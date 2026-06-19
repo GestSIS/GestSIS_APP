@@ -71,7 +71,10 @@ const save = async () => {
     <div class="modal-body">
       <div class="row">
         <div class="col-md-12">
-          <article-creation v-model="activeAttribution.articles" />
+          <article-creation
+            v-model="activeAttribution.articles"
+            :article-types="materielTypeStore.liste"
+          />
         </div>
       </div>
     </div>

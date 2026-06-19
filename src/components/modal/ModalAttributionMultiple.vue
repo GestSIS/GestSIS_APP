@@ -51,6 +51,9 @@ await Promise.all([
 ]);
 
 const sapeurs = computed(() => sapeurStore.liste);
+const typesAttribuables = computed(() =>
+  materielTypeStore.liste.filter((t) => t.est_attribuable),
+);
 
 const { closeModal } = useModalStore();
 const save = async () => {
@@ -150,6 +153,7 @@ const save = async () => {
             <article-creation
               v-if="!depuisInventaire"
               v-model="form.articlesHorsInventaire"
+              :article-types="typesAttribuables"
             />
           </div>
         </div>

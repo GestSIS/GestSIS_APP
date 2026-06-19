@@ -1,12 +1,14 @@
 <script setup>
 import { computed, nextTick, useTemplateRef } from 'vue';
 
-import { useEmplacementStore } from '../../stores/materiel/Emplacement';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { indexedData } from '../../tools/index.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur';
 
 const articles = defineModel({ default: () => [] });
+
+const { articleTypes } = defineProps({
+  articleTypes: { type: Array, required: true },
+});
+
 if (articles.value.length === 0) {
   articles.value.push({
     materiel_type_id: '',
@@ -16,20 +18,8 @@ if (articles.value.length === 0) {
   });
 }
 
-const materielTypeStore = useMaterielTypeStore();
-const emplacementStore = useEmplacementStore();
-const sapeurStore = useSapeurStore();
-
-await Promise.all([
-  materielTypeStore.fetchMaterielTypes(),
-  emplacementStore.fetchEmplacements(),
-  sapeurStore.fetchListeSapeur(),
-]);
-
 const types = computed(() =>
-  materielTypeStore.liste.sort((a, b) =>
-    a.designation.localeCompare(b.designation),
-  ),
+  [...articleTypes].sort((a, b) => a.designation.localeCompare(b.designation)),
 );
 const indexedTypes = computed(() => indexedData(types.value));
 
