@@ -37,7 +37,7 @@ const groupes = computed(() => {
   const selectedNumeros = new Set(selectedGroupes.map((g) => g.no.toString()));
   const availableGroupes = groupeStore.liste
     .filter((g) => g.type === 1)
-    .filter((g) => !selectedNumeros.has(g.no));
+    .filter((g) => !selectedNumeros.has(g.no.toString()));
 
   return [...selectedGroupes, ...availableGroupes]
     .map((g) => ({
