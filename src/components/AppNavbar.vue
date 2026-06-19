@@ -15,7 +15,7 @@ const { hideSidebar, noSidebar } = defineProps({
   },
   noSidebar: {
     type: Boolean,
-    default: () => false,
+    default: false,
   },
 });
 defineEmits(['toggleSidebar']);

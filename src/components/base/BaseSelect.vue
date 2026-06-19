@@ -15,7 +15,7 @@ const {
 } = defineProps({
   required: {
     type: Boolean,
-    default: () => false,
+    default: false,
   },
   placeholder: {
     type: String,

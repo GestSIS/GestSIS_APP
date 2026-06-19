@@ -16,7 +16,7 @@ const { loading, articles, hideDownload, emplacement, refresh } = defineProps({
   },
   hideDownload: {
     type: Boolean,
-    default: () => false,
+    default: false,
   },
   articles: {
     type: Array,

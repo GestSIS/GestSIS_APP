@@ -37,7 +37,7 @@ const {
   },
   selectable: {
     type: Boolean,
-    default: () => false,
+    default: false,
   },
   selectKey: {
     type: String,
@@ -54,7 +54,7 @@ const {
   detailRowColumn: {
     // Pour afficher la colonne détail-row
     type: Boolean,
-    default: () => false,
+    default: false,
   },
   detailRowColumnHideButton: {
     // Fonction pour cacher la bouton toggle detail-row de certaines lignes
@@ -63,7 +63,7 @@ const {
   },
   hideDownload: {
     type: Boolean,
-    default: () => false,
+    default: false,
   },
 });
 const emit = defineEmits(['selected']);
@@ -213,7 +213,9 @@ const toggleDetailRow = (id) => {
   };
 };
 const toggleAllDetailRow = () => {
-  const allVisible = data.every((d) => detailsRowVisibility.value[d[selectKey]]);
+  const allVisible = data.every(
+    (d) => detailsRowVisibility.value[d[selectKey]],
+  );
   detailsRowVisibility.value = Object.fromEntries(
     data.map((d) => [d[selectKey], !allVisible]),
   );
@@ -298,7 +300,9 @@ defineExpose({
       :key="groupe.key"
     >
       <tr v-if="!groupe.data.length">
-        <td :colspan="fields.length + (detailRowColumn ? 1 : 0)">{{ noData }}</td>
+        <td :colspan="fields.length + (detailRowColumn ? 1 : 0)">
+          {{ noData }}
+        </td>
       </tr>
 
       <tr v-if="groupedData.length > 0" class="table-secondary">

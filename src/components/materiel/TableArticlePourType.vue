@@ -23,11 +23,11 @@ const {
   },
   hideDownload: {
     type: Boolean,
-    default: () => false,
+    default: false,
   },
   avecEmplacement: {
     type: Boolean,
-    default: () => true,
+    default: true,
   },
   emplacement: {
     type: Object,
