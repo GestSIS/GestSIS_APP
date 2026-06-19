@@ -92,23 +92,16 @@ const computeSapeur = (id) => {
           currentDate.setMinutes(currentDate.getMinutes() + i * 15);
           code = getPhaseTypeAt(currentDate);
         }
-        res = {
-          ...res,
-          [offset + i]: code,
-        };
+        res[offset + i] = code;
       }
     });
   return res;
 };
 const computedPresences = computed(() => {
-  let temp = [];
-  listSapeurs.value.forEach(
-    (s) =>
-      (temp = {
-        ...temp,
-        [s.id]: computeSapeur(s.id),
-      }),
-  );
+  const temp = {};
+  listSapeurs.value.forEach((s) => {
+    temp[s.id] = computeSapeur(s.id);
+  });
   return temp;
 });
 
