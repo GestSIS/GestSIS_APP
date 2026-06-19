@@ -33,7 +33,7 @@ const {
   },
   loading: {
     type: Boolean,
-    default: () => {},
+    default: false,
   },
 
   noData: {
@@ -95,9 +95,9 @@ const sortedData = computed(() => {
     sortedData.sort((a, b) => {
       let aVal = func(a[key]);
       let bVal = func(b[key]);
-      if (parseInt(aVal) == aVal && parseInt(bVal) == bVal) {
-        aVal = parseInt(aVal);
-        bVal = parseInt(bVal);
+      if (parseInt(aVal, 10) == aVal && parseInt(bVal, 10) == bVal) {
+        aVal = parseInt(aVal, 10);
+        bVal = parseInt(bVal, 10);
       }
       const res =
         typeof aVal === 'string' ? aVal.localeCompare(bVal) : aVal - bVal;
@@ -219,13 +219,13 @@ const toggleDetailRow = (id) => {
   };
 };
 const toggleAllDetailRow = () => {
-  detailsRowVisibility.value = Object.fromEntries({
+  detailsRowVisibility.value = Object.fromEntries([
     ...data.map((d) => [d[selectKey], true]),
     ...Object.entries(detailsRowVisibility.value).map(([key, value]) => [
       key,
       !value,
     ]),
-  });
+  ]);
 };
 
 defineExpose({
@@ -331,7 +331,6 @@ defineExpose({
         <tr
           :class="[
             selected == r[selectKey] ? rowSelectedClass : '',
-            rowClass,
             typeof rowClass === 'function'
               ? rowClass(r, selected == r[selectKey])
               : rowClass,
@@ -406,7 +405,7 @@ defineExpose({
             <!-- Multiline types -->
             <template v-else-if="f.type === 'multiline'">
               <template
-                v-for="(line, i) in r[f.key].toString().split('\n')"
+                v-for="(line, i) in (r[f.key] ?? '').toString().split('\n')"
                 :key="i"
               >
                 {{ line }}<br />
@@ -452,11 +451,13 @@ defineExpose({
     </tbody>
     <tfoot v-show="!loading">
       <slot name="foot" v-bind="{ data }"></slot>
-      <div v-if="!hideDownload" class="d-grid gap-2 d-md-block m-2">
-        <button class="btn" title="Export CSV" @click="toCvs">
-          <font-awesome-icon :icon="['fas', 'file-csv']" size="xl" />
-        </button>
-      </div>
+      <tr v-if="!hideDownload">
+        <td :colspan="fields.length + (detailRowColumn ? 1 : 0)" class="p-0">
+          <button class="btn m-2" title="Export CSV" @click="toCvs">
+            <font-awesome-icon :icon="['fas', 'file-csv']" size="xl" />
+          </button>
+        </td>
+      </tr>
     </tfoot>
   </table>
 </template>

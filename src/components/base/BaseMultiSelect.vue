@@ -44,10 +44,7 @@ const { label, baseOption, options, valueKey, displayKey, formatter } =
         ...$attrs,
       }"
     >
-      {{
-        formatter ? true : false
-      }}
-      <option v-if="baseOption" :value="undefined">{{ baseOption }}</option>
+      <option v-if="baseOption" :value="null">{{ baseOption }}</option>
       <option v-for="o in options" :key="o[valueKey]" :value="o[valueKey]">
         {{ formatter ? formatter(o) : o[displayKey] }}
       </option>

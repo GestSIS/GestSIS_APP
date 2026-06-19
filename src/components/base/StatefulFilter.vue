@@ -54,7 +54,7 @@ const setFilter = (key, value) => {
   const types = new Set(['function', 'undefined']);
   filters.value = {
     ...filters.value,
-    [key]: types.has(typeof value) ? value : parseInt(value),
+    [key]: types.has(typeof value) ? value : parseInt(value, 10),
   };
   localStorage.setItem(
     `${sisKey.value}-${id}`,

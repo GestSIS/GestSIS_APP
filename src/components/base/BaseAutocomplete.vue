@@ -56,7 +56,7 @@ const setResult = (result) => {
 };
 
 const onArrowDown = () => {
-  if (arrowCounter.value < results.value.length) {
+  if (arrowCounter.value < results.value.length - 1) {
     arrowCounter.value = arrowCounter.value + 1;
   }
 };
