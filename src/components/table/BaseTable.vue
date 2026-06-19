@@ -5,7 +5,6 @@ const {
   data,
   groupedData,
   fields,
-  filter,
   noData,
   selectable,
   selectKey,
@@ -26,10 +25,6 @@ const {
   fields: {
     type: Array,
     default: () => [],
-  },
-  filter: {
-    type: Object,
-    default: () => {},
   },
   loading: {
     type: Boolean,
@@ -122,8 +117,7 @@ watch(
   (val) => {
     if (selected.value) {
       // Watcher pour déselectionner l'élément actif en cas de suppression
-      const selectedKey = selected; //[selectKey];
-      if (val.filter((e) => e[selectKey] === selectedKey.value).length <= 0) {
+      if (val.filter((e) => e[selectKey] === selected.value).length <= 0) {
         emit('selected', null);
       }
     }
@@ -299,17 +293,6 @@ defineExpose({
         </tr>
       </thead>
     </slot>
-    <tbody v-show="loading">
-      <tr>
-        <td :colspan="fields.length + (detailRowColumn ? 1 : 0)">
-          <div class="d-flex justify-content-center m-4">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Chargement...</span>
-            </div>
-          </div>
-        </td>
-      </tr>
-    </tbody>
     <tbody
       v-for="groupe in groupedData.length === 0
         ? [{ key: 'default', data: sortedData }]
@@ -318,7 +301,7 @@ defineExpose({
       :key="groupe.key"
     >
       <tr v-if="!groupe.data.length">
-        <td :colspan="fields.length">{{ noData }}</td>
+        <td :colspan="fields.length + (detailRowColumn ? 1 : 0)">{{ noData }}</td>
       </tr>
 
       <tr v-if="groupedData.length > 0" class="table-secondary">
@@ -348,7 +331,7 @@ defineExpose({
                 :icon="['fas', 'angle-down']"
               />
               <font-awesome-icon
-                v-if="!detailsRowVisibility[r[selectKey]] || false"
+                v-if="!detailsRowVisibility[r[selectKey]]"
                 :icon="['fas', 'angle-right']"
               />
             </button>
@@ -379,7 +362,7 @@ defineExpose({
                   : ''
               }}
             </template>
-            <template v-else-if="f.type === 'datetime' || f.type == Date">
+            <template v-else-if="f.type === 'datetime'">
               {{
                 r[f.key]
                   ? new Date(r[f.key]).toLocaleString('fr-CH').slice(0, 16)
