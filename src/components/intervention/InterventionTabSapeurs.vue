@@ -219,6 +219,13 @@ const sortedPresences = (id) => {
     .filter((p) => p.sapeur_id === id)
     .sort((p1, p2) => new Date(p1.debut) > new Date(p2.debut));
 };
+
+const totalHeures = computed(() => {
+  const total = presences.value.reduce((acc, p) => {
+    return acc + (new Date(p.fin) - new Date(p.debut)) / 3600000;
+  }, 0);
+  return Math.round(total * 100) / 100;
+});
 </script>
 
 <template>
@@ -383,7 +390,7 @@ const sortedPresences = (id) => {
               <tfoot>
                 <tr>
                   <th :colspan="4 + 4 * columns.length">
-                    Nombre sapeurs : {{ sortedSapeurs.length }}
+                    Nombre sapeurs : {{ sortedSapeurs.length }} &nbsp;|&nbsp; Total heures : {{ totalHeures }}h
                   </th>
                 </tr>
               </tfoot>
