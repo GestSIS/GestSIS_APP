@@ -4,6 +4,7 @@ import { useModalStore } from '../../stores/common/Modal.js';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import ArticleService from '../../services/materiel/ArticleService';
 import SelectEmplacement from '../materiel/SelectEmplacement.vue';
+import useNotification from '../../composables/useNotification.js';
 
 const { data, callback } = defineProps({
   data: {
@@ -15,6 +16,8 @@ const { data, callback } = defineProps({
     default: () => {},
   },
 });
+
+const awn = useNotification();
 
 const errors = ref({});
 const form = reactive({ quantite: 1, ...data });
@@ -29,9 +32,20 @@ const type = computed(() =>
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  ((form.id || 0) === 0
-    ? ArticleService.creerArticles
-    : ArticleService.updateArticles)([form])
+  const isCreation = (form.id || 0) === 0;
+
+  // Un article doit être rattaché soit à un sapeur, soit à un emplacement.
+  // Ici seul l'emplacement est saisissable (les articles attribués à un sapeur
+  // masquent ce champ), donc le seul cas invalide possible est « ni l'un ni
+  // l'autre » : on l'empêche pour ne pas envoyer un payload rejeté par l'API.
+  if (!form.sapeur_id && !form.emplacement_id) {
+    awn.warning('Veuillez sélectionner un emplacement');
+    return;
+  }
+
+  (isCreation ? ArticleService.creerArticles : ArticleService.updateArticles)([
+    form,
+  ])
     .then(() => {
       closeModal();
       callback();
@@ -76,6 +90,7 @@ const save = async () => {
         <select-emplacement
           v-if="!form.id || form.emplacement_id"
           v-model="form.emplacement_id"
+          :required="!form.sapeur_id"
           label="Emplacement"
           class="mb-3"
         />
