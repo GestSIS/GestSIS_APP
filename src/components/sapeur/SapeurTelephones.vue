@@ -4,9 +4,11 @@ import { useBaseDataStore } from '../../stores/common/BaseData.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import permissions from '/src/composables/permissions.js';
 import useHasPermission from '../../composables/usePermission.js';
+import useNotification from '../../composables/useNotification.js';
 
 const baseDataStore = useBaseDataStore();
 const sapeurStore = useSapeurStore();
+const awn = useNotification();
 const loading = ref(true);
 
 watchEffect(async () => {
@@ -42,25 +44,34 @@ const telephoneTypes = computed(() => baseDataStore.telephoneTypes);
 
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
-const saveTelephones = () => {
+const saveTelephones = async () => {
   const savedTelephones = [...telephones.value];
+  const operations = [];
+
   activeSapeurTelephones.value.forEach((t) => {
     //Suppression des numéros supprimé
     if (telephones.value.filter((t2) => t2.id === t.id).length === 0) {
-      sapeurStore.removeTelephoneSapeur(t.id);
+      operations.push(sapeurStore.removeTelephoneSapeur(t.id));
     }
   });
 
   savedTelephones.forEach((t) => {
     //Numéros modifiés
     if (t.id !== null) {
-      sapeurStore.editTelephoneSapeur(t);
+      operations.push(sapeurStore.editTelephoneSapeur(t));
     }
     //Nouveaux numéros
     else {
-      sapeurStore.addTelephoneSapeur(t);
+      operations.push(sapeurStore.addTelephoneSapeur(t));
     }
   });
+
+  try {
+    await Promise.all(operations);
+    awn.success('Modifications enregistrées');
+  } catch (res) {
+    awn.alert(res?.message || "Erreur lors de l'enregistrement");
+  }
 };
 const addTelephone = () => {
   if (telephonesData.value.length < 3) {
