@@ -24,10 +24,22 @@ const form = reactive({
 const token = ref('');
 
 const permissions = computed(() =>
-  authStore.permissions
+  [...authStore.permissions]
     .sort((a, b) => a.tri - b.tri)
-    .filter((p) => authStore.admin || authStore.sis.permissions.includes(p.id)),
+    .filter(
+      (p) => authStore.admin || authStore.sis.permissions.includes(p.api_key),
+    ),
 );
+
+// Uniquement les SIS de l'utilisateur (tous les SIS pour un admin)
+const sisListe = computed(() => authStore.availableSisListe);
+// Si l'utilisateur n'appartient qu'à un seul SIS, on masque la section
+// et le jeton est assigné à ce SIS par défaut.
+const hasSingleSis = computed(() => sisListe.value.length === 1);
+
+if (!form.id && hasSingleSis.value && !form.sis_ids.length) {
+  form.sis_ids = [sisListe.value[0].id];
+}
 
 const { closeModal } = useModalStore();
 
@@ -46,8 +58,14 @@ const save = async () => {
       token.value = res.token;
     })
     .catch((err) => {
-      console.log(err);
-      errors.value = err;
+      // Le backend renvoie soit { error: { champ: [...] } } (validation),
+      // soit { error: "message" } (permissions/SIS manquants).
+      const payload = err?.error ?? err;
+      if (typeof payload === 'string') {
+        awn.alert(payload);
+      } else {
+        errors.value = payload ?? {};
+      }
     });
 };
 
@@ -132,13 +150,9 @@ const copyToClipboard = (text) => {
           <span class="input-group-text">jours</span>
         </div>
       </div>
-      <div class="mb-3">
+      <div class="mb-3" v-if="!hasSingleSis">
         <label for="designation">Sis</label>
-        <div
-          v-for="sis in authStore.sis.liste"
-          :key="sis.id"
-          class="form-check"
-        >
+        <div v-for="sis in sisListe" :key="sis.id" class="form-check">
           <input
             :id="'s' + sis.id"
             v-model="form.sis_ids"
@@ -174,9 +188,9 @@ const copyToClipboard = (text) => {
         </div>
         <div
           class="invalid-feedback"
-          :class="{ 'd-block': errors['permissions'] }"
+          :class="{ 'd-block': errors['permission_ids'] }"
         >
-          {{ errors['permissions'] }}
+          {{ errors['permission_ids'] }}
         </div>
       </div>
     </div>
