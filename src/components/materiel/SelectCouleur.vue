@@ -1,8 +1,17 @@
 <script setup>
 import { computed } from 'vue';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
-import VueSelect from 'vue3-select-component';
-import 'vue3-select-component/styles';
+import {
+  SelectRoot,
+  SelectTrigger,
+  SelectValue,
+  SelectClear,
+  SelectTrailingIcon,
+  SelectPopover,
+  SelectListbox,
+  SelectNoOptions,
+  SelectOption,
+} from 'vue3-select-component/primitives';
 import TagCouleur from './TagCouleur.vue';
 
 const { label } = defineProps({
@@ -22,50 +31,50 @@ const couleurs = computed(() =>
     .map((c) => ({ ...c, label: c.nom, value: c.id }))
     .sort((c1, c2) => c1.nom.localeCompare(c2.nom)),
 );
+
+// Permet de retrouver l'option complète (avec ses couleurs) depuis la valeur
+// sélectionnée : le slot #default de SelectValue ne garantit que value/label.
+const couleurParValeur = computed(() =>
+  Object.fromEntries(couleurs.value.map((c) => [c.value, c])),
+);
 </script>
 
 <template>
-  <div>
+  <!-- data-assembled-select : la lib ne style le trigger que sous ce hook ;
+       on en a besoin car on compose les primitives à la main. -->
+  <div data-assembled-select>
     <label v-if="label">{{ label }}</label>
-    <vue-select
-      v-model="model"
-      :options="couleurs"
-      placeholder="Sélectionnez une couleur"
-    >
-      <template #value="{ option }">
-        <tag-couleur :couleur="option">
-          {{ option.nom }}
-        </tag-couleur>
-      </template>
-      <template #option="{ option }">
-        <tag-couleur :couleur="option">
-          {{ option.nom }}
-        </tag-couleur>
-      </template>
-    </vue-select>
+    <select-root v-model="model" :options="couleurs" clearable>
+      <select-trigger>
+        <select-value placeholder="Sélectionnez une couleur">
+          <template #default="{ selectedOptions }">
+            <tag-couleur
+              v-for="sel in selectedOptions"
+              :key="sel.value"
+              :couleur="couleurParValeur[sel.value]"
+            >
+              {{ couleurParValeur[sel.value]?.nom }}
+            </tag-couleur>
+          </template>
+        </select-value>
+        <select-clear />
+        <select-trailing-icon />
+      </select-trigger>
+      <select-popover>
+        <select-listbox>
+          <select-no-options>Aucun résultat</select-no-options>
+          <select-option
+            v-for="couleur in couleurs"
+            :key="couleur.value"
+            :value="couleur.value"
+            :label="couleur.label"
+          >
+            <tag-couleur :couleur="couleur">
+              {{ couleur.nom }}
+            </tag-couleur>
+          </select-option>
+        </select-listbox>
+      </select-popover>
+    </select-root>
   </div>
 </template>
-
-<style scoped>
-:deep(:root) {
-  --vs-option-padding: 4px 6px;
-}
-:deep(.single-value) {
-  overflow: visible !important;
-}
-:deep(.control) {
-  border-radius: var(--bs-border-radius-sm);
-  min-height: 31px;
-}
-:deep(.menu) {
-  --vs-menu-offset-top: 0px;
-}
-:deep(.single-value) {
-  font-size: 0.875rem;
-  padding-left: 4px;
-  display: flex;
-}
-:deep(.value-container) {
-  padding: 0px;
-}
-</style>

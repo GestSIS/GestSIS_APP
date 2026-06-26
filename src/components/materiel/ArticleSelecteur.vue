@@ -4,8 +4,17 @@ import { computed, nextTick, useTemplateRef } from 'vue';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
 import { useMaterielTypeStore } from '../../stores/materiel/Type';
 import { indexedData } from '../../tools/index.js';
-import VueSelect from 'vue3-select-component';
-import 'vue3-select-component/styles';
+import { Select } from 'vue3-select-component';
+import {
+  SelectRoot,
+  SelectTrigger,
+  SelectValue,
+  SelectTrailingIcon,
+  SelectPopover,
+  SelectListbox,
+  SelectNoOptions,
+  SelectOption,
+} from 'vue3-select-component/primitives';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import TagCouleur from './TagCouleur.vue';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur';
@@ -77,6 +86,27 @@ const typesDisponible = computed(() => {
   return types.value.filter((t) => ids.has(t.id));
 });
 
+// Options du sélecteur d'emplacement/article (rendu personnalisé).
+const articlesPourType = (materielTypeId) =>
+  articlesAttribuable.value
+    .filter((a) => a.materiel_type_id == materielTypeId)
+    .map((a) => ({ ...a, value: a.id, label: a.designation }));
+
+// Options du sélecteur par numéro (rendu simple).
+const numerosPourType = (materielTypeId) =>
+  articlesAttribuable.value
+    .filter((a) => a.materiel_type_id == materielTypeId)
+    .map((a) => ({
+      value: a.id,
+      label: a.numero?.length ? a.numero : '<sans numéro>',
+    }))
+    .sort((a, b) => a.label?.localeCompare(b.label));
+
+const articleParId = (id) => articlesAttribuable.value.find((a) => a.id === id);
+
+const emplacementAncestors = (emplacementId) =>
+  emplacements.value.find((e) => e.id === emplacementId)?.emplacements ?? [];
+
 const articleReference = useTemplateRef(`articles-reference`);
 const addEmptyLine = () => {
   selectedArticles.value.push({
@@ -136,22 +166,15 @@ const selectMaterielTypeNumerote = (item, value) => {
         </td>
         <td v-if="!item.materiel_type_id" colspan="3"></td>
         <td v-if="item.materiel_type_id">
-          <vue-select
+          <Select
             v-if="indexedTypes[item.materiel_type_id]?.est_numerote"
             v-model="item.id"
-            :is-clearable="false"
-            no-results="Aucun article correspondant"
-            :options="
-              [
-                ...articlesAttribuable
-                  .filter((a) => a.materiel_type_id == item.materiel_type_id)
-                  .map((a) => ({
-                    value: a.id,
-                    label: a.numero?.length ? a.numero : '<sans numéro>',
-                  })),
-              ].sort((a, b) => a.label?.localeCompare(b.label))
-            "
-          />
+            :clearable="false"
+            :searchable="false"
+            :options="numerosPourType(item.materiel_type_id)"
+          >
+            <template #no-options>Aucun article correspondant</template>
+          </Select>
           <font-awesome-icon
             v-else
             v-tooltip.bottom="'Matériel non numéroté'"
@@ -179,54 +202,71 @@ const selectMaterielTypeNumerote = (item, value) => {
             :icon="['far', 'circle-question']"
           />
         </td>
-        <td v-if="item.materiel_type_id">
-          <VueSelect
+        <!-- data-assembled-select : hook requis pour styler le trigger d'une
+             composition de primitives (cf. SelectCouleur). -->
+        <td v-if="item.materiel_type_id" data-assembled-select>
+          <select-root
             v-model="item.id"
-            :is-clearable="false"
-            :options="[
-              ...articlesAttribuable
-                .filter((a) => a.materiel_type_id == item.materiel_type_id)
-                .map((a) => ({ ...a, value: a.id, label: a.designation })),
-            ]"
-            placeholder="Sélectionnez un emplacement"
+            :options="articlesPourType(item.materiel_type_id)"
           >
-            <template #value="{ option }">
-              <span v-if="option.sapeur_id" class="badge bg-primary">
-                {{ indexedSapeurs[option.sapeur_id]?.nom_prenom }}
-              </span>
-              <tag-couleur
-                v-for="id in emplacements.find(
-                  (e) =>
-                    e.id ===
-                    articlesAttribuable.find((a) => a.id === option.value)
-                      .emplacement_id,
-                )?.emplacements ?? []"
-                v-if="option.emplacement_id"
-                :key="id"
-                :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
-              >
-                {{ indexedEmplacements[id].designation }}
-              </tag-couleur>
-            </template>
-            <template #option="{ option }">
-              <span v-if="option.sapeur_id" class="badge bg-primary">
-                {{ indexedSapeurs[option.sapeur_id]?.nom_prenom }}
-              </span>
-              <tag-couleur
-                v-for="id in emplacements.find(
-                  (e) =>
-                    e.id ===
-                    articlesAttribuable.find((a) => a.id === option.value)
-                      .emplacement_id,
-                )?.emplacements ?? []"
-                v-if="option.emplacement_id"
-                :key="id"
-                :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
-              >
-                {{ indexedEmplacements[id].designation }}
-              </tag-couleur>
-            </template>
-          </VueSelect>
+            <select-trigger>
+              <select-value placeholder="Sélectionnez un emplacement">
+                <template #default="{ selectedOptions }">
+                  <template v-for="sel in selectedOptions" :key="sel.value">
+                    <template
+                      v-for="article in [articleParId(sel.value)]"
+                      :key="article?.id"
+                    >
+                      <span
+                        v-if="article?.sapeur_id"
+                        class="badge bg-primary"
+                      >
+                        {{ indexedSapeurs[article.sapeur_id]?.nom_prenom }}
+                      </span>
+                      <tag-couleur
+                        v-for="id in article?.emplacement_id
+                          ? emplacementAncestors(article.emplacement_id)
+                          : []"
+                        :key="id"
+                        :couleur="
+                          indexedCouleurs[indexedEmplacements[id].couleur_id]
+                        "
+                      >
+                        {{ indexedEmplacements[id].designation }}
+                      </tag-couleur>
+                    </template>
+                  </template>
+                </template>
+              </select-value>
+              <select-trailing-icon />
+            </select-trigger>
+            <select-popover>
+              <select-listbox>
+                <select-no-options>Aucun résultat</select-no-options>
+                <select-option
+                  v-for="article in articlesPourType(item.materiel_type_id)"
+                  :key="article.value"
+                  :value="article.value"
+                  :label="article.label"
+                >
+                  <span v-if="article.sapeur_id" class="badge bg-primary">
+                    {{ indexedSapeurs[article.sapeur_id]?.nom_prenom }}
+                  </span>
+                  <tag-couleur
+                    v-for="id in article.emplacement_id
+                      ? emplacementAncestors(article.emplacement_id)
+                      : []"
+                    :key="id"
+                    :couleur="
+                      indexedCouleurs[indexedEmplacements[id].couleur_id]
+                    "
+                  >
+                    {{ indexedEmplacements[id].designation }}
+                  </tag-couleur>
+                </select-option>
+              </select-listbox>
+            </select-popover>
+          </select-root>
         </td>
         <td>{{ item.remarque }}</td>
         <td>
@@ -248,21 +288,3 @@ const selectMaterielTypeNumerote = (item, value) => {
     </tbody>
   </table>
 </template>
-
-<style scoped>
-:deep(.control) {
-  border-radius: var(--bs-border-radius-sm);
-  min-height: 31px;
-}
-:deep(.menu) {
-  --vs-menu-offset-top: 0px;
-}
-:deep(.single-value) {
-  font-size: 0.875rem;
-  padding-left: 4px;
-  display: flex;
-}
-:deep(.value-container) {
-  padding: 0px;
-}
-</style>

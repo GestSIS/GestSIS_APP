@@ -39,3 +39,29 @@ body {
 table button.btn {
   padding: 0 0.5rem;
 }
+
+// --- vue3-select-component v1 (reka-ui) ---
+// Aligne les sélecteurs sur les `form-control-sm` Bootstrap et corrige le
+// z-index du popover (téléporté dans <body>) qui passait sous la modale.
+// Les variables --vs-* sont posées sur les éléments [data-select-*] avec une
+// spécificité `:root ...` pour gagner quel que soit l'ordre d'injection CSS
+// (la librairie définit ses défauts sur ces mêmes éléments, et le popover est
+// hors du scope des composants car téléporté).
+:root [data-select-trigger] {
+  --vs-min-height: 31px;
+  --vs-padding-y: 0.25rem;
+  --vs-padding-x: 0.5rem;
+  --vs-border-radius: var(--bs-border-radius-sm);
+  --vs-border: 1px solid var(--bs-border-color);
+  --vs-font-size: 0.875rem;
+  --vs-text-color: var(--bs-body-color);
+  --vs-placeholder-color: var(--bs-secondary-color);
+}
+
+:root [data-select-popover] {
+  // Au-dessus de la modale Bootstrap (.modal = z-index 1055).
+  --vs-menu-z-index: 1060;
+  --vs-menu-offset-top: 2px;
+  --vs-font-size: 0.875rem;
+  --vs-option-padding: 4px 6px;
+}

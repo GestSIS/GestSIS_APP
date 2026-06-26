@@ -2,8 +2,17 @@
 import { computed } from 'vue';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useEmplacementStore } from '../../stores/materiel/Emplacement';
-import VueSelect from 'vue3-select-component';
-import 'vue3-select-component/styles';
+import {
+  SelectRoot,
+  SelectTrigger,
+  SelectValue,
+  SelectClear,
+  SelectTrailingIcon,
+  SelectPopover,
+  SelectListbox,
+  SelectNoOptions,
+  SelectOption,
+} from 'vue3-select-component/primitives';
 import { indexedData } from '../../tools/index.js';
 import TagCouleur from './TagCouleur.vue';
 
@@ -79,60 +88,90 @@ const emplacements = computed(() => {
       ),
   ];
 });
+
+// Retrouve l'option complète (avec sa hiérarchie) depuis la valeur sélectionnée.
+const emplacementParValeur = computed(() =>
+  Object.fromEntries(emplacements.value.map((e) => [e.value, e])),
+);
 </script>
 
 <template>
-  <div>
+  <!-- data-assembled-select : la lib ne style le trigger que sous ce hook ;
+       on en a besoin car on compose les primitives à la main. -->
+  <div data-assembled-select>
     <label v-if="label">{{ label }}</label>
-    <vue-select
+    <select-root
       v-model="model"
-      :required="required"
-      :is-disabled="disabled"
       :options="emplacements"
-      placeholder="Sélectionnez un emplacement"
+      :disabled="disabled"
+      clearable
     >
-      <template #value="{ option }">
-        <tag-couleur
-          v-for="id in option.emplacements"
-          :key="id"
-          :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
-        >
-          {{ indexedEmplacements[id].designation }}
-        </tag-couleur>
-      </template>
-      <template #option="{ option }">
-        <tag-couleur
-          v-for="id in option.emplacements"
-          :key="id"
-          :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
-        >
-          {{ indexedEmplacements[id].designation }}
-        </tag-couleur>
-      </template>
-    </vue-select>
+      <select-trigger>
+        <select-value placeholder="Sélectionnez un emplacement">
+          <template #default="{ selectedOptions }">
+            <template v-for="sel in selectedOptions" :key="sel.value">
+              <tag-couleur
+                v-for="id in emplacementParValeur[sel.value]?.emplacements ?? []"
+                :key="id"
+                :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
+              >
+                {{ indexedEmplacements[id].designation }}
+              </tag-couleur>
+            </template>
+          </template>
+        </select-value>
+        <select-clear />
+        <select-trailing-icon />
+      </select-trigger>
+      <select-popover>
+        <select-listbox>
+          <select-no-options>Aucun résultat</select-no-options>
+          <select-option
+            v-for="emplacement in emplacements"
+            :key="emplacement.value"
+            :value="emplacement.value"
+            :label="emplacement.label"
+          >
+            <tag-couleur
+              v-for="id in emplacement.emplacements ?? []"
+              :key="id"
+              :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
+            >
+              {{ indexedEmplacements[id].designation }}
+            </tag-couleur>
+            <span v-if="emplacement.value === null">{{
+              emplacement.label
+            }}</span>
+          </select-option>
+        </select-listbox>
+      </select-popover>
+    </select-root>
+    <!-- La v1 a supprimé la prop `required` : on conserve la validation
+         native du formulaire via un input masqué mais focusable. La garde JS
+         côté formulaire (ex. ModalArticle) reste le filet de sécurité. -->
+    <input
+      v-if="required"
+      :value="model ?? ''"
+      required
+      tabindex="-1"
+      aria-hidden="true"
+      class="emplacement-required-proxy"
+    />
   </div>
 </template>
 
 <style scoped>
-:deep(:root) {
-  --vs-option-padding: 4px 6px;
+/* Input proxy pour conserver la validation `required` native sans être visible
+   (display:none rendrait le contrôle non focusable -> erreur navigateur). */
+.emplacement-required-proxy {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  pointer-events: none;
 }
-:deep(.single-value) {
-  overflow: visible !important;
-}
-:deep(.control) {
-  border-radius: var(--bs-border-radius-sm);
-  min-height: 31px;
-}
-:deep(.menu) {
-  --vs-menu-offset-top: 0px;
-}
-:deep(.single-value) {
-  font-size: 0.875rem;
-  padding-left: 4px;
-  display: flex;
-}
-:deep(.value-container) {
-  padding: 0px;
-}
+
 </style>

@@ -2,8 +2,17 @@
 import { computed } from 'vue';
 import { useCouleurStore } from '../../stores/materiel/Couleur';
 import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
-import VueSelect from 'vue3-select-component';
-import 'vue3-select-component/styles';
+import {
+  SelectRoot,
+  SelectTrigger,
+  SelectValue,
+  SelectClear,
+  SelectTrailingIcon,
+  SelectPopover,
+  SelectListbox,
+  SelectNoOptions,
+  SelectOption,
+} from 'vue3-select-component/primitives';
 import { indexedData } from '../../tools/index.js';
 import TagCouleur from './TagCouleur.vue';
 
@@ -58,58 +67,55 @@ const categories = computed(() => {
         !c.categories.includes(categorieIdToIgnore),
     );
 });
+
+// Retrouve l'option complète (avec sa hiérarchie) depuis la valeur sélectionnée.
+const categorieParValeur = computed(() =>
+  Object.fromEntries(categories.value.map((c) => [c.value, c])),
+);
 </script>
 
 <template>
-  <div>
+  <!-- data-assembled-select : la lib ne style le trigger que sous ce hook ;
+       on en a besoin car on compose les primitives à la main. -->
+  <div data-assembled-select>
     <label v-if="label">{{ label }}</label>
-    <vue-select
-      v-model="model"
-      :options="categories"
-      placeholder="Sélectionnez un categorie"
-    >
-      <template #value="{ option }">
-        <tag-couleur
-          v-for="id in option.categories"
-          :key="id"
-          :couleur="indexedCouleurs[indexedCategories[id].couleur_id]"
-        >
-          {{ indexedCategories[id].designation }}
-        </tag-couleur>
-      </template>
-      <template #option="{ option }">
-        <tag-couleur
-          v-for="id in option.categories"
-          :key="id"
-          :couleur="indexedCouleurs[indexedCategories[id].couleur_id]"
-        >
-          {{ indexedCategories[id].designation }}
-        </tag-couleur>
-      </template>
-    </vue-select>
+    <select-root v-model="model" :options="categories" clearable>
+      <select-trigger>
+        <select-value placeholder="Sélectionnez une catégorie">
+          <template #default="{ selectedOptions }">
+            <template v-for="sel in selectedOptions" :key="sel.value">
+              <tag-couleur
+                v-for="id in categorieParValeur[sel.value]?.categories ?? []"
+                :key="id"
+                :couleur="indexedCouleurs[indexedCategories[id].couleur_id]"
+              >
+                {{ indexedCategories[id].designation }}
+              </tag-couleur>
+            </template>
+          </template>
+        </select-value>
+        <select-clear />
+        <select-trailing-icon />
+      </select-trigger>
+      <select-popover>
+        <select-listbox>
+          <select-no-options>Aucun résultat</select-no-options>
+          <select-option
+            v-for="categorie in categories"
+            :key="categorie.value"
+            :value="categorie.value"
+            :label="categorie.label"
+          >
+            <tag-couleur
+              v-for="id in categorie.categories"
+              :key="id"
+              :couleur="indexedCouleurs[indexedCategories[id].couleur_id]"
+            >
+              {{ indexedCategories[id].designation }}
+            </tag-couleur>
+          </select-option>
+        </select-listbox>
+      </select-popover>
+    </select-root>
   </div>
 </template>
-
-<style scoped>
-:deep(:root) {
-  --vs-option-padding: 4px 6px;
-}
-:deep(.single-value) {
-  overflow: visible !important;
-}
-:deep(.control) {
-  border-radius: var(--bs-border-radius-sm);
-  min-height: 31px;
-}
-:deep(.menu) {
-  --vs-menu-offset-top: 0px;
-}
-:deep(.single-value) {
-  font-size: 0.875rem;
-  padding-left: 4px;
-  display: flex;
-}
-:deep(.value-container) {
-  padding: 0px;
-}
-</style>
