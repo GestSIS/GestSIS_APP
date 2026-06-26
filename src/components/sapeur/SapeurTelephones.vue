@@ -12,8 +12,12 @@ const awn = useNotification();
 const loading = ref(true);
 
 watchEffect(async () => {
+  const sapeurId = sapeurStore.active.id ?? 0;
+  if (sapeurId <= 0) {
+    return;
+  }
   loading.value = true;
-  await sapeurStore.fetchSapeurTelephones(sapeurStore.active.id);
+  await sapeurStore.fetchSapeurTelephones(sapeurId);
   loading.value = false;
 });
 await baseDataStore.fetchTelephoneTypes();
