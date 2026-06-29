@@ -79,6 +79,18 @@ const actuel = computed(() =>
     .filter((s) => s.groupes.length > 0),
 );
 
+// Sapeurs faisant partie d'un groupe RTA mais sans aucun numéro de téléphone.
+// On ne peut pas les transmettre au RTA : on les exclut de la liste et de la
+// transmission, et on les signale dans une alerte.
+const sapeursSansNumero = computed(() =>
+  actuel.value
+    .filter((s) => s.numeros.length === 0)
+    .sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom)),
+);
+const sansNumeroIds = computed(
+  () => new Set(sapeursSansNumero.value.map((s) => s.sapeur_id)),
+);
+
 const mutations = computed(() => {
   const referenceIds = new Set(reference.value.map((s) => s.sapeur_id));
   const actuelIds = new Set(actuel.value.map((s) => s.sapeur_id));
@@ -201,7 +213,9 @@ const mutations = computed(() => {
     .filter((m) => m.changements.modifie)
     .sort(sapeurCompare);
 
-  return [...ajoutes, ...modifies, ...supprimes];
+  return [...ajoutes, ...modifies, ...supprimes].filter(
+    (m) => !sansNumeroIds.value.has(m.sapeur_id),
+  );
 });
 
 const nbNumero = computed(() => {
@@ -253,7 +267,9 @@ const mutate = () => {
         (s) => (unselected.value[s.sapeur_id] ?? false) === true,
       ),
       ...actuel.value.filter(
-        (s) => (unselected.value[s.sapeur_id] ?? false) === false,
+        (s) =>
+          (unselected.value[s.sapeur_id] ?? false) === false &&
+          !sansNumeroIds.value.has(s.sapeur_id),
       ),
     ],
   };
@@ -283,6 +299,25 @@ const mutate = () => {
           effectuer des mutations RTA dans
           <em>configurations > droits et rôles</em>. Vous verrez ainsi un
           nouveau groupe de permissions spécifique pour le RTA.
+        </div>
+        <div
+          v-if="sapeursSansNumero.length"
+          class="alert alert-warning"
+          role="alert"
+        >
+          <p class="mb-1">
+            Les sapeurs suivants font partie d'un groupe RTA mais n'ont aucun
+            numéro de téléphone. Ils ne peuvent pas être transmis au RTA :
+          </p>
+          <ul class="mb-0">
+            <li v-for="s in sapeursSansNumero" :key="s.sapeur_id">
+              <router-link
+                :to="{ name: 'sapeur-details', params: { id: s.sapeur_id } }"
+              >
+                {{ s.nom_prenom }}
+              </router-link>
+            </li>
+          </ul>
         </div>
         <button type="button" class="col-auto btn btn-primary" @click="mutate">
           Transfert RTA
