@@ -33,32 +33,39 @@ const localites = computed(() => localiteStore.liste);
 
 const finDeService = computed(() => form.action == 'finService');
 
+// Une date de fin vient d'être ajoutée si la mutation n'en avait pas auparavant
+const sortieAjoutee = computed(() => !!form.sortie && !data.sortie);
+
 const { closeModal, showModal } = useModalStore();
+
+// Après l'enregistrement : si une sortie a été ajoutée et que le sapeur a des
+// groupes, exercices ou fonctions, on propose de les désactiver.
+const onSaved = () => {
+  errors.value = {};
+
+  if (
+    sortieAjoutee.value &&
+    sapeurStore.active.groupes.length +
+      sapeurStore.active.exercices.length +
+      sapeurStore.active.fonctions.length >
+      0
+  ) {
+    showModal('ModalMutationDesactivation');
+  } else {
+    closeModal();
+  }
+};
 
 const save = () => {
   if ((form.id || 0) === 0) {
     sapeurStore
       .addMutation(form)
-      .then(closeModal)
+      .then(onSaved)
       .catch((err) => (errors.value = err));
   } else {
     sapeurStore
       .editMutation(form)
-      .then(() => {
-        errors.value = {};
-
-        if (
-          finDeService.value &&
-          sapeurStore.active.groupes.length +
-            sapeurStore.active.exercices.length +
-            sapeurStore.active.fonctions.length >
-            0
-        ) {
-          showModal('ModalMutationDesactivation');
-        } else {
-          closeModal();
-        }
-      })
+      .then(onSaved)
       .catch((err) => (errors.value = err));
   }
 };

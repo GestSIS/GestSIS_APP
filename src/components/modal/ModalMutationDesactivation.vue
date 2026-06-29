@@ -112,7 +112,7 @@ const save = () => {
   let mapToId = (e) => e.id;
 
   if (sapFonctions.value.filter((e) => selectedFonctions.value[e.id]).length) {
-    fonctionStore.finFonctions({
+    sapeurStore.finFonctions({
       fin: mutationDate.value,
       ids: sapFonctions.value
         .filter((e) => selectedFonctions.value[e.id])
@@ -120,12 +120,12 @@ const save = () => {
     });
   }
   if (exercices.value.filter((e) => selectedExercices.value[e.id]).length) {
-    fonctionStore.supprimerConvocation(
+    sapeurStore.supprimerConvocation(
       exercices.value.filter((e) => selectedExercices.value[e.id]).map(mapToId),
     );
   }
   if (sapGroupes.value.filter((e) => selectedGroupes.value[e.id]).length) {
-    fonctionStore.quitterGroupes(
+    sapeurStore.quitterGroupes(
       sapGroupes.value.filter((e) => selectedGroupes.value[e.id]).map(mapToId),
     );
   }
