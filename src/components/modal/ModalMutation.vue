@@ -50,7 +50,10 @@ const onSaved = () => {
       sapeurStore.active.fonctions.length >
       0
   ) {
-    showModal('ModalMutationDesactivation');
+    showModal({
+      component: 'ModalMutationDesactivation',
+      data: { sortie: form.sortie },
+    });
   } else {
     closeModal();
   }

@@ -1,10 +1,11 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
 import { useGroupeStore } from '../../stores/groupe/Groupe.js';
 import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
 import { useModalStore } from '../../stores/common/Modal.js';
 import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import useNotification from '../../composables/useNotification.js';
 
 const { data } = defineProps({
   data: {
@@ -17,7 +18,7 @@ const errors = ref({});
 const selectedExercices = ref({});
 const selectedGroupes = ref({});
 const selectedFonctions = ref({});
-const mutationDate = ref(null);
+const mutationDate = ref(data?.sortie ?? null);
 
 const exerciceCategorieStore = useExerciceCategorieStore();
 const groupeStore = useGroupeStore();
@@ -25,7 +26,8 @@ const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
 
 exerciceCategorieStore.fetchExerciceCategories();
-groupeStore.fetchGroupes(sapeurStore.active.id);
+groupeStore.fetchGroupes();
+fonctionStore.fetchFonctions();
 
 const formatDate = (date) => {
   var monthNames = [
@@ -58,15 +60,6 @@ const activeSapeurGroupe = computed(() => sapeurStore.active.groupes);
 const activeSapeurFonction = computed(() =>
   sapeurStore.active.fonctions.filter((f) => !f.fin),
 );
-const exercicesSelectedState = computed(() => {
-  return Object.values(selectedExercices.value).every((e) => e);
-});
-const groupesSelectedState = computed(() => {
-  return Object.values(selectedGroupes.value).every((e) => e);
-});
-const fonctionsSelectedState = computed(() => {
-  return Object.values(selectedFonctions.value).every((e) => e);
-});
 const exercices = computed(() => {
   return activeSapeurExercice.value
     .filter(
@@ -95,49 +88,109 @@ const sapFonctions = computed(() => {
   }));
 });
 
-const { closeModal } = useModalStore();
+// État de la case « tout sélectionner » : cochée si tous les éléments affichés
+// sont sélectionnés, indéterminée si une partie seulement l'est.
+const etatSelection = (items, selection) => {
+  if (!items.length) return { checked: false, indeterminate: false };
+  const nb = items.filter((i) => selection[i.id]).length;
+  return {
+    checked: nb === items.length,
+    indeterminate: nb > 0 && nb < items.length,
+  };
+};
+const exercicesSelectedState = computed(() =>
+  etatSelection(exercices.value, selectedExercices.value),
+);
+const groupesSelectedState = computed(() =>
+  etatSelection(sapGroupes.value, selectedGroupes.value),
+);
+const fonctionsSelectedState = computed(() =>
+  etatSelection(sapFonctions.value, selectedFonctions.value),
+);
 
-const save = () => {
+// Par défaut tout est sélectionné : chaque nouvel élément affiché est coché,
+// sans réécraser un choix déjà fait par l'utilisateur.
+const selectionnerParDefaut = (items, selection) => {
+  items.forEach((i) => {
+    if (selection.value[i.id] === undefined) {
+      selection.value[i.id] = true;
+    }
+  });
+};
+watch(exercices, (l) => selectionnerParDefaut(l, selectedExercices), {
+  immediate: true,
+});
+watch(sapGroupes, (l) => selectionnerParDefaut(l, selectedGroupes), {
+  immediate: true,
+});
+watch(sapFonctions, (l) => selectionnerParDefaut(l, selectedFonctions), {
+  immediate: true,
+});
+
+const { closeModal } = useModalStore();
+const awn = useNotification();
+
+const save = async () => {
+  const mapToId = (e) => e.id;
+  const fonctionsASupprimer = sapFonctions.value.filter(
+    (f) => selectedFonctions.value[f.id],
+  );
+
+  // La date n'est requise que si l'on termine des fonctions, et elle doit être
+  // postérieure au début de chacune des fonctions concernées.
   if (
-    sapFonctions.value.length > 0 &&
+    fonctionsASupprimer.length > 0 &&
     (!mutationDate.value ||
-      sapFonctions.value.some(
+      fonctionsASupprimer.some(
         (f) => new Date(f.debut) >= new Date(mutationDate.value),
       ))
   ) {
     errors.value.date = 'Date requise';
     return;
   }
+  errors.value = {};
 
-  let mapToId = (e) => e.id;
+  const exercicesASupprimer = exercices.value.filter(
+    (e) => selectedExercices.value[e.id],
+  );
+  const groupesAQuitter = sapGroupes.value.filter(
+    (g) => selectedGroupes.value[g.id],
+  );
 
-  if (sapFonctions.value.filter((e) => selectedFonctions.value[e.id]).length) {
-    sapeurStore.finFonctions({
-      fin: mutationDate.value,
-      ids: sapFonctions.value
-        .filter((e) => selectedFonctions.value[e.id])
-        .map(mapToId),
-    });
-  }
-  if (exercices.value.filter((e) => selectedExercices.value[e.id]).length) {
-    sapeurStore.supprimerConvocation(
-      exercices.value.filter((e) => selectedExercices.value[e.id]).map(mapToId),
+  const actions = [];
+  if (fonctionsASupprimer.length) {
+    actions.push(
+      sapeurStore.finFonctions({
+        fin: mutationDate.value,
+        ids: fonctionsASupprimer.map(mapToId),
+      }),
     );
   }
-  if (sapGroupes.value.filter((e) => selectedGroupes.value[e.id]).length) {
-    sapeurStore.quitterGroupes(
-      sapGroupes.value.filter((e) => selectedGroupes.value[e.id]).map(mapToId),
+  if (exercicesASupprimer.length) {
+    actions.push(
+      sapeurStore.supprimerConvocation(exercicesASupprimer.map(mapToId)),
     );
   }
+  if (groupesAQuitter.length) {
+    actions.push(sapeurStore.quitterGroupes(groupesAQuitter.map(mapToId)));
+  }
 
-  closeModal();
+  try {
+    await Promise.all(actions);
+    if (actions.length) {
+      awn.success('Traitement effectué');
+    }
+    closeModal();
+  } catch (err) {
+    awn.alert(err?.message ?? 'Une erreur est survenue lors du traitement');
+  }
 };
 const selectGroupe = (state, groupeId) => {
   if (groupeId) {
     selectedGroupes.value[groupeId] = state;
   } else {
     selectedGroupes.value = Object.fromEntries(
-      activeSapeurGroupe.value.map((g) => [g.id, state]),
+      sapGroupes.value.map((g) => [g.id, state]),
     );
   }
 };
@@ -146,7 +199,7 @@ const selectExercice = (state, exerciceId) => {
     selectedExercices.value[exerciceId] = state;
   } else {
     selectedExercices.value = Object.fromEntries(
-      activeSapeurExercice.value.map((g) => [g.id, state]),
+      exercices.value.map((e) => [e.id, state]),
     );
   }
 };
@@ -155,7 +208,7 @@ const selectFonction = (state, fonctionId) => {
     selectedFonctions.value[fonctionId] = state;
   } else {
     selectedFonctions.value = Object.fromEntries(
-      activeSapeurFonction.value.map((g) => [g.id, state]),
+      sapFonctions.value.map((f) => [f.id, state]),
     );
   }
 };
@@ -170,7 +223,10 @@ const selectFonction = (state, fonctionId) => {
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
-      <form v-if="fonctions.length" class="row g-3 align-items-center mb-2">
+      <form
+        v-if="sapFonctions.length || activeSapeurExercice.length"
+        class="row g-3 align-items-center mb-2"
+      >
         <div class="col-auto">
           <label for="fin">Date</label>
         </div>
@@ -204,8 +260,8 @@ const selectFonction = (state, fonctionId) => {
                 id="sel-exercices-mut"
                 type="checkbox"
                 name="exercices"
-                :indeterminate.prop="exercicesSelectedState == undefined"
-                :checked="exercicesSelectedState"
+                :indeterminate.prop="exercicesSelectedState.indeterminate"
+                :checked="exercicesSelectedState.checked"
                 @click="selectExercice($event.target.checked)"
               />
             </td>
@@ -231,8 +287,8 @@ const selectFonction = (state, fonctionId) => {
                 id="sel-groupes-mut"
                 type="checkbox"
                 name="groupes"
-                :indeterminate.prop="groupesSelectedState == undefined"
-                :checked="groupesSelectedState"
+                :indeterminate.prop="groupesSelectedState.indeterminate"
+                :checked="groupesSelectedState.checked"
                 @click="selectGroupe($event.target.checked)"
               />
             </td>
@@ -258,8 +314,8 @@ const selectFonction = (state, fonctionId) => {
                 id="sel-fonctions-mut"
                 type="checkbox"
                 name="fonctions"
-                :indeterminate.prop="fonctionsSelectedState == undefined"
-                :checked="fonctionsSelectedState"
+                :indeterminate.prop="fonctionsSelectedState.indeterminate"
+                :checked="fonctionsSelectedState.checked"
                 @click="selectFonction($event.target.checked)"
               />
             </td>

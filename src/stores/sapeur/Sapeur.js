@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import SapeurService from '../../services/SapeurService.js';
-import { DraggableArea } from 'vue-advanced-cropper';
 
 export const useSapeurStore = defineStore('sapeur', {
     state: () => ({
@@ -333,7 +332,11 @@ export const useSapeurStore = defineStore('sapeur', {
                 this.active.data.id,
                 payload
             );
-            this.active.groupes = payload;
+            // payload = identifiants d'appartenance quittés : on retire ces
+            // appartenances de la liste, on ne l'écrase pas avec les ids.
+            this.active.groupes = this.active.groupes.filter(
+                (g) => !payload.includes(g.id)
+            );
             return data;
         },
         async supprimerConvocation(payload) {
