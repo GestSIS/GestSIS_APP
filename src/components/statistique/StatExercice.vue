@@ -40,7 +40,10 @@ const categoriesOccurence = computed(() => {
 });
 const filteredCategories = computed(() => {
   return categories.value
-    .filter((c) => allCategories.value || categoriesOccurence.value[c.id])
+    .filter(
+      (c) =>
+        categoriesOccurence.value[c.id] || (allCategories.value && c.statut),
+    )
     .map((e) => ({ ...e, nb: categoriesOccurence.value[e.id] ?? 0 }));
 });
 </script>

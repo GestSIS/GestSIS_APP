@@ -49,7 +49,13 @@ watchEffect(async () => {
   loading.value = false;
 });
 
-const categories = computed(() => exerciceCategorieStore.liste);
+// On n'affiche que les catégories actives, en conservant la catégorie
+// actuellement sélectionnée même si elle a été désactivée.
+const categories = computed(() =>
+  exerciceCategorieStore.liste.filter(
+    (c) => c.statut || c.id == form.value.exercice_categorie_id,
+  ),
+);
 const localites = computed(() => localiteStore.liste);
 const hasEditPermission = useHasPermission(permissions.EXERCICE.MODIFICATION);
 
