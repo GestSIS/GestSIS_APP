@@ -50,7 +50,7 @@ const controleMedical = computed(() => controleMedicalStore.active.data);
 const medecins = computed(() => medecinStore.liste);
 const sapeurs = computed(() =>
   sapeurStore.liste
-    .filter((s) => s.type === 0 && parseInt(s.actif))
+    .filter((s) => s.type === 0 && s.actif)
     .map((s) => {
       const age = Math.floor(
         (new Date() - new Date(s?.date_naissance || 0).getTime()) /

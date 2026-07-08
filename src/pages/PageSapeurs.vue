@@ -108,7 +108,7 @@ watchEffect(() => {
 const filter = ref('actif');
 const filters = ref({
   actif: (s) => s.actif,
-  inactif: (s) => s.actif,
+  inactif: (s) => !s.actif,
   all: () => true,
 });
 const eventListener = ref(null);
