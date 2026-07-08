@@ -107,8 +107,8 @@ watchEffect(() => {
 
 const filter = ref('actif');
 const filters = ref({
-  actif: (s) => parseInt(s.actif) === 1,
-  inactif: (s) => parseInt(s.actif) === 0,
+  actif: (s) => s.actif,
+  inactif: (s) => s.actif,
   all: () => true,
 });
 const eventListener = ref(null);
@@ -132,10 +132,7 @@ eventListener.value = (e) => {
 
 onMounted(() => {
   listeSapeurComponent.value.addEventListener('keydown', eventListener.value);
-  listeSapeurComponent.value.addEventListener(
-    'keyup',
-    navigationEventListener,
-  );
+  listeSapeurComponent.value.addEventListener('keyup', navigationEventListener);
 });
 
 const { confirm, showModal, closeModal } = useModalStore();
