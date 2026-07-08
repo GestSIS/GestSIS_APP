@@ -66,8 +66,6 @@ const estSapeur = computed(() => {
                   class="form-check-input"
                   type="checkbox"
                   role="switch"
-                  :true-value="1"
-                  :false-value="0"
                 />
                 <label class="form-check-label" for="civilActif">Actif</label>
               </div>
@@ -107,8 +105,6 @@ const estSapeur = computed(() => {
                 name="actif"
                 class="form-check-input"
                 disabled
-                :true-value="1"
-                :false-value="0"
               />
               <label for="actif">Actif</label>
               <font-awesome-icon

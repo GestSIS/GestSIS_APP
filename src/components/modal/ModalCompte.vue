@@ -63,8 +63,8 @@ const save = async () => {
         class="mb-3"
         label="Type comptable"
         :options="[
-          { id: 0, designation: 'Charge' },
-          { id: 1, designation: 'Produit' },
+          { id: false, designation: 'Charge' },
+          { id: true, designation: 'Produit' },
         ]"
       />
     </div>

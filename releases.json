@@ -1,7 +1,32 @@
 {
   "releases": [
     {
-      "date": "23.06.2026",
+      "date": "02.07.2027",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.6.8",
+      "changes": [
+        "Correction d'un bug dans les exercices contenant des sapeurs inactifs"
+      ]
+    },
+    {
+      "date": "02.07.2027",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.6.7",
+      "changes": [
+        "Correction d'un bug de synchronisation pour les rapports d'intervention créé depuis un rapport d'engagement (RTA)"
+      ]
+    },
+    {
+      "date": "02.07.2026",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.6.6",
+      "changes": [
+        "Correction de la date d'affichage des exercices",
+        "Correction d'un bug pour la saisie des présences aux exercices"
+      ]
+    },
+    {
+      "date": "01.07.2026",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [

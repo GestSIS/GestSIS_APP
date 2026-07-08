@@ -112,11 +112,7 @@ const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {
     return;
   }
-  const statutsClass = {
-    0: 'text-danger', //'inactif',
-    1: '', //'Actif',
-  };
-  return statutsClass[dataItem.actif];
+  return dataItem.actif ? '' : 'text-danger';
 };
 
 const detailRowOptions = {
