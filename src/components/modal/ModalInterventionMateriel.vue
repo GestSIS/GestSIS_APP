@@ -13,12 +13,23 @@ const { data } = defineProps({
 
 const materielStore = useMaterielStore();
 const interventionStore = useInterventionStore();
-const listeMateriels = computed(() => materielStore.liste);
 
 const errors = ref({});
 const form = reactive({
   intervention_id: interventionStore.active.id,
   ...data,
+});
+
+const listeMateriels = computed(() => {
+  // En modification le choix du matériel est verrouillé : liste complète pour que le matériel courant reste affiché
+  if (form.id) {
+    return materielStore.liste;
+  }
+  // En ajout, ne proposer que les matériels pas encore attribués à l'intervention
+  const dejaAttribues = new Set(
+    interventionStore.active.materiels.map((m) => m.materiel_id),
+  );
+  return materielStore.liste.filter((m) => !dejaAttribues.has(m.id));
 });
 
 const { closeModal } = useModalStore();
