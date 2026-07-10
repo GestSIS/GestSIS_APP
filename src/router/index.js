@@ -958,6 +958,12 @@ const router = createRouter({
               beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
               component: () => import("/src/components/parametres/ParametreTuyauDiametre.vue"),
             },
+            {
+              path: "controles",
+              name: "param-materiel-controles",
+              beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
+              component: () => import("/src/components/parametres/ParametreControles.vue"),
+            },
           ],
         },
         {

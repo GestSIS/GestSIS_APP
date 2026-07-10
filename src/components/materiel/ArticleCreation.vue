@@ -41,6 +41,9 @@ const afficherColoneVehicule = computed(() =>
 const afficherColoneEmplacement = computed(() =>
   articles.value.some((a) => indexedTypes.value[a.materiel_type_id]?.est_emplacement),
 );
+const afficherColoneFabrication = computed(() =>
+  articles.value.some((a) => indexedTypes.value[a.materiel_type_id]?.est_perimable),
+);
 
 const articleReference = useTemplateRef(`articles-reference`);
 const addEmptyLine = () => {
@@ -75,6 +78,7 @@ const addEmptyLine = () => {
         <th v-if="afficherColoneQuantite" class="col-1">Quantité</th>
         <th v-if="afficherColoneNumero" class="col-1">Est etiqueté</th>
         <th v-if="afficherColoneTaille" class="col-1">Taille</th>
+        <th v-if="afficherColoneFabrication" class="col-1">Fabrication</th>
         <th class="col-1">Achat</th>
         <th>Remarque</th>
         <th class="col-1"></th>
@@ -218,6 +222,24 @@ const addEmptyLine = () => {
             :icon="['far', 'circle-question']"
           />
         </td>
+        <td v-if="afficherColoneFabrication">
+          <input
+            v-if="indexedTypes[item.materiel_type_id]?.est_perimable"
+            :value="item.date_fabrication?.slice(0, 7)"
+            :required="true"
+            class="form-control form-control-sm"
+            type="month"
+            @change="
+              item.date_fabrication = $event.target.value ? `${$event.target.value}-01` : null
+            "
+          />
+          <font-awesome-icon
+            v-else
+            v-tooltip.bottom="'Uniquement pour le matériel périmable'"
+            class="ms-4"
+            :icon="['far', 'circle-question']"
+          />
+        </td>
         <td>
           <input v-model="item.achat" class="form-control form-control-sm" type="text" />
         </td>
@@ -233,12 +255,13 @@ const addEmptyLine = () => {
       <tr>
         <td
           :colspan="
-            12 -
+            13 -
             (afficherColoneNumero ? 1 : 0) -
             (afficherColoneTaille ? 1 : 0) -
             (afficherColoneQuantite ? 1 : 0) -
             (afficherColoneVehicule ? 3 : 0) -
-            (afficherColoneEmplacement ? 2 : 0)
+            (afficherColoneEmplacement ? 2 : 0) -
+            (afficherColoneFabrication ? 1 : 0)
           "
         >
           <button class="btn btn-outline-primary" @click="addEmptyLine">

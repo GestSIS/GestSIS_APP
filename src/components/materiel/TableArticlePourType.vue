@@ -9,7 +9,15 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import useHasPermission from "../../composables/usePermission.js";
 import permissions from "../../composables/permissions.js";
 
-const { loading, articles, materielType, avecEmplacement, emplacement, refresh } = defineProps({
+const {
+  loading,
+  articles,
+  materielType,
+  avecEmplacement,
+  emplacement,
+  controlesApplicables,
+  refresh,
+} = defineProps({
   loading: {
     type: Boolean,
     required: true,
@@ -34,6 +42,10 @@ const { loading, articles, materielType, avecEmplacement, emplacement, refresh }
     type: Object,
     required: true,
   },
+  controlesApplicables: {
+    type: Array,
+    default: () => [],
+  },
   refresh: {
     type: Function,
     required: true,
@@ -44,6 +56,19 @@ const couleurStore = useCouleurStore();
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
+
+const datePeremption = (article) => {
+  if (!article.date_fabrication || !materielType.duree_peremption) {
+    return null;
+  }
+  const date = new Date(article.date_fabrication);
+  date.setMonth(date.getMonth() + materielType.duree_peremption);
+  return date;
+};
+const estPerime = (article) => {
+  const date = datePeremption(article);
+  return date !== null && date < new Date();
+};
 
 const colonnes = computed(() => [
   ...(materielType.est_numerote ? [{ title: "Numéro", key: "numero" }] : []),
@@ -62,6 +87,9 @@ const colonnes = computed(() => [
     : []),
   ...(materielType.est_taillee ? [{ title: "Taille", key: "taille" }] : []),
   ...(materielType.est_lavable ? [{ title: "Lavages", key: "nbLavages", slot: "lavages" }] : []),
+  ...(materielType.est_perimable
+    ? [{ title: "Péremption", key: "date_fabrication", slot: "peremption" }]
+    : []),
   { title: "Remarque", key: "remarque" },
   { title: "Ajouté", key: "created_at", type: "date" },
   // { title: 'Inventaire', key: 'inventaire' },
@@ -100,6 +128,13 @@ const attribuerMateriel = (materiel) =>
     callback: refresh,
   });
 
+const controlerMateriel = (materiel) =>
+  showModal({
+    component: "ModalControleExec",
+    data: materiel,
+    callback: refresh,
+  });
+
 const supprimer = (article) =>
   confirm(
     "Voulez-vous vraiment supprimer cet article ?",
@@ -131,6 +166,18 @@ const supprimer = (article) =>
           >{{ e.designation }}</tag-couleur
         >
       </div>
+    </template>
+
+    <template #peremption="{ rowData }">
+      <span
+        v-if="datePeremption(rowData)"
+        class="badge"
+        :class="estPerime(rowData) ? 'bg-danger' : 'bg-secondary'"
+      >
+        {{
+          datePeremption(rowData).toLocaleDateString("fr-CH", { year: "numeric", month: "2-digit" })
+        }}
+      </span>
     </template>
 
     <template #lavages="{ rowData }">
@@ -176,6 +223,14 @@ const supprimer = (article) =>
         @click="attribuerMateriel(rowData)"
       >
         <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
+      </button>
+      <button
+        v-if="hasEditPermission && controlesApplicables.length > 0"
+        title="Contrôler"
+        class="btn btn-outline-success border-0"
+        @click="controlerMateriel(rowData)"
+      >
+        <font-awesome-icon :icon="['far', 'clipboard']" />
       </button>
       <button
         v-if="hasEditPermission"

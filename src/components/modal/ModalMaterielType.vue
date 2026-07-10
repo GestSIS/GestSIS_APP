@@ -22,6 +22,7 @@ const activeItem = ref({
   est_taillee: false,
   est_lavable: false,
   a_batterie: false,
+  est_perimable: false,
   ...data,
   tuyau: data?.tuyau ?? {
     separement: true,
@@ -171,6 +172,24 @@ const save = async () => {
                 type="text"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['prefix'] }"
+              />
+            </div>
+            <base-checkbox
+              v-model="activeItem.est_perimable"
+              :class="activeItem.est_perimable ? 'mb-3' : 'mb-0'"
+              label="Est périmable"
+            />
+            <div v-if="activeItem.est_perimable" class="mb-0">
+              <label for="duree_peremption">Durée de péremption (mois)</label>
+              <input
+                id="duree_peremption"
+                v-model="activeItem.duree_peremption"
+                required
+                min="1"
+                step="1"
+                type="number"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['duree_peremption'] }"
               />
             </div>
           </fieldset>

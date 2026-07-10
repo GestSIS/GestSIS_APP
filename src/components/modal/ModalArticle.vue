@@ -267,6 +267,20 @@ const save = async () => {
             :class="{ 'is-invalid': errors['taille'] }"
           />
         </div>
+        <div v-if="type && type.est_perimable" class="mb-3">
+          <label for="date_fabrication">Fabrication</label>
+          <input
+            id="date_fabrication"
+            :value="form.date_fabrication?.slice(0, 7)"
+            required
+            type="month"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['date_fabrication'] }"
+            @change="
+              form.date_fabrication = $event.target.value ? `${$event.target.value}-01` : null
+            "
+          />
+        </div>
         <div class="mb-3">
           <label for="achat">Achat</label>
           <input
