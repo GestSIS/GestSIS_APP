@@ -14,9 +14,16 @@ const password = ref(null);
 const password_confirmation = ref(null);
 const token = ref(route.query?.token ?? '');
 const error = ref({});
+const submitting = ref(false);
 
-const register = async () =>
-  useAuthStore()
+const register = async () => {
+  // Empêche les envois en double (double-clic, réseau lent) qui provoquent
+  // une erreur de contrainte unique côté backend.
+  if (submitting.value) {
+    return;
+  }
+  submitting.value = true;
+  return useAuthStore()
     .register({
       name: name.value?.trim(),
       email: email.value?.trim(),
@@ -30,7 +37,11 @@ const register = async () =>
     })
     .catch((data) => {
       error.value = data.error;
+    })
+    .finally(() => {
+      submitting.value = false;
     });
+};
 </script>
 
 <template>
@@ -119,8 +130,12 @@ const register = async () =>
           />
         </div>
       </transition-expand>
-      <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">
-        Créer un compte
+      <button
+        class="btn btn-lg btn-primary btn-block mt-3"
+        type="submit"
+        :disabled="submitting"
+      >
+        {{ submitting ? 'Création…' : 'Créer un compte' }}
       </button>
       <p class="mt-5 mb-3 text-muted">
         © GestSIS {{ new Date().getFullYear() }}
