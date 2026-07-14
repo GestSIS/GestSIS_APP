@@ -95,7 +95,7 @@ const close = () => {
 <template>
   <form @submit.prevent="validate">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">S'excuser</h5>
+      <h5 class="modal-title">S'excuser</h5>
       <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">

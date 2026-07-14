@@ -29,7 +29,6 @@ onUnmounted(() => document.removeEventListener('keydown', escapeHandler));
     <!-- Modal -->
     <div
       v-if="modal.visible"
-      id="exampleModal"
       class="modal fade show d-block"
       tabindex="-1"
       role="dialog"

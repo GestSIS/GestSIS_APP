@@ -21,9 +21,7 @@ const { closeModal } = useModalStore();
 <template>
   <div>
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">
-        Absences ({{ data.absences.size }})
-      </h5>
+      <h5 class="modal-title">Absences ({{ data.absences.size }})</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">

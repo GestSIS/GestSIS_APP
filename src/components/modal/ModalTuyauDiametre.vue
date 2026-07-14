@@ -30,7 +30,7 @@ const save = async () => {
 <template>
   <div>
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">
+      <h5 class="modal-title">
         {{ activeItem.id ? 'Modifier' : 'Ajouter' }} un diamètre de tuyau
       </h5>
       <button type="button" class="btn-close" @click="closeModal"></button>

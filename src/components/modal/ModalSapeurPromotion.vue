@@ -35,7 +35,7 @@ const save = () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">Ajouter une promotion</h5>
+      <h5 class="modal-title">Ajouter une promotion</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">

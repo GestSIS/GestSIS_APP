@@ -49,9 +49,7 @@ const generer = () => {
 <template>
   <form @submit.prevent="generer">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">
-        Rapport d'intervention - Configuration
-      </h5>
+      <h5 class="modal-title">Rapport d'intervention - Configuration</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">

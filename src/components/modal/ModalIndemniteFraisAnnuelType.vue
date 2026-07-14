@@ -38,7 +38,7 @@ const save = () =>
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">
+      <h5 class="modal-title">
         {{ form.id ? 'Modifier' : 'Ajouter' }}
         {{
           form.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'

@@ -132,7 +132,7 @@ const save = () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">
+      <h5 class="modal-title">
         {{ form.id ? 'Modifier' : 'Ajouter' }} une indemnité pour cours
       </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>

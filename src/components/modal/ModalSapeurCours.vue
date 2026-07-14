@@ -67,8 +67,8 @@ if ((data.id || 0) === 0) {
             .filter((f) => f.fin === null)
             .filter(
               (f) =>
-                fonctions.value.find((e) => e.id == f.fonction_id)?.cumulable ===
-                0,
+                fonctions.value.find((e) => e.id == f.fonction_id)
+                  ?.cumulable === 0,
             );
           if (funcs.length > 0) {
             form.fonction_sapeur_id = funcs[0].id || 0;
@@ -107,7 +107,7 @@ const dateChange = () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">Saisie d'un cours</h5>
+      <h5 class="modal-title">Saisie d'un cours</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">

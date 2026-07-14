@@ -77,7 +77,7 @@ const resetSelection = () => {
 <template>
   <form @submit.prevent="convoquer">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">Convocations</h5>
+      <h5 class="modal-title">Convocations</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">

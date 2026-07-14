@@ -166,7 +166,7 @@ const formatType = (type) => {
 <template>
   <div>
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">Imputer l'exercice</h5>
+      <h5 class="modal-title">Imputer l'exercice</h5>
       <button type="button" class="btn-close" @click="cancel"></button>
     </div>
     <div class="modal-body">

@@ -44,7 +44,7 @@ const review = (accepte) => {
 <template>
   <form @submit.prevent="review(true)">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">Revue du travail</h5>
+      <h5 class="modal-title">Revue du travail</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">

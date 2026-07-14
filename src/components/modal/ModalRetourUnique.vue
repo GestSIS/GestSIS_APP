@@ -40,7 +40,7 @@ const save = async () => {
 <template>
   <div>
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">Retour matériel</h5>
+      <h5 class="modal-title">Retour matériel</h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">

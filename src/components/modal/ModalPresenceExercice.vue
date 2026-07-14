@@ -182,7 +182,7 @@ const downloadJustificatif = (sapeur) => {
 <template>
   <div>
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">
+      <h5 class="modal-title">
         Modifier présences de {{ sapeur?.nom_prenom }}
       </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>

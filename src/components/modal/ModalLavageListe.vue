@@ -41,7 +41,7 @@ const fields = [{ title: 'Date', key: 'date' }];
 <template>
   <div>
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">Ajouter des lavages</h5>
+      <h5 class="modal-title">Ajouter des lavages</h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">

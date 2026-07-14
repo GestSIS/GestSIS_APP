@@ -156,7 +156,7 @@ const fields = [
 <template>
   <form @submit.prevent="send">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">Convoquer par SMS</h5>
+      <h5 class="modal-title">Convoquer par SMS</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">

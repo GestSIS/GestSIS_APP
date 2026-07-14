@@ -72,7 +72,7 @@ const fieldsStep2 = [
 <template>
   <form @submit.prevent="importer">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">
+      <h5 class="modal-title">
         Importer des exercices depuis un autre exercice comptable
       </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>

@@ -217,7 +217,7 @@ const selectFonction = (state, fonctionId) => {
 <template>
   <div>
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">
+      <h5 class="modal-title">
         Suppression des groupes, exercices et fonctions
       </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>

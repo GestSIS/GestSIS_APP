@@ -45,8 +45,10 @@ const sapeurs = computed(() =>
   sapeurStore.liste.filter((s) => s.actif && s.type == 0),
 );
 
-const nbSelectedSapeurs = computed(() =>
-  Object.keys(selectedSapeurs.value).filter((s) => selectedSapeurs.value[s]).length,
+const nbSelectedSapeurs = computed(
+  () =>
+    Object.keys(selectedSapeurs.value).filter((s) => selectedSapeurs.value[s])
+      .length,
 );
 
 const { closeModal } = useModalStore();
@@ -138,7 +140,7 @@ const save = () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">
+      <h5 class="modal-title">
         {{ editMode ? 'Ajouter des présences' : 'Modifier une présence' }}
       </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>

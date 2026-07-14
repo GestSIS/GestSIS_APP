@@ -126,9 +126,7 @@ const resetSelection = () => {
 <template>
   <form @submit.prevent="creer">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">
-        Paramètres pour le décompte
-      </h5>
+      <h5 class="modal-title">Paramètres pour le décompte</h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">

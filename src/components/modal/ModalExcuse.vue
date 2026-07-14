@@ -58,9 +58,7 @@ const save = () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">
-        Sélectionner une excuse
-      </h5>
+      <h5 class="modal-title">Sélectionner une excuse</h5>
       <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
