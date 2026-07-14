@@ -55,37 +55,35 @@ const save = async () => {
 
 <template>
   <form @submit.prevent="save">
-    <div class="overflow-visible">
-      <div class="modal-header">
-        <h5 id="exampleModalLabel" class="modal-title">Ajouter des lavages</h5>
-        <button type="button" class="btn-close" @click="closeModal"></button>
-      </div>
-      <div class="modal-body overflow-visible">
-        <div class="row">
-          <div class="col-6 mb-3">
-            <label for="date">Date du lavage</label>
-            <input
-              id="date"
-              v-model="activeAttribution.date"
-              type="date"
-              class="form-control form-control-sm"
-              :class="{ 'is-invalid': errors['attributions.0.date'] }"
-            />
-          </div>
-          <div class="col-md-12">
-            <article-selecteur
-              v-model="activeAttribution.articles"
-              :articles="articlesLavable"
-            />
-          </div>
+    <div class="modal-header">
+      <h5 id="exampleModalLabel" class="modal-title">Ajouter des lavages</h5>
+      <button type="button" class="btn-close" @click="closeModal"></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-6 mb-3">
+          <label for="date">Date du lavage</label>
+          <input
+            id="date"
+            v-model="activeAttribution.date"
+            type="date"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['attributions.0.date'] }"
+          />
+        </div>
+        <div class="col-md-12">
+          <article-selecteur
+            v-model="activeAttribution.articles"
+            :articles="articlesLavable"
+          />
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" @click="closeModal">
-          Fermer
-        </button>
-        <button type="submit" class="btn btn-primary">Ajouter</button>
-      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" @click="closeModal">
+        Fermer
+      </button>
+      <button type="submit" class="btn btn-primary">Ajouter</button>
     </div>
   </form>
 </template>

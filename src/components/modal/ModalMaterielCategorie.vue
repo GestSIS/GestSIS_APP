@@ -40,46 +40,44 @@ const save = async () => {
 
 <template>
   <form @submit.prevent="save">
-    <div class="overflow-visible">
-      <div class="modal-header">
-        <h5 id="exampleModalLabel" class="modal-title">
-          {{ activeItem.id ? 'Modifier' : 'Ajouter' }} une catégorie
-        </h5>
-        <button type="button" class="btn-close" @click="closeModal"></button>
-      </div>
-      <div class="modal-body overflow-visible">
-        <div class="mb-3">
-          <label for="designation">Désignation</label>
-          <input
-            id="designation"
-            v-model="activeItem.designation"
-            required
-            type="text"
-            class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['designation'] }"
-          />
-        </div>
-        <!-- TODO: Migrer base-select afin de permettre la customization du contenu -->
-        <select-categorie
-          v-model="activeItem.parent_id"
-          label="Catégorie parente"
-          :categorie-id-to-ignore="activeItem.id"
-          class="mb-3"
-        />
-        <select-couleur
-          v-model="activeItem.couleur_id"
-          label="Couleur"
-          class="mb-3"
+    <div class="modal-header">
+      <h5 id="exampleModalLabel" class="modal-title">
+        {{ activeItem.id ? 'Modifier' : 'Ajouter' }} une catégorie
+      </h5>
+      <button type="button" class="btn-close" @click="closeModal"></button>
+    </div>
+    <div class="modal-body">
+      <div class="mb-3">
+        <label for="designation">Désignation</label>
+        <input
+          id="designation"
+          v-model="activeItem.designation"
+          required
+          type="text"
+          class="form-control form-control-sm"
+          :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" @click="closeModal">
-          Fermer
-        </button>
-        <button type="submit" class="btn btn-primary">
-          {{ activeItem.id ? 'Modifier' : 'Ajouter' }}
-        </button>
-      </div>
+      <!-- TODO: Migrer base-select afin de permettre la customization du contenu -->
+      <select-categorie
+        v-model="activeItem.parent_id"
+        label="Catégorie parente"
+        :categorie-id-to-ignore="activeItem.id"
+        class="mb-3"
+      />
+      <select-couleur
+        v-model="activeItem.couleur_id"
+        label="Couleur"
+        class="mb-3"
+      />
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" @click="closeModal">
+        Fermer
+      </button>
+      <button type="submit" class="btn btn-primary">
+        {{ activeItem.id ? 'Modifier' : 'Ajouter' }}
+      </button>
     </div>
   </form>
 </template>

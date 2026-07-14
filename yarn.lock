@@ -1796,7 +1796,7 @@ __metadata:
     vue-advanced-cropper: "npm:^2.8.9"
     vue-eslint-parser: "npm:^10.4.1"
     vue-router: "npm:^5.1.0"
-    vue3-select-component: "npm:^1.0.0"
+    vue3-select-component: "npm:^1.0.1"
   languageName: unknown
   linkType: soft
 
@@ -2573,9 +2573,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"reka-ui@npm:2.9.10":
-  version: 2.9.10
-  resolution: "reka-ui@npm:2.9.10"
+"reka-ui@npm:2.10.1":
+  version: 2.10.1
+  resolution: "reka-ui@npm:2.10.1"
   dependencies:
     "@floating-ui/dom": "npm:^1.6.13"
     "@floating-ui/vue": "npm:^1.1.6"
@@ -2589,7 +2589,7 @@ __metadata:
     ohash: "npm:^2.0.11"
   peerDependencies:
     vue: ">= 3.4.0"
-  checksum: 10/00d9739bd81c95939430d649e735f68b7782f49cc2703a2df942723bfa89a64faf22c1174375d1aff8ea5f72bd96b3e241a73a7890e197ae529a628d536660e0
+  checksum: 10/6332017fd0940baecb0c385f810af681397f1a41a663c70d7f290cf239cc16825d0b04321c2a3b06ac5c0f47d6d8c23d69f3146c8db8188cb6454efc5d4cbaae
   languageName: node
   linkType: hard
 
@@ -3023,14 +3023,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue3-select-component@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "vue3-select-component@npm:1.0.0"
+"vue3-select-component@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "vue3-select-component@npm:1.0.1"
   dependencies:
-    reka-ui: "npm:2.9.10"
+    reka-ui: "npm:2.10.1"
   peerDependencies:
     vue: ^3.5.0
-  checksum: 10/6eb6d78d10eda5cf5103bf28b16dcc0b3aac30097cbc912427456ea1dd51d60f1592024b8105aa5a2756a56d176a9e23485d505ea87d64d73407d7354c904cf5
+  checksum: 10/8dbb51f33146f74ece8aa8445a3bf52437187da94f459c9a64d3b33a224bbf025204132d9b7a1bbd1a7c75058505d9d933584a4eb2b4f9c5eb88a3eeeb57698b
   languageName: node
   linkType: hard
 

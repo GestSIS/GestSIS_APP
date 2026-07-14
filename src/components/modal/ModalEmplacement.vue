@@ -33,20 +33,20 @@ const save = async () => {
       (errors) =>
         (errors = {
           ...errors,
-        })
+        }),
     );
 };
 </script>
 
 <template>
-  <form class="overflow-visible" @submit.prevent="save">
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">
         {{ form.id ? 'Modifier' : 'Ajouter' }} un emplacement
       </h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
-    <div class="modal-body overflow-visible">
+    <div class="modal-body">
       <div class="mb-3">
         <label for="designation">Désignation</label>
         <input

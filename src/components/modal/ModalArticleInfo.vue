@@ -39,14 +39,14 @@ const fields = [
 </script>
 
 <template>
-  <div class="overflow-visible">
+  <div>
     <div class="modal-header">
-      <h5 id="exampleModalLabel" class="modal-title">
+      <h5 class="modal-title">
         {{ activeItem.id ? 'Modifier' : 'Ajouter' }} un article
       </h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
-    <div class="modal-body overflow-visible">
+    <div class="modal-body">
       <div class="row">
         <div class="col-8">
           <base-select

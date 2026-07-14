@@ -38,12 +38,12 @@ const save = async () => {
 </script>
 
 <template>
-  <div class="overflow-visible">
+  <div>
     <div class="modal-header">
       <h5 id="exampleModalLabel" class="modal-title">Retour matériel</h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
-    <div class="modal-body overflow-visible">
+    <div class="modal-body">
       <div class="mb-3">
         <label for="date">Date du retour</label>
         <input

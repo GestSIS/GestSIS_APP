@@ -131,7 +131,7 @@ const selectMaterielTypeNumerote = (item, value) => {
 </script>
 
 <template>
-  <table class="table table-sm overflow-visible">
+  <table class="table table-sm">
     <thead>
       <tr>
         <th class="col-4">Matériel type</th>
@@ -150,7 +150,7 @@ const selectMaterielTypeNumerote = (item, value) => {
         </td>
       </tr>
     </tbody>
-    <tbody v-else class="overflow-visible">
+    <tbody v-else>
       <tr v-for="(item, index) in selectedArticles" :key="index">
         <td>
           <base-select
@@ -217,10 +217,7 @@ const selectMaterielTypeNumerote = (item, value) => {
                       v-for="article in [articleParId(sel.value)]"
                       :key="article?.id"
                     >
-                      <span
-                        v-if="article?.sapeur_id"
-                        class="badge bg-primary"
-                      >
+                      <span v-if="article?.sapeur_id" class="badge bg-primary">
                         {{ indexedSapeurs[article.sapeur_id]?.nom_prenom }}
                       </span>
                       <tag-couleur
