@@ -47,8 +47,8 @@ const save = async () => {
             <tr>
               <td>
                 <input
-                  required
                   v-model="form[index]"
+                  required
                   type="adresse"
                   class="form-control form-control-sm"
                 />

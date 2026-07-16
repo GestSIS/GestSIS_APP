@@ -11,16 +11,16 @@ const props = defineProps({
 
 <template>
   <FontAwesomeIcon
-    :icon="['far', 'house']"
     v-if="props.moyenContact.type === 'Privé'"
+    :icon="['far', 'house']"
   />
   <FontAwesomeIcon
-    :icon="['fas', 'mobile-screen']"
     v-else-if="props.moyenContact.type === 'Mobile'"
+    :icon="['fas', 'mobile-screen']"
   />
   <FontAwesomeIcon
-    :icon="['fas', 'industry']"
     v-else-if="props.moyenContact.type === 'Prof'"
+    :icon="['fas', 'industry']"
   />
   {{ formatPhoneNumber(props.moyenContact.numero || '') }}
 </template>

@@ -83,7 +83,7 @@ const copyToClipboard = (text) => {
       </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
-    <div class="modal-body" v-if="token">
+    <div v-if="token" class="modal-body">
       <div class="alert alert-info">
         <p>
           Voici votre jeton d'API, il ne vous sera plus jamais affiché. Veuillez
@@ -112,7 +112,7 @@ const copyToClipboard = (text) => {
         </button>
       </div>
     </div>
-    <div class="modal-body" v-if="!token">
+    <div v-if="!token" class="modal-body">
       <div class="mb-3">
         <label for="nom">Nom</label>
         <input
@@ -150,7 +150,7 @@ const copyToClipboard = (text) => {
           <span class="input-group-text">jours</span>
         </div>
       </div>
-      <div class="mb-3" v-if="!hasSingleSis">
+      <div v-if="!hasSingleSis" class="mb-3">
         <label for="designation">Sis</label>
         <div v-for="sis in sisListe" :key="sis.id" class="form-check">
           <input

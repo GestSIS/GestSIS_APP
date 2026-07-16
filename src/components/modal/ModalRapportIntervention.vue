@@ -97,9 +97,9 @@ const generer = () => {
       </div>
       <div class="form-check">
         <input
-          :disabled="form.presences"
           id="presencesResume"
           v-model="form.presencesResume"
+          :disabled="form.presences"
           type="checkbox"
           class="form-check-input"
         />

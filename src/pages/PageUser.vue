@@ -156,7 +156,7 @@ const fields = [
         </div>
       </div>
       <div class="col-sm-12 col-xl-9">
-        <form @submit="changerMotDePasse" v-if="tab == 'password'">
+        <form v-if="tab == 'password'" @submit="changerMotDePasse">
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h3>Changer mon mot de passe</h3>
@@ -216,7 +216,7 @@ const fields = [
           </div>
         </form>
 
-        <form @submit="utiliserJeton" v-if="tab == 'permissions'">
+        <form v-if="tab == 'permissions'" @submit="utiliserJeton">
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h3>Utiliser un jeton de permissions</h3>
@@ -238,8 +238,8 @@ const fields = [
           </div>
         </form>
         <div
-          class="card card-primary card-outline mb-2"
           v-if="tab == 'permissions'"
+          class="card card-primary card-outline mb-2"
         >
           <div class="card-header d-flex justify-content-between">
             <h3>Recharger mes permissions</h3>
@@ -252,8 +252,8 @@ const fields = [
         </div>
 
         <div
-          class="card card-primary card-outline mb-2"
           v-if="tab == 'api-tokens'"
+          class="card card-primary card-outline mb-2"
         >
           <div class="card-header d-flex justify-content-between">
             <h3>Jetons d'APIs</h3>
@@ -267,7 +267,7 @@ const fields = [
             :loading="loading"
             no-data="Aucun jeton d'API"
             :selectable="true"
-            :rowClass="rowClass"
+            :row-class="rowClass"
           >
             <template #actions="{ rowData }">
               <button

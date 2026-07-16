@@ -82,9 +82,9 @@ const types = [
       <div class="mb-3">
         <label for="agriculteur">Agriculteur</label>
         <input
-          required
           id="agriculteur"
           v-model="form.agriculteur"
+          required
           type="text"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['agriculteur'] }"
@@ -101,10 +101,10 @@ const types = [
         />
       </div>
       <base-select
+        v-model="form.communes"
         class="mb-3"
         label="Commune(s)"
         :options="communes"
-        v-model="form.communes"
       />
       <div class="mb-3">
         <label>Capacités</label>
@@ -120,8 +120,8 @@ const types = [
               <td>
                 <div class="input-group input-group-sm">
                   <input
-                    required
                     v-model="capacite.capacite"
+                    required
                     type="adresse"
                     class="form-control form-control-sm"
                     :class="{
@@ -181,8 +181,8 @@ const types = [
               </td>
               <td>
                 <input
-                  required
                   v-model="moyenContact.numero"
+                  required
                   placeholder="+41 ..."
                   type="adresse"
                   class="form-control form-control-sm"

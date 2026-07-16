@@ -80,11 +80,11 @@ const fields = [
             rowData.fin ? new Date(rowData.fin).toLocaleDateString('fr-CH') : ''
           }}
           <font-awesome-icon
-            class="text-danger"
             v-if="rowData.fin === null && !rowData.actif"
             v-tooltip.bottom="
               'Fonction inactive, vous devriez mettre une date de fin à cette fonction !'
             "
+            class="text-danger"
             :icon="['fas', 'info-circle']"
           />
         </template>

@@ -315,8 +315,8 @@ const addSapeurs = (node) => {
               <label for="abreviation">No</label>
               <input
                 id="no"
-                maxlength="10"
                 v-model="groupeEdit.no"
+                maxlength="10"
                 class="form-control form-control-sm"
                 :class="{ 'is-invalid': errors['no'] }"
               />

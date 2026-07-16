@@ -183,7 +183,7 @@ const fields = [
                     v-for="contact in rowData.moyens_contact"
                     :key="contact.id"
                   >
-                    <MoyenContact :moyenContact="contact" />
+                    <MoyenContact :moyen-contact="contact" />
                   </li>
                 </ol>
               </template>
@@ -205,8 +205,8 @@ const fields = [
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
                 <button
-                  type="button"
                   v-if="agriculteurs[0].id !== rowData.id"
+                  type="button"
                   class="btn btn-sm btn-outline-primary border-0"
                   aria-label="Déplacer vers le haut"
                   @click="reorder(rowData, rowData.tri - 1)"
