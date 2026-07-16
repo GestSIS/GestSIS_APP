@@ -76,7 +76,7 @@ const sorted = ref({
 });
 const selected = ref(null);
 const detailsRowVisibility = ref(
-  lots["detail-row"] ? Object.fromEntries(data.map((d) => [d[selectKey], false])) : {},
+  slots["detail-row"] ? Object.fromEntries(data.map((d) => [d[selectKey], false])) : {},
 );
 const defaultFormatter = (e) => e;
 
