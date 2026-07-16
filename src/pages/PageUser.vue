@@ -1,20 +1,20 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useAuthStore } from '../stores/auth/Auth';
-import useNotification from '../composables/useNotification.js';
-import { useModalStore } from '../stores/common/Modal';
+import { computed, ref } from "vue";
+import { useAuthStore } from "../stores/auth/Auth";
+import useNotification from "../composables/useNotification.js";
+import { useModalStore } from "../stores/common/Modal";
 
-const jeton = ref('');
-const oldPassword = ref('');
-const newPassword = ref('');
-const newPasswordRepeated = ref('');
+const jeton = ref("");
+const oldPassword = ref("");
+const newPassword = ref("");
+const newPasswordRepeated = ref("");
 const errors = ref({});
-const tab = ref('password');
+const tab = ref("password");
 
 const loading = ref(false);
 const { showModal, confirm } = useModalStore();
 
-const ajouter = () => showModal('ModalApiToken');
+const ajouter = () => showModal("ModalApiToken");
 
 const authStore = useAuthStore();
 Promise.all([authStore.loadApiToken(), authStore.fetchPermissions()])
@@ -23,30 +23,26 @@ Promise.all([authStore.loadApiToken(), authStore.fetchPermissions()])
 
 const apiTokens = computed(() => authStore.apiTokens);
 
-const isPasswordIdentical = computed(
-  () => newPassword.value === newPasswordRepeated.value,
-);
+const isPasswordIdentical = computed(() => newPassword.value === newPasswordRepeated.value);
 const awn = useNotification();
 
 const refreshTokens = async () => {
   authStore
     .refreshToken()
-    .then(() => awn.success('Permissions rechargées'))
-    .catch(() =>
-      awn.alert('Vous avez été déconnecté, veuillez-vous reconnecter'),
-    );
+    .then(() => awn.success("Permissions rechargées"))
+    .catch(() => awn.alert("Vous avez été déconnecté, veuillez-vous reconnecter"));
 };
 const utiliserJeton = async () => {
   if (!jeton.value) {
-    awn.alert('Jeton invalide');
+    awn.alert("Jeton invalide");
   } else {
     authStore
       .useToken(jeton.value)
       .then((message) => {
-        awn.success(message || 'Jeton enregistré avec succès');
-        jeton.value = '';
+        awn.success(message || "Jeton enregistré avec succès");
+        jeton.value = "";
       })
-      .catch((e) => awn.alert(e?.message || 'Jeton déjà utilisé ou invalide.'));
+      .catch((e) => awn.alert(e?.message || "Jeton déjà utilisé ou invalide."));
   }
 };
 
@@ -62,12 +58,12 @@ const changerMotDePasse = async () => {
       newPassword: newPassword.value,
     })
     .then((response) => {
-      awn.success(response?.message || 'Mot de passe mis à jour');
-      oldPassword.value = '';
-      newPassword.value = '';
-      newPasswordRepeated.value = '';
+      awn.success(response?.message || "Mot de passe mis à jour");
+      oldPassword.value = "";
+      newPassword.value = "";
+      newPasswordRepeated.value = "";
     })
-    .catch((e) => awn.alert(e?.message || 'Mot de passe incorrect'));
+    .catch((e) => awn.alert(e?.message || "Mot de passe incorrect"));
 };
 
 const deleteApiToken = async (id) =>
@@ -83,21 +79,21 @@ const deleteApiToken = async (id) =>
 
 const rowClass = (jeton) => {
   if (new Date(jeton.expires_at) < new Date()) {
-    return 'table-danger';
+    return "table-danger";
   }
   // Si expiration dans moins de 7 jours
   if (new Date(jeton.expires_at) - new Date() <= 7 * 24 * 3600 * 1000) {
-    return 'table-warning';
+    return "table-warning";
   }
 };
 
 const fields = [
-  { title: 'Nom', key: 'name' },
-  { title: 'Description', key: 'description' },
-  { title: 'Créé le', key: 'created_at', type: Date },
-  { title: 'Dernière utilisation', key: 'last_used_at', type: 'datetime' },
-  { title: 'Expire le', key: 'expires_at', type: Date },
-  { title: 'Actions', key: 'id', slot: 'actions' },
+  { title: "Nom", key: "name" },
+  { title: "Description", key: "description" },
+  { title: "Créé le", key: "created_at", type: Date },
+  { title: "Dernière utilisation", key: "last_used_at", type: "datetime" },
+  { title: "Expire le", key: "expires_at", type: Date },
+  { title: "Actions", key: "id", slot: "actions" },
 ];
 </script>
 
@@ -110,9 +106,7 @@ const fields = [
             <li class="breadcrumb-item">
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Paramètres utilisateur
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Paramètres utilisateur</li>
           </ol>
         </nav>
       </div>
@@ -123,11 +117,7 @@ const fields = [
           <div class="card-header d-flex justify-content-between">
             <h3 class="card-title">Paramètres</h3>
           </div>
-          <nav
-            class="nav flex-column nav-pills"
-            role="tablist"
-            aria-orientation="vertical"
-          >
+          <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
             <a
               class="nav-link"
               :class="{ active: tab === 'password' }"
@@ -187,15 +177,11 @@ const fields = [
                   class="form-control form-control-sm"
                   :class="{ 'is-invalid': errors.password }"
                 />
-                <div v-if="errors.password" class="invalid-feedback">
-                  Taille minimum: 12
-                </div>
+                <div v-if="errors.password" class="invalid-feedback">Taille minimum: 12</div>
               </div>
 
               <div class="mb-3">
-                <label for="new-password-repeated"
-                  >Répéter le nouveau mot de passe</label
-                >
+                <label for="new-password-repeated">Répéter le nouveau mot de passe</label>
                 <input
                   id="newPasswordRepeated"
                   v-model="newPasswordRepeated"
@@ -237,29 +223,19 @@ const fields = [
             </div>
           </div>
         </form>
-        <div
-          v-if="tab == 'permissions'"
-          class="card card-primary card-outline mb-2"
-        >
+        <div v-if="tab == 'permissions'" class="card card-primary card-outline mb-2">
           <div class="card-header d-flex justify-content-between">
             <h3>Recharger mes permissions</h3>
           </div>
           <div class="card-body">
-            <button class="btn btn-primary" @click="refreshTokens">
-              Charger
-            </button>
+            <button class="btn btn-primary" @click="refreshTokens">Charger</button>
           </div>
         </div>
 
-        <div
-          v-if="tab == 'api-tokens'"
-          class="card card-primary card-outline mb-2"
-        >
+        <div v-if="tab == 'api-tokens'" class="card card-primary card-outline mb-2">
           <div class="card-header d-flex justify-content-between">
             <h3>Jetons d'APIs</h3>
-            <button class="btn btn-outline-primary" @click="ajouter">
-              Ajouter
-            </button>
+            <button class="btn btn-outline-primary" @click="ajouter">Ajouter</button>
           </div>
           <base-table
             :fields="fields"
@@ -270,10 +246,7 @@ const fields = [
             :row-class="rowClass"
           >
             <template #actions="{ rowData }">
-              <button
-                class="btn btn-sm btn-outline-danger"
-                @click="deleteApiToken(rowData.id)"
-              >
+              <button class="btn btn-sm btn-outline-danger" @click="deleteApiToken(rowData.id)">
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </template>

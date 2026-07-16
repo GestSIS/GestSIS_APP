@@ -1,46 +1,46 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getExercices(exerciceComptableId) {
-    return Api.api().get('/exercices', {
+    return Api.api().get("/exercices", {
       params: { exercice_comptable_id: exerciceComptableId },
     });
   },
   getAbsences(exerciceComptableId) {
-    return Api.api().get('/exercices-absences/' + exerciceComptableId);
+    return Api.api().get("/exercices-absences/" + exerciceComptableId);
   },
   getExercice(exerciceId) {
-    return Api.api().get('/exercices/' + exerciceId);
+    return Api.api().get("/exercices/" + exerciceId);
   },
   getSapeurs(exerciceId) {
-    return Api.api().get('/exercices/' + exerciceId + '/sapeurs');
+    return Api.api().get("/exercices/" + exerciceId + "/sapeurs");
   },
   getSms(exerciceId) {
-    return Api.api().get('/exercices/' + exerciceId + '/sms');
+    return Api.api().get("/exercices/" + exerciceId + "/sms");
   },
   createExercice(exerciceData) {
-    return Api.api().post('/exercices', exerciceData);
+    return Api.api().post("/exercices", exerciceData);
   },
   deleteExercice(exerciceId) {
-    return Api.api().delete('/exercices/' + exerciceId);
+    return Api.api().delete("/exercices/" + exerciceId);
   },
   cancelExercice(exerciceId) {
-    return Api.api().post('/exercices/' + exerciceId + '/annuler');
+    return Api.api().post("/exercices/" + exerciceId + "/annuler");
   },
   reactivateExercice(exerciceId) {
-    return Api.api().post('/exercices/' + exerciceId + '/reactiver');
+    return Api.api().post("/exercices/" + exerciceId + "/reactiver");
   },
   validerExercice(exerciceId) {
-    return Api.api().post('/exercices/' + exerciceId + '/valider');
+    return Api.api().post("/exercices/" + exerciceId + "/valider");
   },
   saveExercice(exerciceId, exerciceData) {
-    return Api.api().put('/exercices/' + exerciceId, exerciceData);
+    return Api.api().put("/exercices/" + exerciceId, exerciceData);
   },
   addSapeurs(exercieId, sapeursData) {
-    return Api.api().post('/exercices/' + exercieId + '/sapeurs', sapeursData);
+    return Api.api().post("/exercices/" + exercieId + "/sapeurs", sapeursData);
   },
   removeSapeurs(exercieId, sapeursIds) {
-    return Api.api().delete('/exercices/' + exercieId + '/sapeurs', {
+    return Api.api().delete("/exercices/" + exercieId + "/sapeurs", {
       data: sapeursIds,
     });
   },
@@ -48,52 +48,44 @@ export default {
   editPresence(presenceId, presence) {
     const form = new FormData();
     Object.entries(presence).forEach(([k, v]) => form.append(k, v));
-    return Api.api().post('/exercices/presence/' + presenceId, form, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+    return Api.api().post("/exercices/presence/" + presenceId, form, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
   },
   addHeure(heure) {
-    return Api.api().post('/exercices/heures', heure);
+    return Api.api().post("/exercices/heures", heure);
   },
   editHeure(heure) {
-    return Api.api().put('/exercices/heures/' + heure.id, heure);
+    return Api.api().put("/exercices/heures/" + heure.id, heure);
   },
   removeHeure(heureId) {
-    return Api.api().delete('/exercices/heures/' + heureId);
+    return Api.api().delete("/exercices/heures/" + heureId);
   },
   createMonExcuse(exerciceId, excuse) {
     const form = new FormData();
     Object.entries(excuse).forEach(([k, v]) => form.append(k, v));
-    return Api.api().post('/mes-excuses/' + exerciceId, form, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+    return Api.api().post("/mes-excuses/" + exerciceId, form, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
   },
   removeMonExcuse(exerciceId) {
-    return Api.api().delete('/mes-excuses/' + exerciceId);
+    return Api.api().delete("/mes-excuses/" + exerciceId);
   },
   removeExcuse(exerciceId, sapeurId) {
-    return Api.api().delete(
-      '/exercices/' + exerciceId + '/excuses/' + sapeurId
-    );
+    return Api.api().delete("/exercices/" + exerciceId + "/excuses/" + sapeurId);
   },
   downloadMonExcuseJustificatif(exerciceId, filename) {
-    return Api.apiFileDownload(filename).get(
-      `/mes-excuses/${exerciceId}/justificatif`
-    );
+    return Api.apiFileDownload(filename).get(`/mes-excuses/${exerciceId}/justificatif`);
   },
   downloadExcuseJustificatif(exerciceId, sapeurId, filename) {
     return Api.apiFileDownload(filename).get(
-      `exercices/${exerciceId}/excuses/${sapeurId}/justificatif`
+      `exercices/${exerciceId}/excuses/${sapeurId}/justificatif`,
     );
   },
   downloadListPresence(exerciceId, filename) {
-    return Api.apiFileDownload(filename).get(
-      `/exercices/${exerciceId}/liste-presence`
-    );
+    return Api.apiFileDownload(filename).get(`/exercices/${exerciceId}/liste-presence`);
   },
   downloadListAppel(exerciceId, filename) {
-    return Api.apiFileDownload(filename).get(
-      `/exercices/${exerciceId}/liste-appel`
-    );
+    return Api.apiFileDownload(filename).get(`/exercices/${exerciceId}/liste-appel`);
   },
 };

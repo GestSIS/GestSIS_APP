@@ -31,12 +31,12 @@ const { steps, activeIndex } = defineProps({
 </template>
 
 <style scoped>
-.multisteps-form__panel[data-animation='scaleIn'] {
+.multisteps-form__panel[data-animation="scaleIn"] {
   -webkit-transform: scale(0.9);
   transform: scale(0.9);
 }
 
-.multisteps-form__panel[data-animation='scaleIn'].js-active {
+.multisteps-form__panel[data-animation="scaleIn"].js-active {
   transition-property: all;
   transition-duration: 0.2s;
   transition-timing-function: linear;
@@ -78,7 +78,7 @@ const { steps, activeIndex } = defineProps({
   display: block;
   width: 13px;
   height: 13px;
-  content: '';
+  content: "";
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%);
   transition:
@@ -109,7 +109,7 @@ const { steps, activeIndex } = defineProps({
   display: block;
   width: 100%;
   height: 2px;
-  content: '';
+  content: "";
   background-color: currentColor;
   z-index: 1;
 }

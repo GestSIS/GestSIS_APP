@@ -1,7 +1,7 @@
 <script setup>
-import { reactive, ref, computed } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useAuthStore } from '../../stores/auth/Auth.js';
+import { reactive, ref, computed } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useAuthStore } from "../../stores/auth/Auth.js";
 
 const { data } = defineProps({
   data: {
@@ -14,7 +14,7 @@ const authStore = useAuthStore();
 
 const errors = ref({});
 const form = reactive({
-  name: '',
+  name: "",
   roles: [],
   ...data,
 });
@@ -49,19 +49,15 @@ const save = () =>
             class="form-check-input"
             :value="role.id"
           />
-          <label class="form-check-label" :for="'r' + role.id">{{
-            role.nom
-          }}</label>
+          <label class="form-check-label" :for="'r' + role.id">{{ role.nom }}</label>
         </div>
         <div class="invalid-feedback" :class="{ 'd-block': errors['roles'] }">
-          {{ errors['roles'] }}
+          {{ errors["roles"] }}
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Annuler
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Annuler</button>
       <button type="submit" class="btn btn-primary">Enregistrer</button>
     </div>
   </form>

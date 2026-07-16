@@ -1,15 +1,15 @@
 <script setup>
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import MultiStep from '/src/components/base/MultiStep.vue';
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import MultiStep from "/src/components/base/MultiStep.vue";
+import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 
 const { callback, data } = defineProps({
   data: {
@@ -52,8 +52,7 @@ const computedIndemnites = computed(() => {
           compte: comptes.value.find((c) => c.id == e.compte_id)?.designation,
         })),
       ),
-    categorie: categories.value.find((e) => e.id == c.ecriture_categorie_id)
-      ?.designation,
+    categorie: categories.value.find((e) => e.id == c.ecriture_categorie_id)?.designation,
   }));
 });
 
@@ -73,7 +72,7 @@ const cancel = () => {
 };
 const imputer = () => {
   if (activeIndemnite.value === null) {
-    awn.warning('Veuillez sélectioner une indemnité type');
+    awn.warning("Veuillez sélectioner une indemnité type");
     return;
   }
 
@@ -90,42 +89,42 @@ const imputer = () => {
 };
 const formatType = (type) => {
   const mapping = {
-    0: 'Autre',
-    1: 'Solde',
-    2: 'Indemnité',
-    3: 'Frais forfaitaire',
-    4: 'Frais effectif',
-    5: 'Charges AVS/AC',
+    0: "Autre",
+    1: "Solde",
+    2: "Indemnité",
+    3: "Frais forfaitaire",
+    4: "Frais effectif",
+    5: "Charges AVS/AC",
   };
-  return mapping[type] || '';
+  return mapping[type] || "";
 };
 
 const fields = [
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Catégorie comptable', key: 'categorie' },
+  { title: "Désignation", key: "designation" },
+  { title: "Catégorie comptable", key: "categorie" },
 ];
 const detailRowOptions = {
   fields: [
     {
-      title: 'Type',
-      key: 'type',
+      title: "Type",
+      key: "type",
       formatter: (type) => {
         const mapping = {
-          0: 'Autre',
-          1: 'Solde',
-          2: 'Indemnité',
-          3: 'Frais forfaitaire',
-          4: 'Frais effectif',
-          5: 'Charges AVS/AC',
+          0: "Autre",
+          1: "Solde",
+          2: "Indemnité",
+          3: "Frais forfaitaire",
+          4: "Frais effectif",
+          5: "Charges AVS/AC",
         };
-        return mapping[type] || '';
+        return mapping[type] || "";
       },
     },
-    { title: 'Tarif', key: 'tarif' },
-    { title: 'Unité', key: 'unite' },
-    { title: 'Compte', key: 'compte' },
+    { title: "Tarif", key: "tarif" },
+    { title: "Unité", key: "unite" },
+    { title: "Compte", key: "compte" },
   ],
-  noData: 'Aucune indemnité',
+  noData: "Aucune indemnité",
 };
 </script>
 
@@ -136,10 +135,7 @@ const detailRowOptions = {
       <button type="button" class="btn-close" @click="cancel"></button>
     </div>
     <div class="modal-body">
-      <multi-step
-        :steps="['Type de frais', 'Résultat']"
-        :active-index="phase - 1"
-      />
+      <multi-step :steps="['Type de frais', 'Résultat']" :active-index="phase - 1" />
       <div v-if="phase === 1" class="row">
         <div class="col-12">
           <base-table
@@ -153,19 +149,13 @@ const detailRowOptions = {
             @selected="(indemnite) => selectIndemnite(indemnite)"
           >
             <template #detail-row="{ rowData }">
-              <generic-details-row
-                :options="detailRowOptions"
-                :row-data="rowData"
-              />
+              <generic-details-row :options="detailRowOptions" :row-data="rowData" />
             </template>
           </base-table>
         </div>
       </div>
       <div v-if="phase === 2">
-        <div
-          v-if="successMessageVisibility"
-          class="alert alert-dismissible alert-success"
-        >
+        <div v-if="successMessageVisibility" class="alert alert-dismissible alert-success">
           <button
             type="button"
             class="btn-close"
@@ -188,9 +178,7 @@ const detailRowOptions = {
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
               <td>{{ ecriture.designation }}</td>
               <td>
-                {{
-                  sapeurs.find((f) => f.id == ecriture.sapeur_id)?.nom_prenom
-                }}
+                {{ sapeurs.find((f) => f.id == ecriture.sapeur_id)?.nom_prenom }}
               </td>
               <td>{{ ecriture.quantite }}</td>
               <td>{{ ecriture.tarif }}</td>
@@ -203,7 +191,7 @@ const detailRowOptions = {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="cancel">
-        {{ phase === 1 ? 'Annuler' : 'Fermer' }}
+        {{ phase === 1 ? "Annuler" : "Fermer" }}
       </button>
       <button
         v-if="phase === 1"

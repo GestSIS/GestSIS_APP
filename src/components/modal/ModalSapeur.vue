@@ -1,9 +1,9 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useBaseDataStore } from '../../stores/common/BaseData.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { computed, reactive, ref } from "vue";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useBaseDataStore } from "../../stores/common/BaseData.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 
 const { callback } = defineProps({
   callback: {
@@ -15,17 +15,17 @@ const { callback } = defineProps({
 const errors = ref({});
 const form = reactive({
   type: 0,
-  nom: '',
-  prenom: '',
-  rue: '',
-  no_rue: '',
+  nom: "",
+  prenom: "",
+  rue: "",
+  no_rue: "",
   localite_id: null,
-  no_avs: '',
-  email: '',
-  date_naissance: '',
-  suffixe: '',
-  incorporation: '',
-  remarque: '',
+  no_avs: "",
+  email: "",
+  date_naissance: "",
+  suffixe: "",
+  incorporation: "",
+  remarque: "",
   civilite_id: null,
 });
 
@@ -38,12 +38,12 @@ const civilites = computed(() => baseDataStore.civilites);
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  console.log('Test');
+  console.log("Test");
   try {
     const data = await sapeurStore.createSapeur(form);
 
     const close = await (callback(data.id) ?? Promise.resolve());
-    console.log('close', close);
+    console.log("close", close);
     if (close ?? true) {
       closeModal();
     }
@@ -57,9 +57,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        Ajouter un {{ form.type == 0 ? 'sapeur' : 'civil' }}
-      </h5>
+      <h5 class="modal-title">Ajouter un {{ form.type == 0 ? "sapeur" : "civil" }}</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -218,9 +216,7 @@ const save = async () => {
         <div class="col-6">
           <label for="m-sap-suffixe">Suffixe</label>
           <font-awesome-icon
-            v-tooltip.bottom="
-              'Permet de différencier deux personnes ayant le même nom et prénom.'
-            "
+            v-tooltip.bottom="'Permet de différencier deux personnes ayant le même nom et prénom.'"
             class="ms-1"
             :icon="['far', 'question-circle']"
           />
@@ -264,13 +260,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="submit" class="btn btn-primary">Ajouter</button>
-      <button
-        type="button"
-        class="btn btn-outline-secondary"
-        @click="closeModal()"
-      >
-        Annuler
-      </button>
+      <button type="button" class="btn btn-outline-secondary" @click="closeModal()">Annuler</button>
     </div>
   </form>
 </template>

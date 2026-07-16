@@ -1,10 +1,10 @@
 <script setup>
-import { defineAsyncComponent, onMounted, onUnmounted } from 'vue';
-import { useModalStore } from '../stores/common/Modal';
+import { defineAsyncComponent, onMounted, onUnmounted } from "vue";
+import { useModalStore } from "../stores/common/Modal";
 
 const components = Object.fromEntries(
-  Object.entries(import.meta.glob('./modal/*.vue')).map(([key, value]) => {
-    const name = key.split('/').pop().replace('.vue', '');
+  Object.entries(import.meta.glob("./modal/*.vue")).map(([key, value]) => {
+    const name = key.split("/").pop().replace(".vue", "");
     return [name, defineAsyncComponent(value)];
   }),
 );
@@ -12,7 +12,7 @@ const components = Object.fromEntries(
 const modal = useModalStore();
 
 const escapeHandler = (e) => {
-  if (e.key === 'Escape' && modal.visible) {
+  if (e.key === "Escape" && modal.visible) {
     (modal.callback() ?? Promise.resolve()).then((close) => {
       if (close ?? true) {
         modal.closeModal();
@@ -20,19 +20,14 @@ const escapeHandler = (e) => {
     });
   }
 };
-onMounted(() => document.addEventListener('keydown', escapeHandler));
-onUnmounted(() => document.removeEventListener('keydown', escapeHandler));
+onMounted(() => document.addEventListener("keydown", escapeHandler));
+onUnmounted(() => document.removeEventListener("keydown", escapeHandler));
 </script>
 
 <template>
   <div>
     <!-- Modal -->
-    <div
-      v-if="modal.visible"
-      class="modal fade show d-block"
-      tabindex="-1"
-      role="dialog"
-    >
+    <div v-if="modal.visible" class="modal fade show d-block" tabindex="-1" role="dialog">
       <div
         class="modal-dialog modal-dialog-scrollable"
         :class="
@@ -57,10 +52,6 @@ onUnmounted(() => document.removeEventListener('keydown', escapeHandler));
       </div>
     </div>
     <!-- Overlay -->
-    <div
-      v-if="modal.visible"
-      id="modal-overlay"
-      class="modal-backdrop fade show"
-    ></div>
+    <div v-if="modal.visible" id="modal-overlay" class="modal-backdrop fade show"></div>
   </div>
 </template>

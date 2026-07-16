@@ -1,10 +1,10 @@
 <script setup>
-import { computed, reactive, ref, watchEffect } from 'vue';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import ExerciceService from '../../services/ExerciceService.js';
-import MultiStep from '../base/MultiStep.vue';
+import { computed, reactive, ref, watchEffect } from "vue";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import ExerciceService from "../../services/ExerciceService.js";
+import MultiStep from "../base/MultiStep.vue";
 
 const phase = ref(1);
 const loading = ref(false);
@@ -20,21 +20,16 @@ const exerciceCategorieStore = useExerciceCategorieStore();
 
 const categories = computed(() => exerciceCategorieStore.liste);
 const exercicesComptables = computed(() =>
-  exerciceComptableStore.liste.filter(
-    (e) => e.id !== exerciceComptableStore.activeId,
-  ),
+  exerciceComptableStore.liste.filter((e) => e.id !== exerciceComptableStore.activeId),
 );
 
 const selectExerciceComptable = async () => {
   loading.value = true;
-  form.exercices = (
-    await ExerciceService.getExercices(form.exerciceComptableId)
-  ).map((e) => ({
+  form.exercices = (await ExerciceService.getExercices(form.exerciceComptableId)).map((e) => ({
     ...e,
-    categorie: categories.value.find((c) => c.id === e.exercice_categorie_id)
-      ?.designation,
+    categorie: categories.value.find((c) => c.id === e.exercice_categorie_id)?.designation,
   }));
-  form.exercices.sort((a, b) => a.date?.localeCompare(b.date ?? '') ?? 0);
+  form.exercices.sort((a, b) => a.date?.localeCompare(b.date ?? "") ?? 0);
   loading.value = false;
 };
 
@@ -42,11 +37,9 @@ watchEffect(() => {
   form.exercices = form.exercices.map((e) => ({
     ...e,
     date_2: e.date
-      ? new Date(
-          new Date(e.date).getTime() + form.decallage * 24 * 60 * 60 * 1000,
-        )
+      ? new Date(new Date(e.date).getTime() + form.decallage * 24 * 60 * 60 * 1000)
           .toISOString()
-          .split('T')[0]
+          .split("T")[0]
       : null,
   }));
 });
@@ -55,26 +48,24 @@ const { closeModal } = useModalStore();
 const importer = () => {};
 
 const fieldsStep1 = [
-  { title: 'Catégorie', key: 'categorie' },
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'Durée', key: 'duree' },
-  { title: 'Désignation', key: 'designation' },
+  { title: "Catégorie", key: "categorie" },
+  { title: "Date", key: "date", type: Date },
+  { title: "Durée", key: "duree" },
+  { title: "Désignation", key: "designation" },
 ];
 const fieldsStep2 = [
-  { title: 'Catégorie', key: 'categorie' },
-  { title: 'Date Précédente', key: 'date', type: Date },
-  { title: 'Nouvelle Date', key: 'date_2', type: Date },
-  { title: 'Durée', key: 'duree' },
-  { title: 'Désignation', key: 'designation' },
+  { title: "Catégorie", key: "categorie" },
+  { title: "Date Précédente", key: "date", type: Date },
+  { title: "Nouvelle Date", key: "date_2", type: Date },
+  { title: "Durée", key: "duree" },
+  { title: "Désignation", key: "designation" },
 ];
 </script>
 
 <template>
   <form @submit.prevent="importer">
     <div class="modal-header">
-      <h5 class="modal-title">
-        Importer des exercices depuis un autre exercice comptable
-      </h5>
+      <h5 class="modal-title">Importer des exercices depuis un autre exercice comptable</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -125,15 +116,8 @@ const fieldsStep2 = [
       </template>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
-      <button
-        v-if="phase !== 3"
-        type="button"
-        class="btn btn-primary"
-        @click="phase += 1"
-      >
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
+      <button v-if="phase !== 3" type="button" class="btn btn-primary" @click="phase += 1">
         Suivant
       </button>
       <button v-else type="submit" class="btn btn-primary">Ajouter</button>

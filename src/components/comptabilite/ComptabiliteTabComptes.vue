@@ -1,12 +1,12 @@
 <script setup>
-import { computed, ref, useTemplateRef, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import CompteService from '/src/services/CompteService.js';
+import { computed, ref, useTemplateRef, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import CompteService from "/src/services/CompteService.js";
 
 const sapeurStore = useSapeurStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -18,9 +18,7 @@ await exerciceComptableStore.fetchExercicesComptables();
 sapeurStore.fetchListeSapeur();
 await compteStore.fetchComptes();
 
-const activeExerciceComptableId = computed(
-  () => exerciceComptableStore.activeId,
-);
+const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);
 
 const activeCompteId = ref(compteStore.liste[0]?.id ?? null);
 
@@ -37,7 +35,7 @@ watchEffect(async () => {
   loading.value = false;
 });
 
-const dropdown = useTemplateRef('dropdown');
+const dropdown = useTemplateRef("dropdown");
 
 const ecritures = computed(() => imputationStore.active.ecritures);
 const sapeurs = computed(() => sapeurStore.liste);
@@ -58,50 +56,35 @@ const awn = useNotification();
 const { showModal, closeModal } = useModalStore();
 
 const formatCompte = (compte) => {
-  if (!compte) return '';
-  return compte?.numero + ' - ' + compte?.designation;
+  if (!compte) return "";
+  return compte?.numero + " - " + compte?.designation;
 };
 const formatedDate = () => {
   var today = new Date();
-  return new Date(today.getTime() - today.getTimezoneOffset() * 60000)
-    .toISOString()
-    .split('T')[0];
+  return new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().split("T")[0];
 };
 const justificatifIndividuel = (compteId) => {
   const compte = comptes.value.find((f) => f.id == activeCompteId.value);
   const filename = `${formatedDate()}_justificatif-compte-${compte?.numero}.pdf`;
 
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
 
-  CompteService.downloadJustificatifIndividuel(
-    filename,
-    activeExerciceComptableId.value,
-    compteId,
-  )
+  CompteService.downloadJustificatifIndividuel(filename, activeExerciceComptableId.value, compteId)
     .then(closeModal)
     .catch((err) => {
       closeModal();
-      awn.alert(
-        err?.message ||
-          'Une erreur a eu lieu durant la génération de votre fichier',
-      );
+      awn.alert(err?.message || "Une erreur a eu lieu durant la génération de votre fichier");
     });
 };
 const justificatifComplet = () => {
   const filename = `${formatedDate()}_justificatif-complet.pdf`;
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
 
-  CompteService.downloadJustificatifComplet(
-    filename,
-    activeExerciceComptableId.value,
-  )
+  CompteService.downloadJustificatifComplet(filename, activeExerciceComptableId.value)
     .then(closeModal)
     .catch((err) => {
       closeModal();
-      awn.alert(
-        err?.message ||
-          'Une erreur a eu lieu durant la génération de votre fichier',
-      );
+      awn.alert(err?.message || "Une erreur a eu lieu durant la génération de votre fichier");
     });
 };
 
@@ -111,26 +94,26 @@ const selectCompte = (id) => {
 };
 
 const fields = [
-  { title: 'Date', key: 'date', type: Date },
+  { title: "Date", key: "date", type: Date },
   {
-    title: 'Type',
-    key: 'type',
+    title: "Type",
+    key: "type",
     formatter: (type) => {
       const mapping = {
-        0: 'Autre',
-        1: 'Solde',
-        2: 'Indemnité',
-        3: 'Frais forfaitaire',
-        4: 'Frais effectif',
-        5: 'Charges AVS/AC',
+        0: "Autre",
+        1: "Solde",
+        2: "Indemnité",
+        3: "Frais forfaitaire",
+        4: "Frais effectif",
+        5: "Charges AVS/AC",
       };
-      return mapping[type] || '';
+      return mapping[type] || "";
     },
   },
-  { title: 'Designation', key: 'designation' },
-  { title: 'Sapeur', key: 'sapeur' },
-  { title: 'Total', key: 'total', type: Number },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Designation", key: "designation" },
+  { title: "Sapeur", key: "sapeur" },
+  { title: "Total", key: "total", type: Number },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -147,16 +130,10 @@ const fields = [
             <h3 class="card-title">Impressions</h3>
           </div>
           <div class="card-body d-grid gap-1">
-            <button
-              class="btn btn-outline-primary"
-              @click="justificatifIndividuel(activeCompteId)"
-            >
+            <button class="btn btn-outline-primary" @click="justificatifIndividuel(activeCompteId)">
               Justificatif du compte
             </button>
-            <button
-              class="btn btn-outline-primary"
-              @click="justificatifComplet"
-            >
+            <button class="btn btn-outline-primary" @click="justificatifComplet">
               Justificatif complet
             </button>
           </div>
@@ -192,9 +169,7 @@ const fields = [
                 @update:model-value="(value) => setFilter('type', value)"
               />
               <div v-if="canReset" class="col-md-6 mt-1">
-                <button class="btn btn-sm btn-warning w-100" @click="reset">
-                  Réinitialiser
-                </button>
+                <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
               </div>
             </div>
           </form>
@@ -210,9 +185,7 @@ const fields = [
                 ref="dropdown"
                 button-class="ms-1 btn btn-outline-secondary dropdown-toggle"
                 menu-class="dropdown-menu"
-                :title="
-                  formatCompte(comptes.find((f) => f.id == activeCompteId))
-                "
+                :title="formatCompte(comptes.find((f) => f.id == activeCompteId))"
               >
                 <template #default>
                   <button

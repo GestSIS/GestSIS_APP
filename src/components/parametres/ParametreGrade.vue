@@ -1,18 +1,18 @@
 <script setup>
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useGradeStore } from '../../stores/sapeur/Grade.js';
-import { computed } from 'vue';
-import useNotification from '../../composables/useNotification.js';
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useGradeStore } from "../../stores/sapeur/Grade.js";
+import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
 
 const gradeStore = useGradeStore();
 await gradeStore.fetchGrades();
 
 const fields = [
-  { title: 'Tri', key: 'tri' },
-  { title: 'Abréviation', key: 'abreviation' },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Groupe', key: 'groupeDesignation' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Tri", key: "tri" },
+  { title: "Abréviation", key: "abreviation" },
+  { title: "Désignation", key: "designation" },
+  { title: "Groupe", key: "groupeDesignation" },
+  { title: "Actions", slot: "actions" },
 ];
 
 const listeGrade = computed(() =>
@@ -20,9 +20,9 @@ const listeGrade = computed(() =>
     .map((g) => ({
       ...g,
       groupeDesignation: {
-        1: 'Officier',
-        2: 'Sous-Officier',
-        3: 'Sapeur',
+        1: "Officier",
+        2: "Sous-Officier",
+        3: "Sapeur",
       }[g?.groupe ?? 0],
     }))
     .sort((a, b) => b.tri - a.tri),
@@ -30,30 +30,22 @@ const listeGrade = computed(() =>
 
 const { showModal } = useModalStore();
 const awn = useNotification();
-const ajoutGrade = () => showModal({ component: 'ModalGrade', data: {} });
-const updateGrade = (grade) =>
-  showModal({ component: 'ModalGrade', data: { ...grade } });
+const ajoutGrade = () => showModal({ component: "ModalGrade", data: {} });
+const updateGrade = (grade) => showModal({ component: "ModalGrade", data: { ...grade } });
 const deleteGrade = (grade) =>
   gradeStore
     .removeGrade(grade.id)
-    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
 </script>
 
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Grades</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutGrade()">
-        Ajouter un grade
-      </button>
+      <button type="button" class="btn btn-primary" @click="ajoutGrade()">Ajouter un grade</button>
     </div>
     <div class="card-body table-responsive p-0">
-      <base-table
-        :data="listeGrade"
-        :fields="fields"
-        no-data="Aucun grade"
-        :selectable="true"
-      >
+      <base-table :data="listeGrade" :fields="fields" no-data="Aucun grade" :selectable="true">
         <template #actions="{ rowData }">
           <button
             type="button"

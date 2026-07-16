@@ -1,18 +1,18 @@
 <script setup>
-import { computed, ref, useTemplateRef } from 'vue';
-import useNotification from '../composables/useNotification.js';
-import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
-import { useModalStore } from '../stores/common/Modal';
-import { useGroupeStore } from '../stores/groupe/Groupe.js';
-import GroupeEdition from '../components/groupe/GroupeEdition.vue';
-import ExerciceComptable from '../components/exercice_comptable/ExerciceComptable.vue';
-import permissions from '../composables/permissions.js';
-import useHasPermission from '../composables/usePermission.js';
+import { computed, ref, useTemplateRef } from "vue";
+import useNotification from "../composables/useNotification.js";
+import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
+import { useModalStore } from "../stores/common/Modal";
+import { useGroupeStore } from "../stores/groupe/Groupe.js";
+import GroupeEdition from "../components/groupe/GroupeEdition.vue";
+import ExerciceComptable from "../components/exercice_comptable/ExerciceComptable.vue";
+import permissions from "../composables/permissions.js";
+import useHasPermission from "../composables/usePermission.js";
 
 const active = ref(null);
 const groupeEdit = ref({});
 const editMode = ref(false);
-const groupesTypes = ref(['groupe', 'groupeInter']);
+const groupesTypes = ref(["groupe", "groupeInter"]);
 const errors = ref({});
 
 const sapeurStore = useSapeurStore();
@@ -22,17 +22,15 @@ const awn = useNotification();
 await groupeStore.fetchGroupes();
 await sapeurStore.fetchListeSapeur();
 
-const groupeEdition = useTemplateRef('groupe-edition-component');
+const groupeEdition = useTemplateRef("groupe-edition-component");
 
 const groupes = computed(() =>
   groupeStore.liste.map((g) => ({
     ...g,
-    label: (g.no ? g.no + ' ' : '') + g.designation,
+    label: (g.no ? g.no + " " : "") + g.designation,
   })),
 );
-const hasEditPermission = useHasPermission(
-  permissions.ORGANISATION.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.ORGANISATION.MODIFICATION);
 
 const filteredGroupes = computed(() => {
   const activeId = active.value?.data?.id || 0;
@@ -51,36 +49,22 @@ const filteredGroupes = computed(() => {
 const activeIsGroupe = computed(() => {
   return (
     (!!active.value &&
-      (active.value.data.type == 'groupe' ||
-        active.value.data.type == 'groupeInter')) ||
+      (active.value.data.type == "groupe" || active.value.data.type == "groupeInter")) ||
     false
   );
 });
 const canMoveDown = computed(() => {
-  return (
-    (groupesTypes.value.includes(active.value?.data?.type) &&
-      !active.value?.isLast) ||
-    false
-  );
+  return (groupesTypes.value.includes(active.value?.data?.type) && !active.value?.isLast) || false;
 });
 const canMoveUp = computed(() => {
-  return (
-    (groupesTypes.value.includes(active.value?.data?.type) &&
-      !active.value?.isFirst) ||
-    false
-  );
+  return (groupesTypes.value.includes(active.value?.data?.type) && !active.value?.isFirst) || false;
 });
 const canMoveLeft = computed(() => {
-  return (
-    (groupesTypes.value.includes(active.value?.data?.type) &&
-      !active.value?.isRoot) ||
-    false
-  );
+  return (groupesTypes.value.includes(active.value?.data?.type) && !active.value?.isRoot) || false;
 });
 const canMoveRight = computed(() => {
   return (
-    (groupesTypes.value.includes(active.value?.data?.type) &&
-      !active.value?.isFirstOfLevel) ||
+    (groupesTypes.value.includes(active.value?.data?.type) && !active.value?.isFirstOfLevel) ||
     false
   );
 });
@@ -110,11 +94,11 @@ const save = async () => {
       },
     })
     .then(() => {
-      awn.success('Groupe modifié avec succès');
+      awn.success("Groupe modifié avec succès");
     })
     .catch((err) => {
       errors.value = err;
-      awn.alert(err.message || 'Erreur lors de la modification du groupe');
+      awn.alert(err.message || "Erreur lors de la modification du groupe");
     });
 };
 const up = () => groupeEdition.value.up(active.value);
@@ -124,16 +108,16 @@ const left = () => groupeEdition.value.left(active.value);
 const deleteGroupe = () => {
   if (activeIsGroupe.value) {
     confirm(
-      'Voulez-vous vraiment supprimer ce groupe ?',
+      "Voulez-vous vraiment supprimer ce groupe ?",
       "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
     ).then(() => groupeStore.deleteGroupe(active.value.data.id));
   } else {
-    awn.warning('Sélectionnez un groupe afin de pouvoir le supprimer.');
+    awn.warning("Sélectionnez un groupe afin de pouvoir le supprimer.");
   }
 };
 const addGroupe = () => {
   showModal({
-    component: 'ModalGroupe',
+    component: "ModalGroupe",
   });
 };
 const addSapeurs = (node) => {
@@ -158,7 +142,7 @@ const addSapeurs = (node) => {
   };
 
   showModal({
-    component: 'ModalSapeurSelect',
+    component: "ModalSapeurSelect",
     size: 2,
     callback,
     data,
@@ -174,9 +158,7 @@ const addSapeurs = (node) => {
           <li class="breadcrumb-item">
             <router-link :to="{ name: 'accueil' }">Accueil</router-link>
           </li>
-          <li class="breadcrumb-item active" aria-current="page">
-            Organisation
-          </li>
+          <li class="breadcrumb-item active" aria-current="page">Organisation</li>
         </ol>
       </div>
       <div class="col-sm-6 d-flex justify-content-end">
@@ -201,9 +183,7 @@ const addSapeurs = (node) => {
       </div>
       <div class="col-md-4">
         <div class="card card-primary card-outline">
-          <div
-            class="card-header d-flex justify-content-between align-items-center"
-          >
+          <div class="card-header d-flex justify-content-between align-items-center">
             <h3>Actions</h3>
             <div v-if="hasEditPermission" class="form-check form-switch">
               <input
@@ -213,24 +193,14 @@ const addSapeurs = (node) => {
                 type="checkbox"
                 role="switch"
               />
-              <label class="form-check-label" for="modeEdition"
-                >Mode édition</label
-              >
+              <label class="form-check-label" for="modeEdition">Mode édition</label>
             </div>
           </div>
           <div class="card-body pb-2">
-            <button
-              v-tooltip.top="'Tout développer'"
-              class="btn btn-info me-1"
-              @click="expand"
-            >
+            <button v-tooltip.top="'Tout développer'" class="btn btn-info me-1" @click="expand">
               <font-awesome-icon :icon="['far', 'plus-square']" />
             </button>
-            <button
-              v-tooltip.top="'Tout réduire'"
-              class="btn btn-info me-1"
-              @click="contract"
-            >
+            <button v-tooltip.top="'Tout réduire'" class="btn btn-info me-1" @click="contract">
               <font-awesome-icon :icon="['far', 'minus-square']" />
             </button>
           </div>
@@ -350,9 +320,7 @@ const addSapeurs = (node) => {
                   :true-value="1"
                   :false-value="0"
                 />
-                <label class="form-check-label" for="type"
-                  >Groupe d'alarme</label
-                >
+                <label class="form-check-label" for="type">Groupe d'alarme</label>
               </div>
             </div>
             <button class="btn btn-primary" @click="save">Modifier</button>

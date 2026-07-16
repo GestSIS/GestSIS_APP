@@ -1,8 +1,8 @@
 <script setup>
-import { reactive } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import LavageService from '../../services/materiel/LavageService';
+import { reactive } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import LavageService from "../../services/materiel/LavageService";
 
 const { data, callback } = defineProps({
   data: {
@@ -30,12 +30,10 @@ const save = async () => {
       callback();
       closeModal();
     })
-    .catch((error) =>
-      awn.alert(error.message ?? 'Erreur lors de la création des lavages'),
-    );
+    .catch((error) => awn.alert(error.message ?? "Erreur lors de la création des lavages"));
 };
 
-const fields = [{ title: 'Date', key: 'date' }];
+const fields = [{ title: "Date", key: "date" }];
 </script>
 
 <template>
@@ -62,12 +60,8 @@ const fields = [{ title: 'Date', key: 'date' }];
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save">
-        Ajouter
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
+      <button type="button" class="btn btn-primary" @click="save">Ajouter</button>
     </div>
   </div>
 </template>

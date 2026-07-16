@@ -1,12 +1,12 @@
 <script setup>
-import { computed, reactive, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
+import { computed, reactive, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
 
 const fonctionStore = useFonctionStore();
 const compteStore = useCompteStore();
@@ -38,13 +38,11 @@ const awn = useNotification();
 watchEffect(() => resize(form.par_fonction ? 2 : 1));
 
 const configurations = new Set(
-  data?.fonctions
-    ?.filter((f) => f.fonction_id)
-    ?.map((f) => f.type + ' ' + f.compte_id) || [],
+  data?.fonctions?.filter((f) => f.fonction_id)?.map((f) => f.type + " " + f.compte_id) || [],
 );
 columns.value = Object.fromEntries(
   [...configurations]
-    .map((e) => [e, e.split(' ')])
+    .map((e) => [e, e.split(" ")])
     .map(([index, e]) => [
       index,
       {
@@ -58,8 +56,7 @@ columns.value = Object.fromEntries(
 data?.fonctions
   ?.filter((f) => f.fonction_id)
   ?.forEach((f) => {
-    columns.value[f.type + ' ' + f.compte_id].fonctions[f.fonction_id] =
-      f.tarif;
+    columns.value[f.type + " " + f.compte_id].fonctions[f.fonction_id] = f.tarif;
   });
 
 // Ajout un type par défault en cas d'utilisation des indemnités par fonction
@@ -125,17 +122,15 @@ const save = () => {
   errors.value = {};
 
   // Contrôle qu'aucune colonne n'est dupliquée
-  const baseSet = new Set(base.value.map((e) => e.type + ' ' + e.compte_id));
+  const baseSet = new Set(base.value.map((e) => e.type + " " + e.compte_id));
   if (baseSet.size != base.value.length) {
-    awn.alert(
-      "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises.",
-    );
+    awn.alert("Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises.");
     return;
   }
 
   if (form.par_fonction) {
     const columnsFonctionsSet = new Set(
-      Object.values(columns.value).map((e) => e.type + ' ' + e.compte_id),
+      Object.values(columns.value).map((e) => e.type + " " + e.compte_id),
     );
     if (columnsFonctionsSet.size != Object.keys(columns.value).length) {
       awn.alert(
@@ -147,18 +142,16 @@ const save = () => {
 
   // Contrôle des données de base
   base.value.forEach((e, i) => {
-    if (!e.type) errors.value['base-type' + i] = true;
-    if (!e.compte_id) errors.value['base-compte' + i] = true;
-    if (!e.tarif || e.tarif < 0) errors.value['base-tarif' + i] = true;
-    if (e.tarif_min && e.tarif_min < 0)
-      errors.value['base-tarif-min' + i] = true;
-    if (e.tarif_min_pour && e.tarif_min_pour < 0)
-      errors.value['base-tarif-min-pour' + i] = true;
+    if (!e.type) errors.value["base-type" + i] = true;
+    if (!e.compte_id) errors.value["base-compte" + i] = true;
+    if (!e.tarif || e.tarif < 0) errors.value["base-tarif" + i] = true;
+    if (e.tarif_min && e.tarif_min < 0) errors.value["base-tarif-min" + i] = true;
+    if (e.tarif_min_pour && e.tarif_min_pour < 0) errors.value["base-tarif-min-pour" + i] = true;
   });
   if (form.par_fonction) {
     Object.values(columns.value).forEach((e, i) => {
-      if (!e.type) errors.value['column-type' + i] = true;
-      if (!e.compte_id) errors.value['column-compte' + i] = true;
+      if (!e.type) errors.value["column-type" + i] = true;
+      if (!e.compte_id) errors.value["column-compte" + i] = true;
     });
   }
 
@@ -174,14 +167,14 @@ const save = () => {
   if (form.par_fonction) {
     foncs.push(
       ...Object.values(columns.value)
-        .map((e) => [
-          ...Object.entries(e.fonctions).map(([f, tarif]) => ({
+        .map((e) =>
+          Object.entries(e.fonctions).map(([f, tarif]) => ({
             type: e.type,
             compte_id: e.compte_id,
             fonction_id: f,
             tarif: tarif,
           })),
-        ])
+        )
         .reduce((e, acc) => [...acc, ...e], []),
     );
   }
@@ -203,7 +196,7 @@ const save = () => {
   <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} une indemnité pour exercice
+        {{ form.id ? "Modifier" : "Ajouter" }} une indemnité pour exercice
       </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
@@ -291,16 +284,9 @@ const save = () => {
                 </tr>
                 <tr>
                   <td :colspan="base.length > 1 ? 6 : 5">
-                    <button
-                      type="button"
-                      class="btn btn-outline-primary"
-                      @click="ajoutType()"
-                    >
+                    <button type="button" class="btn btn-outline-primary" @click="ajoutType()">
                       Ajouter
-                      <font-awesome-icon
-                        size="1x"
-                        :icon="['far', 'plus-square']"
-                      />
+                      <font-awesome-icon size="1x" :icon="['far', 'plus-square']" />
                     </button>
                   </td>
                 </tr>
@@ -315,9 +301,7 @@ const save = () => {
                 type="checkbox"
                 class="form-check-input"
               />
-              <label class="form-check-label" for="par-fonction-modal"
-                >Par fonction</label
-              >
+              <label class="form-check-label" for="par-fonction-modal">Par fonction</label>
             </div>
           </div>
 
@@ -363,10 +347,7 @@ const save = () => {
                     class="btn btn-outline-primary border-0"
                     @click="ajoutTypePourFonction()"
                   >
-                    <font-awesome-icon
-                      size="2x"
-                      :icon="['far', 'plus-square']"
-                    />
+                    <font-awesome-icon size="2x" :icon="['far', 'plus-square']" />
                   </button>
                 </th>
               </tr>
@@ -402,9 +383,7 @@ const save = () => {
                     }"
                     type="text"
                     :value="columns[i].fonctions[f.id] || 0.0"
-                    @change="
-                      (e) => (columns[i].fonctions[f.id] = e.target.value)
-                    "
+                    @change="(e) => (columns[i].fonctions[f.id] = e.target.value)"
                   />
                 </td>
               </tr>
@@ -414,11 +393,9 @@ const save = () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

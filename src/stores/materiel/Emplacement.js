@@ -1,7 +1,7 @@
-import EmplacementService from '../../services/materiel/EmplacementService.js';
-import { defineStore } from 'pinia';
+import EmplacementService from "../../services/materiel/EmplacementService.js";
+import { defineStore } from "pinia";
 
-export const useEmplacementStore = defineStore('emplacement', {
+export const useEmplacementStore = defineStore("emplacement", {
   state: () => ({
     liste: [],
   }),

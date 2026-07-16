@@ -1,17 +1,17 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import ImputationService from '/src/services/ImputationService.js';
-import permissions from '../../composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import GenericDetailsRow from "../table/GenericDetailsRow.vue";
+import ImputationService from "/src/services/ImputationService.js";
+import permissions from "../../composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const localiteStore = useLocaliteStore();
 const sapeurStore = useSapeurStore();
@@ -32,10 +32,9 @@ const loading = ref(false);
 const exercices = ref([]);
 const init = async () => {
   loading.value = true;
-  const ecritures =
-    await ImputationService.getExerciceEcriturePourExerciceComptable(
-      exerciceComptableStore.activeId,
-    );
+  const ecritures = await ImputationService.getExerciceEcriturePourExerciceComptable(
+    exerciceComptableStore.activeId,
+  );
   exercices.value = [...ecritures].sort((a, b) => a.date.localeCompare(b.date));
   loading.value = false;
 };
@@ -43,16 +42,12 @@ watchEffect(init);
 
 const selectedItemId = ref(null);
 const selected = (item) => (selectedItemId.value = item?.id ?? null);
-const selectedItem = computed(() =>
-  exercices.value.find((e) => e.id === selectedItemId.value),
-);
+const selectedItem = computed(() => exercices.value.find((e) => e.id === selectedItemId.value));
 
 const sapeurs = computed(() => sapeurStore.liste);
 const localites = computed(() => localiteStore.liste);
 const categories = computed(() => exerciceCategorieStore.liste);
-const hasEditPermission = useHasPermission(
-  permissions.COMPTABILITE.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.COMPTABILITE.MODIFICATION);
 
 const computedData = computed(() => {
   return exercices.value.map((e) => {
@@ -62,8 +57,7 @@ const computedData = computed(() => {
     }
     return {
       ...e,
-      categorie: categories.value.find((c) => c.id == e.exercice_categorie_id)
-        ?.designation,
+      categorie: categories.value.find((c) => c.id == e.exercice_categorie_id)?.designation,
       localite: localites.value.find((l) => l.id == e.localite_id)?.designation,
       aPayer,
       getData: () => Promise.resolve(e.ecritures),
@@ -84,7 +78,7 @@ const { confirm, showModal } = useModalStore();
 
 const genererDecompteExercice = (exerciceId, designation) =>
   showModal({
-    component: 'ModalDecompte',
+    component: "ModalDecompte",
     data: {
       exerciceId,
       designation,
@@ -93,14 +87,14 @@ const genererDecompteExercice = (exerciceId, designation) =>
   });
 const imputer = (exerciceId) =>
   showModal({
-    component: 'ModalImputerExercice',
+    component: "ModalImputerExercice",
     data: { id: exerciceId },
     size: 2,
     callback: init,
   });
 const annulerImputer = (exerciceId) =>
   confirm(
-    'Voulez-vous vraiment supprimer cette imputation ?',
+    "Voulez-vous vraiment supprimer cette imputation ?",
     "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cet exercice.",
   ).then(() =>
     imputationStore
@@ -125,11 +119,11 @@ const onRowClass = (dataItem, isSelected) => {
   }
 
   const statutsClass = {
-    0: '', //'Annulé',
-    1: '', //'A saisir',
-    2: '', //'En attente de validation',
-    3: 'table-warning', //'Validé',
-    4: 'table-success', //'Imputé'
+    0: "", //'Annulé',
+    1: "", //'A saisir',
+    2: "", //'En attente de validation',
+    3: "table-warning", //'Validé',
+    4: "table-success", //'Imputé'
   };
   return statutsClass[dataItem.statut];
 };
@@ -137,108 +131,106 @@ const onRowClass = (dataItem, isSelected) => {
 const detailRowOptions = {
   fields: [
     {
-      title: 'Sapeur',
-      key: 'sapeur_id',
-      formatter: (sapeurId) =>
-        sapeurs.value.find((e) => e.id === sapeurId)?.nom_prenom,
+      title: "Sapeur",
+      key: "sapeur_id",
+      formatter: (sapeurId) => sapeurs.value.find((e) => e.id === sapeurId)?.nom_prenom,
     },
     {
-      title: 'Type',
-      key: 'type',
+      title: "Type",
+      key: "type",
       formatter: (type) => {
         const mapping = {
-          0: 'Autre',
-          1: 'Solde',
-          2: 'Indemnité',
-          3: 'Frais forfaitaire',
-          4: 'Frais effectif',
-          5: 'Charges AVS/AC',
+          0: "Autre",
+          1: "Solde",
+          2: "Indemnité",
+          3: "Frais forfaitaire",
+          4: "Frais effectif",
+          5: "Charges AVS/AC",
         };
-        return mapping[type] || '';
+        return mapping[type] || "";
       },
     },
     {
-      title: 'Tarif',
-      key: 'tarif',
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      title: "Tarif",
+      key: "tarif",
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
     {
-      title: 'Quantite',
-      key: 'quantite',
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      title: "Quantite",
+      key: "quantite",
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
     {
-      title: 'Amende',
-      key: 'total',
-      formatter: (total, ecriture) =>
-        ecriture.module == 5 ? ecriture.total : '0.00',
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      title: "Amende",
+      key: "total",
+      formatter: (total, ecriture) => (ecriture.module == 5 ? ecriture.total : "0.00"),
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
     {
-      title: 'Total',
-      key: 'total',
+      title: "Total",
+      key: "total",
       formatter: (total, ecriture) => (ecriture.module == 5 ? -total : total),
       type: Number,
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
   ],
 };
 const fields = [
   {
-    title: 'Date',
-    key: 'date',
+    title: "Date",
+    key: "date",
     type: Date,
   },
   {
-    title: 'Categorie',
-    key: 'categorie',
+    title: "Categorie",
+    key: "categorie",
   },
   {
-    title: 'Heure',
-    key: 'heure',
+    title: "Heure",
+    key: "heure",
     formatter(value) {
       return value.slice(0, 5);
     },
   },
   {
-    title: 'Duree',
-    key: 'duree',
+    title: "Duree",
+    key: "duree",
   },
   {
-    title: 'Localité',
-    key: 'localite',
+    title: "Localité",
+    key: "localite",
   },
   {
-    title: 'Lieu',
-    key: 'lieu',
+    title: "Lieu",
+    key: "lieu",
   },
   {
-    title: 'Designation',
-    key: 'designation',
+    title: "Designation",
+    key: "designation",
   },
   {
-    title: 'statut',
-    key: 'statut',
+    title: "statut",
+    key: "statut",
     formatter(value) {
       const statuts = {
-        0: 'Annulé',
-        1: 'A saisir',
-        2: 'En attente de validation',
-        3: 'Validé',
-        4: 'Imputé',
+        0: "Annulé",
+        1: "A saisir",
+        2: "En attente de validation",
+        3: "Validé",
+        4: "Imputé",
       };
       return statuts[value];
     },
   },
   {
-    title: 'Actions',
-    slot: 'actions',
-    titleClass: 'align-middle text-center',
-    columnClass: 'align-middle text-center',
+    title: "Actions",
+    slot: "actions",
+    titleClass: "align-middle text-center",
+    columnClass: "align-middle text-center",
   },
 ];
 </script>
@@ -274,12 +266,7 @@ const fields = [
             <button
               class="btn btn-outline-primary"
               :disabled="selectedItem?.statut != 4"
-              @click="
-                genererDecompteExercice(
-                  selectedItem.id,
-                  selectedItem.designation,
-                )
-              "
+              @click="genererDecompteExercice(selectedItem.id, selectedItem.designation)"
             >
               Créer un décompte
             </button>
@@ -305,9 +292,7 @@ const fields = [
                 base-option="&lt;Catégorie&gt;"
                 :options="filteredCategories"
                 :model-value="filters.exercice_categorie_id"
-                @update:model-value="
-                  (value) => setFilter('exercice_categorie_id', value)
-                "
+                @update:model-value="(value) => setFilter('exercice_categorie_id', value)"
               />
               <base-select
                 class="col-md-4"
@@ -320,9 +305,7 @@ const fields = [
                 @update:model-value="(value) => setFilter('statut', value)"
               />
               <div v-if="canReset" class="col-md-4">
-                <button class="btn btn-sm btn-warning w-100" @click="reset">
-                  Réinitialiser
-                </button>
+                <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
               </div>
             </div>
           </form>
@@ -346,10 +329,7 @@ const fields = [
               @selected="selected"
             >
               <template #detail-row="{ rowData }">
-                <generic-details-row
-                  :options="detailRowOptions"
-                  :row-data="rowData"
-                />
+                <generic-details-row :options="detailRowOptions" :row-data="rowData" />
               </template>
               <template #actions="{ rowData }">
                 <button
@@ -364,9 +344,7 @@ const fields = [
                   class="btn btn-outline-primary border-0"
                   title="Décompte sapeur"
                   :disabled="!rowData.aPayer"
-                  @click="
-                    genererDecompteExercice(rowData.id, rowData.designation)
-                  "
+                  @click="genererDecompteExercice(rowData.id, rowData.designation)"
                 >
                   <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
                 </button>

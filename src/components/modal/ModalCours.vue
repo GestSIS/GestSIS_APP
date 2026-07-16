@@ -1,9 +1,9 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useGradeStore } from '../../stores/sapeur/Grade.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useCoursStore } from '../../stores/sapeur/Cours.js';
+import { computed, reactive, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useGradeStore } from "../../stores/sapeur/Grade.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useCoursStore } from "../../stores/sapeur/Cours.js";
 
 const { data } = defineProps({
   data: {
@@ -15,7 +15,7 @@ const { data } = defineProps({
 const errors = ref({});
 const form = reactive({
   actif: 1,
-  abreviation: '',
+  abreviation: "",
   ...data,
 });
 
@@ -40,9 +40,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} un cours
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un cours</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -143,11 +141,9 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

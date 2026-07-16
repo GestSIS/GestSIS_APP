@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { computed, ref, watchEffect } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -19,15 +19,12 @@ await fonctionStore.fetchFonctions();
 
 const activeSapeurFonctions = computed(() =>
   sapeurStore.active.fonctions
+    .slice()
     .sort((a, b) => b.debut.localeCompare(a.debut))
     .map((f) => ({
       ...f,
-      fonction: fonctionStore.liste.find(
-        (fonction) => fonction.id == f.fonction_id,
-      )?.nom,
-      actif: fonctionStore.liste.find(
-        (fonction) => fonction.id == f.fonction_id,
-      )?.actif,
+      fonction: fonctionStore.liste.find((fonction) => fonction.id == f.fonction_id)?.nom,
+      actif: fonctionStore.liste.find((fonction) => fonction.id == f.fonction_id)?.actif,
     })),
 );
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
@@ -35,23 +32,23 @@ const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 const { showModal, confirm } = useModalStore();
 
 const newFonction = () => {
-  showModal('ModalSapeurFonction');
+  showModal("ModalSapeurFonction");
 };
 const editFonction = (fonction) => {
-  showModal({ component: 'ModalSapeurFonction', data: fonction });
+  showModal({ component: "ModalSapeurFonction", data: fonction });
 };
 const supprimerFonction = (fonction) =>
   confirm(
-    'Voulez-vous vraiment supprimer cette fonction ?',
+    "Voulez-vous vraiment supprimer cette fonction ?",
     "Attention, la suppression d'une fonction est irréversible ! Toutes les données de cette fonction seront perdues !",
   ).then(() => sapeurStore.removeSapeurFonction(fonction?.id));
 
 const fields = [
-  { title: 'Début', key: 'debut', type: Date },
-  { title: 'Fin', key: 'fin', slot: 'fin' },
-  { title: 'Fonction', key: 'fonction' },
-  { title: 'Remarques', key: 'remarque' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Début", key: "debut", type: Date },
+  { title: "Fin", key: "fin", slot: "fin" },
+  { title: "Fonction", key: "fonction" },
+  { title: "Remarques", key: "remarque" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -59,12 +56,7 @@ const fields = [
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Fonctions</h3>
-      <button
-        v-if="hasEditPermission"
-        type="button"
-        class="btn btn-primary"
-        @click="newFonction"
-      >
+      <button v-if="hasEditPermission" type="button" class="btn btn-primary" @click="newFonction">
         Ajouter une fonction
       </button>
     </div>
@@ -76,9 +68,7 @@ const fields = [
         no-data="Aucune fonction"
       >
         <template #fin="{ rowData }">
-          {{
-            rowData.fin ? new Date(rowData.fin).toLocaleDateString('fr-CH') : ''
-          }}
+          {{ rowData.fin ? new Date(rowData.fin).toLocaleDateString("fr-CH") : "" }}
           <font-awesome-icon
             v-if="rowData.fin === null && !rowData.actif"
             v-tooltip.bottom="

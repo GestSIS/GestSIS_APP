@@ -1,22 +1,22 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted } from "vue";
 
 defineProps({
   tag: {
     type: String,
-    default: () => 'div',
+    default: () => "div",
   },
   buttonClass: {
     type: String,
-    default: () => '',
+    default: () => "",
   },
   menuClass: {
     type: String,
-    default: () => '',
+    default: () => "",
   },
   title: {
     type: String,
-    default: () => '',
+    default: () => "",
   },
 });
 
@@ -31,10 +31,10 @@ onMounted(() => {
       dropdown.value = false;
     }
   };
-  document.addEventListener('click', listener.value);
+  document.addEventListener("click", listener.value);
 });
 onUnmounted(() => {
-  document.removeEventListener('click', listener.value);
+  document.removeEventListener("click", listener.value);
 });
 
 // Methods for manipulations from outside

@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onUnmounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/auth/Auth';
+import { ref, onUnmounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useAuthStore } from "../stores/auth/Auth";
 
 const route = useRoute();
 const router = useRouter();
@@ -15,7 +15,7 @@ const time = ref(10);
 const timeInterval = ref(null);
 
 if (!token.value) {
-  router.push({ name: 'public' });
+  router.push({ name: "public" });
 }
 
 onUnmounted(() => {
@@ -26,7 +26,7 @@ onUnmounted(() => {
 
 const reset = async () => {
   if (password.value.length < 8) {
-    error.value['password'] = 'Mot de passe trop court (min 8 charactères)';
+    error.value["password"] = "Mot de passe trop court (min 8 charactères)";
     return;
   }
   error.value = {};
@@ -43,9 +43,7 @@ const reset = async () => {
         timeInterval.value = setInterval(() => {
           if (time.value <= 0) {
             clearInterval(timeInterval.value);
-            router.push(
-              route.query.redirect ? route.query.redirect : 'accueil',
-            );
+            router.push(route.query.redirect ? route.query.redirect : "accueil");
           } else {
             time.value--;
           }
@@ -53,7 +51,7 @@ const reset = async () => {
       }
     })
     .catch((data) => {
-      error.value = { ...(data?.error ?? {}) };
+      error.value = { ...data?.error };
     });
 };
 </script>
@@ -76,12 +74,8 @@ const reset = async () => {
           autocomplete="off"
           :class="{ 'is-invalid': error.password }"
         />
-        <div v-if="error.password" class="invalid-feedback">
-          Taille minimum: 8
-        </div>
-        <label for="inputPasswordConfirmation" class="visually-hidden"
-          >Confirmation</label
-        >
+        <div v-if="error.password" class="invalid-feedback">Taille minimum: 8</div>
+        <label for="inputPasswordConfirmation" class="visually-hidden">Confirmation</label>
         <input
           id="inputPasswordConfirmation"
           v-model="password_confirmation"
@@ -91,8 +85,7 @@ const reset = async () => {
           required
           autocomplete="off"
           :class="{
-            'is-invalid':
-              error.password_confirmation || password !== password_confirmation,
+            'is-invalid': error.password_confirmation || password !== password_confirmation,
           }"
         />
         <div v-if="password !== password_confirmation" class="invalid-feedback">
@@ -101,25 +94,19 @@ const reset = async () => {
         <div v-if="error.message" class="invalid-feedback d-block">
           {{ error.message }}
         </div>
-        <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">
-          Réinitialiser
-        </button>
+        <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Réinitialiser</button>
       </template>
       <template v-else>
         <div>
           <p>
-            Votre mot de passe a été réinitalisé, vous allez être redirigé vers
-            la page de connection dans {{ time }} secondes.
+            Votre mot de passe a été réinitalisé, vous allez être redirigé vers la page de
+            connection dans {{ time }} secondes.
           </p>
         </div>
       </template>
-      <p class="mt-5 mb-3 text-muted">
-        © GestSIS {{ new Date().getFullYear() }}
-      </p>
+      <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
 
-      <router-link :to="{ name: 'login' }" class="btn btn-link is-active"
-        >Se connecter</router-link
-      >
+      <router-link :to="{ name: 'login' }" class="btn btn-link is-active">Se connecter</router-link>
     </form>
   </div>
 </template>
@@ -156,13 +143,13 @@ const reset = async () => {
   z-index: 2;
 }
 
-.form-signin input[type='email'] {
+.form-signin input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.form-signin input[type='password'] {
+.form-signin input[type="password"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;

@@ -1,15 +1,15 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useExerciceStore } from '../../stores/exercice/Exercice.js';
-import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
-import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useExcuseParamStore } from '../../stores/exercice/ExcuseParam.js';
-import permissions from '../../composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { computed, ref, watchEffect } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useExerciceStore } from "../../stores/exercice/Exercice.js";
+import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
+import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useExcuseParamStore } from "../../stores/exercice/ExcuseParam.js";
+import permissions from "../../composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const sapeurStore = useSapeurStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -39,17 +39,13 @@ const excuseParam = computed(() => excuseParamStore.params);
 const sapeurs = computed(() => sapeurStore.liste);
 const absences = computed(() => exerciceStore.absences);
 const exercices = computed(() =>
-  exerciceStore.liste.sort((a, b) => a.date?.localeCompare(b.date)),
+  exerciceStore.liste.slice().sort((a, b) => a.date?.localeCompare(b.date)),
 );
 const categories = computed(() => exerciceCategorieStore.liste);
 const localites = computed(() =>
-  localiteStore.liste.sort((a, b) =>
-    a.designation?.localeCompare(b.designation),
-  ),
+  localiteStore.liste.slice().sort((a, b) => a.designation?.localeCompare(b.designation)),
 );
-const hasValidationPermission = useHasPermission(
-  permissions.EXERCICE.VALIDATION,
-);
+const hasValidationPermission = useHasPermission(permissions.EXERCICE.VALIDATION);
 
 const computedData = computed(() => {
   return absences.value
@@ -61,15 +57,12 @@ const computedData = computed(() => {
     }))
     .map((e) => ({
       ...e,
-      categorie: categories.value.find((c) => c.id == e.exercice_categorie_id)
-        ?.designation,
+      categorie: categories.value.find((c) => c.id == e.exercice_categorie_id)?.designation,
       localite: localites.value.find((l) => l.id == e.localite_id)?.designation,
     }));
 });
 const filteredExercicesCategories = computed(() => {
-  const ids = new Set(
-    exercices.value.map((i) => parseInt(i.exercice_categorie_id)),
-  );
+  const ids = new Set(exercices.value.map((i) => parseInt(i.exercice_categorie_id)));
   return categories.value.filter((t) => ids.has(t.id));
 });
 const filteredLocalites = computed(() => {
@@ -79,80 +72,74 @@ const filteredLocalites = computed(() => {
 
 const { showModal } = useModalStore();
 
-const review = () => showModal({ component: 'ModalReviewAbsence', size: 2 });
+const review = () => showModal({ component: "ModalReviewAbsence", size: 2 });
 const reviewAbsence = (absence) =>
   showModal({
-    component: 'ModalReviewAbsence',
+    component: "ModalReviewAbsence",
     size: 2,
     data: absence,
   });
 
 const onRowClass = (dataItem) => {
   if (dataItem?.excuse_statut === -2) {
-    return 'text-danger';
+    return "text-danger";
   }
   const statutsClass = {
-    '-1': 'text-warning', //'Annulé',
-    0: '', //'A saisir',
-    1: 'text-success', //'Saisie',
+    "-1": "text-warning", //'Annulé',
+    0: "", //'A saisir',
+    1: "text-success", //'Saisie',
   };
   return statutsClass[dataItem.excuse_statut];
 };
 
 const absenceStatuts = [
-  { id: -2, designation: 'Amendé' },
-  { id: -1, designation: 'Refusé' },
-  { id: 0, designation: 'A traiter' },
-  { id: -1, designation: 'Accepté' },
+  { id: -2, designation: "Amendé" },
+  { id: -1, designation: "Refusé" },
+  { id: 0, designation: "A traiter" },
+  { id: -1, designation: "Accepté" },
 ];
 const fieldsBase = [
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'Sapeur', key: 'sapeur' },
-  { title: 'Categorie', key: 'categorie' },
+  { title: "Date", key: "date", type: Date },
+  { title: "Sapeur", key: "sapeur" },
+  { title: "Categorie", key: "categorie" },
   {
-    title: 'Heure',
-    key: 'heure',
+    title: "Heure",
+    key: "heure",
     formatter(value) {
       return value.slice(0, 5);
     },
   },
-  { title: 'Localité', key: 'localite' },
-  { title: 'Designation', key: 'designation' },
+  { title: "Localité", key: "localite" },
+  { title: "Designation", key: "designation" },
   {
-    title: 'Statut',
-    key: 'excuse_statut',
-    slot: 'statut',
+    title: "Statut",
+    key: "excuse_statut",
+    slot: "statut",
     formatter(value, rowData) {
       const statuts = {
-        '-2': 'Amendée',
-        '-1': 'Refusée',
-        0: 'Excusé, à traiter',
-        1: 'Acceptée',
+        "-2": "Amendée",
+        "-1": "Refusée",
+        0: "Excusé, à traiter",
+        1: "Acceptée",
       };
       if (rowData.excuse_type_id) {
         return statuts[value];
       }
 
-      var dateParts = rowData.date.split('-');
-      const d = new Date(
-        dateParts[0],
-        dateParts[1] - 1,
-        dateParts[2].substr(0, 2),
-      );
+      var dateParts = rowData.date.split("-");
+      const d = new Date(dateParts[0], dateParts[1] - 1, dateParts[2].substr(0, 2));
 
       d.setDate(d.getDate() + (excuseParam.value?.delai_excuse ?? 0));
-      const diffDays = Math.ceil(
-        Math.abs(new Date() - d) / (1000 * 60 * 60 * 24),
-      );
+      const diffDays = Math.ceil(Math.abs(new Date() - d) / (1000 * 60 * 60 * 24));
 
       if (d < new Date()) {
-        return 'Non excusé, à traiter';
+        return "Non excusé, à traiter";
       } else {
-        return 'Non excusé (' + diffDays + ' jours restants)';
+        return "Non excusé (" + diffDays + " jours restants)";
       }
     },
   },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -191,9 +178,7 @@ const fieldsBase = [
                 :options="absenceStatuts"
                 base-option="<Statut>"
                 :model-value="filters.excuse_statut"
-                @update:model-value="
-                  (value) => setFilter('excuse_statut', value)
-                "
+                @update:model-value="(value) => setFilter('excuse_statut', value)"
               />
               <base-select
                 class="col-md-4"
@@ -207,14 +192,10 @@ const fieldsBase = [
                 :options="filteredExercicesCategories"
                 base-option="<Catégorie>"
                 :model-value="filters.exercice_categorie_id"
-                @update:model-value="
-                  (value) => setFilter('exercice_categorie_id', value)
-                "
+                @update:model-value="(value) => setFilter('exercice_categorie_id', value)"
               />
               <div v-if="canReset" class="col-md-4 mt-1">
-                <button class="btn btn-sm btn-warning w-100" @click="reset">
-                  Réinitialiser
-                </button>
+                <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
               </div>
             </div>
           </div>
@@ -251,11 +232,7 @@ const fieldsBase = [
                   v-if="hasValidationPermission"
                   :title="rowData.excuse_statut == 0 ? 'Examen' : 'Réexaminer'"
                   class="btn border-0"
-                  :class="
-                    rowData.excuse_statut == 0
-                      ? 'btn-outline-success'
-                      : 'btn-outline'
-                  "
+                  :class="rowData.excuse_statut == 0 ? 'btn-outline-success' : 'btn-outline'"
                   @click="reviewAbsence(rowData)"
                 >
                   <font-awesome-icon :icon="['far', 'eye']" />

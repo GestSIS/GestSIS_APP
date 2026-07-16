@@ -1,7 +1,7 @@
 <script setup>
-import { computed } from 'vue';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
-import { useEmplacementStore } from '../../stores/materiel/Emplacement';
+import { computed } from "vue";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
+import { useEmplacementStore } from "../../stores/materiel/Emplacement";
 import {
   SelectRoot,
   SelectTrigger,
@@ -12,48 +12,44 @@ import {
   SelectListbox,
   SelectNoOptions,
   SelectOption,
-} from 'vue3-select-component/primitives';
-import { indexedData } from '../../tools/index.js';
-import TagCouleur from './TagCouleur.vue';
+} from "vue3-select-component/primitives";
+import { indexedData } from "../../tools/index.js";
+import TagCouleur from "./TagCouleur.vue";
 
-const { label, emplacementIdToIgnore, emplacementRacine, disabled, required } =
-  defineProps({
-    label: {
-      type: String,
-      default: () => '',
-    },
-    required: {
-      type: Boolean,
-      default: false,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    emplacementIdToIgnore: {
-      type: Number,
-      default: () => -1,
-    },
-    emplacementRacine: {
-      type: Boolean,
-      default: () => false,
-    },
-  });
+const { label, emplacementIdToIgnore, emplacementRacine, disabled, required } = defineProps({
+  label: {
+    type: String,
+    default: () => "",
+  },
+  required: {
+    type: Boolean,
+    default: false,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  emplacementIdToIgnore: {
+    type: Number,
+    default: () => -1,
+  },
+  emplacementRacine: {
+    type: Boolean,
+    default: () => false,
+  },
+});
 
 const model = defineModel();
 
 const couleurStore = useCouleurStore();
 const emplacementStore = useEmplacementStore();
 
-await Promise.all([
-  emplacementStore.fetchEmplacements(),
-  couleurStore.fetchCouleurs(),
-]);
+await Promise.all([emplacementStore.fetchEmplacements(), couleurStore.fetchCouleurs()]);
 
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
 const indexedCouleurs = computed(() => ({
   ...indexedData(couleurStore.liste),
-  racine: { text: 'black', fond: 'white' },
+  racine: { text: "black", fond: "white" },
 }));
 const emplacements = computed(() => {
   const recursive = (id) => {
@@ -65,9 +61,7 @@ const emplacements = computed(() => {
     ];
   };
   return [
-    ...(emplacementRacine
-      ? [{ value: null, label: 'Sans parent', color_id: 'racine' }]
-      : []),
+    ...(emplacementRacine ? [{ value: null, label: "Sans parent", color_id: "racine" }] : []),
     ...emplacementStore.liste
       .map((e) => {
         const ids = recursive(e.id);
@@ -75,16 +69,12 @@ const emplacements = computed(() => {
           ...e,
           value: e.id,
           emplacements: ids,
-          label: ids
-            .map((id) => indexedEmplacements.value[id].designation)
-            .join(' '),
+          label: ids.map((id) => indexedEmplacements.value[id].designation).join(" "),
         };
       })
       .sort((a, b) => a.tri - b.tri)
       .filter(
-        (c) =>
-          c.id !== emplacementIdToIgnore &&
-          !c.emplacements.includes(emplacementIdToIgnore),
+        (c) => c.id !== emplacementIdToIgnore && !c.emplacements.includes(emplacementIdToIgnore),
       ),
   ];
 });
@@ -96,16 +86,9 @@ const emplacementParValeur = computed(() =>
 </script>
 
 <template>
-  <!-- data-assembled-select : la lib ne style le trigger que sous ce hook ;
-       on en a besoin car on compose les primitives à la main. -->
   <div data-assembled-select>
     <label v-if="label">{{ label }}</label>
-    <select-root
-      v-model="model"
-      :options="emplacements"
-      :disabled="disabled"
-      clearable
-    >
+    <select-root v-model="model" :options="emplacements" :disabled="disabled" clearable>
       <select-trigger>
         <select-value placeholder="Sélectionnez un emplacement">
           <template #default="{ selectedOptions }">
@@ -139,9 +122,7 @@ const emplacementParValeur = computed(() =>
             >
               {{ indexedEmplacements[id].designation }}
             </tag-couleur>
-            <span v-if="emplacement.value === null">{{
-              emplacement.label
-            }}</span>
+            <span v-if="emplacement.value === null">{{ emplacement.label }}</span>
           </select-option>
         </select-listbox>
       </select-popover>
@@ -173,5 +154,4 @@ const emplacementParValeur = computed(() =>
   border: 0;
   pointer-events: none;
 }
-
 </style>

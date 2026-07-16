@@ -1,10 +1,10 @@
 <script setup>
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { ref } from 'vue';
-import ParametreTravailType from './ParametreTravailType.vue';
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { ref } from "vue";
+import ParametreTravailType from "./ParametreTravailType.vue";
 const uniteStore = useUniteStore();
 const travailTypeStore = useTravailTypeStore();
 const compteStore = useCompteStore();
@@ -22,7 +22,7 @@ await Promise.all([
   loadEcritureCategories,
   loadTravailTypes,
 ]);
-const tab = ref('type');
+const tab = ref("type");
 </script>
 
 <template>
@@ -32,11 +32,7 @@ const tab = ref('type');
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres fiche travail</h3>
         </div>
-        <nav
-          class="nav flex-column nav-pills"
-          role="tablist"
-          aria-orientation="vertical"
-        >
+        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
           <a
             class="nav-link"
             :class="{ active: tab === 'type' }"

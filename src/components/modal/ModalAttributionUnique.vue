@@ -1,9 +1,9 @@
 <script setup>
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import ArticleService from '../../services/materiel/ArticleService';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import ArticleService from "../../services/materiel/ArticleService";
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const awn = useNotification();
 const { data, callback } = defineProps({
@@ -72,9 +72,7 @@ const save = async () => {
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
       <button type="submit" class="btn btn-primary">Attribuer</button>
     </div>
   </form>

@@ -1,6 +1,6 @@
 <script setup>
-import { ref, computed, watch, onBeforeMount } from 'vue';
-import { useAuthStore } from '../../stores/auth/Auth';
+import { ref, computed, watch, onBeforeMount } from "vue";
+import { useAuthStore } from "../../stores/auth/Auth";
 
 const authStore = useAuthStore();
 
@@ -26,9 +26,9 @@ const filters = ref({});
 const filteredData = computed(() => {
   return data.filter(
     Object.entries(filters.value)
-      .filter(([, val]) => val >= 0 || typeof val === 'function')
+      .filter(([, val]) => val >= 0 || typeof val === "function")
       .map(([key, value]) => {
-        if (typeof value == 'function') {
+        if (typeof value == "function") {
           return (x) => value(x[key]);
         } else {
           return (x) => x[key] == value;
@@ -41,17 +41,17 @@ const filteredData = computed(() => {
   );
 });
 const canReset = computed(() => {
-  return !!Object.entries(filters.value).find(([, value]) => value != null && value !== '');
+  return !!Object.entries(filters.value).find(([, value]) => value != null && value !== "");
 });
 
 const init = () => {
   filters.value = {
-    ...JSON.parse(localStorage.getItem(`${sisKey.value}-${id}`) ?? '{}'),
+    ...JSON.parse(localStorage.getItem(`${sisKey.value}-${id}`) ?? "{}"),
   };
 };
 
 const setFilter = (key, value) => {
-  const types = new Set(['function', 'undefined']);
+  const types = new Set(["function", "undefined"]);
   filters.value = {
     ...filters.value,
     [key]: types.has(typeof value) ? value : parseInt(value, 10),
@@ -78,8 +78,5 @@ watch(sisKey, init);
 </script>
 
 <template>
-  <slot
-    name="default"
-    v-bind="{ setFilter, filters, filteredData, reset, canReset }"
-  ></slot>
+  <slot name="default" v-bind="{ setFilter, filters, filteredData, reset, canReset }"></slot>
 </template>

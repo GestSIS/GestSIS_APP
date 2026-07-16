@@ -1,8 +1,8 @@
 <script setup>
-import { computed } from 'vue';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useCoursStore } from '../../stores/sapeur/Cours.js';
-import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
+import { computed } from "vue";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useCoursStore } from "../../stores/sapeur/Cours.js";
+import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
 
 const localiteStore = useLocaliteStore();
 const coursStore = useCoursStore();
@@ -15,21 +15,20 @@ await Promise.all([
 ]);
 
 const fields = [
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Lieu', key: 'localite' },
-  { title: 'Durée [jours]', key: 'duree' },
+  { title: "Date", key: "date", type: Date },
+  { title: "Désignation", key: "designation" },
+  { title: "Lieu", key: "localite" },
+  { title: "Durée [jours]", key: "duree" },
 ];
 
 const cours = computed(() =>
   infosStore.cours
+    .slice()
     .sort((a, b) => b.date.localeCompare(a.date))
     .map((c) => ({
       ...c,
-      designation: coursStore.liste.find((cours) => cours.id == c.cours_id)
-        ?.designation,
-      localite: localiteStore.liste.find((l) => l.id == c.localite_id)
-        ?.designation,
+      designation: coursStore.liste.find((cours) => cours.id == c.cours_id)?.designation,
+      localite: localiteStore.liste.find((l) => l.id == c.localite_id)?.designation,
     })),
 );
 </script>

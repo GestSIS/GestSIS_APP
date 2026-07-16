@@ -1,13 +1,13 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useExerciceStore } from '../../stores/exercice/Exercice.js';
-import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
-import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
+import { computed, ref, watchEffect } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useExerciceStore } from "../../stores/exercice/Exercice.js";
+import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
+import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useStatistiqueStore } from "../../stores/statistique/Statistique.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -28,12 +28,10 @@ await Promise.all([
 await exerciceComptableStore.fetchExercicesComptables();
 
 const exercices = computed(() =>
-  exerciceStore.liste.sort((a, b) => new Date(a.date) - new Date(b.date)),
+  exerciceStore.liste.slice().sort((a, b) => new Date(a.date) - new Date(b.date)),
 );
 const localites = computed(() =>
-  localiteStore.liste.sort((a, b) =>
-    a.designation.localeCompare(b.designation),
-  ),
+  localiteStore.liste.slice().sort((a, b) => a.designation.localeCompare(b.designation)),
 );
 const sapeurs = computed(() => sapeurStore.liste);
 const localiteExercices = computed(() => {
@@ -57,9 +55,7 @@ const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
   await exerciceStore.fetchListeExercice(exerciceComptableStore.activeId);
-  await statistiqueStore.fetchStatistiquePresenceExercice(
-    exerciceComptableStore.activeId,
-  );
+  await statistiqueStore.fetchStatistiquePresenceExercice(exerciceComptableStore.activeId);
   selectedCategories.value = categorieExercices.value.map((c) => c.id);
   selectedSapeurDe.value = localiteSapeurs.value.map((l) => l.id);
   selectedExerciceA.value = localiteExercices.value.map((l) => l.id);
@@ -105,9 +101,7 @@ const displayExercice = computed(() => {
   const selectedCat = new Set(selectedCategories.value);
   const selectedLoc = new Set(selectedExerciceA.value);
   return exercices.value.filter(
-    (e) =>
-      selectedCat.has(e.exercice_categorie_id) &&
-      selectedLoc.has(e.localite_id),
+    (e) => selectedCat.has(e.exercice_categorie_id) && selectedLoc.has(e.localite_id),
   );
 });
 
@@ -121,10 +115,7 @@ const computeStats = (presences) => {
       p.excuse_type_id ? 1 : 0,
       p.excuse_statut === -2 ? 1 : 0,
     ])
-    .reduce(
-      (accumulator, p) => accumulator.map((v, i) => v + p[i]),
-      [0, 0, 0, 0, 0, 0],
-    );
+    .reduce((accumulator, p) => accumulator.map((v, i) => v + p[i]), [0, 0, 0, 0, 0, 0]);
   return {
     convoque: stats[0],
     present: stats[1],
@@ -144,9 +135,7 @@ const computedData = computed(() => {
     return (
       selectedLocaliteExercice.has(exercice?.localite_id) &&
       selectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
-      selectedLocaliteSapeur.has(
-        indexedSapeursLocaliteId.value.get(p.sapeur_id),
-      )
+      selectedLocaliteSapeur.has(indexedSapeursLocaliteId.value.get(p.sapeur_id))
     );
   });
   const sapeurIndexedPresence = filteredPresences.reduce((map, e) => {
@@ -172,7 +161,7 @@ const computedData = computed(() => {
       stats: computeStats(sapeurIndexedPresence[s.id] || []),
       temp: sapeurIndexedPresence[s.id] || [],
       localite: localites.value.find((l) => l.id == s.localiteId)?.designation,
-      fonction: fonctions.value.find((f) => f.id == s.fonction_id)?.nom || '-',
+      fonction: fonctions.value.find((f) => f.id == s.fonction_id)?.nom || "-",
     }));
 });
 
@@ -187,9 +176,7 @@ const computedStats = computed(() => {
       return (
         selectedLocaliteExercice.has(exercice?.localite_id) &&
         selectedExerciceCategorie.has(exercice?.exercice_categorie_id) &&
-        selectedLocaliteSapeur.has(
-          indexedSapeursLocaliteId.value.get(p.sapeur_id),
-        )
+        selectedLocaliteSapeur.has(indexedSapeursLocaliteId.value.get(p.sapeur_id))
       );
     }),
   );
@@ -197,90 +184,88 @@ const computedStats = computed(() => {
 
 const formatPresence = (presence) => {
   if (!presence) {
-    return '';
+    return "";
   }
   if (presence.present) {
-    return '✓';
+    return "✓";
   }
   if (presence.remplace) {
-    return 'Rpl';
+    return "Rpl";
   }
   if (presence.excuse_type_id) {
     const excuse = excuses.value.find((e) => e.id == presence.excuse_type_id);
     return excuse?.abreviation;
   }
-  return '✕';
+  return "✕";
 };
 const formatPresenceExport = (presence) => {
   if (!presence) {
-    return '';
+    return "";
   }
-  let prefix = '';
+  let prefix = "";
   if (!presence.convoque) {
-    prefix = 'A';
+    prefix = "A";
   }
   if (presence.present) {
-    return prefix + 'Présent';
+    return prefix + "Présent";
   }
   if (presence.remplace) {
-    return prefix + 'Remplacé';
+    return prefix + "Remplacé";
   }
   if (presence.excuse_type_id) {
     const excuse = excuses.value.find((e) => e.id == presence.excuse_type_id);
     return prefix + excuse?.designation;
   }
-  return prefix + '-';
+  return prefix + "-";
 };
 const formatPresenceClass = (presence) => {
   if (!presence) {
-    return '';
+    return "";
   }
   if (presence.excuse_statut == 1 || presence.present || presence.remplace) {
-    return 'text-bg-success';
+    return "text-bg-success";
   }
   if (presence.excuse_statut == -2) {
-    return 'text-bg-danger';
+    return "text-bg-danger";
   }
   if (presence.excuse_statut == -1) {
-    return 'text-bg-warning';
+    return "text-bg-warning";
   }
   if (presence.excuse_statut == 0) {
-    return 'text-bg-secondary';
+    return "text-bg-secondary";
   }
   if (presence.remplace || presence.statut == 1) {
-    return 'text-bg-success';
+    return "text-bg-success";
   }
 };
 const toCvs = () => {
   // TODO: Migrate to BaseTable and remove duplicates
   const data =
-    'data:text/csv;charset=utf-8,\ufeff' +
+    "data:text/csv;charset=utf-8,\ufeff" +
     [
-      'Sapeur',
-      'Localité',
-      'Fonction',
+      "Sapeur",
+      "Localité",
+      "Fonction",
       ...displayExercice.value.map((e) => e.designation),
-      'Nombre Convoqué',
-      'Nombre Présent',
-      'Nombre Remplacé',
-      'Nombre excusé',
-      'Nombre absent',
-    ].join(';') +
-    '\n' +
+      "Nombre Convoqué",
+      "Nombre Présent",
+      "Nombre Remplacé",
+      "Nombre excusé",
+      "Nombre absent",
+    ].join(";") +
+    "\n" +
     [
-      '',
-      '',
-      '',
-      ...displayExercice.value.map((e) =>
-        new Date(e.date).toLocaleDateString('fr-CH'),
-      ),
-      '',
-      '',
-      '',
-      '',
-      '',
-    ].join(';') +
-    '\n' +
+      "",
+      "",
+      "",
+      ...displayExercice.value.map((e) => new Date(e.date).toLocaleDateString("fr-CH")),
+      "",
+      "",
+      "",
+      "",
+      "",
+    ].join(";") +
+    "\n" +
     computedData.value
       .map((s) =>
         [
@@ -294,28 +279,28 @@ const toCvs = () => {
           s.stats.remplace,
           s.stats.excuse,
           s.stats.amende,
-        ].join(';'),
+        ].join(";"),
       )
-      .join('\n') +
-    '\n' +
+      .join("\n") +
+    "\n" +
     [
       `Total : ${exercices.value.length}`,
-      '',
-      '',
-      ...displayExercice.value.map(() => ''),
+      "",
+      "",
+      ...displayExercice.value.map(() => ""),
       computedStats.value.convoque,
       computedStats.value.present,
       computedStats.value.absent,
       computedStats.value.remplace,
       computedStats.value.excuse,
       computedStats.value.amende,
-    ].join(';');
+    ].join(";");
 
   // V2
   var encodedUri = encodeURI(data);
-  var link = document.createElement('a');
-  link.setAttribute('href', encodedUri);
-  link.setAttribute('download', 'statistiques_presences.csv');
+  var link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "statistiques_presences.csv");
   document.body.appendChild(link); // Required for FF
 
   link.click();
@@ -373,16 +358,12 @@ const toCvs = () => {
               </tr>
               <tr>
                 <td>
-                  <span class="badge rouded-pill text-bg-secondary"
-                    >A traiter</span
-                  >
+                  <span class="badge rouded-pill text-bg-secondary">A traiter</span>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <span class="badge rouded-pill text-bg-success"
-                    >Acceptée</span
-                  >
+                  <span class="badge rouded-pill text-bg-success">Acceptée</span>
                 </td>
               </tr>
             </table>
@@ -434,8 +415,7 @@ const toCvs = () => {
                   <div>
                     <span
                       :class="{
-                        'text-decoration-line-through text-danger':
-                          e.statut === 0,
+                        'text-decoration-line-through text-danger': e.statut === 0,
                       }"
                     >
                       {{ e.designation }}
@@ -460,7 +440,7 @@ const toCvs = () => {
                   class="fs-6 fw-normal text-center ps-0 pe-0 border border-1"
                   :class="{ 'bg-danger-subtle': e.statut === 0 }"
                 >
-                  {{ new Date(e.date).toLocaleDateString('fr-CH').slice(0, 5) }}
+                  {{ new Date(e.date).toLocaleDateString("fr-CH").slice(0, 5) }}
                 </th>
                 <th class="text-center">Nb Cvq</th>
                 <th class="text-center">Nb Pre</th>
@@ -471,10 +451,7 @@ const toCvs = () => {
             </thead>
             <tbody>
               <tr>
-                <td
-                  v-if="!computedData.length"
-                  :colspan="displayExercice.length + 8"
-                >
+                <td v-if="!computedData.length" :colspan="displayExercice.length + 8">
                   Aucun sapeur à afficher
                 </td>
               </tr>
@@ -495,9 +472,7 @@ const toCvs = () => {
                     'bg-danger-subtle': displayExercice[index].statut === 0,
                   }"
                 >
-                  <span
-                    class="badge rouded-pill"
-                    :class="formatPresenceClass(p)"
+                  <span class="badge rouded-pill" :class="formatPresenceClass(p)"
                     ><font-awesome-icon
                       v-if="p && !p.convoque"
                       v-tooltip.bottom="'Pour information'"
@@ -517,10 +492,7 @@ const toCvs = () => {
             <thead>
               <tr>
                 <th colspan="3">Total : {{ exercices.length }}</th>
-                <th
-                  v-if="displayExercice.length"
-                  :colspan="displayExercice.length"
-                ></th>
+                <th v-if="displayExercice.length" :colspan="displayExercice.length"></th>
                 <th class="text-center">{{ computedStats.convoque }}</th>
                 <th class="text-center">{{ computedStats.present }}</th>
                 <th class="text-center">{{ computedStats.absent }}</th>

@@ -1,9 +1,9 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useConvocationParamStore } from '../../stores/exercice/ConvocationParam.js';
-import ConvocationService from '/src/services/ConvocationService.js';
+import { computed, reactive, ref } from "vue";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useConvocationParamStore } from "../../stores/exercice/ConvocationParam.js";
+import ConvocationService from "/src/services/ConvocationService.js";
 
 const { data } = defineProps({
   data: {
@@ -34,7 +34,7 @@ const exerciceComptableId = computed(() => exerciceComptableStore.activeId);
 const { showModal, closeModal } = useModalStore();
 
 const convoquer = () => {
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
   ConvocationService.downloadConvocations(exerciceComptableId.value, form.value)
     .then(closeModal)
     .catch(closeModal);
@@ -53,7 +53,7 @@ const select = () => {
       save.save.sapeurIds = res.tous;
     }
     showModal({
-      component: 'ModalConvoquer',
+      component: "ModalConvoquer",
       size: 1,
       callback,
       data: save,
@@ -61,7 +61,7 @@ const select = () => {
     return Promise.resolve(false);
   };
   showModal({
-    component: 'ModalSapeurSelect',
+    component: "ModalSapeurSelect",
     size: 1,
     callback,
     data: {
@@ -83,20 +83,10 @@ const resetSelection = () => {
     <div class="modal-body">
       <div class="row mb-3">
         <div class="col-12 mb-3">
-          <span v-if="!form.sapeurIds.length" class="me-3"
-            >Tous les sapeurs actifs</span
-          >
-          <span v-else-if="form.sapeurIds.length === 1" class="me-3"
-            >1 sapeur sélectionné</span
-          >
-          <span v-else class="me-3"
-            >{{ form.sapeurIds.length }} sapeurs sélectionnés</span
-          >
-          <button
-            class="me-3 btn btn-outline-primary"
-            type="button"
-            @click="select()"
-          >
+          <span v-if="!form.sapeurIds.length" class="me-3">Tous les sapeurs actifs</span>
+          <span v-else-if="form.sapeurIds.length === 1" class="me-3">1 sapeur sélectionné</span>
+          <span v-else class="me-3">{{ form.sapeurIds.length }} sapeurs sélectionnés</span>
+          <button class="me-3 btn btn-outline-primary" type="button" @click="select()">
             Sélection des sapeurs
           </button>
           <button
@@ -185,9 +175,7 @@ const resetSelection = () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">Convoquer</button>
     </div>
   </form>

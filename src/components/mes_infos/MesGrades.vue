@@ -1,7 +1,7 @@
 <script setup>
-import { computed } from 'vue';
-import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
-import { useGradeStore } from '../../stores/sapeur/Grade.js';
+import { computed } from "vue";
+import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
+import { useGradeStore } from "../../stores/sapeur/Grade.js";
 
 const infosStore = useMesInfosStore();
 const gradeStore = useGradeStore();
@@ -18,9 +18,9 @@ const grades = computed(() =>
 );
 
 const fields = [
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'Désignation', key: 'grade' },
-  { title: 'Remarques', key: 'remarques' },
+  { title: "Date", key: "date", type: Date },
+  { title: "Désignation", key: "grade" },
+  { title: "Remarques", key: "remarques" },
 ];
 </script>
 

@@ -1,9 +1,9 @@
 <script setup>
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification';
-import { useModalStore } from '../../stores/common/Modal';
-import { useAdminStore } from '../../stores/admin/Admin';
-import { useAuthStore } from '../../stores/auth/Auth';
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification";
+import { useModalStore } from "../../stores/common/Modal";
+import { useAdminStore } from "../../stores/admin/Admin";
+import { useAuthStore } from "../../stores/auth/Auth";
 
 const adminStore = useAdminStore();
 const authStore = useAuthStore();
@@ -26,8 +26,8 @@ const computedSis = computed(() =>
     const computedContacts = contacts.value[s.api_key] ?? [];
     return {
       ...s,
-      news: computedContacts.filter((c) => c.liste === 'news'),
-      facturation: computedContacts.filter((c) => c.liste === 'facturation'),
+      news: computedContacts.filter((c) => c.liste === "news"),
+      facturation: computedContacts.filter((c) => c.liste === "facturation"),
     };
   }),
 );
@@ -45,20 +45,20 @@ const jsonExport = () => {
 
   navigator.clipboard.writeText(data);
 
-  awn.success('Données copiées dans le press papier');
+  awn.success("Données copiées dans le press papier");
 };
-const editSis = (sis) => showModal({ component: 'ModalSis', data: sis });
-const ajoutSis = () => showModal({ component: 'ModalSis' });
+const editSis = (sis) => showModal({ component: "ModalSis", data: sis });
+const ajoutSis = () => showModal({ component: "ModalSis" });
 
 const fields = [
-  { title: 'id', key: 'id' },
-  { title: 'api_key', key: 'api_key' },
-  { title: 'Nom', key: 'nom' },
-  { title: 'Abréviation', key: 'abreviation' },
-  { title: 'Mobile', key: 'mobile', type: Boolean },
-  { title: 'Newsletter', key: 'news', slot: 'badges' },
-  { title: 'Facturation', key: 'facturation', slot: 'badges' },
-  { title: 'Actions', key: 'id', slot: 'actions' },
+  { title: "id", key: "id" },
+  { title: "api_key", key: "api_key" },
+  { title: "Nom", key: "nom" },
+  { title: "Abréviation", key: "abreviation" },
+  { title: "Mobile", key: "mobile", type: Boolean },
+  { title: "Newsletter", key: "news", slot: "badges" },
+  { title: "Facturation", key: "facturation", slot: "badges" },
+  { title: "Actions", key: "id", slot: "actions" },
 ];
 </script>
 
@@ -99,9 +99,7 @@ const fields = [
             :href="
               'mailto:?bcc=' +
               Object.entries(contacts)
-                .filter(
-                  ([key, _]) => sis.find((s) => s.api_key === key)?.mobile,
-                )
+                .filter(([key, _]) => sis.find((s) => s.api_key === key)?.mobile)
                 .map(([_, value]) => value)
                 .flat()
                 .filter((c) => c.liste === 'news')
@@ -120,9 +118,7 @@ const fields = [
           <h5>Données</h5>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" @click="jsonExport">
-            Données JSON
-          </button>
+          <button class="btn btn-outline-primary" @click="jsonExport">Données JSON</button>
         </div>
       </div>
     </div>
@@ -143,19 +139,12 @@ const fields = [
         no-data="Aucun SIS"
       >
         <template #badges="{ rowData, key }">
-          <span
-            v-for="e in rowData[key]"
-            :key="e.id"
-            class="badge bg-primary me-1"
-            >{{ e.email }}</span
-          >
+          <span v-for="e in rowData[key]" :key="e.id" class="badge bg-primary me-1">{{
+            e.email
+          }}</span>
         </template>
         <template #actions="{ rowData }">
-          <button
-            type="button"
-            class="btn btn-outline-primary border-0"
-            @click="editSis(rowData)"
-          >
+          <button type="button" class="btn btn-outline-primary border-0" @click="editSis(rowData)">
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
         </template>

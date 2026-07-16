@@ -1,11 +1,11 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useCoursStore } from '../../stores/sapeur/Cours.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { computed, ref, watchEffect } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useCoursStore } from "../../stores/sapeur/Cours.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const sapeurStore = useSapeurStore();
 const coursStore = useCoursStore();
@@ -21,35 +21,33 @@ await coursStore.fetchCours();
 
 const activeSapeurCours = computed(() =>
   sapeurStore.active.cours
+    .slice()
     .sort((a, b) => b.date.localeCompare(a.date))
     .map((c) => ({
       ...c,
-      designation: coursStore.liste.find((cours) => cours.id == c.cours_id)
-        ?.designation,
-      localite: localiteStore.liste.find((l) => l.id == c.localite_id)
-        ?.designation,
+      designation: coursStore.liste.find((cours) => cours.id == c.cours_id)?.designation,
+      localite: localiteStore.liste.find((l) => l.id == c.localite_id)?.designation,
     })),
 );
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
 const { showModal, confirm } = useModalStore();
 
-const newCours = () => showModal('ModalSapeurCours');
-const editCours = (cours) =>
-  showModal({ component: 'ModalSapeurCours', data: cours });
+const newCours = () => showModal("ModalSapeurCours");
+const editCours = (cours) => showModal({ component: "ModalSapeurCours", data: cours });
 
 const supprimerCours = (cours) =>
   confirm(
-    'Voulez-vous vraiment supprimer ce cours ?',
+    "Voulez-vous vraiment supprimer ce cours ?",
     "Attention, la suppression d'un cours est irréversible ! Toutes les données de ce cours seront perdues !",
   ).then(() => sapeurStore.removeSapeurCours(cours?.id));
 
 const fields = [
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Lieu', key: 'localite' },
-  { title: 'Durée [jours]', key: 'duree' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Date", key: "date", type: Date },
+  { title: "Désignation", key: "designation" },
+  { title: "Lieu", key: "localite" },
+  { title: "Durée [jours]", key: "duree" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -57,12 +55,7 @@ const fields = [
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Cours</h3>
-      <button
-        v-if="hasEditPermission"
-        type="button"
-        class="btn btn-primary"
-        @click="newCours"
-      >
+      <button v-if="hasEditPermission" type="button" class="btn btn-primary" @click="newCours">
         Ajouter un cours
       </button>
     </div>

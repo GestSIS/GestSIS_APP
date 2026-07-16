@@ -1,10 +1,10 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { usePhaseTypeStore } from '../../stores/intervention/PhaseType.js';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, reactive, ref } from "vue";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const { data } = defineProps({
   data: {
@@ -26,10 +26,8 @@ const form = reactive({
   fin: data?.fin?.slice(0, 5),
 });
 
-const imputationType = ref(
-  form.taux_nuit || form.taux_weekend ? 'taux' : 'tarif-min',
-);
-import { useUniteStore } from '../../stores/common/Unite.js';
+const imputationType = ref(form.taux_nuit || form.taux_weekend ? "taux" : "tarif-min");
+import { useUniteStore } from "../../stores/common/Unite.js";
 
 const compteStore = useCompteStore();
 const ecritureCategorieStore = useEcritureCategorieStore();
@@ -45,23 +43,17 @@ const phases = computed(() => phaseTypeStore.liste);
 const { closeModal } = useModalStore();
 
 const save = () => {
-  if (imputationType.value == 'taux') {
+  if (imputationType.value == "taux") {
     form.type_unite_id = 2; // Par heure
     form.tarif_pro_rata = null;
     form.tarif_min = null;
     form.tarif_min_pour = null;
     form.phase_id = null;
 
-    if (
-      !form.taux_nuit ||
-      !form.taux_weekend ||
-      form.taux_nuit <= 0 ||
-      form.taux_weekend <= 0
-    ) {
+    if (!form.taux_nuit || !form.taux_weekend || form.taux_nuit <= 0 || form.taux_weekend <= 0) {
       errors.value = {
-        taux_nuit: !form.taux_nuit || form.taux_nuit <= 0 ? 'invalide' : null,
-        taux_weekend:
-          !form.taux_weekend || form.taux_weekend <= 0 ? 'invalide' : null,
+        taux_nuit: !form.taux_nuit || form.taux_nuit <= 0 ? "invalide" : null,
+        taux_weekend: !form.taux_weekend || form.taux_weekend <= 0 ? "invalide" : null,
       };
       return;
     }
@@ -84,7 +76,7 @@ const save = () => {
   <div>
     <div class="modal-header">
       <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} une indemnité pour intervention
+        {{ form.id ? "Modifier" : "Ajouter" }} une indemnité pour intervention
       </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
@@ -152,9 +144,7 @@ const save = () => {
             name="taux"
             value="taux"
           />
-          <label class="form-check-label" for="taux"
-            >Taux week-end et taux nuit</label
-          >
+          <label class="form-check-label" for="taux">Taux week-end et taux nuit</label>
         </div>
       </div>
       <div class="container-fluid">
@@ -307,11 +297,9 @@ const save = () => {
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </div>

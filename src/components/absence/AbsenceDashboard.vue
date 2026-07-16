@@ -1,15 +1,15 @@
 <script setup>
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useBaseDataStore } from '../../stores/common/BaseData.js';
-import { useGroupeStore } from '../../stores/groupe/Groupe.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import permissions from '../../composables/permissions.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { computed, ref, watchEffect } from 'vue';
-import useHasPermission from '../../composables/usePermission.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useAbsenceStore } from '../../stores/absence/Absence.js';
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useBaseDataStore } from "../../stores/common/BaseData.js";
+import { useGroupeStore } from "../../stores/groupe/Groupe.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import permissions from "../../composables/permissions.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { computed, ref, watchEffect } from "vue";
+import useHasPermission from "../../composables/usePermission.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useAbsenceStore } from "../../stores/absence/Absence.js";
 
 const fonctionStore = useFonctionStore();
 const localiteStore = useLocaliteStore();
@@ -45,28 +45,26 @@ watchEffect(async () => {
   loading.value = false;
 });
 
-const displayKey = ref('groupe');
+const displayKey = ref("groupe");
 const displayMonth = ref(new Date().getMonth() + 1);
 const mois = [
-  { id: 1, designation: 'Janvier' },
-  { id: 2, designation: 'Février' },
-  { id: 3, designation: 'Mars' },
-  { id: 4, designation: 'Avril' },
-  { id: 5, designation: 'Mai' },
-  { id: 6, designation: 'Juin' },
-  { id: 7, designation: 'Juillet' },
-  { id: 8, designation: 'Août' },
-  { id: 9, designation: 'Septembre' },
-  { id: 10, designation: 'Octobre' },
-  { id: 11, designation: 'Novembre' },
-  { id: 12, designation: 'Decembre' },
+  { id: 1, designation: "Janvier" },
+  { id: 2, designation: "Février" },
+  { id: 3, designation: "Mars" },
+  { id: 4, designation: "Avril" },
+  { id: 5, designation: "Mai" },
+  { id: 6, designation: "Juin" },
+  { id: 7, designation: "Juillet" },
+  { id: 8, designation: "Août" },
+  { id: 9, designation: "Septembre" },
+  { id: 10, designation: "Octobre" },
+  { id: 11, designation: "Novembre" },
+  { id: 12, designation: "Decembre" },
 ];
 
-const sapeurs = computed(() =>
-  sapeurStore.liste.filter((s) => s.actif && s.type == 0),
-);
+const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif && s.type == 0));
 const absences = computed(() =>
-  absenceStore.liste.sort((a, b) => a.debut?.localeCompare(b.debut)),
+  absenceStore.liste.slice().sort((a, b) => a.debut?.localeCompare(b.debut)),
 );
 const localitesSis = computed(() =>
   localiteStore.listeSis.map((l) => ({
@@ -78,15 +76,11 @@ const groupes = computed(() =>
   groupeStore.liste.filter((g) => g.type && g.no).sort((a, b) => a.no - b.no),
 );
 const fonctions = computed(() =>
-  fonctionStore.liste
-    .filter((f) => !f.cumulable && f.actif)
-    .sort((a, b) => b.tri - a.tri),
+  fonctionStore.liste.filter((f) => !f.cumulable && f.actif).sort((a, b) => b.tri - a.tri),
 );
 const permisTypes = computed(() => baseDataStore.permisTypes);
 const activeExerciceComptable = computed(() =>
-  exerciceComptableStore.liste.find(
-    (e) => exerciceComptableStore.activeId === e.id,
-  ),
+  exerciceComptableStore.liste.find((e) => exerciceComptableStore.activeId === e.id),
 );
 const hasEditPermission = useHasPermission(permissions.ABSENCE.MODIFICATION);
 
@@ -119,16 +113,12 @@ const referenceData = computed(() => {
   computedSapeurs.value.forEach((s) => {
     data.total++;
     data.localites[s.localite_id] = (data.localites[s.localite_id] ?? 0) + 1;
-    data.fonctions[s.mainFonctionId] =
-      (data.fonctions[s.mainFonctionId] ?? 0) + 1;
+    data.fonctions[s.mainFonctionId] = (data.fonctions[s.mainFonctionId] ?? 0) + 1;
 
     s.groupeIds?.forEach(
-      (groupeId) =>
-        (data.groupes[groupeId] = (data.groupes[groupeId] ?? 0) + 1),
+      (groupeId) => (data.groupes[groupeId] = (data.groupes[groupeId] ?? 0) + 1),
     );
-    s.permis.forEach(
-      (permisId) => (data.permis[permisId] = (data.permis[permisId] ?? 0) + 1),
-    );
+    s.permis.forEach((permisId) => (data.permis[permisId] = (data.permis[permisId] ?? 0) + 1));
   });
   return data;
 });
@@ -141,8 +131,7 @@ const computedAbsences = computed(() => {
   const nbDays = new Date(year, displayMonth.value, 0).getDate();
   const data = [...Array(nbDays).keys()].map((day) => ({
     jourSemaine: new Date(year, displayMonth.value - 1, 1 + day).getDay(),
-    date:
-      ('0' + (1 + day)).slice(-2) + '.' + ('0' + displayMonth.value).slice(-2),
+    date: ("0" + (1 + day)).slice(-2) + "." + ("0" + displayMonth.value).slice(-2),
     permis: {},
     groupes: {},
     fonctions: {},
@@ -169,15 +158,11 @@ const computedAbsences = computed(() => {
 
           sapeur.permis.forEach(
             (permisId) =>
-              (record.permis[permisId] = (
-                record.permis[permisId] ?? new Set()
-              ).add(sapeur.id)),
+              (record.permis[permisId] = (record.permis[permisId] ?? new Set()).add(sapeur.id)),
           );
           sapeur.groupeIds?.forEach(
             (groupeId) =>
-              (record.groupes[groupeId] = (
-                record.groupes[groupeId] ?? new Set()
-              ).add(sapeur.id)),
+              (record.groupes[groupeId] = (record.groupes[groupeId] ?? new Set()).add(sapeur.id)),
           );
           record.fonctions[sapeur.mainFonctionId] = (
             record.fonctions[sapeur.mainFonctionId] ?? new Set()
@@ -195,16 +180,14 @@ const computedAbsences = computed(() => {
   return data;
 });
 const filteredPermis = computed(() => {
-  const ids = new Set(
-    Object.keys(referenceData.value.permis).map((id) => parseInt(id)),
-  );
+  const ids = new Set(Object.keys(referenceData.value.permis).map((id) => parseInt(id)));
   return permisTypes.value.filter((p) => ids.has(p.id));
 });
 
 const { showModal } = useModalStore();
-const addAbsence = () => showModal({ component: 'ModalAbsence' });
+const addAbsence = () => showModal({ component: "ModalAbsence" });
 const showAbsences = (absences) =>
-  showModal({ component: 'ModalAbsencesStats', data: { absences } });
+  showModal({ component: "ModalAbsencesStats", data: { absences } });
 </script>
 
 <template>
@@ -215,11 +198,7 @@ const showAbsences = (absences) =>
           <h5>Actions</h5>
         </div>
         <div class="card-body d-grid gap-2">
-          <button
-            v-if="hasEditPermission"
-            class="btn btn-outline-primary"
-            @click="addAbsence"
-          >
+          <button v-if="hasEditPermission" class="btn btn-outline-primary" @click="addAbsence">
             Ajouter une absence
           </button>
         </div>
@@ -281,15 +260,9 @@ const showAbsences = (absences) =>
                   :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
                 >
                   {{
-                    [
-                      'Dimanche',
-                      'Lundi',
-                      'Mardi',
-                      'Mercredi',
-                      'Jeudi',
-                      'Vendredi',
-                      'Samedi',
-                    ][jourSemaine]
+                    ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"][
+                      jourSemaine
+                    ]
                   }}
                 </td>
               </tr>
@@ -305,38 +278,25 @@ const showAbsences = (absences) =>
             </thead>
 
             <tbody v-if="displayKey == 'fonction'">
-              <tr
-                v-for="f in [
-                  ...fonctions,
-                  { id: undefined, nom: 'Sans fonction' },
-                ]"
-                :key="f.id"
-              >
+              <tr v-for="f in [...fonctions, { id: undefined, nom: 'Sans fonction' }]" :key="f.id">
                 <th class="sticky">{{ f.nom }}</th>
                 <td
-                  v-for="(
-                    { jourSemaine, fonctions: foncs }, i
-                  ) in computedAbsences"
+                  v-for="({ jourSemaine, fonctions: foncs }, i) in computedAbsences"
                   :key="i"
                   :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
                   :style="
                     'background-color:hsl(' +
                     (
-                      (((referenceData.fonctions[f.id] ?? 0) -
-                        (foncs[f.id] ?? new Set()).size) /
+                      (((referenceData.fonctions[f.id] ?? 0) - (foncs[f.id] ?? new Set()).size) /
                         referenceData.fonctions[f.id] ?? 0) * 120
                     ).toString(10) +
                     ',100%,50%)'
                   "
                 >
                   <template v-if="referenceData.fonctions[f.id]">
-                    <span
-                      class="clickable"
-                      @click="showAbsences(foncs[f.id] ?? new Set())"
-                    >
+                    <span class="clickable" @click="showAbsences(foncs[f.id] ?? new Set())">
                       {{
-                        (referenceData.fonctions[f.id] ?? 0) -
-                        (foncs[f.id] ?? new Set()).size
+                        (referenceData.fonctions[f.id] ?? 0) - (foncs[f.id] ?? new Set()).size
                       }}/{{ referenceData.fonctions[f.id] ?? 0 }}
                     </span>
                   </template>
@@ -355,22 +315,17 @@ const showAbsences = (absences) =>
                   :style="
                     'background-color:hsl(' +
                     (
-                      (((referenceData.permis[p.id] ?? 0) -
-                        (permis[p.id] ?? new Set()).size) /
+                      (((referenceData.permis[p.id] ?? 0) - (permis[p.id] ?? new Set()).size) /
                         referenceData.permis[p.id] ?? 0) * 120
                     ).toString(10) +
                     ',100%,50%)'
                   "
                 >
                   <template v-if="referenceData.permis[p.id]">
-                    <span
-                      class="clickable"
-                      @click="showAbsences(permis[p.id] ?? new Set())"
-                    >
-                      {{
-                        (referenceData.permis[p.id] ?? 0) -
-                        (permis[p.id] ?? new Set()).size
-                      }}/{{ referenceData.permis[p.id] ?? 0 }}
+                    <span class="clickable" @click="showAbsences(permis[p.id] ?? new Set())">
+                      {{ (referenceData.permis[p.id] ?? 0) - (permis[p.id] ?? new Set()).size }}/{{
+                        referenceData.permis[p.id] ?? 0
+                      }}
                     </span>
                   </template>
                   <template v-else>-</template>
@@ -396,13 +351,9 @@ const showAbsences = (absences) =>
                   "
                 >
                   <template v-if="referenceData.localites[l.id]">
-                    <span
-                      class="clickable"
-                      @click="showAbsences(localites[l.id] ?? new Set())"
-                    >
+                    <span class="clickable" @click="showAbsences(localites[l.id] ?? new Set())">
                       {{
-                        (referenceData.localites[l.id] ?? 0) -
-                        (localites[l.id] ?? new Set()).size
+                        (referenceData.localites[l.id] ?? 0) - (localites[l.id] ?? new Set()).size
                       }}/{{ referenceData.localites[l.id] ?? 0 }}
                     </span>
                   </template>
@@ -415,30 +366,23 @@ const showAbsences = (absences) =>
               <tr v-for="g in groupes" :key="g.id">
                 <th class="sticky">{{ g.no }} {{ g.designation }}</th>
                 <td
-                  v-for="(
-                    { jourSemaine, groupes: groups }, i
-                  ) in computedAbsences"
+                  v-for="({ jourSemaine, groupes: groups }, i) in computedAbsences"
                   :key="i"
                   :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
                   :style="
                     'background-color:hsl(' +
                     (
-                      (((referenceData.groupes[g.id] ?? 0) -
-                        (groups[g.id] ?? new Set()).size) /
+                      (((referenceData.groupes[g.id] ?? 0) - (groups[g.id] ?? new Set()).size) /
                         referenceData.groupes[g.id] ?? 0) * 120
                     ).toString(10) +
                     ',100%,50%)'
                   "
                 >
                   <template v-if="referenceData.groupes[g.id]">
-                    <span
-                      class="clickable"
-                      @click="showAbsences(groups[g.id] ?? new Set())"
-                    >
-                      {{
-                        (referenceData.groupes[g.id] ?? 0) -
-                        (groups[g.id] ?? new Set()).size
-                      }}/{{ referenceData.groupes[g.id] ?? 0 }}
+                    <span class="clickable" @click="showAbsences(groups[g.id] ?? new Set())">
+                      {{ (referenceData.groupes[g.id] ?? 0) - (groups[g.id] ?? new Set()).size }}/{{
+                        referenceData.groupes[g.id] ?? 0
+                      }}
                     </span>
                   </template>
                   <template v-else>-</template>

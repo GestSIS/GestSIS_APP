@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const model = defineModel({
   type: [Boolean, Number],
@@ -9,7 +9,7 @@ const model = defineModel({
 const { label, options, advancedLabel } = defineProps({
   label: {
     type: String,
-    default: () => '',
+    default: () => "",
   },
   options: {
     required: true,
@@ -22,15 +22,12 @@ const { label, options, advancedLabel } = defineProps({
 });
 
 const generateQuickGuid = () => {
-  return (
-    Math.random().toString(36).substring(2, 15) +
-    Math.random().toString(36).substring(2, 15)
-  );
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
 };
 
 const uuid = ref(generateQuickGuid());
 
-const splittedLabel = (label) => (label ?? '').split('\n');
+const splittedLabel = (label) => (label ?? "").split("\n");
 </script>
 
 <template>
@@ -44,12 +41,9 @@ const splittedLabel = (label) => (label ?? '').split('\n');
         :name="uuid"
         :value="option.value"
       />
-      <label
-        v-if="!advancedLabel"
-        class="form-check-label"
-        :for="option.value"
-        >{{ option.label }}</label
-      >
+      <label v-if="!advancedLabel" class="form-check-label" :for="option.value">{{
+        option.label
+      }}</label>
       <label v-else class="form-check-label" :for="option.value">
         <template v-for="(l, i) in splittedLabel(option.label)" :key="i">
           {{ l }}<br v-if="i != splittedLabel(option.label).length - 1" />

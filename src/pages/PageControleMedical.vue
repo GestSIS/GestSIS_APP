@@ -1,15 +1,15 @@
 <script setup>
-import { computed, ref, useTemplateRef, watch } from 'vue';
-import useNotification from '../composables/useNotification.js';
-import { useRouter } from 'vue-router';
-import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
-import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
-import { useMedecinStore } from '../stores/controleMedical/Medecin.js';
-import { useControleMedicalTypeStore } from '../stores/controleMedical/ControleMedicalType.js';
-import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
-import PdfViewer from '/src/components/pdf/PdfViewer.vue';
-import { useModalStore } from '../stores/common/Modal';
-import { useControleMedicalStore } from '../stores/controleMedical/ControleMedical.js';
+import { computed, ref, useTemplateRef, watch } from "vue";
+import useNotification from "../composables/useNotification.js";
+import { useRouter } from "vue-router";
+import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
+import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
+import { useMedecinStore } from "../stores/controleMedical/Medecin.js";
+import { useControleMedicalTypeStore } from "../stores/controleMedical/ControleMedicalType.js";
+import ControlesMedicauxService from "/src/services/ControlesMedicauxService.js";
+import PdfViewer from "/src/components/pdf/PdfViewer.vue";
+import { useModalStore } from "../stores/common/Modal";
+import { useControleMedicalStore } from "../stores/controleMedical/ControleMedical.js";
 
 const sapeurStore = useSapeurStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -22,7 +22,7 @@ const awn = useNotification();
 const { id } = defineProps({
   id: {
     type: [String, Number],
-    default: 'ajout',
+    default: "ajout",
   },
 });
 
@@ -35,12 +35,7 @@ const loadControleMedicale =
     ? controleMedicalStore.fetchControleMedical(id)
     : controleMedicalStore.resetControleMedical();
 
-await Promise.all([
-  loadSapeurs,
-  loadMedecins,
-  loadControlesMedicauxTypes,
-  loadControleMedicale,
-]);
+await Promise.all([loadSapeurs, loadMedecins, loadControlesMedicauxTypes, loadControleMedicale]);
 
 const errors = ref({});
 const pdfData = ref(null);
@@ -53,24 +48,17 @@ const sapeurs = computed(() =>
     .filter((s) => s.type === 0 && s.actif)
     .map((s) => {
       const age = Math.floor(
-        (new Date() - new Date(s?.date_naissance || 0).getTime()) /
-          1000 /
-          (60 * 60 * 24) /
-          365.25,
+        (new Date() - new Date(s?.date_naissance || 0).getTime()) / 1000 / (60 * 60 * 24) / 365.25,
       );
       return { ...s, age };
     }),
 );
 const controleTypes = computed(() => controleMedicalTypeStore.liste);
-const activeExerciceComptableId = computed(
-  () => exerciceComptableStore.activeId,
-);
+const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);
 
 const breadcrumbFinal = computed(() => controleMedical.value.designation);
 const sapeurName = computed(() => {
-  const sapeur = sapeurs.value.find(
-    (s) => s.id == controleMedical.value.sapeur_id,
-  );
+  const sapeur = sapeurs.value.find((s) => s.id == controleMedical.value.sapeur_id);
   return `${sapeur?.nom_prenom} (${sapeur?.age} ans)`;
 });
 const modeAjout = computed(() => {
@@ -106,11 +94,9 @@ watch(
 );
 
 const displayJustificatif = () => {
-  ControlesMedicauxService.downloadJustificatif(controleMedical.value.id).then(
-    (response) => {
-      pdfData.value = response.data;
-    },
-  );
+  ControlesMedicauxService.downloadJustificatif(controleMedical.value.id).then((response) => {
+    pdfData.value = response.data;
+  });
 };
 
 if (controleMedical.value.filename) {
@@ -134,23 +120,19 @@ const save = async () => {
     controleMedicalStore
       .createControleMedical()
       .then((res) => {
-        router.push({ name: 'controle-medical', params: { id: res.id } });
-        awn.success(res?.message || 'Modifications enregistrées');
+        router.push({ name: "controle-medical", params: { id: res.id } });
+        awn.success(res?.message || "Modifications enregistrées");
       })
-      .catch((err) =>
-        awn.alert(err?.message || "Erreur lors de l'enregistrement"),
-      );
+      .catch((err) => awn.alert(err?.message || "Erreur lors de l'enregistrement"));
   } else {
     // Sauvegarder les changements
     controleMedicalStore
       .updateControleMedical()
-      .then((res) => awn.success(res?.message || 'Modifications enregistrées'))
-      .catch((err) =>
-        awn.alert(err?.message || "Erreur lors de l'enregistrement"),
-      );
+      .then((res) => awn.success(res?.message || "Modifications enregistrées"))
+      .catch((err) => awn.alert(err?.message || "Erreur lors de l'enregistrement"));
   }
 };
-const fileComponent = useTemplateRef('file-justificatif');
+const fileComponent = useTemplateRef("file-justificatif");
 const ajoutJustificatif = () => {
   if (fileComponent.value.files.length > 0) {
     const file = fileComponent.value.files[0];
@@ -160,7 +142,7 @@ const ajoutJustificatif = () => {
 const { confirm } = useModalStore();
 const removeJustificatif = () =>
   confirm(
-    'Voulez-vous vraiment supprimer ce justificatif ?',
+    "Voulez-vous vraiment supprimer ce justificatif ?",
     "Attention, la suppression d'un justificatif est irréversible ! Toutes les données de ce justificatif seront perdues !",
   ).then(() => controleMedicalStore.removeJustificatif());
 
@@ -169,9 +151,9 @@ const validite = (duree) => {
   var year = d.getFullYear();
   var month = d.getMonth() + 1;
   var day = d.getDate();
-  controleMedical.value.validite = `${year + duree}-${('0' + month).slice(
+  controleMedical.value.validite = `${year + duree}-${("0" + month).slice(
     -2,
-  )}-${('0' + day).slice(-2)}`;
+  )}-${("0" + day).slice(-2)}`;
 };
 </script>
 
@@ -185,9 +167,7 @@ const validite = (duree) => {
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
             <li class="breadcrumb-item">
-              <router-link :to="{ name: 'controles-medicaux' }"
-                >Controles médicaux</router-link
-              >
+              <router-link :to="{ name: 'controles-medicaux' }">Controles médicaux</router-link>
             </li>
             <li class="breadcrumb-item active" aria-current="page">
               {{ breadcrumbFinal }}
@@ -202,7 +182,7 @@ const validite = (duree) => {
           <div class="card-header d-flex justify-content-between">
             <h5>Infos</h5>
             <button class="btn btn-outline-primary" @click="save">
-              {{ modeAjout ? 'Ajouter' : 'Enregistrer' }}
+              {{ modeAjout ? "Ajouter" : "Enregistrer" }}
             </button>
           </div>
           <div class="card-body">
@@ -251,9 +231,7 @@ const validite = (duree) => {
                   type="checkbox"
                   class="form-check-input"
                 />
-                <label class="form-check-label" for="m-ctr-accepter"
-                  >Accepté</label
-                >
+                <label class="form-check-label" for="m-ctr-accepter">Accepté</label>
               </div>
             </div>
             <div class="row">
@@ -277,23 +255,17 @@ const validite = (duree) => {
               </div>
               <div v-if="expirable" class="col-4 d-xl-none">
                 <div v-if="expirable" class="d-grid">
-                  <button class="btn btn-primary" @click="validite(1)">
-                    +1
-                  </button>
+                  <button class="btn btn-primary" @click="validite(1)">+1</button>
                 </div>
               </div>
               <div v-if="expirable" class="col-4 d-xl-none">
                 <div v-if="expirable" class="d-grid">
-                  <button class="btn btn-primary" @click="validite(3)">
-                    +3
-                  </button>
+                  <button class="btn btn-primary" @click="validite(3)">+3</button>
                 </div>
               </div>
               <div v-if="expirable" class="col-4 d-xl-none">
                 <div v-if="expirable" class="d-grid">
-                  <button class="btn btn-primary" @click="validite(5)">
-                    +5
-                  </button>
+                  <button class="btn btn-primary" @click="validite(5)">+5</button>
                 </div>
               </div>
               <div v-if="expirable" class="col-12 col-xl-6">
@@ -316,23 +288,17 @@ const validite = (duree) => {
               </div>
               <div v-if="expirable" class="col-4 d-none d-xl-block">
                 <div v-if="expirable" class="d-grid">
-                  <button class="btn btn-primary" @click="validite(1)">
-                    +1
-                  </button>
+                  <button class="btn btn-primary" @click="validite(1)">+1</button>
                 </div>
               </div>
               <div v-if="expirable" class="col-4 d-none d-xl-block">
                 <div v-if="expirable" class="d-grid">
-                  <button class="btn btn-primary" @click="validite(3)">
-                    +3
-                  </button>
+                  <button class="btn btn-primary" @click="validite(3)">+3</button>
                 </div>
               </div>
               <div v-if="expirable" class="col-4 d-none d-xl-block">
                 <div v-if="expirable" class="d-grid">
-                  <button class="btn btn-primary" @click="validite(5)">
-                    +5
-                  </button>
+                  <button class="btn btn-primary" @click="validite(5)">+5</button>
                 </div>
               </div>
             </div>
@@ -353,18 +319,16 @@ const validite = (duree) => {
           <strong><em>Contrôle médical type, remarque :</em></strong>
           <template
             v-if="
-              !controleTypes?.find(
-                (t) => t.id == controleMedical.controle_medical_type_id,
-              )?.remarque
+              !controleTypes?.find((t) => t.id == controleMedical.controle_medical_type_id)
+                ?.remarque
             "
           >
             Aucune remarque
           </template>
           <template
             v-for="(elem, i) in (
-              controleTypes?.find(
-                (t) => t.id == controleMedical.controle_medical_type_id,
-              )?.remarque ?? ''
+              controleTypes?.find((t) => t.id == controleMedical.controle_medical_type_id)
+                ?.remarque ?? ''
             ).split('\n')"
             :key="i"
           >
@@ -379,16 +343,10 @@ const validite = (duree) => {
             <h5>Document</h5>
             <div v-if="controleMedical.filename">
               {{ controleMedical.filename }}
-              <button
-                class="btn btn-outline-primary ms-2"
-                @click="downloadJustificatif()"
-              >
+              <button class="btn btn-outline-primary ms-2" @click="downloadJustificatif()">
                 Download
               </button>
-              <button
-                class="btn btn-outline-primary ms-2"
-                @click="removeJustificatif()"
-              >
+              <button class="btn btn-outline-primary ms-2" @click="removeJustificatif()">
                 Supprimer
               </button>
             </div>

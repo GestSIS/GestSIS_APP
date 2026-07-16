@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia';
-import ConvocationParamService from '../../services/ConvocationParamService.js';
+import { defineStore } from "pinia";
+import ConvocationParamService from "../../services/ConvocationParamService.js";
 
-export const useConvocationParamStore = defineStore('convocationParam', {
+export const useConvocationParamStore = defineStore("convocationParam", {
   state: () => ({
     params: null,
   }),

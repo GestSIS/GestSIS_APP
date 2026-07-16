@@ -1,7 +1,7 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
+import { computed, ref, watchEffect } from "vue";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useStatistiqueStore } from "../../stores/statistique/Statistique.js";
 
 const exerciceComptableStore = useExerciceComptableStore();
 const statistiqueStore = useStatistiqueStore();
@@ -11,38 +11,36 @@ await exerciceComptableStore.fetchExercicesComptables();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await statistiqueStore.fetchStatistiqueModuleComptable(
-    exerciceComptableStore.activeId,
-  );
+  await statistiqueStore.fetchStatistiqueModuleComptable(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
 const allModule = ref(false);
 const modules = [
-  { designation: 'Exercice & séance', id: 1 },
-  { designation: 'Intervention', id: 2 },
-  { designation: 'Frais et indemnité annuel', id: 3 },
-  { designation: 'Ecriture divers', id: 0 },
-  { designation: 'Amende', id: 5 },
-  { designation: 'Fiche de travail', id: 6 },
-  { designation: 'Cours', id: 7 },
-  { designation: 'Avs', id: 4 },
+  { designation: "Exercice & séance", id: 1 },
+  { designation: "Intervention", id: 2 },
+  { designation: "Frais et indemnité annuel", id: 3 },
+  { designation: "Ecriture divers", id: 0 },
+  { designation: "Amende", id: 5 },
+  { designation: "Fiche de travail", id: 6 },
+  { designation: "Cours", id: 7 },
+  { designation: "Avs", id: 4 },
   // {designation: 'REMBOURSEMENT', id: 8},
 ];
 const fields = [
-  { title: 'Module', key: 'designation' },
+  { title: "Module", key: "designation" },
   {
-    title: 'Nb écritures',
-    key: 'nb',
-    columnClass: 'text-end',
-    titleClass: 'text-end',
+    title: "Nb écritures",
+    key: "nb",
+    columnClass: "text-end",
+    titleClass: "text-end",
   },
   {
-    title: 'Total',
-    key: 'total',
+    title: "Total",
+    key: "total",
     type: Number,
-    titleClass: 'text-end',
-    columnClass: 'text-end',
+    titleClass: "text-end",
+    columnClass: "text-end",
   },
 ];
 
@@ -53,7 +51,7 @@ const filteredData = computed(() => {
     .filter((e) => allModule.value || ids.has(e.id))
     .map((c) => ({
       ...c,
-      ...(stats.value.find((s) => s.module == c.id) ?? {}),
+      ...stats.value.find((s) => s.module == c.id),
     }));
 });
 </script>
@@ -87,12 +85,7 @@ const filteredData = computed(() => {
             <tr>
               <th>Total :</th>
               <th class="text-end">
-                {{
-                  filteredData.reduce(
-                    (acc, a) => acc + (parseInt(a.nb) ?? 0),
-                    0,
-                  )
-                }}
+                {{ filteredData.reduce((acc, a) => acc + (parseInt(a.nb) ?? 0), 0) }}
               </th>
               <th class="text-end">
                 {{

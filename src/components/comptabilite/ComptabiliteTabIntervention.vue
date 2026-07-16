@@ -1,20 +1,20 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useInterventionStore } from '../../stores/intervention/Intervention.js';
-import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
-import { useStatFederalStore } from '../../stores/intervention/StatFederal.js';
-import { useInterventionTraitementStore } from '../../stores/intervention/InterventionTraitement.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import ImputationService from '/src/services/ImputationService.js';
-import permissions from '../../composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import { useTypeInterventionStore } from "../../stores/intervention/TypeIntervention.js";
+import { useStatFederalStore } from "../../stores/intervention/StatFederal.js";
+import { useInterventionTraitementStore } from "../../stores/intervention/InterventionTraitement.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import GenericDetailsRow from "../table/GenericDetailsRow.vue";
+import ImputationService from "/src/services/ImputationService.js";
+import permissions from "../../composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 
 const sapeurStore = useSapeurStore();
 const uniteStore = useUniteStore();
@@ -37,9 +37,7 @@ imputationStore.fetchFraisIndemnitesTypes();
 const loading = ref(false);
 const init = async () => {
   loading.value = true;
-  await interventionStore.fetchListeIntervention(
-    exerciceComptableStore.activeId,
-  );
+  await interventionStore.fetchListeIntervention(exerciceComptableStore.activeId);
   loading.value = false;
 };
 watchEffect(init);
@@ -55,15 +53,12 @@ const statsFederal = computed(() => statFederalStore.liste);
 const traitements = computed(() => interventionTraitementStore.liste);
 const localites = computed(() => localiteStore.liste);
 const unites = computed(() => uniteStore.liste);
-const hasEditPermission = useHasPermission(
-  permissions.COMPTABILITE.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.COMPTABILITE.MODIFICATION);
 const computedData = computed(() => {
   return interventions.value.map((i) => ({
     ...i,
-    type_intervention: typesIntervention.value.find(
-      (t) => t.id == i.type_intervention_id,
-    )?.designation,
+    type_intervention: typesIntervention.value.find((t) => t.id == i.type_intervention_id)
+      ?.designation,
     localite: localites.value.find((l) => l.id == i.localite_id)?.designation,
     getData: () => ImputationService.getEcrituresForInterventions(i.id),
   }));
@@ -83,16 +78,14 @@ const filteredStatFederal = computed(() => {
 
 const selectedId = ref(null);
 const selected = (row) => (selectedId.value = row?.id ?? null);
-const selectedItem = computed(() =>
-  interventions.value.find((i) => i.id == selectedId.value),
-);
+const selectedItem = computed(() => interventions.value.find((i) => i.id == selectedId.value));
 
 const awn = useNotification();
 const { confirm, showModal } = useModalStore();
 
 const imputer = (interventionId) =>
   showModal({
-    component: 'ModalImputerIntervention',
+    component: "ModalImputerIntervention",
     data: { id: interventionId },
     callback: init,
     size: 2,
@@ -100,7 +93,7 @@ const imputer = (interventionId) =>
 
 const annulerImputer = (interventionId) =>
   confirm(
-    'Voulez-vous vraiment supprimer cette imputation ?',
+    "Voulez-vous vraiment supprimer cette imputation ?",
     "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cette intervention.",
   ).then(() =>
     imputationStore
@@ -116,159 +109,158 @@ const onRowClass = (dataItem, isSelected) => {
   }
 
   const statutsClass = {
-    0: '', //'A saisir',
-    1: '', //'A valider',
-    2: 'table-warning', //'Validée',
-    3: 'table-success', //'Imputée'
+    0: "", //'A saisir',
+    1: "", //'A valider',
+    2: "table-warning", //'Validée',
+    3: "table-success", //'Imputée'
   };
   return statutsClass[dataItem.statut];
 };
 
 const degres = [
-  { id: 1, designation: 'Fausse alarme' },
-  { id: 2, designation: 'Petite' },
-  { id: 3, designation: 'Moyenne' },
-  { id: 4, designation: 'Grande' },
+  { id: 1, designation: "Fausse alarme" },
+  { id: 2, designation: "Petite" },
+  { id: 3, designation: "Moyenne" },
+  { id: 4, designation: "Grande" },
 ];
 const detailRowOptions = {
   fields: [
     {
-      title: 'Sapeur',
-      key: 'sapeur_id',
-      formatter: (field) =>
-        sapeurs.value.find((s) => s.id == field)?.nom_prenom,
+      title: "Sapeur",
+      key: "sapeur_id",
+      formatter: (field) => sapeurs.value.find((s) => s.id == field)?.nom_prenom,
     },
     {
-      title: 'Tarif',
-      key: 'tarif',
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      title: "Tarif",
+      key: "tarif",
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
     {
-      title: 'Tarif min',
-      key: 'tarif_min',
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      title: "Tarif min",
+      key: "tarif_min",
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
     {
-      title: 'Pour',
-      key: 'tarif_min_pour',
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      title: "Pour",
+      key: "tarif_min_pour",
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
     {
-      title: 'Pro-rata',
-      key: 'tarif_min_pro_rata',
+      title: "Pro-rata",
+      key: "tarif_min_pro_rata",
       type: Boolean,
-      titleClass: 'text-center',
-      columnClass: 'text-center',
+      titleClass: "text-center",
+      columnClass: "text-center",
     },
     {
-      title: 'Unité',
-      key: 'type_unite_id',
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      title: "Unité",
+      key: "type_unite_id",
+      titleClass: "text-center",
+      columnClass: "text-end",
       formatter: (id) => unites.value.find((u) => u.id == id)?.abreviation,
     },
     {
-      title: 'Taux',
-      key: 'taux',
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      title: "Taux",
+      key: "taux",
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
     {
-      title: 'Taux description',
-      key: 'taux_description',
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      title: "Taux description",
+      key: "taux_description",
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
     {
-      title: 'Quantité',
-      key: 'quantite',
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      title: "Quantité",
+      key: "quantite",
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
     {
-      title: 'Total',
-      key: 'total',
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      title: "Total",
+      key: "total",
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
   ],
 };
 const fields = [
   {
-    title: 'Date',
-    key: 'date_debut',
+    title: "Date",
+    key: "date_debut",
     type: Date,
   },
   {
-    title: 'Heure',
-    key: 'heure_debut',
+    title: "Heure",
+    key: "heure_debut",
     formatter(value) {
       return value.slice(0, 5);
     },
   },
   {
     title: "Type d'intervention",
-    key: 'type_intervention',
+    key: "type_intervention",
   },
   {
-    title: 'Localité',
-    key: 'localite_id',
+    title: "Localité",
+    key: "localite_id",
     formatter(value) {
       return localites.value.find((l) => l.id == value)?.designation;
     },
   },
   {
-    title: 'Lieu',
-    key: 'lieu',
+    title: "Lieu",
+    key: "lieu",
   },
   {
-    title: 'Stat fédérale',
-    key: 'stat_federal_id',
+    title: "Stat fédérale",
+    key: "stat_federal_id",
     formatter(value) {
       return statsFederal.value.find((s) => s.id == value)?.designation;
     },
   },
   {
-    title: 'Traitement',
-    key: 'intervention_traitement_id',
+    title: "Traitement",
+    key: "intervention_traitement_id",
     formatter(value) {
       return traitements.value.find((t) => t.id == value)?.designation;
     },
   },
   {
-    title: 'Étendue',
-    key: 'degre',
+    title: "Étendue",
+    key: "degre",
     formatter(value) {
       const degre = {
-        1: 'Fausse-alarme',
-        2: 'Petite',
-        3: 'Moyenne',
-        4: 'Grande',
+        1: "Fausse-alarme",
+        2: "Petite",
+        3: "Moyenne",
+        4: "Grande",
       };
       return degre[value];
     },
   },
   {
-    title: 'Statut',
-    key: 'statut',
+    title: "Statut",
+    key: "statut",
     formatter(value) {
       const statuts = {
-        0: 'A saisir',
-        1: 'A valider',
-        2: 'Validée',
-        3: 'Imputée',
+        0: "A saisir",
+        1: "A valider",
+        2: "Validée",
+        3: "Imputée",
       };
       return statuts[value];
     },
   },
   {
-    title: 'Actions',
-    slot: 'actions',
-    titleClass: 'align-middle text-center',
-    columnClass: 'align-middle text-center',
+    title: "Actions",
+    slot: "actions",
+    titleClass: "align-middle text-center",
+    columnClass: "align-middle text-center",
   },
 ];
 </script>
@@ -323,27 +315,21 @@ const fields = [
                 base-option="&lt;Type&gt;"
                 :options="filteredTypesIntervention"
                 :model-value="filters.type_intervention_id"
-                @update:model-value="
-                  (value) => setFilter('type_intervention_id', value)
-                "
+                @update:model-value="(value) => setFilter('type_intervention_id', value)"
               />
               <base-select
                 class="col-md-4 mb-1"
                 base-option="&lt;Statistique fédérale&gt;"
                 :options="filteredStatFederal"
                 :model-value="filters.stat_federal_id"
-                @update:model-value="
-                  (value) => setFilter('stat_federal_id', value)
-                "
+                @update:model-value="(value) => setFilter('stat_federal_id', value)"
               />
               <base-select
                 class="col-md-4 mb-1"
                 base-option="&lt;Traitement&gt;"
                 :options="traitements"
                 :model-value="filters.intervention_traitement_id"
-                @update:model-value="
-                  (value) => setFilter('intervention_traitement_id', value)
-                "
+                @update:model-value="(value) => setFilter('intervention_traitement_id', value)"
               />
               <base-select
                 class="col-md-4 mb-1"
@@ -353,9 +339,7 @@ const fields = [
                 @update:model-value="(value) => setFilter('degre', value)"
               />
               <div v-if="canReset" class="col-md-4 mb-1">
-                <button class="btn btn-sm btn-warning w-100" @click="reset">
-                  Réinitialiser
-                </button>
+                <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
               </div>
             </div>
           </form>
@@ -382,10 +366,7 @@ const fields = [
               @selected="selected"
             >
               <template #detail-row="{ rowData }">
-                <generic-details-row
-                  :options="detailRowOptions"
-                  :row-data="rowData"
-                />
+                <generic-details-row :options="detailRowOptions" :row-data="rowData" />
               </template>
               <template #actions="{ rowData }">
                 <button

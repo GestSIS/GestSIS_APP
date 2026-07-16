@@ -1,9 +1,9 @@
 <script setup>
-import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
-import { useLocaliteStore } from '../stores/common/Localite.js';
-import { useExerciceCategorieStore } from '../stores/exercice/ExerciceCategorie.js';
-import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
+import { useLocaliteStore } from "../stores/common/Localite.js";
+import { useExerciceCategorieStore } from "../stores/exercice/ExerciceCategorie.js";
+import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
+import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -13,15 +13,9 @@ const exerciceComptableStore = useExerciceComptableStore();
 const loadSapeurs = sapeurStore.fetchListeSapeur();
 const loadLocalities = localiteStore.fetchLocalites();
 const loadExerciceCategories = exerciceCategorieStore.fetchExerciceCategories();
-const loadExerciceComptables =
-  exerciceComptableStore.fetchExercicesComptables();
+const loadExerciceComptables = exerciceComptableStore.fetchExercicesComptables();
 
-await Promise.all([
-  loadSapeurs,
-  loadLocalities,
-  loadExerciceCategories,
-  loadExerciceComptables,
-]);
+await Promise.all([loadSapeurs, loadLocalities, loadExerciceCategories, loadExerciceComptables]);
 </script>
 
 <template>
@@ -33,9 +27,7 @@ await Promise.all([
             <li class="breadcrumb-item">
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Exercices
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Exercices</li>
           </ol>
         </nav>
       </div>

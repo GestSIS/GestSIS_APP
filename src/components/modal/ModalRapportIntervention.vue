@@ -1,9 +1,9 @@
 <script setup>
-import { reactive, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/composables/permissions.js';
-import InterventionService from '/src/services/InterventionService.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { reactive, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import permissions from "/src/composables/permissions.js";
+import InterventionService from "/src/services/InterventionService.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const { data } = defineProps({
   data: {
@@ -28,19 +28,13 @@ const form = reactive({
   montants: false,
 });
 
-const hasComptabilitePermission = useHasPermission(
-  permissions.COMPTABILITE.LECTURE,
-);
+const hasComptabilitePermission = useHasPermission(permissions.COMPTABILITE.LECTURE);
 
 const { closeModal, showModal } = useModalStore();
 
 const generer = () => {
-  showModal({ component: 'ModalChargement' });
-  InterventionService.downloadRapport(
-    data.interventionId,
-    form,
-    `${data.date}_intervention.pdf`,
-  )
+  showModal({ component: "ModalChargement" });
+  InterventionService.downloadRapport(data.interventionId, form, `${data.date}_intervention.pdf`)
     .then(() => closeModal())
     .catch(() => closeModal());
 };
@@ -60,9 +54,7 @@ const generer = () => {
           type="checkbox"
           class="form-check-input"
         />
-        <label class="form-check-label" for="infoGeneral"
-          >Informations générales</label
-        >
+        <label class="form-check-label" for="infoGeneral">Informations générales</label>
       </div>
       <div class="form-check">
         <input
@@ -71,29 +63,15 @@ const generer = () => {
           type="checkbox"
           class="form-check-input"
         />
-        <label class="form-check-label" for="description"
-          >Description de l'intervention</label
-        >
+        <label class="form-check-label" for="description">Description de l'intervention</label>
       </div>
       <div class="form-check">
-        <input
-          id="groupes"
-          v-model="form.groupes"
-          type="checkbox"
-          class="form-check-input"
-        />
+        <input id="groupes" v-model="form.groupes" type="checkbox" class="form-check-input" />
         <label class="form-check-label" for="groupes">Groupes alarmés</label>
       </div>
       <div class="form-check">
-        <input
-          id="presences"
-          v-model="form.presences"
-          type="checkbox"
-          class="form-check-input"
-        />
-        <label class="form-check-label" for="presences"
-          >Détails des présences des sapeurs</label
-        >
+        <input id="presences" v-model="form.presences" type="checkbox" class="form-check-input" />
+        <label class="form-check-label" for="presences">Détails des présences des sapeurs</label>
       </div>
       <div class="form-check">
         <input
@@ -108,88 +86,36 @@ const generer = () => {
         >
       </div>
       <div class="form-check">
-        <input
-          id="vehicules"
-          v-model="form.vehicules"
-          type="checkbox"
-          class="form-check-input"
-        />
-        <label class="form-check-label" for="vehicules"
-          >Véhicules mobilisé</label
-        >
+        <input id="vehicules" v-model="form.vehicules" type="checkbox" class="form-check-input" />
+        <label class="form-check-label" for="vehicules">Véhicules mobilisé</label>
       </div>
       <div class="form-check">
-        <input
-          id="materiel"
-          v-model="form.materiel"
-          type="checkbox"
-          class="form-check-input"
-        />
+        <input id="materiel" v-model="form.materiel" type="checkbox" class="form-check-input" />
         <label class="form-check-label" for="materiel">Matériel utilisé</label>
       </div>
       <div class="form-check">
-        <input
-          id="absents"
-          v-model="form.absents"
-          type="checkbox"
-          class="form-check-input"
-        />
-        <label class="form-check-label" for="absents"
-          >Sapeurs non-présent</label
-        >
+        <input id="absents" v-model="form.absents" type="checkbox" class="form-check-input" />
+        <label class="form-check-label" for="absents">Sapeurs non-présent</label>
       </div>
       <div class="form-check">
-        <input
-          id="statut"
-          v-model="form.statut"
-          type="checkbox"
-          class="form-check-input"
-        />
-        <label class="form-check-label" for="statut"
-          >Indication du traitement du rapport</label
-        >
+        <input id="statut" v-model="form.statut" type="checkbox" class="form-check-input" />
+        <label class="form-check-label" for="statut">Indication du traitement du rapport</label>
       </div>
       <div class="form-check">
-        <input
-          id="missions"
-          v-model="form.missions"
-          type="checkbox"
-          class="form-check-input"
-        />
-        <label class="form-check-label" for="missions"
-          >Missions de l'intervention</label
-        >
+        <input id="missions" v-model="form.missions" type="checkbox" class="form-check-input" />
+        <label class="form-check-label" for="missions">Missions de l'intervention</label>
       </div>
       <div class="form-check">
-        <input
-          id="appels"
-          v-model="form.appels"
-          type="checkbox"
-          class="form-check-input"
-        />
-        <label class="form-check-label" for="appels"
-          >Appels durant l'intervention</label
-        >
+        <input id="appels" v-model="form.appels" type="checkbox" class="form-check-input" />
+        <label class="form-check-label" for="appels">Appels durant l'intervention</label>
       </div>
-      <div
-        v-if="hasComptabilitePermission && data.statut >= 3"
-        class="form-check"
-      >
-        <input
-          id="montants"
-          v-model="form.montants"
-          type="checkbox"
-          class="form-check-input"
-        />
-        <label class="form-check-label" for="montants"
-          >Informations financières (montant)</label
-        >
+      <div v-if="hasComptabilitePermission && data.statut >= 3" class="form-check">
+        <input id="montants" v-model="form.montants" type="checkbox" class="form-check-input" />
+        <label class="form-check-label" for="montants">Informations financières (montant)</label>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">Générer</button>
     </div>
   </form>

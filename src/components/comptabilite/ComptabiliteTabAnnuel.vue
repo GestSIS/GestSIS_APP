@@ -1,15 +1,15 @@
 <script setup>
-import { useModalStore } from '../../stores/common/Modal.js';
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import permissions from '../../composables/permissions.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { useModalStore } from "../../stores/common/Modal.js";
+import GenericDetailsRow from "../table/GenericDetailsRow.vue";
+import permissions from "../../composables/permissions.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -24,9 +24,7 @@ compteStore.fetchComptes();
 fonctionStore.fetchFonctions();
 imputationStore.fetchFraisIndemnitesTypes();
 
-const activeExerciceComptableId = computed(
-  () => exerciceComptableStore.activeId,
-);
+const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);
 
 const loading = ref(false);
 watchEffect(async () => {
@@ -39,17 +37,13 @@ const sapeurs = computed(() => sapeurStore.liste);
 const comptes = computed(() => compteStore.liste);
 const ecritures = computed(() => imputationStore.ecritures.annuels);
 const fonctions = computed(() => fonctionStore.liste);
-const hasEditPermission = useHasPermission(
-  permissions.COMPTABILITE.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.COMPTABILITE.MODIFICATION);
 const computedData = computed(() => {
   //Group by sapeur ID
   return (
     Object.entries(
       ecritures.value.reduce((reduced, ecriture) => {
-        (reduced[ecriture.sapeur_id] = reduced[ecriture.sapeur_id] || []).push(
-          ecriture,
-        );
+        (reduced[ecriture.sapeur_id] = reduced[ecriture.sapeur_id] || []).push(ecriture);
         return reduced;
       }, {}),
     )
@@ -65,8 +59,7 @@ const computedData = computed(() => {
         return {
           ...e,
           ...sapeur,
-          fonction: fonctions.value.find((f) => f.id == sapeur?.fonction_id)
-            ?.nom,
+          fonction: fonctions.value.find((f) => f.id == sapeur?.fonction_id)?.nom,
         };
       })
       // Add data relative to table
@@ -89,13 +82,12 @@ const filteredSapeurs = computed(() => {
 const { confirm, showModal } = useModalStore();
 const awn = useNotification();
 
-const regenererSapeur = () =>
-  showModal({ component: 'ModalImputerAnnuel', size: 2 });
+const regenererSapeur = () => showModal({ component: "ModalImputerAnnuel", size: 2 });
 
 const annulerImputation = async () =>
   confirm(
     "Voulez-vous annuler l'imputation annuel des frais ?",
-    'Attention, les écritures actuelles seront supprimées, mais il vous sera toujours possible de générer ces écritures à nouveau.',
+    "Attention, les écritures actuelles seront supprimées, mais il vous sera toujours possible de générer ces écritures à nouveau.",
   ).then(() =>
     imputationStore
       .annulerImputationAnnuel(activeExerciceComptableId.value)
@@ -106,69 +98,69 @@ const annulerImputation = async () =>
         ),
       ),
   );
-const generer = () => showModal({ component: 'ModalImputerAnnuel', size: 2 });
+const generer = () => showModal({ component: "ModalImputerAnnuel", size: 2 });
 
 const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {
     return;
   }
-  return dataItem.actif ? '' : 'text-danger';
+  return dataItem.actif ? "" : "text-danger";
 };
 
 const detailRowOptions = {
   fields: [
-    { title: 'Designation', key: 'designation' },
+    { title: "Designation", key: "designation" },
     {
-      title: 'Type',
-      key: 'type',
+      title: "Type",
+      key: "type",
       formatter: (t) => {
         const mapping = {
-          0: 'Autre',
-          1: 'Solde',
-          2: 'Indemnité',
-          3: 'Frais forfaitaire',
-          4: 'Frais effectif',
-          5: 'Cotisation AVS/AC',
+          0: "Autre",
+          1: "Solde",
+          2: "Indemnité",
+          3: "Frais forfaitaire",
+          4: "Frais effectif",
+          5: "Cotisation AVS/AC",
         };
-        return mapping[t] ?? 'Autre';
+        return mapping[t] ?? "Autre";
       },
     },
     {
-      title: 'Compte',
-      key: 'compte_id',
+      title: "Compte",
+      key: "compte_id",
       formatter: (id) => comptes.value.find((f) => f.id == id)?.label,
     },
     {
-      title: 'Tarif',
-      key: 'tarif',
+      title: "Tarif",
+      key: "tarif",
       type: Number,
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
     {
-      title: 'Quantité',
-      key: 'quantite',
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      title: "Quantité",
+      key: "quantite",
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
     {
-      title: 'Total',
-      key: 'total',
+      title: "Total",
+      key: "total",
       type: Number,
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
   ],
 };
 const fields = [
-  { title: 'Sapeur', key: 'nom_prenom' },
-  { title: 'Fonction', key: 'fonction' },
-  { title: 'Total', key: 'total', type: Number },
+  { title: "Sapeur", key: "nom_prenom" },
+  { title: "Fonction", key: "fonction" },
+  { title: "Total", key: "total", type: Number },
   {
-    title: 'Actions',
-    slot: 'actions',
-    titleClass: 'align-middle text-center',
-    columnClass: 'align-middle text-center',
+    title: "Actions",
+    slot: "actions",
+    titleClass: "align-middle text-center",
+    columnClass: "align-middle text-center",
   },
 ];
 </script>
@@ -191,7 +183,7 @@ const fields = [
               :title="computedData.length ? 'Regénérer tous' : 'Générer'"
               @click.prevent="generer"
             >
-              {{ computedData.length ? 'Regénérer' : 'Générer' }}
+              {{ computedData.length ? "Regénérer" : "Générer" }}
             </button>
             <button
               v-if="computedData.length"
@@ -217,9 +209,7 @@ const fields = [
               @update:model-value="(value) => setFilter('id', value)"
             />
             <div v-if="canReset" class="w-100 mt-3">
-              <button class="btn btn-sm btn-warning w-100" @click="reset">
-                Réinitialiser
-              </button>
+              <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
             </div>
           </form>
         </div>
@@ -240,10 +230,7 @@ const fields = [
               :selectable="true"
             >
               <template #detail-row="{ rowData }">
-                <generic-details-row
-                  :options="detailRowOptions"
-                  :row-data="rowData"
-                />
+                <generic-details-row :options="detailRowOptions" :row-data="rowData" />
               </template>
               <template #actions="{ rowData }">
                 <button

@@ -1,12 +1,12 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
-import { groupedByData, indexedData } from '../../tools/index.js';
-import TagCouleur from './TagCouleur.vue';
-import permissions from '../../composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { computed, ref } from "vue";
+import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
+import { groupedByData, indexedData } from "../../tools/index.js";
+import TagCouleur from "./TagCouleur.vue";
+import permissions from "../../composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const typeStore = useMaterielTypeStore();
 const categorieStore = useMaterielCategorieStore();
@@ -34,22 +34,18 @@ const linearCategories = (categorieId) => {
   return [...linearCategories(categorie.parent_id), categorie];
 };
 
-const filtre = ref('');
+const filtre = ref("");
 
 const computedData = computed(() => {
   // TODO: Trier les categories par `tri`
-  const sortedCategories = [...categorieStore.liste].sort(
-    (a, b) => a.tri - b.tri,
-  );
+  const sortedCategories = [...categorieStore.liste].sort((a, b) => a.tri - b.tri);
 
   // Grouper les types par categorie
   const groupedTypesByCategorieId = groupedByData(
     typeStore.liste.filter((t) =>
-      t.designation
-        .toLowerCase()
-        .includes(filtre.value.toLowerCase().trim(' ')),
+      t.designation.toLowerCase().includes(filtre.value.toLowerCase().trim(" ")),
     ),
-    'materiel_categorie_id',
+    "materiel_categorie_id",
   );
 
   // Map categories avec leurs types et les filtre
@@ -60,10 +56,10 @@ const computedData = computed(() => {
     }))
     .filter((groupe) => groupe.types.length > 0)
     .flatMap(({ categorie, types }) => [
-      { type: 'categorie', globalId: 'c' + categorie.id, data: categorie },
+      { type: "categorie", globalId: "c" + categorie.id, data: categorie },
       ...types.map((t) => ({
-        type: 'type',
-        globalId: 't' + t.id,
+        type: "type",
+        globalId: "t" + t.id,
         data: t,
       })),
     ]);

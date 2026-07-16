@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
+import { computed, ref, watchEffect } from "vue";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useStatistiqueStore } from "../../stores/statistique/Statistique.js";
 
 const localiteStore = useLocaliteStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -14,15 +14,13 @@ await exerciceComptableStore.fetchExercicesComptables();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await statistiqueStore.fetchStatistiqueLocalite(
-    exerciceComptableStore.activeId,
-  );
+  await statistiqueStore.fetchStatistiqueLocalite(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
 const fields = [
-  { title: 'Localité', key: 'designation' },
-  { title: 'Nombre', key: 'quantite' },
+  { title: "Localité", key: "designation" },
+  { title: "Nombre", key: "quantite" },
 ];
 
 const localites = computed(() => localiteStore.liste);
@@ -30,7 +28,8 @@ const sapeurLocalites = computed(() => statistiqueStore.localites);
 const occurences = computed(() => {
   return sapeurLocalites.value.reduce(
     (prev, { localite_id, nb }) => (
-      (prev[localite_id] = (prev[localite_id] ?? 0) + parseFloat(nb)), prev
+      (prev[localite_id] = (prev[localite_id] ?? 0) + parseFloat(nb)),
+      prev
     ),
     {},
   );

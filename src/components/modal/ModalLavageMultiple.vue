@@ -1,12 +1,12 @@
 <script setup>
-import { ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useEmplacementStore } from '../../stores/materiel/Emplacement';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import LavageService from '../../services/materiel/LavageService';
-import ArticleService from '../../services/materiel/ArticleService';
-import ArticleSelecteur from '../materiel/ArticleSelecteur.vue';
+import { ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useEmplacementStore } from "../../stores/materiel/Emplacement";
+import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import LavageService from "../../services/materiel/LavageService";
+import ArticleService from "../../services/materiel/ArticleService";
+import ArticleSelecteur from "../materiel/ArticleSelecteur.vue";
 
 const { data, callback } = defineProps({
   data: {
@@ -28,10 +28,7 @@ const activeAttribution = ref({
 const materielTypeStore = useMaterielTypeStore();
 const emplacementStore = useEmplacementStore();
 
-await Promise.all([
-  materielTypeStore.fetchMaterielTypes(),
-  emplacementStore.fetchEmplacements(),
-]);
+await Promise.all([materielTypeStore.fetchMaterielTypes(), emplacementStore.fetchEmplacements()]);
 
 const articlesLavable = ref(await ArticleService.getLavable());
 
@@ -47,9 +44,7 @@ const save = async () => {
       callback();
       closeModal();
     })
-    .catch((error) =>
-      awn.alert(error.message ?? 'Erreur lors de la création des lavages'),
-    );
+    .catch((error) => awn.alert(error.message ?? "Erreur lors de la création des lavages"));
 };
 </script>
 
@@ -72,17 +67,12 @@ const save = async () => {
           />
         </div>
         <div class="col-md-12">
-          <article-selecteur
-            v-model="activeAttribution.articles"
-            :articles="articlesLavable"
-          />
+          <article-selecteur v-model="activeAttribution.articles" :articles="articlesLavable" />
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
       <button type="submit" class="btn btn-primary">Ajouter</button>
     </div>
   </form>

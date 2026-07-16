@@ -1,11 +1,11 @@
 <script setup>
-import { computed, reactive, ref, watch } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useGradeStore } from '../../stores/sapeur/Grade.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useCoursStore } from '../../stores/sapeur/Cours.js';
+import { computed, reactive, ref, watch } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useGradeStore } from "../../stores/sapeur/Grade.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useCoursStore } from "../../stores/sapeur/Cours.js";
 
 const { data } = defineProps({
   data: {
@@ -65,11 +65,7 @@ if ((data.id || 0) === 0) {
         if (fonction?.cumulable === 0) {
           let funcs = sapeurFonctions.value
             .filter((f) => f.fin === null)
-            .filter(
-              (f) =>
-                fonctions.value.find((e) => e.id == f.fonction_id)
-                  ?.cumulable === 0,
-            );
+            .filter((f) => fonctions.value.find((e) => e.id == f.fonction_id)?.cumulable === 0);
           if (funcs.length > 0) {
             form.fonction_sapeur_id = funcs[0].id || 0;
           }
@@ -84,13 +80,10 @@ const { closeModal } = useModalStore();
 const save = () => {
   let saveData = Object.assign({}, form);
   Object.keys(saveData).map((key) => {
-    saveData[key] =
-      saveData[key] === 0 || saveData[key] === '0' ? null : saveData[key];
+    saveData[key] = saveData[key] === 0 || saveData[key] === "0" ? null : saveData[key];
   });
 
-  (addMode.value ? sapeurStore.addSapeurCours : sapeurStore.editSapeurCours)(
-    saveData,
-  )
+  (addMode.value ? sapeurStore.addSapeurCours : sapeurStore.editSapeurCours)(saveData)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };
@@ -241,11 +234,9 @@ const dateChange = () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ addMode ? 'Ajouter' : 'Modifier' }}
+        {{ addMode ? "Ajouter" : "Modifier" }}
       </button>
     </div>
   </form>

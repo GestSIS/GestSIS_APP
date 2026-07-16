@@ -1,10 +1,10 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { useHeureExerciceStore } from '../../stores/exercice/HeureExercice.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
+import { computed, reactive, ref } from "vue";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { useHeureExerciceStore } from "../../stores/exercice/HeureExercice.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
 
 const { data } = defineProps({
   data: {
@@ -44,8 +44,7 @@ const save = () => {
   <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} une heure additionelle pour
-        exercice
+        {{ form.id ? "Modifier" : "Ajouter" }} une heure additionelle pour exercice
       </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
@@ -117,11 +116,9 @@ const save = () => {
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

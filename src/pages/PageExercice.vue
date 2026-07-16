@@ -1,27 +1,27 @@
 <script setup>
-import { computed, watchEffect } from 'vue';
-import { useRoute } from 'vue-router';
-import { useExerciceStore } from '../stores/exercice/Exercice.js';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import { computed, watchEffect } from "vue";
+import { useRoute } from "vue-router";
+import { useExerciceStore } from "../stores/exercice/Exercice.js";
+import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 
 const { id } = defineProps({
   id: {
     type: String,
-    default: 'new',
+    default: "new",
   },
 });
 
 const exerciceStore = useExerciceStore();
 const route = useRoute();
 
-const newMode = computed(() => id === 'new');
+const newMode = computed(() => id === "new");
 watchEffect(() => {
-  if (id !== 'new') {
+  if (id !== "new") {
     exerciceStore.selectExercice(parseInt(id));
     exerciceStore.fetchExercice(parseInt(id));
   } else {
-    if (route.name != 'exercice-details') {
-      router.push({ name: 'exercice-details', id: 'new' });
+    if (route.name != "exercice-details") {
+      router.push({ name: "exercice-details", id: "new" });
     }
   }
 });
@@ -30,9 +30,9 @@ const activeExerciceId = computed(() => exerciceStore.active.id);
 const activeExerciceData = computed(() => exerciceStore.active.data);
 const breadcrumbFinal = computed(() =>
   newMode.value
-    ? 'Nouveau'
-    : new Date(activeExerciceData.value.date)?.toLocaleDateString('fr-CH') +
-      ' - ' +
+    ? "Nouveau"
+    : new Date(activeExerciceData.value.date)?.toLocaleDateString("fr-CH") +
+      " - " +
       activeExerciceData.value?.designation,
 );
 </script>

@@ -1,7 +1,7 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useAuthStore } from '../../stores/auth/Auth.js';
+import { computed, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useAuthStore } from "../../stores/auth/Auth.js";
 
 const authStore = useAuthStore();
 
@@ -11,11 +11,11 @@ d.setMonth(d.getMonth() + 1);
 const step = ref(1);
 const errors = ref({});
 const token = ref({
-  description: '',
+  description: "",
   validite: d.toISOString().substring(0, 10),
-  email: '',
+  email: "",
   roles: [],
-  token: '',
+  token: "",
 });
 
 const roles = computed(() => authStore.roles);
@@ -27,17 +27,17 @@ const copyToClipboard = (value) => {
 };
 const save = () => {
   if (token.value.roles.length <= 0) {
-    errors.value = { roles: 'Sélectionnez au minimum 1 rôle' };
+    errors.value = { roles: "Sélectionnez au minimum 1 rôle" };
   } else {
     delete errors.value.roles;
   }
-  if (token.value.description === '') {
-    errors.value = { description: 'Description invalide' };
+  if (token.value.description === "") {
+    errors.value = { description: "Description invalide" };
   } else {
     delete errors.value.description;
   }
   if (new Date(token.value.validite) <= new Date()) {
-    errors.value = { validite: 'Validité incorrecte' };
+    errors.value = { validite: "Validité incorrecte" };
   } else {
     delete errors.value.validite;
   }
@@ -104,15 +104,14 @@ const save = () => {
           </label>
         </div>
         <div class="invalid-feedback" :class="{ 'd-block': errors['roles'] }">
-          {{ errors['roles'] }}
+          {{ errors["roles"] }}
         </div>
       </div>
     </div>
     <div v-if="step === 2" class="modal-body">
       <p>
-        Votre token a été généré avec succès, vous pouvez le transmettre à votre
-        contact qui pourra alors l'utiliser lors de la création d'un nouveau
-        compte.
+        Votre token a été généré avec succès, vous pouvez le transmettre à votre contact qui pourra
+        alors l'utiliser lors de la création d'un nouveau compte.
       </p>
       <p>Ce compte aura dès lors accès au rôles précédemment défini.</p>
       <div class="mb-3">
@@ -138,11 +137,9 @@ const save = () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">
-        {{ step == 1 ? 'Annuler' : 'Fermer' }}
+        {{ step == 1 ? "Annuler" : "Fermer" }}
       </button>
-      <button v-if="step === 1" type="submit" class="btn btn-primary">
-        Créer
-      </button>
+      <button v-if="step === 1" type="submit" class="btn btn-primary">Créer</button>
     </div>
   </form>
 </template>

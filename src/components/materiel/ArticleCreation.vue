@@ -1,9 +1,9 @@
 <script setup>
-import { computed, nextTick, useTemplateRef } from 'vue';
+import { computed, nextTick, useTemplateRef } from "vue";
 
-import { indexedData } from '../../tools/index.js';
+import { indexedData } from "../../tools/index.js";
 
-const articles = defineModel({ default: () => [] });
+const articles = defineModel({ type: Array, default: () => [] });
 
 const { articleTypes } = defineProps({
   articleTypes: { type: Array, required: true },
@@ -11,7 +11,7 @@ const { articleTypes } = defineProps({
 
 if (articles.value.length === 0) {
   articles.value.push({
-    materiel_type_id: '',
+    materiel_type_id: "",
     taille: null,
     remarque: null,
     quantite: 1,
@@ -24,36 +24,26 @@ const types = computed(() =>
 const indexedTypes = computed(() => indexedData(types.value));
 
 const afficherColoneTaille = computed(() =>
-  articles.value.some(
-    (a) => indexedTypes.value[a.materiel_type_id]?.est_taillee,
-  ),
+  articles.value.some((a) => indexedTypes.value[a.materiel_type_id]?.est_taillee),
 );
 const afficherColoneNumero = computed(() =>
-  articles.value.some(
-    (a) => indexedTypes.value[a.materiel_type_id]?.est_numerote,
-  ),
+  articles.value.some((a) => indexedTypes.value[a.materiel_type_id]?.est_numerote),
 );
 const afficherColoneQuantite = computed(() =>
-  articles.value.some(
-    (a) => !indexedTypes.value[a.materiel_type_id]?.est_numerote,
-  ),
+  articles.value.some((a) => !indexedTypes.value[a.materiel_type_id]?.est_numerote),
 );
 const afficherColoneVehicule = computed(() =>
-  articles.value.some(
-    (a) => indexedTypes.value[a.materiel_type_id]?.type === 3,
-  ),
+  articles.value.some((a) => indexedTypes.value[a.materiel_type_id]?.type === 3),
 );
 
 const articleReference = useTemplateRef(`articles-reference`);
 const addEmptyLine = () => {
   articles.value.push({
     compartiment: null,
-    materiel_type_id: '',
+    materiel_type_id: "",
     numero: null,
     taille: null,
-    remarque: null,
     achat: null,
-    taille: null,
     remarque: null,
     quantite: 1,
   });
@@ -83,9 +73,7 @@ const addEmptyLine = () => {
     </thead>
     <tbody v-if="types.length === 0">
       <tr>
-        <td colspan="6">
-          Aucun matériel type de configuré ! Impossible d'ajouter du matériel'.
-        </td>
+        <td colspan="6">Aucun matériel type de configuré ! Impossible d'ajouter du matériel'.</td>
       </tr>
     </tbody>
     <tbody v-else>
@@ -197,24 +185,13 @@ const addEmptyLine = () => {
           />
         </td>
         <td>
-          <input
-            v-model="item.achat"
-            class="form-control form-control-sm"
-            type="text"
-          />
+          <input v-model="item.achat" class="form-control form-control-sm" type="text" />
         </td>
         <td>
-          <input
-            v-model="item.remarque"
-            class="form-control form-control-sm"
-            type="text"
-          />
+          <input v-model="item.remarque" class="form-control form-control-sm" type="text" />
         </td>
         <td>
-          <button
-            class="btn btn-outline-danger border-0"
-            @click="articles.splice(index, 1)"
-          >
+          <button class="btn btn-outline-danger border-0" @click="articles.splice(index, 1)">
             <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>
         </td>

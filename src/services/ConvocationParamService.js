@@ -1,10 +1,10 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getParams() {
-    return Api.api().get('/convocation-param');
+    return Api.api().get("/convocation-param");
   },
   updateParams(params) {
-    return Api.api().post('/convocation-param', params);
+    return Api.api().post("/convocation-param", params);
   },
 };

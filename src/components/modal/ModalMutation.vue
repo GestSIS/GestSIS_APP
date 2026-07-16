@@ -1,9 +1,9 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, reactive, ref } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const { data } = defineProps({
   data: {
@@ -31,7 +31,7 @@ sapeurStore.fetchSapeurFonctions(sapeurStore.active.id);
 
 const localites = computed(() => localiteStore.liste);
 
-const finDeService = computed(() => form.action == 'finService');
+const finDeService = computed(() => form.action == "finService");
 
 // Une date de fin vient d'être ajoutée si la mutation n'en avait pas auparavant
 const sortieAjoutee = computed(() => !!form.sortie && !data.sortie);
@@ -51,7 +51,7 @@ const onSaved = () => {
       0
   ) {
     showModal({
-      component: 'ModalMutationDesactivation',
+      component: "ModalMutationDesactivation",
       data: { sortie: form.sortie },
     });
   } else {
@@ -77,9 +77,7 @@ const save = () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} une mutation
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} une mutation</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -103,9 +101,7 @@ const save = () => {
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['sortie'] }"
         />
-        <div v-if="errors['sortie']" class="invalid-feedback">
-          Date invalide
-        </div>
+        <div v-if="errors['sortie']" class="invalid-feedback">Date invalide</div>
       </div>
       <base-select
         v-model="form.localite_id"
@@ -127,11 +123,9 @@ const save = () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

@@ -1,9 +1,9 @@
 <script setup>
-import { computed } from 'vue';
-import { useMedecinStore } from '../../stores/controleMedical/Medecin.js';
-import { useControleMedicalTypeStore } from '../../stores/controleMedical/ControleMedicalType.js';
-import MesInfosService from '../../services/MesInfosService';
-import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
+import { computed } from "vue";
+import { useMedecinStore } from "../../stores/controleMedical/Medecin.js";
+import { useControleMedicalTypeStore } from "../../stores/controleMedical/ControleMedicalType.js";
+import MesInfosService from "../../services/MesInfosService";
+import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
 
 const infosStore = useMesInfosStore();
 const medecinStore = useMedecinStore();
@@ -17,14 +17,13 @@ Promise.all([
 
 const controlesMedicaux = computed(() =>
   infosStore.controlesMedicaux
+    .slice()
     .sort((a, b) => b.validite?.localeCompare(a.validite))
     .map((c) => ({
       ...c,
-      type: controleMedicalTypeStore.liste.find(
-        (t) => t.id == c.controle_medical_type_id,
-      )?.designation,
-      medecin: medecinStore.liste.find((m) => m.id == c.medecin_id)
+      type: controleMedicalTypeStore.liste.find((t) => t.id == c.controle_medical_type_id)
         ?.designation,
+      medecin: medecinStore.liste.find((m) => m.id == c.medecin_id)?.designation,
     })),
 );
 
@@ -36,28 +35,25 @@ const onRowClass = (dataItem, isSelected) => {
     return;
   }
 
-  if (
-    (dataItem.validite && Date.parse(dataItem.validite) < new Date()) ||
-    !dataItem.accepter
-  ) {
-    return 'table-danger';
+  if ((dataItem.validite && Date.parse(dataItem.validite) < new Date()) || !dataItem.accepter) {
+    return "table-danger";
   }
 };
 
 const fields = [
-  { title: 'Type', key: 'type' },
-  { title: 'Medecin', key: 'medecin' },
-  { title: 'Consultation', key: 'consultation', type: Date },
-  { title: 'Validité', key: 'validite', type: Date },
-  { title: 'Designation', key: 'designation' },
-  { title: 'Accepté', key: 'accepter', type: Boolean },
+  { title: "Type", key: "type" },
+  { title: "Medecin", key: "medecin" },
+  { title: "Consultation", key: "consultation", type: Date },
+  { title: "Validité", key: "validite", type: Date },
+  { title: "Designation", key: "designation" },
+  { title: "Accepté", key: "accepter", type: Boolean },
   // { title: 'En cours', key: 'en_cours', type: Boolean },
   {
-    title: 'Doc',
-    key: 'doc',
-    slot: 'doc',
-    titleClass: 'align-middle text-center',
-    columnClass: 'align-middle text-center',
+    title: "Doc",
+    key: "doc",
+    slot: "doc",
+    titleClass: "align-middle text-center",
+    columnClass: "align-middle text-center",
   },
 ];
 </script>
@@ -78,11 +74,7 @@ const fields = [
         no-data="Aucun contrôle médical"
       >
         <template #doc="{ rowData }">
-          <button
-            v-if="rowData.filename"
-            class="btn"
-            @click="downloadJustificatif(rowData)"
-          >
+          <button v-if="rowData.filename" class="btn" @click="downloadJustificatif(rowData)">
             <font-awesome-icon :icon="['far', 'file-pdf']" />
           </button>
         </template>

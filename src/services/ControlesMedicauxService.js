@@ -1,8 +1,8 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getControlesMedicaux() {
-    return Api.api().get('/controles-medicaux');
+    return Api.api().get("/controles-medicaux");
   },
   getControleMedical(id) {
     return Api.api().get(`/controles-medicaux/${id}`);
@@ -13,30 +13,28 @@ export default {
     });
   },
   updateControleMedical(id, controleData) {
-    return Api.api().put('/controles-medicaux/' + id, {
+    return Api.api().put("/controles-medicaux/" + id, {
       ...controleData,
     });
   },
   removeControleMedical(id) {
-    return Api.api().delete('/controles-medicaux/' + id);
+    return Api.api().delete("/controles-medicaux/" + id);
   },
   addJustificatif(id, file) {
     const form = new FormData();
-    form.append('justificatif', file);
-    return Api.api().post('/controles-medicaux/' + id + '/justificatif', form, {
+    form.append("justificatif", file);
+    return Api.api().post("/controles-medicaux/" + id + "/justificatif", form, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
   },
   downloadJustificatif(controleMedicalId, filename) {
     return Api.apiFileDownload(filename).get(
-      `/controles-medicaux/${controleMedicalId}/justificatif`
+      `/controles-medicaux/${controleMedicalId}/justificatif`,
     );
   },
   removeJustificatif(controleMedicalId) {
-    return Api.api().delete(
-      '/controles-medicaux/' + controleMedicalId + '/justificatif'
-    );
+    return Api.api().delete("/controles-medicaux/" + controleMedicalId + "/justificatif");
   },
 };

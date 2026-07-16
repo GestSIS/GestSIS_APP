@@ -1,31 +1,26 @@
 <script setup>
-import { computed } from 'vue';
-import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
+import { computed } from "vue";
+import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
+import { useMaterielTypeStore } from "../../stores/materiel/Type";
 
 const infosStore = useMesInfosStore();
 const materielTypeStore = useMaterielTypeStore();
 
-await Promise.all([
-  infosStore.fetchMonMateriel(),
-  materielTypeStore.fetchMaterielTypes(),
-]);
+await Promise.all([infosStore.fetchMonMateriel(), materielTypeStore.fetchMaterielTypes()]);
 
 const materiels = computed(() =>
   infosStore.materiels.map((m) => ({
     ...m,
-    materiel_type: materielTypeStore.liste.find(
-      (t) => t.id == m.materiel_type_id,
-    )?.designation,
+    materiel_type: materielTypeStore.liste.find((t) => t.id == m.materiel_type_id)?.designation,
   })),
 );
 
 const fields = [
-  { title: 'Numéro', key: 'numero' },
-  { title: 'Matériel', key: 'materiel_type' },
-  { title: 'Taille', key: 'taille' },
-  { title: 'Remarque', key: 'remarque' },
-  { title: 'Attribution', key: 'attribution', type: Date },
+  { title: "Numéro", key: "numero" },
+  { title: "Matériel", key: "materiel_type" },
+  { title: "Taille", key: "taille" },
+  { title: "Remarque", key: "remarque" },
+  { title: "Attribution", key: "attribution", type: Date },
 ];
 </script>
 

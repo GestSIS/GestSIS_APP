@@ -1,6 +1,6 @@
 <script setup>
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
+import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
+import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
 
 const exerciceComptableStore = useExerciceComptableStore();
 await exerciceComptableStore.fetchExercicesComptables();
@@ -15,9 +15,7 @@ await exerciceComptableStore.fetchExercicesComptables();
             <li class="breadcrumb-item">
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Comptabilité
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Comptabilité</li>
           </ol>
         </nav>
       </div>

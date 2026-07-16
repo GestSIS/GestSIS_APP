@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useAspsmsParamStore } from '../../stores/sms/AspsmsParam.js';
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useAspsmsParamStore } from "../../stores/sms/AspsmsParam.js";
 
-import AspsmsParamService from '../../services/AspsmsParamService';
+import AspsmsParamService from "../../services/AspsmsParamService";
 
 const { data } = defineProps({
   data: {
@@ -18,10 +18,10 @@ const errors = ref({});
 const loadingCredit = ref(true);
 const sapeurs = ref([...data]);
 const params = ref({
-  message: '',
-  origin: 'GestSIS',
+  message: "",
+  origin: "GestSIS",
   differe: false,
-  date: '',
+  date: "",
   sapeurIds: [],
 });
 
@@ -48,29 +48,29 @@ const awn = useNotification();
 
 const send = () => {
   if (params.value.differe && new Date(params.value.date) < new Date()) {
-    return awn.alert('Date invalide');
+    return awn.alert("Date invalide");
   }
 
   const clonedParams = {
     ...params.value,
     message: params.value.message
-      .replaceAll('‘', "'")
-      .replaceAll('’', "'")
-      .replaceAll('«', '"')
-      .replaceAll('»', '"'),
+      .replaceAll("‘", "'")
+      .replaceAll("’", "'")
+      .replaceAll("«", '"')
+      .replaceAll("»", '"'),
     contacts: computedSapeurs.value
       .filter((s) => s?.portable)
       .map((s) => ({ sapeurId: s.sapeur_id, numero: s?.portable })),
   };
 
   if (clonedParams.contacts.length == 0) {
-    return awn.alert('Aucun numéro disponible');
+    return awn.alert("Aucun numéro disponible");
   }
 
   AspsmsParamService.sendSms(clonedParams)
     .then(() => {
       aspsmsParamStore.fetchCredit();
-      awn.success('Message envoyé avec succès');
+      awn.success("Message envoyé avec succès");
       closeModal();
     })
     .catch((err) => {
@@ -82,14 +82,14 @@ const send = () => {
 
 const fields = [
   {
-    title: 'Nom prénom',
-    key: 'nom_prenom',
-    titleClass: 'align-middle',
+    title: "Nom prénom",
+    key: "nom_prenom",
+    titleClass: "align-middle",
   },
   {
-    title: 'Portable',
-    key: 'portable',
-    titleClass: 'align-middle',
+    title: "Portable",
+    key: "portable",
+    titleClass: "align-middle",
   },
 ];
 </script>
@@ -106,11 +106,7 @@ const fields = [
           <base-table :fields="fields" :data="computedSapeurs" />
         </div>
         <div class="col-6">
-          <base-checkbox
-            v-model="params.differe"
-            class="mb-3"
-            label="Envoie différé"
-          />
+          <base-checkbox v-model="params.differe" class="mb-3" label="Envoie différé" />
           <div v-if="params.differe" class="mb-3">
             <label for="date">Date</label>
             <input
@@ -123,9 +119,7 @@ const fields = [
             />
           </div>
           <div class="mb-3">
-            <label for="commentaire"
-              >Message ({{ 500 - params.message.length }})</label
-            >
+            <label for="commentaire">Message ({{ 500 - params.message.length }})</label>
             <textarea
               id="commentaire"
               v-model="params.message"
@@ -138,18 +132,14 @@ const fields = [
             ></textarea>
           </div>
           <p>
-            Crédit : <span>{{ loadingCredit ? 'chargement...' : credit }}</span>
+            Crédit : <span>{{ loadingCredit ? "chargement..." : credit }}</span>
           </p>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
-      <button type="submit" class="btn btn-primary" :disabled="sending">
-        Envoyer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
+      <button type="submit" class="btn btn-primary" :disabled="sending">Envoyer</button>
     </div>
   </form>
 </template>

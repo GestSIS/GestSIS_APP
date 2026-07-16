@@ -1,12 +1,12 @@
 <script setup>
-import { computed } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
+import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 
 const uniteStore = useUniteStore();
 const travailTypeStore = useTravailTypeStore();
@@ -17,42 +17,37 @@ const loadUnites = uniteStore.fetchUnites();
 const loadComptes = compteStore.fetchComptes();
 const loadEcritureCategories = ecritureCategorieStore.fetchEcritureCategories();
 
-await Promise.all([
-  loadComptes,
-  loadUnites,
-  loadTravailTypes,
-  loadEcritureCategories,
-]);
+await Promise.all([loadComptes, loadUnites, loadTravailTypes, loadEcritureCategories]);
 
 const fields = [
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Catégorie comptable', key: 'categorie' },
-  { title: 'Actif', key: 'actif', type: Boolean },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Désignation", key: "designation" },
+  { title: "Catégorie comptable", key: "categorie" },
+  { title: "Actif", key: "actif", type: Boolean },
+  { title: "Actions", slot: "actions" },
 ];
 
 const detailRowOptions = {
   fields: [
     {
-      title: 'Type',
-      key: 'type',
+      title: "Type",
+      key: "type",
       formatter: (type) => {
         const mapping = {
-          0: 'Autre',
-          1: 'Solde',
-          2: 'Indemnité',
-          3: 'Frais forfaitaire',
-          4: 'Frais effectif',
-          5: 'Charges AVS/AC',
+          0: "Autre",
+          1: "Solde",
+          2: "Indemnité",
+          3: "Frais forfaitaire",
+          4: "Frais effectif",
+          5: "Charges AVS/AC",
         };
-        return mapping[type] || '';
+        return mapping[type] || "";
       },
     },
-    { title: 'Tarif', key: 'tarif' },
-    { title: 'Unité', key: 'unite' },
-    { title: 'Compte', key: 'compte' },
+    { title: "Tarif", key: "tarif" },
+    { title: "Unité", key: "unite" },
+    { title: "Compte", key: "compte" },
   ],
-  noData: 'Aucune indemnité',
+  noData: "Aucune indemnité",
 };
 
 const computedData = computed(() => {
@@ -63,13 +58,11 @@ const computedData = computed(() => {
         c.fonctions.map((e) => ({
           ...e,
           unite: uniteStore.liste.find((u) => u.id == c.type_unite_id)?.unite,
-          compte: compteStore.liste.find((c) => c.id == e.compte_id)
-            ?.designation,
+          compte: compteStore.liste.find((c) => c.id == e.compte_id)?.designation,
         })),
       ),
-    categorie: ecritureCategorieStore.liste.find(
-      (e) => e.id == c.ecriture_categorie_id,
-    )?.designation,
+    categorie: ecritureCategorieStore.liste.find((e) => e.id == c.ecriture_categorie_id)
+      ?.designation,
   }));
 });
 
@@ -78,14 +71,14 @@ const awn = useNotification();
 
 const ajoutTravailType = () =>
   showModal({
-    component: 'ModalTravailType',
+    component: "ModalTravailType",
     size: 1,
     data: {},
   });
 
 const updateTravailType = (travailType) =>
   showModal({
-    component: 'ModalTravailType',
+    component: "ModalTravailType",
     size: 1,
     data: { ...travailType },
   });
@@ -93,7 +86,7 @@ const updateTravailType = (travailType) =>
 const deleteTravailType = (travailType) =>
   travailTypeStore
     .removeTravailType(travailType.id)
-    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
 </script>
 
 <template>
@@ -113,10 +106,7 @@ const deleteTravailType = (travailType) =>
         :selectable="true"
       >
         <template #detail-row="{ rowData }">
-          <generic-details-row
-            :options="detailRowOptions"
-            :row-data="rowData"
-          />
+          <generic-details-row :options="detailRowOptions" :row-data="rowData" />
         </template>
         <template #actions="{ rowData }">
           <td class="align-middle text-center">

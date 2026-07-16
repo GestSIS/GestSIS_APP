@@ -1,88 +1,86 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getEffectif() {
-    return Api.api().get('/effectif');
+    return Api.api().get("/effectif");
   },
   listeFssp(date) {
-    return Api.apiFileDownload('liste_fssp.xlsx').get('/liste-fssp', {
+    return Api.apiFileDownload("liste_fssp.xlsx").get("/liste-fssp", {
       params: { date },
     });
   },
   listeFoad(date) {
-    return Api.apiFileDownload('liste_foad.xlsx').get('/liste-foad', {
+    return Api.apiFileDownload("liste_foad.xlsx").get("/liste-foad", {
       params: { date },
     });
   },
   downloadTrombinoscope(filename) {
-    return Api.apiFileDownload(filename).get('/trombinoscope');
+    return Api.apiFileDownload(filename).get("/trombinoscope");
   },
   downloadFicheSapeur(sapeurId, filename) {
-    return Api.apiFileDownload(filename).get('/sapeurs/' + sapeurId + '/fiche');
+    return Api.apiFileDownload(filename).get("/sapeurs/" + sapeurId + "/fiche");
   },
   getSapeurPourConvocationSms() {
-    return Api.api().get('/sapeurs-convocation');
+    return Api.api().get("/sapeurs-convocation");
   },
   getSapeursTelephones() {
-    return Api.api().get('/sapeurs-telephones');
+    return Api.api().get("/sapeurs-telephones");
   },
   getSapeurs(options = {}) {
-    return Api.api().get('/sapeurs', { params: options });
+    return Api.api().get("/sapeurs", { params: options });
   },
   getData(sapeurId) {
-    return Api.api().get('/sapeurs/' + sapeurId);
+    return Api.api().get("/sapeurs/" + sapeurId);
   },
   getPermis(sapeurId) {
-    return Api.api().get('/sapeurs/' + sapeurId + '/permis');
+    return Api.api().get("/sapeurs/" + sapeurId + "/permis");
   },
   getTelephones(sapeurId) {
-    return Api.api().get('/sapeurs/' + sapeurId + '/telephones');
+    return Api.api().get("/sapeurs/" + sapeurId + "/telephones");
   },
   getGroupes(sapeurId) {
-    return Api.api().get('/sapeurs/' + sapeurId + '/groupes');
+    return Api.api().get("/sapeurs/" + sapeurId + "/groupes");
   },
   getGrades(sapeurId) {
-    return Api.api().get('/sapeurs/' + sapeurId + '/grades');
+    return Api.api().get("/sapeurs/" + sapeurId + "/grades");
   },
   getFonctions(sapeurId) {
-    return Api.api().get('/sapeurs/' + sapeurId + '/fonctions');
+    return Api.api().get("/sapeurs/" + sapeurId + "/fonctions");
   },
   getCours(sapeurId) {
-    return Api.api().get('/sapeurs/' + sapeurId + '/cours');
+    return Api.api().get("/sapeurs/" + sapeurId + "/cours");
   },
   getControlesMedicaux(sapeurId) {
-    return Api.api().get('/sapeurs/' + sapeurId + '/controles-medicaux');
+    return Api.api().get("/sapeurs/" + sapeurId + "/controles-medicaux");
   },
   getMutations(sapeurId) {
-    return Api.api().get('/sapeurs/' + sapeurId + '/mutations');
+    return Api.api().get("/sapeurs/" + sapeurId + "/mutations");
   },
   getMateriels(sapeurId) {
-    return Api.api().get('/sapeurs/' + sapeurId + '/articles');
+    return Api.api().get("/sapeurs/" + sapeurId + "/articles");
   },
   getExercices(sapeurId, exerciceComptableId) {
-    return Api.api().get(
-      '/sapeurs/' + sapeurId + '/exercices/' + exerciceComptableId
-    );
+    return Api.api().get("/sapeurs/" + sapeurId + "/exercices/" + exerciceComptableId);
   },
   createSapeur(sapeurData) {
-    return Api.api().post('/sapeurs', sapeurData);
+    return Api.api().post("/sapeurs", sapeurData);
   },
   deleteSapeur(sapeurId) {
-    return Api.api().delete('/sapeurs/' + sapeurId);
+    return Api.api().delete("/sapeurs/" + sapeurId);
   },
   saveSapeur(sapeurId, sapeurData) {
-    return Api.api().put('/sapeurs/' + sapeurId, sapeurData);
+    return Api.api().put("/sapeurs/" + sapeurId, sapeurData);
   },
   saveNonSapeurStatut(sapeurId, sapeurData) {
-    return Api.api().put('/sapeurs/' + sapeurId + '/autre-statut', sapeurData);
+    return Api.api().put("/sapeurs/" + sapeurId + "/autre-statut", sapeurData);
   },
   fetchPhoto(sapeurId) {
     return Api.api()
-      .get('/sapeurs/' + sapeurId + '/photo', {
-        responseType: 'blob',
+      .get("/sapeurs/" + sapeurId + "/photo", {
+        responseType: "blob",
       })
       .then((data) => {
-        if (data?.type == 'application/json') {
+        if (data?.type == "application/json") {
           return null;
         } else {
           return URL.createObjectURL(data);
@@ -91,68 +89,52 @@ export default {
   },
   updatePhoto(sapeurId, photo) {
     const formData = new FormData();
-    formData.append('image', photo);
+    formData.append("image", photo);
 
-    return Api.api().post('/sapeurs/' + sapeurId + '/photo', formData, {
+    return Api.api().post("/sapeurs/" + sapeurId + "/photo", formData, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        "Content-Type": "multipart/form-data",
       },
     });
   },
   deletePhoto(sapeurId) {
-    return Api.api().delete('/sapeurs/' + sapeurId + '/photo');
+    return Api.api().delete("/sapeurs/" + sapeurId + "/photo");
   },
 
   //Téléphones
   addTelephone(sapeurId, telephoneData) {
-    return Api.api().post(
-      '/sapeurs/' + sapeurId + '/telephones',
-      telephoneData
-    );
+    return Api.api().post("/sapeurs/" + sapeurId + "/telephones", telephoneData);
   },
   editTelephone(sapeurId, telephoneData) {
-    return Api.api().put(
-      '/sapeurs/' + sapeurId + '/telephones/' + telephoneData.id,
-      telephoneData
-    );
+    return Api.api().put("/sapeurs/" + sapeurId + "/telephones/" + telephoneData.id, telephoneData);
   },
   removeTelephone(sapeurId, telephoneId) {
-    return Api.api().delete(
-      '/sapeurs/' + sapeurId + '/telephones/' + telephoneId
-    );
+    return Api.api().delete("/sapeurs/" + sapeurId + "/telephones/" + telephoneId);
   },
 
   //Permis
   addPermis(sapeurId, permisData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/permis', permisData);
+    return Api.api().post("/sapeurs/" + sapeurId + "/permis", permisData);
   },
   editPermis(sapeurId, permisData) {
-    return Api.api().put(
-      '/sapeurs/' + sapeurId + '/permis/' + permisData.id,
-      permisData
-    );
+    return Api.api().put("/sapeurs/" + sapeurId + "/permis/" + permisData.id, permisData);
   },
   removePermis(sapeurId, permisId) {
-    return Api.api().delete('/sapeurs/' + sapeurId + '/permis/' + permisId);
+    return Api.api().delete("/sapeurs/" + sapeurId + "/permis/" + permisId);
   },
 
   //Fonctions
   addFonction(sapeurId, fonctionData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/fonctions', fonctionData);
+    return Api.api().post("/sapeurs/" + sapeurId + "/fonctions", fonctionData);
   },
   editFonction(sapeurId, fonctionData) {
-    return Api.api().put(
-      '/sapeurs/' + sapeurId + '/fonctions/' + fonctionData.id,
-      fonctionData
-    );
+    return Api.api().put("/sapeurs/" + sapeurId + "/fonctions/" + fonctionData.id, fonctionData);
   },
   removeFonction(sapeurId, fonctionId) {
-    return Api.api().delete(
-      '/sapeurs/' + sapeurId + '/fonctions/' + fonctionId
-    );
+    return Api.api().delete("/sapeurs/" + sapeurId + "/fonctions/" + fonctionId);
   },
   finFonctions(sapeurId, date, fonctionsId) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/fin-fonctions', {
+    return Api.api().post("/sapeurs/" + sapeurId + "/fin-fonctions", {
       ids: fonctionsId,
       date: date,
     });
@@ -160,57 +142,46 @@ export default {
 
   //Grades
   addGrade(sapeurId, gradeData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/grades', gradeData);
+    return Api.api().post("/sapeurs/" + sapeurId + "/grades", gradeData);
   },
   editGrade(sapeurId, gradeData) {
-    return Api.api().put(
-      '/sapeurs/' + sapeurId + '/grades/' + gradeData.id,
-      gradeData
-    );
+    return Api.api().put("/sapeurs/" + sapeurId + "/grades/" + gradeData.id, gradeData);
   },
   removeGrade(sapeurId, gradeId) {
-    return Api.api().delete('/sapeurs/' + sapeurId + '/grades/' + gradeId);
+    return Api.api().delete("/sapeurs/" + sapeurId + "/grades/" + gradeId);
   },
 
   //Cours
   addCours(sapeurId, coursData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/cours', coursData);
+    return Api.api().post("/sapeurs/" + sapeurId + "/cours", coursData);
   },
   editCours(sapeurId, coursData) {
-    return Api.api().put(
-      '/sapeurs/' + sapeurId + '/cours/' + coursData.id,
-      coursData
-    );
+    return Api.api().put("/sapeurs/" + sapeurId + "/cours/" + coursData.id, coursData);
   },
   removeCours(sapeurId, coursId) {
-    return Api.api().delete('/sapeurs/' + sapeurId + '/cours/' + coursId);
+    return Api.api().delete("/sapeurs/" + sapeurId + "/cours/" + coursId);
   },
 
   //Mutations
   addMutation(sapeurId, mutationData) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/mutations', mutationData);
+    return Api.api().post("/sapeurs/" + sapeurId + "/mutations", mutationData);
   },
   editMutation(sapeurId, mutationData) {
-    return Api.api().put(
-      '/sapeurs/' + sapeurId + '/mutations/' + mutationData.id,
-      mutationData
-    );
+    return Api.api().put("/sapeurs/" + sapeurId + "/mutations/" + mutationData.id, mutationData);
   },
   removeMutation(sapeurId, mutationId) {
-    return Api.api().delete(
-      '/sapeurs/' + sapeurId + '/mutations/' + mutationId
-    );
+    return Api.api().delete("/sapeurs/" + sapeurId + "/mutations/" + mutationId);
   },
 
   //Groupes
   quitterGroupes(sapeurId, groupesId) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/quitter-groupes', {
+    return Api.api().post("/sapeurs/" + sapeurId + "/quitter-groupes", {
       groupes: groupesId,
     });
   },
 
   supprimerConvocation(sapeurId, convocationsIds) {
-    return Api.api().post('/sapeurs/' + sapeurId + '/supprimer-convocations', {
+    return Api.api().post("/sapeurs/" + sapeurId + "/supprimer-convocations", {
       convocations: convocationsIds,
     });
   },

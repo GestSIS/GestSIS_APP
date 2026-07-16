@@ -1,13 +1,13 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import permissions from '../../composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import GenericDetailsRow from "../table/GenericDetailsRow.vue";
+import permissions from "../../composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const sapeurStore = useSapeurStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -17,24 +17,18 @@ await exerciceComptableStore.fetchExercicesComptables();
 
 sapeurStore.fetchListeSapeur();
 
-const activeExerciceComptableId = computed(
-  () => exerciceComptableStore.activeId,
-);
+const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await imputationStore.fetchAmendesExerciceComptable(
-    activeExerciceComptableId.value,
-  );
+  await imputationStore.fetchAmendesExerciceComptable(activeExerciceComptableId.value);
   loading.value = false;
 });
 
 const sapeurs = computed(() => sapeurStore.liste);
 const amendes = computed(() => imputationStore.ecritures.amendes);
-const hasEditPermission = useHasPermission(
-  permissions.COMPTABILITE.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.COMPTABILITE.MODIFICATION);
 
 const computedData = computed(() => {
   const sapeursAmendes = amendes.value.reduce((rv, a) => {
@@ -63,15 +57,15 @@ const generer = () => {
     .genererAmendesAnnuels(activeExerciceComptableId.value)
     .then((amendes) => {
       if (amendes?.length == 0) {
-        awn.success('Aucune amende requise pour cet exercice comptable');
+        awn.success("Aucune amende requise pour cet exercice comptable");
       } else {
-        awn.success('Amendes générées avec succes');
+        awn.success("Amendes générées avec succes");
       }
     })
     .catch((err) =>
       awn.alert(
         err?.message ??
-          'Une erreur est survenue durant le génération des indemnités/frais annuelles',
+          "Une erreur est survenue durant le génération des indemnités/frais annuelles",
       ),
     );
 };
@@ -80,26 +74,26 @@ const onRowClass = (dataItem, isSelected) => {
     return;
   }
   const statutsClass = {
-    0: '', // A saisir
-    1: '', // En attente de validation
-    2: '', // Validée
-    3: 'table-success', // Imputée
+    0: "", // A saisir
+    1: "", // En attente de validation
+    2: "", // Validée
+    3: "table-success", // Imputée
   };
   return statutsClass[dataItem.statut];
 };
 
 const detailRowOptions = {
   fields: [
-    { title: 'Date', key: 'date', type: Date },
-    { title: 'Exercice', key: 'designation' },
-    { title: 'Excuse', key: 'complement' },
-    { title: 'Total', key: 'total', type: Number },
+    { title: "Date", key: "date", type: Date },
+    { title: "Exercice", key: "designation" },
+    { title: "Excuse", key: "complement" },
+    { title: "Total", key: "total", type: Number },
   ],
 };
 const fields = [
-  { title: 'Sapeur', key: 'sapeur' },
-  { title: 'Nombre', key: 'nb' },
-  { title: 'Montant', key: 'total', type: Number },
+  { title: "Sapeur", key: "sapeur" },
+  { title: "Nombre", key: "nb" },
+  { title: "Montant", key: "total", type: Number },
 ];
 </script>
 
@@ -116,9 +110,7 @@ const fields = [
             <h3 class="card-title">Actions</h3>
           </div>
           <div class="card-body d-grid gap-1">
-            <button class="btn btn-primary" @click="generer">
-              Générer les amendes
-            </button>
+            <button class="btn btn-primary" @click="generer">Générer les amendes</button>
           </div>
         </div>
       </div>
@@ -136,9 +128,7 @@ const fields = [
               @update:model-value="(value) => setFilter('id', value)"
             />
             <div v-if="canReset" class="w-100 mt-2">
-              <button class="btn btn-sm btn-warning w-100" @click="reset">
-                Réinitialiser
-              </button>
+              <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
             </div>
           </form>
         </div>
@@ -159,10 +149,7 @@ const fields = [
               :selectable="true"
             >
               <template #detail-row="{ rowData }">
-                <generic-details-row
-                  :options="detailRowOptions"
-                  :row-data="rowData"
-                />
+                <generic-details-row :options="detailRowOptions" :row-data="rowData" />
               </template>
               <template #foot="{ data }">
                 <tr>

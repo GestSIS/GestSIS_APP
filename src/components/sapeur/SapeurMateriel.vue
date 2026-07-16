@@ -1,7 +1,7 @@
 <script setup>
-import { computed } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import ListeArticlePourSapeur from '../materiel/ListeArticlePourSapeur.vue';
+import { computed } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import ListeArticlePourSapeur from "../materiel/ListeArticlePourSapeur.vue";
 
 const sapeurStore = useSapeurStore();
 

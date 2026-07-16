@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { watchEffect } from 'vue';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { computed, ref } from "vue";
+import { watchEffect } from "vue";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useStatistiqueStore } from "../../stores/statistique/Statistique.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -16,24 +16,20 @@ sapeurStore.fetchListeSapeur();
 await exerciceComptableStore.fetchExercicesComptables();
 
 watchEffect(() =>
-  statistiqueStore.fetchStatistiquePresenceIntervention(
-    exerciceComptableStore.activeId,
-  ),
+  statistiqueStore.fetchStatistiquePresenceIntervention(exerciceComptableStore.activeId),
 );
 const allSapeurs = ref(false);
 const fields = [
-  { title: 'Sapeur', key: 'nom_prenom' },
-  { title: 'Nombre', key: 'nb' },
-  { title: 'Durée [h]', key: 'duree' },
+  { title: "Sapeur", key: "nom_prenom" },
+  { title: "Nombre", key: "nb" },
+  { title: "Durée [h]", key: "duree" },
 ];
 
 const sapeurs = computed(() => sapeurStore.liste);
 const presences = computed(() =>
   statistiqueStore.presencesIntervention.map((p) => ({
     ...p,
-    duree:
-      (new Date(p.fin).getTime() - new Date(p.debut).getTime()) /
-      (1000 * 60 * 60),
+    duree: (new Date(p.fin).getTime() - new Date(p.debut).getTime()) / (1000 * 60 * 60),
   })),
 );
 const computedData = computed(() => {

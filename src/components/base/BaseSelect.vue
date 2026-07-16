@@ -1,5 +1,5 @@
 <script setup>
-import { useTemplateRef } from 'vue';
+import { useTemplateRef } from "vue";
 
 const {
   label,
@@ -19,19 +19,19 @@ const {
   },
   placeholder: {
     type: String,
-    default: () => '',
+    default: () => "",
   },
   label: {
     type: String,
-    default: () => '',
+    default: () => "",
   },
   selectClass: {
     type: [String, Array, Object],
-    default: '',
+    default: "",
   },
   baseOption: {
     type: String,
-    default: '',
+    default: "",
   },
   baseValue: {
     type: [String, Number],
@@ -43,11 +43,11 @@ const {
   },
   valueKey: {
     type: String,
-    default: 'id',
+    default: "id",
   },
   displayKey: {
     type: String,
-    default: 'designation',
+    default: "designation",
   },
   formatter: {
     type: Function,
@@ -55,11 +55,11 @@ const {
   },
 });
 const model = defineModel();
-if (placeholder != '' && !model.value) {
-  model.value = '';
+if (placeholder != "" && !model.value) {
+  model.value = "";
 }
 
-const input = useTemplateRef('input');
+const input = useTemplateRef("input");
 const focus = () => {
   input.value.focus();
 };

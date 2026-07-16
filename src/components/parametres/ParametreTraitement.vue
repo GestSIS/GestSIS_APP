@@ -1,38 +1,35 @@
 <script setup>
-import { useInterventionTraitementStore } from '../../stores/intervention/InterventionTraitement.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { computed } from 'vue';
-import useNotification from '../../composables/useNotification.js';
+import { useInterventionTraitementStore } from "../../stores/intervention/InterventionTraitement.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
 
 const traitementStore = useInterventionTraitementStore();
 await traitementStore.fetchTraitements();
 
 const fields = [
-  { title: 'Tri', key: 'tri' },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Tri", key: "tri" },
+  { title: "Désignation", key: "designation" },
+  { title: "Actions", slot: "actions" },
 ];
 
-const listeTraitement = computed(() =>
-  traitementStore.liste.sort((a, b) => a.tri - b.tri),
-);
+const listeTraitement = computed(() => traitementStore.liste.slice().sort((a, b) => a.tri - b.tri));
 
 const { showModal } = useModalStore();
 const awn = useNotification();
 
-const ajoutTraitement = () =>
-  showModal({ component: 'ModalInterventionTraitement', data: {} });
+const ajoutTraitement = () => showModal({ component: "ModalInterventionTraitement", data: {} });
 
 const updateTraitement = (traitement) =>
   showModal({
-    component: 'ModalInterventionTraitement',
+    component: "ModalInterventionTraitement",
     data: { ...traitement },
   });
 
 const deleteTraitement = (traitement) =>
   traitementStore
     .removeTraitement(traitement.id)
-    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
 </script>
 
 <template>

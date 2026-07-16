@@ -1,10 +1,10 @@
 <script setup>
-import { computed } from 'vue';
-import { indexedData } from '../../tools/index.js';
-import { useEmplacementStore } from '../../stores/materiel/Emplacement';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
-import TagCouleur from './TagCouleur.vue';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { computed } from "vue";
+import { indexedData } from "../../tools/index.js";
+import { useEmplacementStore } from "../../stores/materiel/Emplacement";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
+import TagCouleur from "./TagCouleur.vue";
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const { id } = defineProps({
   id: {
@@ -16,16 +16,11 @@ const { id } = defineProps({
 const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
 
-await Promise.all([
-  emplacementStore.fetchEmplacements(),
-  couleurStore.fetchCouleurs(),
-]);
+await Promise.all([emplacementStore.fetchEmplacements(), couleurStore.fetchCouleurs()]);
 
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
-const emplacement = computed(() =>
-  emplacementStore.liste.find((e) => e.id === parseInt(id)),
-);
+const emplacement = computed(() => emplacementStore.liste.find((e) => e.id === parseInt(id)));
 
 const etiquettage = computed(() => {
   const recursive = (emplacement) => {
@@ -38,12 +33,12 @@ const etiquettage = computed(() => {
   };
   return recursive(emplacement.value);
 });
-const formatEmptyString = (str) => (str === '' ? '-' : str);
+const formatEmptyString = (str) => (str === "" ? "-" : str);
 
 const { showModal } = useModalStore();
 const editEmplacement = () => {
   showModal({
-    component: 'ModalEmplacement',
+    component: "ModalEmplacement",
     data: emplacement.value,
   });
 };
@@ -53,11 +48,7 @@ const editEmplacement = () => {
   <div class="card mb-2">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="m-0">Description de l'emplacement</h5>
-      <button
-        type="button"
-        class="btn btn-primary btn-sm"
-        @click="editEmplacement"
-      >
+      <button type="button" class="btn btn-primary btn-sm" @click="editEmplacement">
         <font-awesome-icon :icon="['far', 'edit']" />
       </button>
     </div>

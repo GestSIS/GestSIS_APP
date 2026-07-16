@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
+import { computed, ref, watchEffect } from "vue";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { useStatistiqueStore } from "../../stores/statistique/Statistique.js";
 
 const exerciceComptableStore = useExerciceComptableStore();
 const ecritureCategorieStore = useEcritureCategorieStore();
@@ -14,32 +14,30 @@ await exerciceComptableStore.fetchExercicesComptables();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await statistiqueStore.fetchStatistiqueCategorieComptable(
-    exerciceComptableStore.activeId,
-  );
+  await statistiqueStore.fetchStatistiqueCategorieComptable(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
 const allCategorie = ref(false);
 const fields = [
-  { title: 'Catégorie comptable', key: 'designation' },
+  { title: "Catégorie comptable", key: "designation" },
   {
-    title: 'Nb écritures',
-    key: 'nb',
-    columnClass: 'text-end',
-    titleClass: 'text-end',
+    title: "Nb écritures",
+    key: "nb",
+    columnClass: "text-end",
+    titleClass: "text-end",
   },
   {
-    title: 'Total',
-    key: 'total',
+    title: "Total",
+    key: "total",
     type: Number,
-    columnClass: 'text-end',
-    titleClass: 'text-end',
+    columnClass: "text-end",
+    titleClass: "text-end",
   },
 ];
 
 const categories = computed(() =>
-  ecritureCategorieStore.liste.sort((a, b) => a.tri - b.tri),
+  ecritureCategorieStore.liste.slice().sort((a, b) => a.tri - b.tri),
 );
 const stats = computed(() => statistiqueStore.categoriesComptable);
 const filteredData = computed(() => {
@@ -48,7 +46,7 @@ const filteredData = computed(() => {
     .filter((e) => allCategorie.value || ids.has(e.id))
     .map((c) => ({
       ...c,
-      ...(stats.value.find((s) => s.ecriture_categorie_id == c.id) ?? {}),
+      ...stats.value.find((s) => s.ecriture_categorie_id == c.id),
     }));
 });
 </script>
@@ -82,12 +80,7 @@ const filteredData = computed(() => {
             <tr>
               <th>Total :</th>
               <th class="text-end">
-                {{
-                  filteredData.reduce(
-                    (acc, a) => acc + (parseInt(a.nb) ?? 0),
-                    0,
-                  )
-                }}
+                {{ filteredData.reduce((acc, a) => acc + (parseInt(a.nb) ?? 0), 0) }}
               </th>
               <th class="text-end">
                 {{

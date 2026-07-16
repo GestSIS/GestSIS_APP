@@ -1,7 +1,7 @@
 <script setup>
-import { computed } from 'vue';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
-import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
+import { computed } from "vue";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
+import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
 import {
   SelectRoot,
   SelectTrigger,
@@ -12,14 +12,14 @@ import {
   SelectListbox,
   SelectNoOptions,
   SelectOption,
-} from 'vue3-select-component/primitives';
-import { indexedData } from '../../tools/index.js';
-import TagCouleur from './TagCouleur.vue';
+} from "vue3-select-component/primitives";
+import { indexedData } from "../../tools/index.js";
+import TagCouleur from "./TagCouleur.vue";
 
 const { label, categorieIdToIgnore } = defineProps({
   label: {
     type: String,
-    default: () => '',
+    default: () => "",
   },
   categorieIdToIgnore: {
     type: Number,
@@ -32,10 +32,7 @@ const model = defineModel();
 const couleurStore = useCouleurStore();
 const categorieStore = useMaterielCategorieStore();
 
-await Promise.all([
-  categorieStore.fetchMaterielCategories(),
-  couleurStore.fetchCouleurs(),
-]);
+await Promise.all([categorieStore.fetchMaterielCategories(), couleurStore.fetchCouleurs()]);
 
 const indexedCategories = computed(() => indexedData(categorieStore.liste));
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
@@ -55,17 +52,11 @@ const categories = computed(() => {
         ...e,
         value: e.id,
         categories: ids,
-        label: ids
-          .map((id) => indexedCategories.value[id].designation)
-          .join(' '),
+        label: ids.map((id) => indexedCategories.value[id].designation).join(" "),
       };
     })
     .sort((a, b) => a.tri - b.tri)
-    .filter(
-      (c) =>
-        c.id !== categorieIdToIgnore &&
-        !c.categories.includes(categorieIdToIgnore),
-    );
+    .filter((c) => c.id !== categorieIdToIgnore && !c.categories.includes(categorieIdToIgnore));
 });
 
 // Retrouve l'option complète (avec sa hiérarchie) depuis la valeur sélectionnée.
@@ -75,8 +66,6 @@ const categorieParValeur = computed(() =>
 </script>
 
 <template>
-  <!-- data-assembled-select : la lib ne style le trigger que sous ce hook ;
-       on en a besoin car on compose les primitives à la main. -->
   <div data-assembled-select>
     <label v-if="label">{{ label }}</label>
     <select-root v-model="model" :options="categories" clearable>

@@ -1,11 +1,11 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getMissions() {
-    return Api.api().get('/mission-types');
+    return Api.api().get("/mission-types");
   },
   addMission(mission) {
-    return Api.api().post('/mission-types', mission);
+    return Api.api().post("/mission-types", mission);
   },
   updateMission(mission) {
     return Api.api().put(`/mission-types/${mission.id}`, mission);

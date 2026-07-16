@@ -1,7 +1,7 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useAuthStore } from '../../stores/auth/Auth.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { computed, ref } from "vue";
+import { useAuthStore } from "../../stores/auth/Auth.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 
 const sapeurStore = useSapeurStore();
 const authStore = useAuthStore();
@@ -13,8 +13,8 @@ const loading = ref(true);
 Promise.all([loadUsers, loadSapeurs]).then(() => (loading.value = false));
 
 const filters = ref({
-  sapeur: '',
-  email: '',
+  sapeur: "",
+  email: "",
 });
 
 const sisId = computed(() => authStore.sis.activeId);
@@ -33,34 +33,34 @@ const computedData = computed(() => {
     .filter((s) => !sapeurIds.has(s.id))
     .filter((s) =>
       s.nom_prenom
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
         .includes(
           filters.value.sapeur
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
             .toLowerCase(),
         ),
     )
     .filter((s) =>
-      (s.email ?? '')
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
+      (s.email ?? "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
         .includes(
           filters.value.email
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
             .toLowerCase(),
         ),
     );
 });
 
 const fields = [
-  { title: 'Sapeur', key: 'nom_prenom' },
-  { title: 'Email', key: 'email' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Sapeur", key: "nom_prenom" },
+  { title: "Email", key: "email" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -118,10 +118,7 @@ const fields = [
           :selectable="true"
         >
           <template #actions="{ rowData }">
-            <a
-              class="btn btn-sm btn-outline-primary border-0"
-              :href="'mailto:' + rowData.email"
-            >
+            <a class="btn btn-sm btn-outline-primary border-0" :href="'mailto:' + rowData.email">
               <font-awesome-icon :icon="['fas', 'envelope']" />
             </a>
           </template>

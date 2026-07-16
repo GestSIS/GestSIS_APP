@@ -1,11 +1,11 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getTelephones() {
-    return Api.api().get('/telephones');
+    return Api.api().get("/telephones");
   },
   addTelephone(telephone) {
-    return Api.api().post('/telephones', telephone);
+    return Api.api().post("/telephones", telephone);
   },
   updateTelephone(telephone) {
     return Api.api().put(`/telephones/${telephone.id}`, telephone);

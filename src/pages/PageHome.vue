@@ -1,9 +1,9 @@
 <script setup>
-import { computed, onUnmounted, ref } from 'vue';
-import useNotification from '../composables/useNotification.js';
-import Api from '/src/http/Request';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/auth/Auth.js';
+import { computed, onUnmounted, ref } from "vue";
+import useNotification from "../composables/useNotification.js";
+import Api from "/src/http/Request";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "../stores/auth/Auth.js";
 
 const authStore = useAuthStore();
 
@@ -44,7 +44,7 @@ const getImageUrl = (sis) => {
 };
 const connectToSis = async (sis) => {
   await authStore.selectSis(sis);
-  router.push({ name: 'dashboard' });
+  router.push({ name: "dashboard" });
 };
 const refresh = () => {
   authStore.refreshToken().then(() => {
@@ -75,17 +75,11 @@ const resend = () => {
   authStore
     .resendValidationEmail()
     .then((res) => {
-      awn.success(
-        res?.message ??
-          'Un nouvel email vous a été envoyé, controllez votre boîte mail',
-      );
+      awn.success(res?.message ?? "Un nouvel email vous a été envoyé, controllez votre boîte mail");
       callback();
     })
     .catch((err) => {
-      awn.alert(
-        err?.error ??
-          "Une erreur a eu lieu durant le renvoie de l'email de confirmation",
-      );
+      awn.alert(err?.error ?? "Une erreur a eu lieu durant le renvoie de l'email de confirmation");
       callback();
     });
 };
@@ -102,8 +96,8 @@ const resend = () => {
         <div class="row">
           <div v-if="!validated" class="col-12">
             <div class="alert alert-warning" role="alert">
-              Attention, votre compte n'est pas encore validé, veuillez cliquer
-              sur le lien reçu dans votre boîte mail pour activer votre compte.
+              Attention, votre compte n'est pas encore validé, veuillez cliquer sur le lien reçu
+              dans votre boîte mail pour activer votre compte.
               <br />
               <button
                 class="btn btn-secondary mt-2"
@@ -111,9 +105,7 @@ const resend = () => {
                 @click="refresh"
               >
                 Rafraichir
-                <em v-if="disableCounter > 0"
-                  >[Réessayer dans {{ disableCounter }} s]</em
-                >
+                <em v-if="disableCounter > 0">[Réessayer dans {{ disableCounter }} s]</em>
               </button>
               <button
                 class="btn btn-secondary mt-2 ms-2"
@@ -121,26 +113,17 @@ const resend = () => {
                 @click="resend"
               >
                 Renvoyer l'email
-                <em v-if="resendCounter > 0"
-                  >[Réessayer dans {{ resendCounter }} s]</em
-                >
+                <em v-if="resendCounter > 0">[Réessayer dans {{ resendCounter }} s]</em>
               </button>
             </div>
           </div>
 
-          <div
-            v-if="availableSisListe.length <= 0"
-            class="card col-md-3 col-sm-6 col-xs-12"
-          >
+          <div v-if="availableSisListe.length <= 0" class="card col-md-3 col-sm-6 col-xs-12">
             <div class="align-vertical">
               <p v-if="!validated">
-                Vous devez valider votre compte afin de pouvoir obtenir des
-                droits depuis votre SIS.
+                Vous devez valider votre compte afin de pouvoir obtenir des droits depuis votre SIS.
               </p>
-              <p v-else>
-                Vous n'avez actuellement aucun droit, demandez des droits à
-                votre SIS.
-              </p>
+              <p v-else>Vous n'avez actuellement aucun droit, demandez des droits à votre SIS.</p>
             </div>
           </div>
           <div

@@ -1,11 +1,11 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getStats() {
-    return Api.api().get('/stat-intervention');
+    return Api.api().get("/stat-intervention");
   },
   addStat(stat) {
-    return Api.api().post('/stat-intervention', stat);
+    return Api.api().post("/stat-intervention", stat);
   },
   updateStat(stat) {
     return Api.api().put(`/stat-intervention/${stat.id}`, stat);

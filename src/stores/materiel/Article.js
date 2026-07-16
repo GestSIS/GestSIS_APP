@@ -1,7 +1,6 @@
-import ArticleService from '../../services/materiel/ArticleService.js';
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-export const useArticleStore = defineStore('articles', {
+export const useArticleStore = defineStore("articles", {
   state: () => ({
     attribuable: [],
   }),

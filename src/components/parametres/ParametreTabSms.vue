@@ -1,12 +1,12 @@
 <script setup>
-import { ref } from 'vue';
-import { useAspsmsParamStore } from '../../stores/sms/AspsmsParam.js';
-import ParametreAspsms from './ParametreAspsms.vue';
+import { ref } from "vue";
+import { useAspsmsParamStore } from "../../stores/sms/AspsmsParam.js";
+import ParametreAspsms from "./ParametreAspsms.vue";
 
 const aspsmsParamStore = useAspsmsParamStore();
 await aspsmsParamStore.fetchParams();
 
-const tab = ref('aspsms');
+const tab = ref("aspsms");
 </script>
 
 <template>
@@ -16,11 +16,7 @@ const tab = ref('aspsms');
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres SMS</h3>
         </div>
-        <nav
-          class="nav flex-column nav-pills"
-          role="tablist"
-          aria-orientation="vertical"
-        >
+        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
           <a
             class="nav-link"
             :class="{ active: tab === 'aspsms' }"

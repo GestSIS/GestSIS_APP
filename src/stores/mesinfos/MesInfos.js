@@ -1,10 +1,10 @@
-import AbsenceService from '../../services/AbsenceService.js';
-import ExerciceService from '../../services/ExerciceService.js';
-import MesInfosService from '../../services/MesInfosService.js';
+import AbsenceService from "../../services/AbsenceService.js";
+import ExerciceService from "../../services/ExerciceService.js";
+import MesInfosService from "../../services/MesInfosService.js";
 
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-export const useMesInfosStore = defineStore('mes-infos', {
+export const useMesInfosStore = defineStore("mes-infos", {
   state: () => ({
     infos: {},
     fonctions: [],
@@ -74,25 +74,25 @@ export const useMesInfosStore = defineStore('mes-infos', {
     },
     async editMonAbsence(absence) {
       const data = await AbsenceService.updateMonAbsence(absence);
-      this.absences = this.absences.map(a => a.id === data.id ? data : a);
+      this.absences = this.absences.map((a) => (a.id === data.id ? data : a));
       return data;
     },
     async removeMonAbsence(absence) {
       const data = await AbsenceService.removeMonAbsence(absence.id);
-      this.absences = this.absences.filter(a => a.id !== absence.id);
+      this.absences = this.absences.filter((a) => a.id !== absence.id);
       return data;
     },
     async addMonExcuse(excuse) {
       const data = await ExerciceService.createMonExcuse(excuse.exercice_id, excuse);
       this.exercices = this.exercices.map((p) =>
-        p.presence?.id == data.id ? { ...p, presence: data } : p
+        p.presence?.id == data.id ? { ...p, presence: data } : p,
       );
       return data;
     },
     async removeMonExcuse(exercice) {
       const data = await ExerciceService.removeMonExcuse(exercice.id);
       this.exercices = this.exercices.map((p) =>
-        p.presence?.id == data.id ? { ...p, presence: data } : p
+        p.presence?.id == data.id ? { ...p, presence: data } : p,
       );
       return data;
     },

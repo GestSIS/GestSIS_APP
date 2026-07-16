@@ -1,6 +1,6 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import ExerciceService from '/src/services/ExerciceService.js';
+import { onMounted, ref } from "vue";
+import ExerciceService from "/src/services/ExerciceService.js";
 
 const { rowData } = defineProps({
   rowData: {
@@ -36,51 +36,39 @@ onMounted(() =>
   <div class="p-2 d-flex">
     <div class="me-3">
       Convoqué
-      <span
-        class="badge"
-        :class="{ 'bg-primary': convoque, 'bg-secondary': !convoque }"
-        >{{ convoque }}</span
-      >
+      <span class="badge" :class="{ 'bg-primary': convoque, 'bg-secondary': !convoque }">{{
+        convoque
+      }}</span>
     </div>
     <div class="me-3">
       Présent
-      <span
-        class="badge"
-        :class="{ 'bg-success': present, 'bg-secondary': !present }"
-        >{{ present }}</span
-      >
+      <span class="badge" :class="{ 'bg-success': present, 'bg-secondary': !present }">{{
+        present
+      }}</span>
     </div>
     <div class="me-3">
       Remplacé
-      <span
-        class="badge"
-        :class="{ 'bg-success': remplace, 'bg-secondary': !remplace }"
-        >{{ remplace }}</span
-      >
+      <span class="badge" :class="{ 'bg-success': remplace, 'bg-secondary': !remplace }">{{
+        remplace
+      }}</span>
     </div>
     <div class="me-3">
       Absent
-      <span
-        class="badge"
-        :class="{ 'bg-warning': absent, 'bg-secondary': !absent }"
-        >{{ absent }}</span
-      >
+      <span class="badge" :class="{ 'bg-warning': absent, 'bg-secondary': !absent }">{{
+        absent
+      }}</span>
     </div>
     <div class="me-3">
       Excusé
-      <span
-        class="badge"
-        :class="{ 'bg-warning': excuse, 'bg-secondary': !excuse }"
-        >{{ excuse }}</span
-      >
+      <span class="badge" :class="{ 'bg-warning': excuse, 'bg-secondary': !excuse }">{{
+        excuse
+      }}</span>
     </div>
     <div class="me-3">
       Amende
-      <span
-        class="badge"
-        :class="{ 'bg-danger': amende, 'bg-secondary': !amende }"
-        >{{ amende }}</span
-      >
+      <span class="badge" :class="{ 'bg-danger': amende, 'bg-secondary': !amende }">{{
+        amende
+      }}</span>
     </div>
   </div>
 </template>

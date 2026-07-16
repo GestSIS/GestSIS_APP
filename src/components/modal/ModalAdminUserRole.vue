@@ -1,7 +1,7 @@
 <script setup>
-import { reactive, ref, computed } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useAdminStore } from '../../stores/admin/Admin.js';
+import { reactive, ref, computed } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useAdminStore } from "../../stores/admin/Admin.js";
 
 const adminStore = useAdminStore();
 
@@ -28,8 +28,7 @@ const sis = computed(() => adminStore.sis);
 const roles = computed(() =>
   adminStore.roles.map((r) => ({
     id: r.id,
-    designation:
-      sis.value.find((s) => s.id === r.sis_id)?.api_key + ' - ' + r.nom,
+    designation: sis.value.find((s) => s.id === r.sis_id)?.api_key + " - " + r.nom,
   })),
 );
 
@@ -68,9 +67,7 @@ const save = () =>
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Annuler
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Annuler</button>
       <button type="submit" class="btn btn-primary">Enregistrer</button>
     </div>
   </form>

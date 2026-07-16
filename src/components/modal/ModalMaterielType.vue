@@ -1,11 +1,11 @@
 <script setup>
-import { ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useMaterielTypeStore } from '../../stores/materiel/Type.js';
-import { useTuyauDiametreStore } from '../../stores/materiel/TuyauDiametre.js';
-import { useBatterieTypeStore } from '../../stores/materiel/BatterieType.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import SelectCategorie from '../materiel/SelectCategorie.vue';
+import { ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useMaterielTypeStore } from "../../stores/materiel/Type.js";
+import { useTuyauDiametreStore } from "../../stores/materiel/TuyauDiametre.js";
+import { useBatterieTypeStore } from "../../stores/materiel/BatterieType.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import SelectCategorie from "../materiel/SelectCategorie.vue";
 
 const { data } = defineProps({
   data: {
@@ -32,21 +32,18 @@ const typeStore = useMaterielTypeStore();
 const diametreStore = useTuyauDiametreStore();
 const batterieStore = useBatterieTypeStore();
 
-await Promise.all([
-  diametreStore.fetchTuyauDiametres(),
-  batterieStore.fetchBatterieTypes(),
-]);
+await Promise.all([diametreStore.fetchTuyauDiametres(), batterieStore.fetchBatterieTypes()]);
 
 const { closeModal } = useModalStore();
 const awn = useNotification();
 const save = async () => {
   if (activeItem.value.materiel_categorie_id == null) {
-    awn.alert('Veuillez sélectionnez une catégorie');
+    awn.alert("Veuillez sélectionnez une catégorie");
     return;
   }
-  ((activeItem.value.id || 0) === 0
-    ? typeStore.addMaterielType
-    : typeStore.updateMaterielType)(activeItem.value)
+  ((activeItem.value.id || 0) === 0 ? typeStore.addMaterielType : typeStore.updateMaterielType)(
+    activeItem.value,
+  )
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };
@@ -55,9 +52,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ activeItem.id ? 'Modifier' : 'Ajouter' }} un matériel type
-      </h5>
+      <h5 class="modal-title">{{ activeItem.id ? "Modifier" : "Ajouter" }} un matériel type</h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
@@ -78,26 +73,10 @@ const save = async () => {
         label="Catégorie"
         class="mb-3"
       />
-      <base-checkbox
-        v-model="activeItem.est_attribuable"
-        class="mb-3"
-        label="Est attribuable"
-      />
-      <base-checkbox
-        v-model="activeItem.est_taillee"
-        class="mb-3"
-        label="Possède une taille"
-      />
-      <base-checkbox
-        v-model="activeItem.est_lavable"
-        class="mb-3"
-        label="Suivi des lavages"
-      />
-      <base-checkbox
-        v-model="activeItem.est_numerote"
-        class="mb-3"
-        label="Est numéroté"
-      />
+      <base-checkbox v-model="activeItem.est_attribuable" class="mb-3" label="Est attribuable" />
+      <base-checkbox v-model="activeItem.est_taillee" class="mb-3" label="Possède une taille" />
+      <base-checkbox v-model="activeItem.est_lavable" class="mb-3" label="Suivi des lavages" />
+      <base-checkbox v-model="activeItem.est_numerote" class="mb-3" label="Est numéroté" />
       <div v-if="activeItem.est_numerote" class="mb-3">
         <label for="designation">Préfix (numérotation)</label>
         <input
@@ -215,11 +194,9 @@ const save = async () => {
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ activeItem.id ? 'Modifier' : 'Ajouter' }}
+        {{ activeItem.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

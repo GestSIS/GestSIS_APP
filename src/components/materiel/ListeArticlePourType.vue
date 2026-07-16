@@ -1,16 +1,16 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
-import { useEmplacementStore } from '../../stores/materiel/Emplacement';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import { groupedByData, indexedData } from '../../tools/index.js';
-import useHasPermission from '../../composables/usePermission.js';
-import permissions from '../../composables/permissions.js';
-import ArticleService from '../../services/materiel/ArticleService';
-import TableArticlePourType from './TableArticlePourType.vue';
-import TagCouleur from './TagCouleur.vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { computed, ref, watchEffect } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
+import { useEmplacementStore } from "../../stores/materiel/Emplacement";
+import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import { groupedByData, indexedData } from "../../tools/index.js";
+import useHasPermission from "../../composables/usePermission.js";
+import permissions from "../../composables/permissions.js";
+import ArticleService from "../../services/materiel/ArticleService";
+import TableArticlePourType from "./TableArticlePourType.vue";
+import TagCouleur from "./TagCouleur.vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 
 const { id } = defineProps({
   id: {
@@ -44,9 +44,7 @@ await Promise.all([
   sapeurStore.fetchListeSapeur(),
 ]);
 
-const materielType = computed(() =>
-  materielTypeStore.liste.find((m) => m.id === parseInt(id)),
-);
+const materielType = computed(() => materielTypeStore.liste.find((m) => m.id === parseInt(id)));
 
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
@@ -69,21 +67,19 @@ const computedData = computed(() => {
       ...a,
       emplacements: linearEmplacements(a.emplacement_id),
       nbLavages: (a.lavages ?? []).length,
-      sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
-      emplacement:
-        indexedEmplacements.value[a.emplacement_id]?.designation ?? '',
-      generic_emplacement_id:
-        (a.sapeur_id ?? '') + '_' + (a.emplacement_id ?? ''),
+      sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? "",
+      emplacement: indexedEmplacements.value[a.emplacement_id]?.designation ?? "",
+      generic_emplacement_id: (a.sapeur_id ?? "") + "_" + (a.emplacement_id ?? ""),
     }))
     .filter((a) => a.statut)
     .map((a) => ({
       ...a,
-      emplacement_sort: a.sapeur + 'ZZZZ' + a.emplacement,
+      emplacement_sort: a.sapeur + "ZZZZ" + a.emplacement,
     }));
 
   return affichageIndividuel.value
     ? items
-    : Object.entries(groupedByData(items, 'generic_emplacement_id'))
+    : Object.entries(groupedByData(items, "generic_emplacement_id"))
         .map(([key, values]) => ({
           key,
           id: key,
@@ -99,22 +95,20 @@ const computedData = computed(() => {
         .map((a) => ({
           ...a,
           compartiment:
-            a.compartiments.size === 1
-              ? [...a.compartiments][0]
-              : `(${a.compartiments.size})`,
+            a.compartiments.size === 1 ? [...a.compartiments][0] : `(${a.compartiments.size})`,
         }));
 });
 
 const piecesColonnes = [
-  { title: 'Emplacement', key: 'emplacement_sort', slot: 'emplacement' },
+  { title: "Emplacement", key: "emplacement_sort", slot: "emplacement" },
   // { title: 'Compartiment', key: 'compartiment' },
-  { title: 'Quantité', key: 'quantite' },
+  { title: "Quantité", key: "quantite" },
 ];
 
 const { showModal } = useModalStore();
 const ajouter = () =>
   showModal({
-    component: 'ModalArticle',
+    component: "ModalArticle",
     data: {},
     size: 1,
   });
@@ -124,11 +118,7 @@ const ajouter = () =>
   <base-card>
     <template #title>Pièces ({{ articles.length }})</template>
     <template #header>
-      <div
-        class="btn-group"
-        role="group"
-        aria-label="Basic radio toggle button group"
-      >
+      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
         <input
           id="individuel"
           v-model="affichageIndividuel"
@@ -139,9 +129,7 @@ const ajouter = () =>
           :value="true"
           checked
         />
-        <label class="btn btn-sm btn-outline-primary" for="individuel"
-          >Individuel</label
-        >
+        <label class="btn btn-sm btn-outline-primary" for="individuel">Individuel</label>
         <input
           id="par-emplacement"
           v-model="affichageIndividuel"
@@ -151,9 +139,7 @@ const ajouter = () =>
           :value="false"
           autocomplete="off"
         />
-        <label class="btn btn-sm btn-outline-primary" for="par-emplacement"
-          >Par emplacement</label
-        >
+        <label class="btn btn-sm btn-outline-primary" for="par-emplacement">Par emplacement</label>
       </div>
       <button
         v-if="hasEditPermission"

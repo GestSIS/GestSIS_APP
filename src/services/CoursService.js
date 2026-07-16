@@ -1,11 +1,11 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getCours() {
-    return Api.api().get('/cours');
+    return Api.api().get("/cours");
   },
   addCours(cours) {
-    return Api.api().post('/cours', cours);
+    return Api.api().post("/cours", cours);
   },
   updateCours(cours) {
     return Api.api().put(`/cours/${cours.id}`, cours);

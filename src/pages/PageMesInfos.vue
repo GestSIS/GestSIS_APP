@@ -1,25 +1,25 @@
 <script setup>
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
+import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
+import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
 
 const exerciceComptableStore = useExerciceComptableStore();
 exerciceComptableStore.fetchExercicesComptables();
 
 const routes = [
-  { to: { name: 'mes-infos' }, texte: 'Mes infos' },
-  { to: { name: 'mes-exercices' }, texte: 'Mes exercices' },
-  { to: { name: 'mes-interventions' }, texte: 'Mes interventions' },
-  { to: { name: 'mes-absences' }, texte: 'Mes absences' },
-  { to: { name: 'mon-materiel' }, texte: 'Mon matériel' },
-  { to: { name: 'mes-travaux' }, texte: 'Ma fiche de travail' },
-  { to: { name: 'mes-decomptes' }, texte: 'Mes décomptes' },
-  { to: { name: 'mes-controles-medicaux' }, texte: 'Mes contrôles médicaux' },
-  { to: { name: 'mes-cours' }, texte: 'Mes cours' },
-  { to: { name: 'mes-fonctions' }, texte: 'Mes fonctions' },
-  { to: { name: 'mes-grades' }, texte: 'Mes grades' },
-  { to: { name: 'mes-groupes' }, texte: 'Mes groupes' },
-  { to: { name: 'mes-mutations' }, texte: 'Mes mutations' },
-  { to: { name: 'mes-permis' }, texte: 'Mes permis' },
+  { to: { name: "mes-infos" }, texte: "Mes infos" },
+  { to: { name: "mes-exercices" }, texte: "Mes exercices" },
+  { to: { name: "mes-interventions" }, texte: "Mes interventions" },
+  { to: { name: "mes-absences" }, texte: "Mes absences" },
+  { to: { name: "mon-materiel" }, texte: "Mon matériel" },
+  { to: { name: "mes-travaux" }, texte: "Ma fiche de travail" },
+  { to: { name: "mes-decomptes" }, texte: "Mes décomptes" },
+  { to: { name: "mes-controles-medicaux" }, texte: "Mes contrôles médicaux" },
+  { to: { name: "mes-cours" }, texte: "Mes cours" },
+  { to: { name: "mes-fonctions" }, texte: "Mes fonctions" },
+  { to: { name: "mes-grades" }, texte: "Mes grades" },
+  { to: { name: "mes-groupes" }, texte: "Mes groupes" },
+  { to: { name: "mes-mutations" }, texte: "Mes mutations" },
+  { to: { name: "mes-permis" }, texte: "Mes permis" },
 ];
 </script>
 
@@ -32,9 +32,7 @@ const routes = [
             <li class="breadcrumb-item">
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Mes infos
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Mes infos</li>
           </ol>
         </nav>
       </div>

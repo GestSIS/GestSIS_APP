@@ -1,24 +1,17 @@
 <script setup>
-import permissions from '../composables/permissions.js';
-import { useModalStore } from '../stores/common/Modal';
-import { useBaseDataStore } from '../stores/common/BaseData.js';
-import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
-import { useFonctionStore } from '../stores/sapeur/Fonction.js';
-import { useGradeStore } from '../stores/sapeur/Grade.js';
-import { useLocaliteStore } from '../stores/common/Localite.js';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import SapeurService from '/src/services/SapeurService';
-import { useRoute, useRouter } from 'vue-router';
-import useHasPermission from '../composables/usePermission.js';
-import {
-  computed,
-  onMounted,
-  ref,
-  useTemplateRef,
-  watch,
-  watchEffect,
-} from 'vue';
-import useNotification from '../composables/useNotification.js';
+import permissions from "../composables/permissions.js";
+import { useModalStore } from "../stores/common/Modal";
+import { useBaseDataStore } from "../stores/common/BaseData.js";
+import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
+import { useFonctionStore } from "../stores/sapeur/Fonction.js";
+import { useGradeStore } from "../stores/sapeur/Grade.js";
+import { useLocaliteStore } from "../stores/common/Localite.js";
+import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
+import SapeurService from "/src/services/SapeurService";
+import { useRoute, useRouter } from "vue-router";
+import useHasPermission from "../composables/usePermission.js";
+import { computed, onMounted, ref, useTemplateRef, watch, watchEffect } from "vue";
+import useNotification from "../composables/useNotification.js";
 
 const baseDataStore = useBaseDataStore();
 const sapeurStore = useSapeurStore();
@@ -27,21 +20,21 @@ const gradeStore = useGradeStore();
 const localiteStore = useLocaliteStore();
 
 const routes = [
-  { texte: 'General', to: { name: 'sapeur-details' }, civil: true },
-  { texte: 'Mutations', to: { name: 'sapeur-mutations' } },
+  { texte: "General", to: { name: "sapeur-details" }, civil: true },
+  { texte: "Mutations", to: { name: "sapeur-mutations" } },
   {
-    texte: 'Contrôles médicaux',
-    to: { name: 'sapeur-controles-medicaux' },
+    texte: "Contrôles médicaux",
+    to: { name: "sapeur-controles-medicaux" },
     permission: permissions.CONTROLE_MEDICAL.TOUT,
   },
-  { texte: 'Fonctions', to: { name: 'sapeur-fonctions' }, civil: true },
-  { texte: 'Cours', to: { name: 'sapeur-cours' } },
-  { texte: 'Promotion', to: { name: 'sapeur-promotions' } },
-  { texte: 'Materiel', to: { name: 'sapeur-materiels' }, civil: true },
-  { texte: 'Organisation', to: { name: 'sapeur-organisation' }, civil: true },
-  { texte: 'Permis', to: { name: 'sapeur-permis' } },
-  { texte: 'Banque', to: { name: 'sapeur-banque' }, civil: true },
-  { texte: 'Exercice', to: { name: 'sapeur-exercices' }, civil: true },
+  { texte: "Fonctions", to: { name: "sapeur-fonctions" }, civil: true },
+  { texte: "Cours", to: { name: "sapeur-cours" } },
+  { texte: "Promotion", to: { name: "sapeur-promotions" } },
+  { texte: "Materiel", to: { name: "sapeur-materiels" }, civil: true },
+  { texte: "Organisation", to: { name: "sapeur-organisation" }, civil: true },
+  { texte: "Permis", to: { name: "sapeur-permis" } },
+  { texte: "Banque", to: { name: "sapeur-banque" }, civil: true },
+  { texte: "Exercice", to: { name: "sapeur-exercices" }, civil: true },
 ];
 
 baseDataStore.fetchCivilites();
@@ -59,13 +52,13 @@ if (route.params.id == 0 || !route.params.id) {
   if (activeSapeurId.value > 0) {
     // Sapeur précédemment sélectionné
     router.push({
-      name: 'sapeur-details',
+      name: "sapeur-details",
       params: { id: activeSapeurId.value },
     });
   } else if (sapeurStore.liste.filter((s) => s.actif).length > 0) {
     // Sapeurs disponible
     router.push({
-      name: 'sapeur-details',
+      name: "sapeur-details",
       params: {
         id: sapeurStore.liste.filter((s) => s.actif)[0]?.id,
       },
@@ -94,18 +87,15 @@ watchEffect(async () => {
 watchEffect(() => {
   const isCivil = sapeurStore.active.data?.type;
   const routeName = route.name;
-  if (
-    isCivil &&
-    routes.find((r) => r.to.name == routeName && r.civil !== true)
-  ) {
+  if (isCivil && routes.find((r) => r.to.name == routeName && r.civil !== true)) {
     router.push({
-      name: 'sapeur-details',
+      name: "sapeur-details",
       params: { id: sapeurStore.active.id },
     });
   }
 });
 
-const filter = ref('actif');
+const filter = ref("actif");
 const filters = ref({
   actif: (s) => s.actif,
   inactif: (s) => !s.actif,
@@ -117,41 +107,36 @@ const sapeurs = computed(() => sapeurStore.liste);
 const activeSapeur = computed(() => sapeurStore.active.data);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
-const filteredSapeurs = computed(() =>
-  sapeurs.value.filter(filters.value[filter.value]),
-);
+const filteredSapeurs = computed(() => sapeurs.value.filter(filters.value[filter.value]));
 
 const currentRouteName = computed(() => route.name);
 
-const listeSapeurComponent = useTemplateRef('liste-sapeurs');
+const listeSapeurComponent = useTemplateRef("liste-sapeurs");
 eventListener.value = (e) => {
-  if (e.key == 'ArrowDown' || e.key == 'ArrowUp') {
+  if (e.key == "ArrowDown" || e.key == "ArrowUp") {
     e.preventDefault();
   }
 };
 
 onMounted(() => {
-  listeSapeurComponent.value.addEventListener('keydown', eventListener.value);
-  listeSapeurComponent.value.addEventListener('keyup', navigationEventListener);
+  listeSapeurComponent.value.addEventListener("keydown", eventListener.value);
+  listeSapeurComponent.value.addEventListener("keyup", navigationEventListener);
 });
 
 const { confirm, showModal, closeModal } = useModalStore();
 const awn = useNotification();
 
 const ficheSapeur = () => {
-  showModal({ component: 'ModalChargement' });
-  SapeurService.downloadFicheSapeur(
-    activeSapeurId.value,
-    'fiche-sapeur.pdf',
-  ).then(closeModal);
+  showModal({ component: "ModalChargement" });
+  SapeurService.downloadFicheSapeur(activeSapeurId.value, "fiche-sapeur.pdf").then(closeModal);
 };
 const navigationEventListener = async (e) => {
   const ids = filteredSapeurs.value.map((s) => s.id);
   const i = ids.indexOf(parseInt(route.params?.id));
   let nextId = null;
-  if (e.key == 'ArrowDown' && i < ids.length - 1) {
+  if (e.key == "ArrowDown" && i < ids.length - 1) {
     nextId = i + 1;
-  } else if (e.key == 'ArrowUp' && i > 0) {
+  } else if (e.key == "ArrowUp" && i > 0) {
     nextId = i - 1;
   }
   if (nextId != null) {
@@ -171,12 +156,12 @@ const selectSapeur = (sapeurId) => {
 };
 const addSapeur = () => {
   showModal({
-    component: 'ModalSapeur',
+    component: "ModalSapeur",
     size: 2,
     callback: (sapeurId) => {
       sapeurStore.selectSapeur(sapeurId);
       router.push({
-        name: 'sapeur-details',
+        name: "sapeur-details",
         params: { id: sapeurId },
       });
       return true;
@@ -185,7 +170,7 @@ const addSapeur = () => {
 };
 const deleteSapeur = () =>
   confirm(
-    'Voulez-vous vraiment supprimer ce sapeur ?',
+    "Voulez-vous vraiment supprimer ce sapeur ?",
     "Attention, la suppression d'un sapeur est irréversible ! Toutes les données de ce sapeur seront perdues !",
   ).then(() =>
     sapeurStore
@@ -194,14 +179,14 @@ const deleteSapeur = () =>
         const newSelectedSapeurId = filteredSapeurs.value[0]?.id;
         sapeurStore.selectSapeur(newSelectedSapeurId).then(() => {
           router.push({
-            name: 'sapeur-details',
+            name: "sapeur-details",
             params: { id: newSelectedSapeurId },
           });
         });
-        awn.success('Sapeur supprimé avec succès');
+        awn.success("Sapeur supprimé avec succès");
       })
       .catch((err) => {
-        awn.alert(err?.message ?? 'Impossible de supprimer ce sapeur');
+        awn.alert(err?.message ?? "Impossible de supprimer ce sapeur");
       }),
   );
 </script>
@@ -249,9 +234,7 @@ const deleteSapeur = () =>
                   class="form-check-input"
                   value="inactif"
                 />
-                <label class="form-check-label" for="statutInactif"
-                  >Inactif</label
-                >
+                <label class="form-check-label" for="statutInactif">Inactif</label>
               </div>
               <div class="form-check form-check-inline">
                 <input
@@ -266,11 +249,7 @@ const deleteSapeur = () =>
               </div>
             </div>
           </div>
-          <ul
-            id="liste-sapeurs"
-            ref="liste-sapeurs"
-            class="list-group list-group-flush"
-          >
+          <ul id="liste-sapeurs" ref="liste-sapeurs" class="list-group list-group-flush">
             <router-link
               v-for="sapeur in filteredSapeurs"
               v-slot="{ navigate }"
@@ -290,15 +269,10 @@ const deleteSapeur = () =>
                 role="link"
                 @click="navigate"
                 >{{ sapeur.nom_prenom }}
-                <font-awesome-icon
-                  v-if="sapeur.type !== 0"
-                  :icon="['far', 'handshake']"
-                />
+                <font-awesome-icon v-if="sapeur.type !== 0" :icon="['far', 'handshake']" />
               </a>
             </router-link>
-            <li v-if="filteredSapeurs.length === 0" class="list-group-item">
-              Aucun sapeur
-            </li>
+            <li v-if="filteredSapeurs.length === 0" class="list-group-item">Aucun sapeur</li>
             <button
               v-if="!filteredSapeurs.length && hasEditPermission"
               class="btn btn-primary"
@@ -334,9 +308,7 @@ const deleteSapeur = () =>
                   class="form-check-input"
                   value="inactif"
                 />
-                <label class="form-check-label" for="statutInactif"
-                  >Inactif</label
-                >
+                <label class="form-check-label" for="statutInactif">Inactif</label>
               </div>
               <div class="form-check form-check-inline">
                 <input
@@ -364,18 +336,10 @@ const deleteSapeur = () =>
         </div>
         <div class="card card-primary card-outline mb-3">
           <div class="card-body d-flex flex-row-reverse">
-            <button
-              type="button"
-              class="btn btn-outline-primary ms-2 d-none"
-              disabled
-            >
+            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>
               Exporter
             </button>
-            <button
-              type="button"
-              class="btn btn-outline-primary ms-2 d-none"
-              disabled
-            >
+            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>
               Importer
             </button>
             <button
@@ -435,10 +399,10 @@ const deleteSapeur = () =>
 </template>
 
 <style lang="scss" scoped>
-@import 'bootstrap/scss/functions';
-@import 'bootstrap/scss/variables';
-@import 'bootstrap/scss/mixins/utilities';
-@import 'bootstrap/scss/mixins/breakpoints';
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins/utilities";
+@import "bootstrap/scss/mixins/breakpoints";
 
 #liste-sapeurs {
   a {

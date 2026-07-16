@@ -1,7 +1,7 @@
 <script setup>
-import { computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '../../stores/auth/Auth.js';
+import { computed } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "../../stores/auth/Auth.js";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -12,7 +12,7 @@ const listeSis = computed(() => authStore.sis.liste);
 
 const selectSis = async (sisId) => {
   if (sisId != activeSisId.value) {
-    await router.push({ name: 'dashboard' });
+    await router.push({ name: "dashboard" });
     const sis = listeSis.value.find((s) => s.id == sisId);
     authStore.selectSis(sis);
   }

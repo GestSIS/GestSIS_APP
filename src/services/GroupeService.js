@@ -1,11 +1,11 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getGroupes() {
-    return Api.api().get('/groupes');
+    return Api.api().get("/groupes");
   },
   createGroupe(data) {
-    return Api.api().post('/groupes', data);
+    return Api.api().post("/groupes", data);
   },
   updateGroupe(groupeId, data) {
     return Api.api().put(`/groupes/${groupeId}`, data);

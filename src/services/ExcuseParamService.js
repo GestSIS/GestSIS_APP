@@ -1,10 +1,10 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getParams() {
-    return Api.api().get('/excuse-param');
+    return Api.api().get("/excuse-param");
   },
   updateParams(params) {
-    return Api.api().post('/excuse-param', params);
+    return Api.api().post("/excuse-param", params);
   },
 };

@@ -1,6 +1,6 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, reactive, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const { data } = defineProps({
   data: {
@@ -28,14 +28,14 @@ const toggleAll = (value) => {
 
 const save = () => {
   store
-    .dispatch('retourMatPerso', {
+    .dispatch("retourMatPerso", {
       date: form.date,
       materielIds: Object.entries(selected.value)
         .filter(([, selected]) => selected)
         .map(([id]) => id),
     })
     .then(() => {
-      store.dispatch('fetchMatPersoARecuperer');
+      store.dispatch("fetchMatPersoARecuperer");
       closeModal();
     })
     .catch((err) => (errors.value = err));
@@ -81,11 +81,7 @@ const save = () => {
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-for="item in data"
-              :key="item.id"
-              :class="{ 'table-primary': selected[item.id] }"
-            >
+            <tr v-for="item in data" :key="item.id" :class="{ 'table-primary': selected[item.id] }">
               <td>
                 <input
                   :id="item.id"
@@ -95,9 +91,7 @@ const save = () => {
                 />
               </td>
               <td>
-                {{
-                  types.find((e) => e.id === item.materiel_type_id)?.designation
-                }}
+                {{ types.find((e) => e.id === item.materiel_type_id)?.designation }}
               </td>
               <td>{{ item.materiel?.quantite ?? 1 }}</td>
               <td>{{ item.taille }}</td>
@@ -109,9 +103,7 @@ const save = () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">Valider</button>
     </div>
   </form>

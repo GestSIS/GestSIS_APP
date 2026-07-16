@@ -1,58 +1,49 @@
 <script setup>
-import { computed, ref, useTemplateRef } from 'vue';
-import TransitionExpand from '/src/components/transition/TransitionExpand.vue';
+import { computed, ref, useTemplateRef } from "vue";
+import TransitionExpand from "/src/components/transition/TransitionExpand.vue";
 
-const {
-  types,
-  node,
-  isRoot,
-  isFirst,
-  isFirstOfLevel,
-  isLast,
-  isLastOfLevel,
-  select,
-  active,
-} = defineProps({
-  types: {
-    required: false,
-    type: Object,
-    default: () => {},
-  },
-  node: {
-    required: true,
-    type: Object,
-  },
-  isRoot: {
-    required: false,
-    type: Boolean,
-    default: false,
-  },
-  isFirst: {
-    required: true,
-    type: Boolean,
-  },
-  isFirstOfLevel: {
-    required: true,
-    type: Boolean,
-  },
-  isLast: {
-    required: true,
-    type: Boolean,
-  },
-  isLastOfLevel: {
-    required: true,
-    type: Boolean,
-  },
-  select: {
-    type: Function,
-    required: true,
-  },
-  active: {
-    type: Object,
-    required: false,
-    default: () => {},
-  },
-});
+const { types, node, isRoot, isFirst, isFirstOfLevel, isLast, isLastOfLevel, select, active } =
+  defineProps({
+    types: {
+      required: false,
+      type: Object,
+      default: () => {},
+    },
+    node: {
+      required: true,
+      type: Object,
+    },
+    isRoot: {
+      required: false,
+      type: Boolean,
+      default: false,
+    },
+    isFirst: {
+      required: true,
+      type: Boolean,
+    },
+    isFirstOfLevel: {
+      required: true,
+      type: Boolean,
+    },
+    isLast: {
+      required: true,
+      type: Boolean,
+    },
+    isLastOfLevel: {
+      required: true,
+      type: Boolean,
+    },
+    select: {
+      type: Function,
+      required: true,
+    },
+    active: {
+      type: Object,
+      required: false,
+      default: () => {},
+    },
+  });
 
 const expanded = ref(false);
 
@@ -74,7 +65,7 @@ const handleClick = () => {
   });
 };
 
-const nodeRef = useTemplateRef('node');
+const nodeRef = useTemplateRef("node");
 const expand = (exp) => {
   expanded.value = exp;
   if (nodeRef) {
@@ -268,7 +259,7 @@ defineExpose({ expand });
 }
 
 .tree-node.tree-node--parent::after {
-  content: '';
+  content: "";
   position: absolute;
   top: -3px;
   bottom: 0;
@@ -283,7 +274,7 @@ defineExpose({ expand });
 }
 
 .tree-node--parent > .tree-node-header::before {
-  content: '';
+  content: "";
   position: absolute;
   width: 15px;
   left: -15px;

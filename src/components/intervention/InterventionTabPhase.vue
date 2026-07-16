@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
-import { useInterventionStore } from '../../stores/intervention/Intervention.js';
-import { usePhaseTypeStore } from '../../stores/intervention/PhaseType.js';
+import { computed, ref, watchEffect } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
+import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
 
 const { id } = defineProps({
   id: {
@@ -34,46 +34,42 @@ const phases = computed(() =>
       p?.debut === null
         ? `${interventionStore.active.data?.date_debut} ${interventionStore.active.data?.heure_debut}`
         : p?.debut.slice(0, 16),
-    designation: phaseTypeStore.liste.find(
-      (phase) => phase.id == p.phase_type_id,
-    )?.designation,
+    designation: phaseTypeStore.liste.find((phase) => phase.id == p.phase_type_id)?.designation,
   })),
 );
 // TODO: Check si intervention pas déjà imputé
-const hasEditPermission = useHasPermission(
-  permissions.INTERVENTION.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
 const { confirm, showModal } = useModalStore();
 const newPhase = () =>
   showModal({
-    component: 'ModalPhase',
+    component: "ModalPhase",
     data: {
-      min: interData.value.date_debut + ' ' + interData.value.heure_debut,
-      max: interData.value.date_fin + ' ' + interData.value.heure_fin,
+      min: interData.value.date_debut + " " + interData.value.heure_debut,
+      max: interData.value.date_fin + " " + interData.value.heure_fin,
     },
   });
 
 const editPhase = (phase) =>
   showModal({
-    component: 'ModalPhase',
+    component: "ModalPhase",
     data: {
       ...phase,
-      min: interData.value.date_debut + ' ' + interData.value.heure_debut,
-      max: interData.value.date_fin + ' ' + interData.value.heure_fin,
+      min: interData.value.date_debut + " " + interData.value.heure_debut,
+      max: interData.value.date_fin + " " + interData.value.heure_fin,
     },
   });
 
 const removePhase = (id) =>
   confirm(
-    'Voulez-vous vraiment supprimer cette phase ?',
+    "Voulez-vous vraiment supprimer cette phase ?",
     "Attention, la suppression d'une phase est irréversible ! Toutes les données de cette phase seront perdues !",
   ).then(() => interventionStore.removePhase(id));
 
 const fields = [
-  { title: 'Début', key: 'date_heure', type: 'datetime' },
-  { title: 'Type', key: 'designation' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Début", key: "date_heure", type: "datetime" },
+  { title: "Type", key: "designation" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -82,12 +78,7 @@ const fields = [
     <div class="card card-primary card-outline mb-3">
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Phases de l'intervention</h3>
-        <button
-          v-if="hasEditPermission"
-          type="button"
-          class="btn btn-primary"
-          @click="newPhase"
-        >
+        <button v-if="hasEditPermission" type="button" class="btn btn-primary" @click="newPhase">
           Nouvelle phase
         </button>
       </div>

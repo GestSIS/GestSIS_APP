@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useInterventionTraitementStore } from '../../stores/intervention/InterventionTraitement.js';
-import { useStatFederalStore } from '../../stores/intervention/StatFederal.js';
-import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
+import { computed, ref, watchEffect } from "vue";
+import { useInterventionTraitementStore } from "../../stores/intervention/InterventionTraitement.js";
+import { useStatFederalStore } from "../../stores/intervention/StatFederal.js";
+import { useTypeInterventionStore } from "../../stores/intervention/TypeIntervention.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useStatistiqueStore } from "../../stores/statistique/Statistique.js";
 
 const traitementStore = useInterventionTraitementStore();
 const statFederalStore = useStatFederalStore();
@@ -21,25 +21,19 @@ const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
   await Promise.all([
-    statistiqueStore.fetchStatistiqueTypeIntervention(
-      exerciceComptableStore.activeId,
-    ),
-    statistiqueStore.fetchStatistiqueStatFederal(
-      exerciceComptableStore.activeId,
-    ),
-    statistiqueStore.fetchStatistiqueTraitementIntervention(
-      exerciceComptableStore.activeId,
-    ),
+    statistiqueStore.fetchStatistiqueTypeIntervention(exerciceComptableStore.activeId),
+    statistiqueStore.fetchStatistiqueStatFederal(exerciceComptableStore.activeId),
+    statistiqueStore.fetchStatistiqueTraitementIntervention(exerciceComptableStore.activeId),
   ]);
   loading.value = false;
 });
 
 const allCategories = ref(false);
-const displayKey = ref('statistiquesTypeIntervention');
+const displayKey = ref("statistiquesTypeIntervention");
 const grouping = {
-  statistiquesTypeIntervention: 'Types',
-  statistiquesStatFederal: 'Statistiques fédérale',
-  statistiquesInterventionTraitement: 'Traitements',
+  statistiquesTypeIntervention: "Types",
+  statistiquesStatFederal: "Statistiques fédérale",
+  statistiquesInterventionTraitement: "Traitements",
 };
 
 const types = computed(() => typeInterventionStore.liste);
@@ -47,12 +41,8 @@ const traitements = computed(() => traitementStore.liste);
 const statsFederal = computed(() => statFederalStore.liste);
 
 const statistiquesStatFederal = computed(() => statistiqueStore.statFederal);
-const statistiquesTypeIntervention = computed(
-  () => statistiqueStore.typeIntervention,
-);
-const statistiquesInterventionTraitement = computed(
-  () => statistiqueStore.interventionTraitement,
-);
+const statistiquesTypeIntervention = computed(() => statistiqueStore.typeIntervention);
+const statistiquesInterventionTraitement = computed(() => statistiqueStore.interventionTraitement);
 
 const occurences = computed(() => {
   const map = {
@@ -87,22 +77,22 @@ const fields = computed(() => {
   return [
     {
       title: grouping[displayKey.value],
-      key: 'designation',
+      key: "designation",
     },
     {
-      title: 'Nombre',
-      key: 'nb',
-      titleClass: 'text-center',
-      columnClass: 'text-center',
+      title: "Nombre",
+      key: "nb",
+      titleClass: "text-center",
+      columnClass: "text-center",
     },
     {
-      title: 'Heures',
-      key: 'heures',
+      title: "Heures",
+      key: "heures",
       type: Number,
-      titleClass: 'text-center',
-      columnClass: 'text-center',
+      titleClass: "text-center",
+      columnClass: "text-center",
     },
-  ].slice(0, displayKey.value != 'statistiquesInterventionTraitement' ? 3 : 2);
+  ].slice(0, displayKey.value != "statistiquesInterventionTraitement" ? 3 : 2);
 });
 </script>
 
@@ -112,12 +102,7 @@ const fields = computed(() => {
       <div class="card-header d-flex justify-content-between">
         <h3>Stats interventions</h3>
         <div class="form-check form-switch mb-2">
-          <input
-            id="switch"
-            v-model="allCategories"
-            type="checkbox"
-            class="form-check-input"
-          />
+          <input id="switch" v-model="allCategories" type="checkbox" class="form-check-input" />
           <label class="form-check-label" for="switch">
             Afficher les {{ groupingLabel.toLowerCase() }} sans intervention
           </label>
@@ -139,20 +124,13 @@ const fields = computed(() => {
                   v-model="displayKey"
                   class="form-select form-select-sm"
                 >
-                  <option
-                    v-for="(label, key) in grouping"
-                    :key="key"
-                    :value="key"
-                  >
+                  <option v-for="(label, key) in grouping" :key="key" :value="key">
                     {{ label }}
                   </option>
                 </select>
               </th>
               <th class="text-center">Nombre</th>
-              <th
-                v-if="displayKey != 'statistiquesInterventionTraitement'"
-                class="text-center"
-              >
+              <th v-if="displayKey != 'statistiquesInterventionTraitement'" class="text-center">
                 Heures
               </th>
             </tr>
@@ -168,17 +146,10 @@ const fields = computed(() => {
                   )
                 }}
               </th>
-              <th
-                v-if="displayKey != 'statistiquesInterventionTraitement'"
-                class="text-center"
-              >
+              <th v-if="displayKey != 'statistiquesInterventionTraitement'" class="text-center">
                 {{
                   Object.values(occurences)
-                    .reduce(
-                      (partialSum, a) =>
-                        partialSum + Number.parseFloat(a?.heures ?? 0),
-                      0.0,
-                    )
+                    .reduce((partialSum, a) => partialSum + Number.parseFloat(a?.heures ?? 0), 0.0)
                     ?.toLocaleString(undefined, { minimumFractionDigits: 2 })
                 }}
               </th>

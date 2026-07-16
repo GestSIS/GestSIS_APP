@@ -1,9 +1,9 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, reactive, ref } from "vue";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const { data } = defineProps({
   data: {
@@ -39,10 +39,8 @@ const save = () =>
   <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
-        {{
-          form.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
-        }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
+        {{ form.type == "frais" ? "un frais annuel" : "une indemnité annuelle" }}
         type
       </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
@@ -95,18 +93,14 @@ const save = () =>
             type="checkbox"
             class="form-check-input"
           />
-          <label class="form-check-label" for="fonction-actif-modal"
-            >Cumulable</label
-          >
+          <label class="form-check-label" for="fonction-actif-modal">Cumulable</label>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

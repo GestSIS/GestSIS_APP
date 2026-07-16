@@ -1,8 +1,8 @@
 <script setup>
-import { reactive, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useSisParamStore } from '../../stores/params/SisParam.js';
+import { reactive, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useSisParamStore } from "../../stores/params/SisParam.js";
 
 const { callback, data } = defineProps({
   data: {
@@ -17,7 +17,7 @@ const { callback, data } = defineProps({
 
 const errors = ref({});
 const form = reactive({
-  email: '',
+  email: "",
   ...data,
 });
 
@@ -35,10 +35,9 @@ const close = () => {
 
 const save = async () => {
   form.email = form.email?.toLowerCase()?.trim();
-  const validRegex =
-    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
   if (!form.email || !form.email.match(validRegex)) {
-    errors.value['email'] = 'Email invalide !';
+    errors.value["email"] = "Email invalide !";
     return;
   }
 
@@ -75,17 +74,15 @@ const save = async () => {
           required
         />
         <div v-if="errors['email']" class="invalid-feedback">
-          {{ errors['email'] }}
+          {{ errors["email"] }}
         </div>
       </div>
     </div>
     <div class="modal-footer">
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
-      <button type="button" class="btn btn-outline-secondary" @click="close">
-        Annuler
-      </button>
+      <button type="button" class="btn btn-outline-secondary" @click="close">Annuler</button>
     </div>
   </form>
 </template>

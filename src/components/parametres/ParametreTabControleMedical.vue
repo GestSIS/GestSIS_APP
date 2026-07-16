@@ -1,10 +1,10 @@
 <script setup>
-import { ref } from 'vue';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useMedecinStore } from '../../stores/controleMedical/Medecin.js';
-import { useControleMedicalTypeStore } from '../../stores/controleMedical/ControleMedicalType.js';
-import ParametreMedecin from './ParametreMedecin.vue';
-import ParametreControleMedicalType from './ParametreControleMedicalType.vue';
+import { ref } from "vue";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useMedecinStore } from "../../stores/controleMedical/Medecin.js";
+import { useControleMedicalTypeStore } from "../../stores/controleMedical/ControleMedicalType.js";
+import ParametreMedecin from "./ParametreMedecin.vue";
+import ParametreControleMedicalType from "./ParametreControleMedicalType.vue";
 
 const localiteStore = useLocaliteStore();
 const medecinStore = useMedecinStore();
@@ -15,7 +15,7 @@ const loadLocalite = localiteStore.fetchLocalites();
 
 await Promise.all([loadMedecin, loadType, loadLocalite]);
 
-const tab = ref('medecin');
+const tab = ref("medecin");
 </script>
 
 <template>
@@ -25,11 +25,7 @@ const tab = ref('medecin');
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres contrôles médicaux</h3>
         </div>
-        <nav
-          class="nav flex-column nav-pills"
-          role="tablist"
-          aria-orientation="vertical"
-        >
+        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
           <a
             class="nav-link"
             :class="{ active: tab === 'medecin' }"

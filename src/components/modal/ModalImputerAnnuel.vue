@@ -1,13 +1,13 @@
 <script setup>
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import MultiStep from '../base/MultiStep.vue';
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import MultiStep from "../base/MultiStep.vue";
 
 const { data } = defineProps({
   data: {
@@ -26,18 +26,14 @@ const compteStore = useCompteStore();
 const exerciceComptableStore = useExerciceComptableStore();
 
 const fonctions = computed(() => fonctionStore.liste);
-const fraisIndemniteAnnuel = computed(
-  () => imputationStore.fraisIndemnites.annuels,
-);
+const fraisIndemniteAnnuel = computed(() => imputationStore.fraisIndemnites.annuels);
 const comptes = computed(() => compteStore.liste);
 const sapeurs = computed(() => sapeurStore.liste);
 const typesAnnuel = computed(() => {
-  return [
-    ...fraisIndemniteAnnuel.value.map((f) => ({
-      ...f,
-      fonctions: f.frais_indemnite_annuels || [],
-    })),
-  ];
+  return fraisIndemniteAnnuel.value.map((f) => ({
+    ...f,
+    fonctions: f.frais_indemnite_annuels || [],
+  }));
 });
 const filteredFonctions = computed(() => {
   const fonctionIds = new Set(
@@ -51,11 +47,11 @@ const awn = useNotification();
 
 const montantAnnuelTypePourFonction = (type, fonction) => {
   const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);
-  return elem?.quantite * elem?.montant || '';
+  return elem?.quantite * elem?.montant || "";
 };
 const compte = (id) => {
   if (!id) {
-    return '';
+    return "";
   }
   const compte = comptes.value.find((f) => f.id === id);
   return `${compte?.numero} ${compte?.designation}`;
@@ -70,9 +66,7 @@ const imputer = () => {
       phase.value = 2;
       ecritures.value = [...data].sort((e1, e2) => e2.sapeur_id - e1.sapeur_id);
     })
-    .catch((err) =>
-      awn.alert(err?.message ?? "Impossible d'effectuer cette action"),
-    );
+    .catch((err) => awn.alert(err?.message ?? "Impossible d'effectuer cette action"));
 };
 </script>
 
@@ -83,23 +77,14 @@ const imputer = () => {
       <button type="button" class="btn-close" @click="cancel"></button>
     </div>
     <div class="modal-body">
-      <multi-step
-        :steps="['Type de frais', 'Résultat']"
-        :active-index="phase - 1"
-      />
+      <multi-step :steps="['Type de frais', 'Résultat']" :active-index="phase - 1" />
       <div v-if="phase === 1" class="alert alert-dismissible alert-primary">
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="alert"
-        ></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         <h4 class="alert-heading">Aide</h4>
         <p class="mb-0">
-          Les frais et indemnités annuels ci-dessous seront imputés
-          automatiquement pour
-          <strong>chaque</strong> sapeur selon ses fonctions. Pour effectuer
-          l'imputation, cliquez sur le bouton <strong>Imputer</strong> en bas de
-          la fenêtre.
+          Les frais et indemnités annuels ci-dessous seront imputés automatiquement pour
+          <strong>chaque</strong> sapeur selon ses fonctions. Pour effectuer l'imputation, cliquez
+          sur le bouton <strong>Imputer</strong> en bas de la fenêtre.
         </p>
       </div>
       <div v-if="phase === 1" class="row">
@@ -153,11 +138,7 @@ const imputer = () => {
                     :icon="['fas', 'info-circle']"
                   />&nbsp;{{ fonction.nom }}
                 </td>
-                <td
-                  v-for="type in typesAnnuel"
-                  :key="type.id + '-' + type.type"
-                  class="text-end"
-                >
+                <td v-for="type in typesAnnuel" :key="type.id + '-' + type.type" class="text-end">
                   {{ montantAnnuelTypePourFonction(type, fonction) }}
                 </td>
               </tr>
@@ -167,11 +148,7 @@ const imputer = () => {
       </div>
       <div v-if="phase === 2">
         <div class="alert alert-dismissible alert-success">
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="alert"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
           Imputations effectuées avec
           <strong>succès</strong>!
         </div>
@@ -188,9 +165,7 @@ const imputer = () => {
           <tbody>
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
               <td>
-                {{
-                  sapeurs.find((s) => s.id == ecriture.sapeur_id)?.nom_prenom
-                }}
+                {{ sapeurs.find((s) => s.id == ecriture.sapeur_id)?.nom_prenom }}
               </td>
               <td>{{ ecriture.designation }}</td>
               <td class="text-end">{{ ecriture.tarif }}</td>
@@ -203,14 +178,9 @@ const imputer = () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">
-        {{ phase === 1 ? 'Annuler' : 'Fermer' }}
+        {{ phase === 1 ? "Annuler" : "Fermer" }}
       </button>
-      <button
-        v-if="phase === 1"
-        type="button"
-        class="btn btn-primary"
-        @click="imputer()"
-      >
+      <button v-if="phase === 1" type="button" class="btn btn-primary" @click="imputer()">
         Imputer
       </button>
     </div>

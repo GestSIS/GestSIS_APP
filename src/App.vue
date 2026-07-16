@@ -1,14 +1,13 @@
 <script setup>
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 
-const default_layout = 'default';
-const loading = 'empty';
+const default_layout = "default";
+const loading = "empty";
 const route = useRoute();
 
 const layout = computed(
-  () =>
-    (!route.name ? loading : route.meta.layout || default_layout) + '-layout',
+  () => (!route.name ? loading : route.meta.layout || default_layout) + "-layout",
 );
 </script>
 
@@ -22,5 +21,5 @@ const layout = computed(
 </template>
 
 <style lang="scss">
-@use './assets/sass/main.scss' as *;
+@use "./assets/sass/main.scss" as *;
 </style>

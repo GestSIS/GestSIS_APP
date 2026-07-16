@@ -1,9 +1,9 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { computed, reactive, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const { callback, data } = defineProps({
   callback: {
@@ -18,18 +18,16 @@ const { callback, data } = defineProps({
 
 const errors = ref({});
 const form = reactive({
-  remarque: '',
+  remarque: "",
   excuse_type_id: null,
   excuse_statut: 0,
-  justification: '',
+  justification: "",
   ...data,
 });
 
 const excuseTypeStore = useExcuseTypeStore();
 const listeExcuseTypes = computed(() => excuseTypeStore.liste);
-const hasValidationPermission = useHasPermission(
-  permissions.EXERCICE.VALIDATION,
-);
+const hasValidationPermission = useHasPermission(permissions.EXERCICE.VALIDATION);
 
 const { closeModal } = useModalStore();
 
@@ -105,9 +103,7 @@ const save = () => {
         label="Statut"
       />
       <div v-if="hasValidationPermission" class="mb-3">
-        <label for="justification"
-          >Justification de la décision <em>(optionnel)</em></label
-        >
+        <label for="justification">Justification de la décision <em>(optionnel)</em></label>
         <input
           id="justification"
           v-model="form.justification"
@@ -119,9 +115,7 @@ const save = () => {
     </div>
     <div class="modal-footer">
       <button type="submit" class="btn btn-outline-primary">Valider</button>
-      <button type="button" class="btn btn-outline-secondary" @click="close">
-        Annuler
-      </button>
+      <button type="button" class="btn btn-outline-secondary" @click="close">Annuler</button>
     </div>
   </form>
 </template>

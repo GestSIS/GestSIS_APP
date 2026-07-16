@@ -1,7 +1,7 @@
 <script setup>
-import { computed } from 'vue';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useBaseDataStore } from '../../stores/common/BaseData.js';
+import { computed } from "vue";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useBaseDataStore } from "../../stores/common/BaseData.js";
 
 const model = defineModel();
 
@@ -150,9 +150,7 @@ const civilites = computed(() => baseDataStore.civilites);
         <div class="col-6">
           <label for="m-sap-suffixe">Suffixe</label>
           <font-awesome-icon
-            v-tooltip.bottom="
-              'Permet de différencier deux personnes ayant le même nom et prénom.'
-            "
+            v-tooltip.bottom="'Permet de différencier deux personnes ayant le même nom et prénom.'"
             class="ms-1"
             :icon="['far', 'question-circle']"
           />

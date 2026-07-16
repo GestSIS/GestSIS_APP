@@ -1,10 +1,10 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import ArticleService from '../../services/materiel/ArticleService';
-import SelectEmplacement from '../materiel/SelectEmplacement.vue';
-import useNotification from '../../composables/useNotification.js';
+import { computed, reactive, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import ArticleService from "../../services/materiel/ArticleService";
+import SelectEmplacement from "../materiel/SelectEmplacement.vue";
+import useNotification from "../../composables/useNotification.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -25,9 +25,7 @@ const form = reactive({ quantite: 1, ...data });
 const typeStore = useMaterielTypeStore();
 await typeStore.fetchMaterielTypes();
 
-const type = computed(() =>
-  typeStore.liste.find((t) => t.id == form.materiel_type_id),
-);
+const type = computed(() => typeStore.liste.find((t) => t.id == form.materiel_type_id));
 
 const { closeModal } = useModalStore();
 
@@ -39,13 +37,11 @@ const save = async () => {
   // masquent ce champ), donc le seul cas invalide possible est « ni l'un ni
   // l'autre » : on l'empêche pour ne pas envoyer un payload rejeté par l'API.
   if (!form.sapeur_id && !form.emplacement_id) {
-    awn.warning('Veuillez sélectionner un emplacement');
+    awn.warning("Veuillez sélectionner un emplacement");
     return;
   }
 
-  (isCreation ? ArticleService.creerArticles : ArticleService.updateArticles)([
-    form,
-  ])
+  (isCreation ? ArticleService.creerArticles : ArticleService.updateArticles)([form])
     .then(() => {
       closeModal();
       callback();
@@ -57,9 +53,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} un article
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un article</h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
@@ -105,12 +99,7 @@ const save = async () => {
         />
       </div>
       <div v-if="type && type.type === 3" class="mb-3">
-        <input
-          id="actif"
-          v-model="form.statut"
-          type="checkbox"
-          class="form-check-input"
-        />
+        <input id="actif" v-model="form.statut" type="checkbox" class="form-check-input" />
         <label class="form-check-label" for="actif">Actif</label>
       </div>
       <div v-if="type && type.type === 3" class="mb-3">
@@ -143,11 +132,7 @@ const save = async () => {
           :class="{ 'is-invalid': errors['compartiment'] }"
         />
       </div>
-      <base-checkbox
-        v-model="form.est_etiquete"
-        class="mb-3"
-        label="Est étiquetté correctement"
-      />
+      <base-checkbox v-model="form.est_etiquete" class="mb-3" label="Est étiquetté correctement" />
       <div v-if="type && type.est_numerote" class="mb-3">
         <label for="numero">Numéro</label>
         <input
@@ -191,11 +176,9 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

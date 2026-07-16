@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const { callback, data } = defineProps({
   data: {
@@ -42,9 +42,7 @@ const canAddSelected = computed(() => {
     return acc;
   }, {});
   return (
-    Object.entries(selected.value).find(
-      ([l, selected]) => selected && !indexedChosen[l],
-    ) != null
+    Object.entries(selected.value).find(([l, selected]) => selected && !indexedChosen[l]) != null
   );
 });
 const canRemoveSelected = computed(() => {
@@ -199,8 +197,8 @@ const removeSelected = () => {
                   Toutes les localités sont déjà sélectionnées
                 </td>
                 <td v-if="localites.length == 0" colspan="3">
-                  Aucune localité de disponible dans GestSIS, veuillez prendre
-                  contact avec l'administrateur de GestSIS
+                  Aucune localité de disponible dans GestSIS, veuillez prendre contact avec
+                  l'administrateur de GestSIS
                 </td>
               </tr>
               <tr
@@ -238,12 +236,8 @@ const removeSelected = () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-outline-primary" @click="save">
-        Enregistrer
-      </button>
-      <button type="button" class="btn btn-outline-secondary" @click="close">
-        Annuler
-      </button>
+      <button type="button" class="btn btn-outline-primary" @click="save">Enregistrer</button>
+      <button type="button" class="btn btn-outline-secondary" @click="close">Annuler</button>
     </div>
   </div>
 </template>

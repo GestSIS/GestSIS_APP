@@ -1,11 +1,11 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getFonctions() {
-    return Api.api().get('/fonctions');
+    return Api.api().get("/fonctions");
   },
   addFonction(fonction) {
-    return Api.api().post('/fonctions', fonction);
+    return Api.api().post("/fonctions", fonction);
   },
   updateFonction(fonction) {
     return Api.api().put(`/fonctions/${fonction.id}`, fonction);

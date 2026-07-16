@@ -1,11 +1,11 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getCategories() {
-    return Api.api().get('/exercice-categories');
+    return Api.api().get("/exercice-categories");
   },
   addCategorie(categorie) {
-    return Api.api().post('/exercice-categories', categorie);
+    return Api.api().post("/exercice-categories", categorie);
   },
   updateCategorie(categorie) {
     return Api.api().put(`/exercice-categories/${categorie.id}`, categorie);

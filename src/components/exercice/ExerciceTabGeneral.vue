@@ -1,19 +1,19 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useRouter } from 'vue-router';
-import { useExerciceStore } from '../../stores/exercice/Exercice.js';
-import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useRouter } from "vue-router";
+import { useExerciceStore } from "../../stores/exercice/Exercice.js";
+import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const { id } = defineProps({
   id: {
     type: String,
-    default: 'new',
+    default: "new",
   },
 });
 
@@ -31,14 +31,14 @@ exerciceComptableStore.fetchExercicesComptables();
 const errors = ref({});
 const form = ref({
   exercice_comptable_id: exerciceComptableStore.activeId,
-  lieu: '',
-  communications: '',
+  lieu: "",
+  communications: "",
 });
 
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  if (id !== 'new') {
+  if (id !== "new") {
     await exerciceStore.fetchExercice(id);
     form.value = {
       exercice_categorie_id: null,
@@ -52,15 +52,13 @@ watchEffect(async () => {
 // On n'affiche que les catégories actives, en conservant la catégorie
 // actuellement sélectionnée même si elle a été désactivée.
 const categories = computed(() =>
-  exerciceCategorieStore.liste.filter(
-    (c) => c.statut || c.id == form.value.exercice_categorie_id,
-  ),
+  exerciceCategorieStore.liste.filter((c) => c.statut || c.id == form.value.exercice_categorie_id),
 );
 const localites = computed(() => localiteStore.liste);
 const hasEditPermission = useHasPermission(permissions.EXERCICE.MODIFICATION);
 
 watchEffect(() => {
-  if (id === 'new') {
+  if (id === "new") {
     form.value.duree = categories.value.find(
       (e) => e.id == form.value.exercice_categorie_id,
     )?.duree_base;
@@ -71,14 +69,14 @@ const router = useRouter();
 const awn = useNotification();
 
 const save = () => {
-  const action = (form.value.id || 0) === 0 ? 'createExercice' : 'saveExercice';
+  const action = (form.value.id || 0) === 0 ? "createExercice" : "saveExercice";
   return exerciceStore[action](form.value)
     .then((data) => {
-      if (id === 'new') {
-        router.push('/exercices/' + data.id);
+      if (id === "new") {
+        router.push("/exercices/" + data.id);
       }
       errors.value = {};
-      awn.success(data?.message || 'Exercice créé');
+      awn.success(data?.message || "Exercice créé");
     })
     .catch((err) => {
       errors.value = err;
@@ -91,12 +89,8 @@ const save = () => {
   <form class="card card-primary card-outline" @submit.prevent="save">
     <div class="card-header d-flex justify-content-between">
       <span></span>
-      <button
-        v-if="hasEditPermission"
-        type="submit"
-        class="btn btn-outline-primary"
-      >
-        {{ (form.id || 0) === 0 ? 'Ajouter' : 'Sauvegarder' }}
+      <button v-if="hasEditPermission" type="submit" class="btn btn-outline-primary">
+        {{ (form.id || 0) === 0 ? "Ajouter" : "Sauvegarder" }}
       </button>
     </div>
     <div class="card-body">

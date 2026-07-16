@@ -1,8 +1,8 @@
 <script setup>
-import { ref } from 'vue';
-import TagCouleur from '../materiel/TagCouleur.vue';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { ref } from "vue";
+import TagCouleur from "../materiel/TagCouleur.vue";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const { data } = defineProps({
   data: {
@@ -14,17 +14,17 @@ const { data } = defineProps({
 const errors = ref({});
 const activeItem = ref({
   ...data,
-  fond: data?.fond?.slice(0, 7) ?? '#ffffff',
-  texte: data?.texte?.slice(0, 7) ?? '#000000',
+  fond: data?.fond?.slice(0, 7) ?? "#ffffff",
+  texte: data?.texte?.slice(0, 7) ?? "#000000",
 });
 
 const couleurStore = useCouleurStore();
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  ((activeItem.value.id || 0) === 0
-    ? couleurStore.addCouleur
-    : couleurStore.updateCouleur)(activeItem.value)
+  ((activeItem.value.id || 0) === 0 ? couleurStore.addCouleur : couleurStore.updateCouleur)(
+    activeItem.value,
+  )
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };
@@ -33,9 +33,7 @@ const save = async () => {
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ activeItem.id ? 'Modifier' : 'Ajouter' }} une couleur
-      </h5>
+      <h5 class="modal-title">{{ activeItem.id ? "Modifier" : "Ajouter" }} une couleur</h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
@@ -77,11 +75,9 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
       <button type="button" class="btn btn-primary" @click="save">
-        {{ activeItem.id ? 'Modifier' : 'Ajouter' }}
+        {{ activeItem.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </div>

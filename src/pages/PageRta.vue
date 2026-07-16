@@ -6,9 +6,7 @@
           <li class="breadcrumb-item">
             <router-link :to="{ name: 'accueil' }">Accueil</router-link>
           </li>
-          <li class="breadcrumb-item active" aria-current="page">
-            Mutations RTA
-          </li>
+          <li class="breadcrumb-item active" aria-current="page">Mutations RTA</li>
         </ol>
       </div>
       <div class="col-md-4 d-flex justify-content-end"></div>

@@ -1,4 +1,4 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getStatCivilite(exercieComptableId) {
@@ -23,39 +23,27 @@ export default {
     return Api.api().get(`/statistiques/${exercieComptableId}/materiel`);
   },
   getStatPresencesExercice(exercieComptableId) {
-    return Api.api().get(
-      `/statistiques/${exercieComptableId}/presence-exercice`
-    );
+    return Api.api().get(`/statistiques/${exercieComptableId}/presence-exercice`);
   },
   getStatPresencesIntervention(exercieComptableId) {
-    return Api.api().get(
-      `/statistiques/${exercieComptableId}/presence-intervention`
-    );
+    return Api.api().get(`/statistiques/${exercieComptableId}/presence-intervention`);
   },
   getStatTypeIntervention(exercieComptableId) {
-    return Api.api().get(
-      `/statistiques/${exercieComptableId}/type-intervention`
-    );
+    return Api.api().get(`/statistiques/${exercieComptableId}/type-intervention`);
   },
   getStatStatFederal(exercieComptableId) {
     return Api.api().get(`/statistiques/${exercieComptableId}/stat-federal`);
   },
   getStatTraitementIntervention(exercieComptableId) {
-    return Api.api().get(
-      `/statistiques/${exercieComptableId}/intervention-traitement`
-    );
+    return Api.api().get(`/statistiques/${exercieComptableId}/intervention-traitement`);
   },
   getStatCategorieComptable(exercieComptableId) {
-    return Api.api().get(
-      `/statistiques/${exercieComptableId}/categorie-comptable`
-    );
+    return Api.api().get(`/statistiques/${exercieComptableId}/categorie-comptable`);
   },
   getStatCompte(exercieComptableId) {
     return Api.api().get(`/statistiques/${exercieComptableId}/compte`);
   },
   getStatModuleComptable(exercieComptableId) {
-    return Api.api().get(
-      `/statistiques/${exercieComptableId}/module-comptable`
-    );
+    return Api.api().get(`/statistiques/${exercieComptableId}/module-comptable`);
   },
 };

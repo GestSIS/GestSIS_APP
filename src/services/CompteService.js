@@ -1,11 +1,11 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getComptes() {
-    return Api.api().get('/comptes');
+    return Api.api().get("/comptes");
   },
   addCompte(compte) {
-    return Api.api().post('/comptes', compte);
+    return Api.api().post("/comptes", compte);
   },
   updateCompte(compte) {
     return Api.api().put(`/comptes/${compte.id}`, compte);
@@ -15,12 +15,12 @@ export default {
   },
   downloadJustificatifIndividuel(filename, exerciceComptableId, compteId) {
     return Api.apiFileDownload(filename).get(
-      `/exercices-comptable/${exerciceComptableId}/comptes/${compteId}/justificatif`
+      `/exercices-comptable/${exerciceComptableId}/comptes/${compteId}/justificatif`,
     );
   },
   downloadJustificatifComplet(filename, exerciceComptableId) {
     return Api.apiFileDownload(filename).get(
-      `/exercices-comptable/${exerciceComptableId}/justificatif`
+      `/exercices-comptable/${exerciceComptableId}/justificatif`,
     );
   },
 };

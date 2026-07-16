@@ -1,6 +1,6 @@
 <script setup>
-import { computed } from 'vue';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
+import { computed } from "vue";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
 import {
   SelectRoot,
   SelectTrigger,
@@ -11,13 +11,13 @@ import {
   SelectListbox,
   SelectNoOptions,
   SelectOption,
-} from 'vue3-select-component/primitives';
-import TagCouleur from './TagCouleur.vue';
+} from "vue3-select-component/primitives";
+import TagCouleur from "./TagCouleur.vue";
 
 const { label } = defineProps({
   label: {
     type: String,
-    default: () => '',
+    default: () => "",
   },
 });
 
@@ -40,8 +40,6 @@ const couleurParValeur = computed(() =>
 </script>
 
 <template>
-  <!-- data-assembled-select : la lib ne style le trigger que sous ce hook ;
-       on en a besoin car on compose les primitives à la main. -->
   <div data-assembled-select>
     <label v-if="label">{{ label }}</label>
     <select-root v-model="model" :options="couleurs" clearable>

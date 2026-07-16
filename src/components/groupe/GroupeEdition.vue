@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref, useTemplateRef } from 'vue';
-import EditableTree from '/src/components/editable_tree/EditableTree.vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useGroupeStore } from '../../stores/groupe/Groupe.js';
+import { computed, ref, useTemplateRef } from "vue";
+import EditableTree from "/src/components/editable_tree/EditableTree.vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useGroupeStore } from "../../stores/groupe/Groupe.js";
 
 const sapeurStore = useSapeurStore();
 const groupeStore = useGroupeStore();
@@ -13,28 +13,28 @@ const { editMode } = defineProps({
     default: false,
   },
 });
-const emit = defineEmits(['selected']);
+const emit = defineEmits(["selected"]);
 
 const active = ref(null);
 const types = {
   groupe: {
-    icon: ['fas', 'sitemap'],
-    color: '#2c3e50',
+    icon: ["fas", "sitemap"],
+    color: "#2c3e50",
   },
   groupeInter: {
-    icon: ['fas', 'fire'],
-    color: '#f39c12',
+    icon: ["fas", "fire"],
+    color: "#f39c12",
   },
   groupeInactif: {
-    icon: ['fas', 'sitemap'],
-    color: '#bdc3c7',
+    icon: ["fas", "sitemap"],
+    color: "#bdc3c7",
   },
 };
 const tree = ref([
   {
-    id: 'g',
-    type: 'groupe',
-    label: 'Groupes',
+    id: "g",
+    type: "groupe",
+    label: "Groupes",
     children: [],
   },
 ]);
@@ -44,8 +44,8 @@ const groupeTree = computed(() => {
   const groupFilter = (parentId) => (g) => g.parent_id == parentId;
   const sapeurMapping = (s) => {
     const sapeur = sapeurStore.liste.find((sap) => sap.id == s.sapeur_id) || {
-      nom: 'Ancien',
-      prenom: 'Sapeur',
+      nom: "Ancien",
+      prenom: "Sapeur",
       civilite: 1,
       id: s.sapeur_id,
     };
@@ -53,22 +53,20 @@ const groupeTree = computed(() => {
       id: s.sapeur_id,
       key: `s-${s.sapeur_id}`,
       label: sapeur.nom_prenom,
-      type: 'sapeur',
+      type: "sapeur",
     };
   };
   const groupeMapping = (g) => ({
     label:
       (g.no ? `${g.no} ${g.designation}` : g.designation) +
-      (g.sapeur_ids.length ? ` (${g.sapeur_ids.length})` : ''),
-    type: g.type == 0 ? 'groupe' : 'groupeInter',
+      (g.sapeur_ids.length ? ` (${g.sapeur_ids.length})` : ""),
+    type: g.type == 0 ? "groupe" : "groupeInter",
     id: g.id,
     key: `g-${g.id}`,
     tri: g.tri,
     children: [
       ...groupeStore.liste.filter(groupFilter(g.id)).map(groupeMapping),
-      ...g.sapeur_ids
-        .map(sapeurMapping)
-        .sort((a, b) => a.label.localeCompare(b.label)),
+      ...g.sapeur_ids.map(sapeurMapping).sort((a, b) => a.label.localeCompare(b.label)),
     ],
   });
 
@@ -79,7 +77,7 @@ tree.value.children = groupeTree.value;
 
 const selected = (elem) => {
   active.value = elem;
-  emit('selected', elem);
+  emit("selected", elem);
 };
 
 const left = (node) => {
@@ -126,8 +124,7 @@ const up = (node) => {
     const groupesOfSameLevelAsParent = groupes.value
       .filter((g) => g.parent_id == parent.parent_id)
       .filter((g) => g.tri < parent.tri);
-    const previousParentGroupe =
-      groupesOfSameLevelAsParent[groupesOfSameLevelAsParent.length - 1];
+    const previousParentGroupe = groupesOfSameLevelAsParent[groupesOfSameLevelAsParent.length - 1];
     if (!previousParentGroupe) return;
     groupeStore.updateGroupe({
       groupeId: groupe.id,
@@ -211,7 +208,7 @@ const down = (node) => {
   }
 };
 
-const treeRef = useTemplateRef('tree');
+const treeRef = useTemplateRef("tree");
 const contract = () => treeRef.contract();
 const expand = () => treeRef.expand();
 
@@ -232,11 +229,7 @@ defineExpose({
   >
     <template v-if="editMode" #default="{ node }">
       <div v-if="node.data.type == 'groupe' || node.data.type == 'groupeInter'">
-        <button
-          v-if="!node.isRoot"
-          class="btn btn-sm pt-0 pb-0"
-          @click.prevent="left(node)"
-        >
+        <button v-if="!node.isRoot" class="btn btn-sm pt-0 pb-0" @click.prevent="left(node)">
           ←
         </button>
         <button
@@ -246,18 +239,10 @@ defineExpose({
         >
           →
         </button>
-        <button
-          v-if="!node.isFirst"
-          class="btn btn-sm pt-0 pb-0"
-          @click.prevent="up(node)"
-        >
+        <button v-if="!node.isFirst" class="btn btn-sm pt-0 pb-0" @click.prevent="up(node)">
           ↑
         </button>
-        <button
-          v-if="!node.isLast"
-          class="btn btn-sm pt-0 pb-0"
-          @click.prevent="down(node)"
-        >
+        <button v-if="!node.isLast" class="btn btn-sm pt-0 pb-0" @click.prevent="down(node)">
           ↓
         </button>
       </div>

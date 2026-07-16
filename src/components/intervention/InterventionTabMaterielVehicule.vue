@@ -1,6 +1,6 @@
 <script setup>
-import InterventionTabMateriel from '/src/components/intervention/InterventionTabMateriel.vue';
-import InterventionTabVehicule from '/src/components/intervention/InterventionTabVehicule.vue';
+import InterventionTabMateriel from "/src/components/intervention/InterventionTabMateriel.vue";
+import InterventionTabVehicule from "/src/components/intervention/InterventionTabVehicule.vue";
 
 const { id } = defineProps({
   id: {

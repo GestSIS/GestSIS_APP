@@ -1,13 +1,13 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
+import { computed, reactive, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
 
 const { data } = defineProps({
   data: {
@@ -27,11 +27,11 @@ const form = reactive({
 });
 
 const types = [
-  { id: 0, designation: 'Autre' },
-  { id: 1, designation: 'Solde' },
-  { id: 2, designation: 'Indemnité' },
-  { id: 3, designation: 'Frais forfaitaire' },
-  { id: 4, designation: 'Frais effectif' },
+  { id: 0, designation: "Autre" },
+  { id: 1, designation: "Solde" },
+  { id: 2, designation: "Indemnité" },
+  { id: 3, designation: "Frais forfaitaire" },
+  { id: 4, designation: "Frais effectif" },
 ];
 
 const sapeurStore = useSapeurStore();
@@ -44,16 +44,11 @@ const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
 const comptes = computed(() => compteStore.liste);
 const unites = computed(() => uniteStore.liste);
 const categories = computed(() => ecritureCategorieStore.liste);
-const activeExerciceComptableId = computed(
-  () => exerciceComptableStore.activeId,
-);
+const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);
 
-const activeUnite = computed(() =>
-  unites.value.find((u) => u.id == form.type_unite_id),
-);
+const activeUnite = computed(() => unites.value.find((u) => u.id == form.type_unite_id));
 
-form.exercice_comptable_id =
-  form.exercice_comptable_id ?? activeExerciceComptableId.value;
+form.exercice_comptable_id = form.exercice_comptable_id ?? activeExerciceComptableId.value;
 
 const { closeModal } = useModalStore();
 const awn = useNotification();
@@ -64,9 +59,7 @@ const save = async () => {
   }
   form.total = Math.round(form?.tarif * form?.quantite * 20) / 20;
 
-  ((form.id || 0) === 0
-    ? imputationStore.addEcriture
-    : imputationStore.updateEcriture)(form)
+  ((form.id || 0) === 0 ? imputationStore.addEcriture : imputationStore.updateEcriture)(form)
     .then(closeModal)
     .catch((err) => {
       errors.value = {
@@ -83,9 +76,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} une écriture
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} une écriture</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -146,10 +137,7 @@ const save = async () => {
             <span class="input-group-text">{{ activeUnite.abreviation }}</span>
           </div>
         </div>
-        <div
-          class="mb-3 col-4"
-          :class="activeUnite?.comptable ? 'col-4' : 'col-12'"
-        >
+        <div class="mb-3 col-4" :class="activeUnite?.comptable ? 'col-4' : 'col-12'">
           <label for="tarif">Tarif</label>
           <div class="input-group input-group-sm">
             <input
@@ -210,11 +198,9 @@ const save = async () => {
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

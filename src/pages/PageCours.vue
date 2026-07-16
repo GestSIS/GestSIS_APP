@@ -1,11 +1,11 @@
 <script setup>
-import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
-import { useCoursStore } from '../stores/sapeur/Cours.js';
-import { useCoursSapeurStore } from '../stores/sapeur/CoursSapeur.js';
-import { useLocaliteStore } from '../stores/common/Localite.js';
-import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { computed, ref, watchEffect } from 'vue';
+import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
+import { useCoursStore } from "../stores/sapeur/Cours.js";
+import { useCoursSapeurStore } from "../stores/sapeur/CoursSapeur.js";
+import { useLocaliteStore } from "../stores/common/Localite.js";
+import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
+import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
+import { computed, ref, watchEffect } from "vue";
 
 const sapeurStore = useSapeurStore();
 const coursStore = useCoursStore();
@@ -19,9 +19,7 @@ const loadSapeurs = sapeurStore.fetchListeSapeur();
 
 await exerciceComptableStore.fetchExercicesComptables();
 
-const activeExerciceComptableId = computed(
-  () => exerciceComptableStore.activeId,
-);
+const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);
 
 const loading = ref(false);
 watchEffect(async () => {
@@ -33,18 +31,16 @@ watchEffect(async () => {
 await Promise.all([loadLocalities, loadCours, loadSapeurs]);
 
 const sapeurs = computed(() =>
-  sapeurStore.liste.sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom)),
+  sapeurStore.liste.slice().sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom)),
 );
 const coursTypes = computed(() =>
-  coursStore.liste.sort((a, b) => a.designation.localeCompare(b.designation)),
+  coursStore.liste.slice().sort((a, b) => a.designation.localeCompare(b.designation)),
 );
 const coursSapeurs = computed(() =>
-  coursSapeurStore.liste.sort((a, b) => a.date.localeCompare(b.date)),
+  coursSapeurStore.liste.slice().sort((a, b) => a.date.localeCompare(b.date)),
 );
 const localites = computed(() =>
-  localiteStore.liste.sort((a, b) =>
-    a.designation.localeCompare(b.designation),
-  ),
+  localiteStore.liste.slice().sort((a, b) => a.designation.localeCompare(b.designation)),
 );
 
 const computedData = computed(() =>
@@ -69,11 +65,11 @@ const filteredLocalites = computed(() => {
 });
 
 const fields = [
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'Cours', key: 'designation' },
-  { title: 'Sapeur', key: 'nom_prenom' },
-  { title: 'Durée [jour]', key: 'duree' },
-  { title: 'Localité', key: 'localite' },
+  { title: "Date", key: "date", type: Date },
+  { title: "Cours", key: "designation" },
+  { title: "Sapeur", key: "nom_prenom" },
+  { title: "Durée [jour]", key: "duree" },
+  { title: "Localité", key: "localite" },
 ];
 </script>
 
@@ -127,14 +123,10 @@ const fields = [
                   base-option="<Localité>"
                   :options="filteredLocalites"
                   :model-value="filters.localite_id"
-                  @update:model-value="
-                    (value) => setFilter('localite_id', value)
-                  "
+                  @update:model-value="(value) => setFilter('localite_id', value)"
                 />
                 <div v-if="canReset" class="col-md-4 mb-1">
-                  <button class="btn btn-sm btn-warning w-100" @click="reset">
-                    Réinitialiser
-                  </button>
+                  <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
                 </div>
               </div>
             </div>

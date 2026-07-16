@@ -1,9 +1,9 @@
-import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
+import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
-import { API_URL, AUTH_URL } from '../http/Env.js';
+import { API_URL, AUTH_URL } from "../http/Env.js";
 
-import { useAuthStore } from '../stores/auth/Auth.js';
+import { useAuthStore } from "../stores/auth/Auth.js";
 
 const request = {
   API_URL: API_URL,
@@ -22,11 +22,11 @@ const request = {
     } catch (exception) {
       this._accessTokenValidity = null;
     }
-    axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+    axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
   },
 
   setSisKey(sis_key) {
-    axios.defaults.headers.common['Sis-Key'] = sis_key;
+    axios.defaults.headers.common["Sis-Key"] = sis_key;
     this._sisKey = sis_key;
   },
 
@@ -37,10 +37,10 @@ const request = {
   apiFileDownload(filename) {
     const api = axios.create({
       baseURL: API_URL,
-      responseType: 'arraybuffer', //TODO: next fix this bug to be able to handle error message in json format
+      responseType: "arraybuffer", //TODO: next fix this bug to be able to handle error message in json format
       headers: {
-        Accept: 'application/pdf',
-        'Content-Type': 'application/json',
+        Accept: "application/pdf",
+        "Content-Type": "application/json",
       },
     });
 
@@ -62,16 +62,16 @@ const request = {
         const decoder = new TextDecoder();
         const res = decoder.decode(error.response.data);
         throw JSON.parse(res)?.data;
-      }
+      },
     );
 
     if (filename) {
       api.interceptors.response.use((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
+        const link = document.createElement("a");
         link.href = url;
         // link.target = '_blank' // If we want to open it in another tab
-        link.setAttribute('download', filename);
+        link.setAttribute("download", filename);
         // link.setAttribute('download', response.headers["content-disposition"].split("filename=")[1])
         link.click();
         window.URL.revokeObjectURL(url);
@@ -86,8 +86,8 @@ const request = {
     const api = axios.create({
       baseURL: API_URL,
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
 
@@ -159,7 +159,7 @@ const request = {
           try {
             await useAuthStore().refreshToken();
 
-            error.config.headers.Authorization = `Bearer ${axios.defaults.headers.common['Authorization']}`;
+            error.config.headers.Authorization = `Bearer ${axios.defaults.headers.common["Authorization"]}`;
             // Retry the original request
             return axios({
               ...error.config,
@@ -173,7 +173,7 @@ const request = {
         }
 
         return Promise.reject(error);
-      }
+      },
     );
 
     return api;
@@ -183,8 +183,8 @@ const request = {
     const auth = axios.create({
       baseURL: AUTH_URL,
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
     });
 
@@ -197,7 +197,7 @@ const request = {
       },
       function (error) {
         return Promise.reject(error.response?.data ?? error);
-      }
+      },
     );
     return auth;
   },

@@ -1,10 +1,10 @@
 <script setup>
-import AdminService from '../../services/AdminService';
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useModalStore } from '../../stores/common/Modal';
-import { useAdminStore } from '../../stores/admin/Admin';
-import { useAuthStore } from '../../stores/auth/Auth';
+import AdminService from "../../services/AdminService";
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useModalStore } from "../../stores/common/Modal";
+import { useAdminStore } from "../../stores/admin/Admin";
+import { useAuthStore } from "../../stores/auth/Auth";
 
 const adminStore = useAdminStore();
 const authStore = useAuthStore();
@@ -26,29 +26,29 @@ const awn = useNotification();
 const tokenForUser = (user) =>
   AdminService.getUserToken(user.id).then((data) => {
     navigator.clipboard.writeText(data.accessToken);
-    awn.success('Token copié dans le press papier');
+    awn.success("Token copié dans le press papier");
   });
-const editUser = (user) => showModal({ component: 'ModalUser', data: user });
+const editUser = (user) => showModal({ component: "ModalUser", data: user });
 const deleteUser = (user) =>
   confirm(
-    'Voulez-vous vraiment supprimer cet utilisateur ?',
+    "Voulez-vous vraiment supprimer cet utilisateur ?",
     "Attention, l'action est irréversible et l'utilisateur devra recréer un compte pour utiliser GestSIS.",
   ).then(() =>
     adminStore
       .deleteUser(user?.id)
-      .then((res) => awn.success(res?.message || 'Utilisateur supprimé'))
-      .catch((e) => awn.alert(e?.message || 'Erreur lors de la suppression')),
+      .then((res) => awn.success(res?.message || "Utilisateur supprimé"))
+      .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression")),
   );
 
 const fields = [
-  { title: 'id', key: 'id' },
-  { title: 'name', key: 'name' },
-  { title: 'email', key: 'email' },
-  { title: 'admin', key: 'admin', type: Boolean },
-  { title: 'sapeur', key: 'sapeur', slot: 'liste' },
-  { title: 'created_at', key: 'created_at', type: Date },
-  { title: 'email_verified_at', key: 'email_verified_at', type: Date },
-  { title: 'Actions', key: 'id', slot: 'actions' },
+  { title: "id", key: "id" },
+  { title: "name", key: "name" },
+  { title: "email", key: "email" },
+  { title: "admin", key: "admin", type: Boolean },
+  { title: "sapeur", key: "sapeur", slot: "liste" },
+  { title: "created_at", key: "created_at", type: Date },
+  { title: "email_verified_at", key: "email_verified_at", type: Date },
+  { title: "Actions", key: "id", slot: "actions" },
 ];
 </script>
 
@@ -79,11 +79,7 @@ const fields = [
           >
             <font-awesome-icon :icon="['far', 'eye']" />
           </router-link>
-          <button
-            type="button"
-            class="btn btn-outline-primary border-0"
-            @click="editUser(rowData)"
-          >
+          <button type="button" class="btn btn-outline-primary border-0" @click="editUser(rowData)">
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button

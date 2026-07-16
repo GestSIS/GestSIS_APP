@@ -1,6 +1,6 @@
-const TOKEN_KEY = 'access_token';
-const USER_KEY = 'logged_user';
-const REFRESH_TOKEN_KEY = 'refresh_token';
+const TOKEN_KEY = "access_token";
+const USER_KEY = "logged_user";
+const REFRESH_TOKEN_KEY = "refresh_token";
 
 /**
  * Manage the how Access Tokens are being stored and retreived from storage.
@@ -23,7 +23,7 @@ const TokenService = {
     return localStorage.getItem(TOKEN_KEY);
   },
   saveAccessToken(accessToken) {
-    if (accessToken === null || accessToken === 'null') {
+    if (accessToken === null || accessToken === "null") {
       this.removeAccessToken();
     } else {
       localStorage.setItem(TOKEN_KEY, accessToken);
@@ -37,7 +37,7 @@ const TokenService = {
     return localStorage.getItem(REFRESH_TOKEN_KEY);
   },
   saveRefreshToken(refreshToken) {
-    if (refreshToken === null || refreshToken === 'null') {
+    if (refreshToken === null || refreshToken === "null") {
       this.removeRefreshToken();
     } else {
       localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);

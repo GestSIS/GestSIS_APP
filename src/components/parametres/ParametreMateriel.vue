@@ -1,9 +1,9 @@
 <script setup>
-import { useMaterielStore } from '../../stores/intervention/Materiel.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { computed } from 'vue';
-import useNotification from '../../composables/useNotification.js';
+import { useMaterielStore } from "../../stores/intervention/Materiel.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
 
 const materielStore = useMaterielStore();
 const uniteStore = useUniteStore();
@@ -11,38 +11,36 @@ const uniteStore = useUniteStore();
 await materielStore.fetchMateriels();
 
 const fields = [
-  { title: 'Tri', key: 'tri' },
-  { title: 'Actif', key: 'statut', type: Boolean },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Prix de forfait', key: 'forfait' },
-  { title: "Prix de l'unité", key: 'unite' },
-  { title: "Type d'unité", key: 'type_unite' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Tri", key: "tri" },
+  { title: "Actif", key: "statut", type: Boolean },
+  { title: "Désignation", key: "designation" },
+  { title: "Prix de forfait", key: "forfait" },
+  { title: "Prix de l'unité", key: "unite" },
+  { title: "Type d'unité", key: "type_unite" },
+  { title: "Actions", slot: "actions" },
 ];
 
 const listeMateriel = computed(() =>
   materielStore.liste
     .map((m) => ({
       ...m,
-      type_unite:
-        uniteStore.liste.find((u) => u.id == m.type_unite_id)?.unite ?? '-',
+      type_unite: uniteStore.liste.find((u) => u.id == m.type_unite_id)?.unite ?? "-",
     }))
     .sort((a, b) => a.tri - b.tri),
 );
 
 const { showModal } = useModalStore();
 const awn = useNotification();
-const ajoutMateriel = () =>
-  showModal({ component: 'ModalMaterielIntervention', data: {} });
+const ajoutMateriel = () => showModal({ component: "ModalMaterielIntervention", data: {} });
 const updateMateriel = (materiel) =>
   showModal({
-    component: 'ModalMaterielIntervention',
+    component: "ModalMaterielIntervention",
     data: { ...materiel },
   });
 const deleteMateriel = (materiel) =>
   materielStore
     .removeMateriel(materiel.id)
-    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
 </script>
 
 <template>

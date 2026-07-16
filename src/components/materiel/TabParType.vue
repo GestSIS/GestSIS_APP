@@ -1,7 +1,7 @@
 <script setup>
-import NavigationParType from './NavigationParType.vue';
-import MaterielTypeDetail from './MaterielTypeDetail.vue';
-import ListeArticlePourType from './ListeArticlePourType.vue';
+import NavigationParType from "./NavigationParType.vue";
+import MaterielTypeDetail from "./MaterielTypeDetail.vue";
+import ListeArticlePourType from "./ListeArticlePourType.vue";
 
 const { id } = defineProps({
   id: {
@@ -40,9 +40,7 @@ const { id } = defineProps({
         <div class="card-header">
           <h5 class="m-0">Aucun type sélectionné</h5>
         </div>
-        <div class="card-body">
-          Sélectionnez un matériel type dans la liste de gauche
-        </div>
+        <div class="card-body">Sélectionnez un matériel type dans la liste de gauche</div>
       </div>
     </div>
   </div>

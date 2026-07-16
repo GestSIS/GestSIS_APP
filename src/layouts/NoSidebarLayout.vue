@@ -1,6 +1,6 @@
 <script setup>
-import AppNavbar from '/src/components/AppNavbar.vue';
-import AppModal from '/src/components/AppModal.vue';
+import AppNavbar from "/src/components/AppNavbar.vue";
+import AppModal from "/src/components/AppModal.vue";
 </script>
 
 <template>

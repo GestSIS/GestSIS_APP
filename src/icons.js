@@ -1,4 +1,4 @@
-import { library } from '@fortawesome/fontawesome-svg-core';
+import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faUser,
   faFireExtinguisher,
@@ -61,9 +61,9 @@ import {
   faIndustry,
   faArrowUp,
   faArrowDown,
-} from '@fortawesome/free-solid-svg-icons';
+} from "@fortawesome/free-solid-svg-icons";
 
-import { faGripfire, faGithub } from '@fortawesome/free-brands-svg-icons';
+import { faGripfire, faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
   faEdit,
   faCalendarAlt,
@@ -83,7 +83,7 @@ import {
   faClipboard,
   faHandshake,
   faHouse,
-} from '@fortawesome/free-regular-svg-icons';
+} from "@fortawesome/free-regular-svg-icons";
 
 library.add(
   faArrowUp,
@@ -166,5 +166,5 @@ library.add(
   faEye,
   faAddressCard,
   faAddressBook,
-  faClipboard
+  faClipboard,
 );

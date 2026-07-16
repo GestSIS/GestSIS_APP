@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-export const useModalStore = defineStore('Modal', {
+export const useModalStore = defineStore("Modal", {
   state: () => ({
     visible: false,
     component: null,
@@ -10,7 +10,7 @@ export const useModalStore = defineStore('Modal', {
   }),
   actions: {
     showModal(payload) {
-      if (typeof payload === 'string') {
+      if (typeof payload === "string") {
         this.callback = () => Promise.resolve();
         this.size = 0;
         this.data = {};
@@ -32,20 +32,20 @@ export const useModalStore = defineStore('Modal', {
     confirm(title, question) {
       return new Promise((resolve, reject) =>
         this.showModal({
-          component: 'ModalConfirmation',
+          component: "ModalConfirmation",
           data: {
             title: title,
             question: question,
           },
           callback: (confirmed) => {
             if (confirmed) {
-              resolve()
+              resolve();
             } else {
               reject();
             }
           },
-        })
-      )
-    }
+        }),
+      );
+    },
   },
 });

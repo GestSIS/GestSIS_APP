@@ -1,11 +1,11 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getTypes() {
-    return Api.api().get('/travail-types');
+    return Api.api().get("/travail-types");
   },
   addType(type) {
-    return Api.api().post('/travail-types', type);
+    return Api.api().post("/travail-types", type);
   },
   updateType(type) {
     return Api.api().put(`/travail-types/${type.id}`, type);

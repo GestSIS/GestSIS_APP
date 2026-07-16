@@ -1,15 +1,12 @@
 <script setup>
-import { useBaseDataStore } from '../../stores/common/BaseData';
-import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
-import { computed } from 'vue';
+import { useBaseDataStore } from "../../stores/common/BaseData";
+import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
+import { computed } from "vue";
 
 const baseDataStore = useBaseDataStore();
 const infosStore = useMesInfosStore();
 
-await Promise.all([
-  baseDataStore.fetchPermisType(),
-  infosStore.fetchMesPermis(),
-]);
+await Promise.all([baseDataStore.fetchPermisType(), infosStore.fetchMesPermis()]);
 
 const listPermisType = computed(() => baseDataStore.permisTypes);
 const activeSapeurPermis = computed(() => infosStore.permis);
@@ -36,18 +33,18 @@ const permisData = computed(() => {
 const publicPath = import.meta.env.BASE_URL;
 const fields = [
   {
-    title: 'Permis',
-    slot: 'logo',
-    key: 'type',
-    columnClass: 'col-1 text-end',
+    title: "Permis",
+    slot: "logo",
+    key: "type",
+    columnClass: "col-1 text-end",
   },
   {
-    key: 'type',
-    columnClass: 'col-1 ',
+    key: "type",
+    columnClass: "col-1 ",
   },
   {
-    title: 'date',
-    key: 'date',
+    title: "date",
+    key: "date",
     type: Date,
   },
 ];
@@ -59,12 +56,7 @@ const fields = [
       <h3 class="card-title">Permis de conduire</h3>
     </div>
     <div class="card-body table-responsive p-0">
-      <base-table
-        :fields="fields"
-        :data="permisData"
-        :selectable="true"
-        no-data="Aucun permis"
-      >
+      <base-table :fields="fields" :data="permisData" :selectable="true" no-data="Aucun permis">
         <template #head>
           <tr>
             <th colspan="2" class="text-center">Permis</th>
@@ -78,11 +70,7 @@ const fields = [
             style="font-size: 1.7em"
             :icon="['fab', 'gripfire']"
           />
-          <img
-            :src="`${publicPath}permis/${rowData.type
-              .toLowerCase()
-              .replace(' ', '_')}.gif`"
-          />
+          <img :src="`${publicPath}permis/${rowData.type.toLowerCase().replace(' ', '_')}.gif`" />
         </template>
       </base-table>
     </div>

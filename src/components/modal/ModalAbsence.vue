@@ -1,9 +1,9 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useAbsenceStore } from '../../stores/absence/Absence.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import { computed, reactive, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useAbsenceStore } from "../../stores/absence/Absence.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 
 const { data } = defineProps({
   data: {
@@ -26,7 +26,7 @@ const { closeModal } = useModalStore();
 const awn = useNotification();
 
 const save = async () => {
-  const action = form?.id ? 'updateAbsence' : 'addAbsence';
+  const action = form?.id ? "updateAbsence" : "addAbsence";
   absenceStore[action](form)
     .then(closeModal)
     .catch((err) => {
@@ -39,9 +39,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form?.id ? 'Modifier' : 'Ajouter' }} une absence
-      </h5>
+      <h5 class="modal-title">{{ form?.id ? "Modifier" : "Ajouter" }} une absence</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -83,11 +81,9 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form?.id ? 'Modifier' : 'Ajouter' }}
+        {{ form?.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

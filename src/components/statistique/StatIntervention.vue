@@ -1,7 +1,7 @@
 <script setup>
-import StatInterventionBasic from '/src/components/statistique/StatInterventionBasic.vue';
-import StatVehicule from '/src/components/statistique/StatVehicule.vue';
-import StatMateriel from '/src/components/statistique/StatMateriel.vue';
+import StatInterventionBasic from "/src/components/statistique/StatInterventionBasic.vue";
+import StatVehicule from "/src/components/statistique/StatVehicule.vue";
+import StatMateriel from "/src/components/statistique/StatMateriel.vue";
 </script>
 
 <template>

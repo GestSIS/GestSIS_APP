@@ -1,6 +1,6 @@
 <script setup>
-import { ref, useTemplateRef, watch } from 'vue';
-import EditableNode from '/src/components/editable_tree/EditableNode.vue';
+import { ref, useTemplateRef, watch } from "vue";
+import EditableNode from "/src/components/editable_tree/EditableNode.vue";
 
 const { types, tree, selectable, active } = defineProps({
   types: {
@@ -24,7 +24,7 @@ const { types, tree, selectable, active } = defineProps({
   },
 });
 
-const emit = defineEmits(['selected']);
+const emit = defineEmits(["selected"]);
 const localActive = ref(null);
 
 watch(
@@ -36,13 +36,13 @@ watch(
 
 localActive.value = active?.data;
 
-const nodeRef = useTemplateRef('node');
+const nodeRef = useTemplateRef("node");
 const contract = () => nodeRef.forEach((node) => node.expand(false));
 const expand = () => nodeRef.forEach((node) => node.expand(true));
 const select = (elem) => {
   if (selectable) {
     localActive.value = elem.data;
-    emit('selected', elem);
+    emit("selected", elem);
   }
 };
 defineExpose({

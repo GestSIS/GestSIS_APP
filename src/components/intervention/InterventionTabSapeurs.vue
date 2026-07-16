@@ -1,13 +1,13 @@
 <script setup>
-import { computed, onMounted, ref, useTemplateRef, watchEffect } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import useHasPermission from '../../composables/usePermission.js';
-import permissions from '/src/composables/permissions.js';
-import InterventionTabGroupe from '/src/components/intervention/InterventionTabGroupe.vue';
-import InterventionTabPhase from '/src/components/intervention/InterventionTabPhase.vue';
-import { useInterventionStore } from '../../stores/intervention/Intervention.js';
-import { usePhaseTypeStore } from '../../stores/intervention/PhaseType.js';
+import { computed, onMounted, ref, useTemplateRef, watchEffect } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import useHasPermission from "../../composables/usePermission.js";
+import permissions from "/src/composables/permissions.js";
+import InterventionTabGroupe from "/src/components/intervention/InterventionTabGroupe.vue";
+import InterventionTabPhase from "/src/components/intervention/InterventionTabPhase.vue";
+import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
 
 const sapeurStore = useSapeurStore();
 const interventionStore = useInterventionStore();
@@ -45,9 +45,7 @@ const phases = computed(() => interventionStore.active.phases);
 const sapeurs = computed(() => sapeurStore.liste);
 
 // TODO: Check si intervention pas déjà imputé
-const hasEditPermission = useHasPermission(
-  permissions.INTERVENTION.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
 const listSapeurs = computed(() => {
   return Array.from(
@@ -68,9 +66,7 @@ const sortedSapeurs = computed(() => {
 
 const computeSapeur = (id) => {
   let res = {};
-  const start = new Date(
-    dataInter.value.date_debut + ' ' + dataInter.value.heure_debut,
-  );
+  const start = new Date(dataInter.value.date_debut + " " + dataInter.value.heure_debut);
   start.setMinutes(0);
 
   presences.value
@@ -105,12 +101,8 @@ const computedPresences = computed(() => {
   return temp;
 });
 
-const startFloored = new Date(
-  dataInter.value.date_debut + ' ' + dataInter.value.heure_debut,
-);
-const end = new Date(
-  dataInter.value.date_fin + ' ' + dataInter.value.heure_fin,
-);
+const startFloored = new Date(dataInter.value.date_debut + " " + dataInter.value.heure_debut);
+const end = new Date(dataInter.value.date_fin + " " + dataInter.value.heure_fin);
 
 startFloored.setMinutes(0);
 const diff = Math.abs(startFloored - end) / 3600000;
@@ -121,20 +113,16 @@ for (let i = 0; i < Math.ceil(diff); ++i) {
   columns.value.push((min + i) % 24);
 }
 
-const wrapperNode = useTemplateRef('wrapper');
+const wrapperNode = useTemplateRef("wrapper");
 onMounted(() => {
   if (wrapperNode.value.addEventListener) {
     // IE9, Chrome, Safari, Opera
-    wrapperNode.value.addEventListener('mousewheel', scrollHorizontally, false);
+    wrapperNode.value.addEventListener("mousewheel", scrollHorizontally, false);
     // Firefox
-    wrapperNode.value.addEventListener(
-      'DOMMouseScroll',
-      scrollHorizontally,
-      false,
-    );
+    wrapperNode.value.addEventListener("DOMMouseScroll", scrollHorizontally, false);
   } else {
     // IE 6/7/8
-    wrapperNode.value.attachEvent('onmousewheel', scrollHorizontally);
+    wrapperNode.value.attachEvent("onmousewheel", scrollHorizontally);
   }
 });
 
@@ -150,13 +138,13 @@ const scrollHorizontally = (e) => {
 };
 const addPresences = () => {
   showModal({
-    component: 'ModalPresenceIntervention',
+    component: "ModalPresenceIntervention",
     callback: () => {},
     data: {
-      mode: 'add',
+      mode: "add",
       id: dataInter.value.id,
-      min: dataInter.value.date_debut + ' ' + dataInter.value.heure_debut,
-      max: dataInter.value.date_fin + ' ' + dataInter.value.heure_fin,
+      min: dataInter.value.date_debut + " " + dataInter.value.heure_debut,
+      max: dataInter.value.date_fin + " " + dataInter.value.heure_fin,
     },
   });
 };
@@ -164,27 +152,25 @@ const editPresence = (presence) => {
   const clone = {};
   Object.assign(clone, presence);
   showModal({
-    component: 'ModalPresenceIntervention',
+    component: "ModalPresenceIntervention",
     callback: () => {},
     data: {
-      mode: 'edit',
+      mode: "edit",
       sapeurs: [clone.sapeur_id],
       presence: clone,
-      min: dataInter.value.date_debut + ' ' + dataInter.value.heure_debut,
-      max: dataInter.value.date_fin + ' ' + dataInter.value.heure_fin,
+      min: dataInter.value.date_debut + " " + dataInter.value.heure_debut,
+      max: dataInter.value.date_fin + " " + dataInter.value.heure_fin,
     },
   });
 };
 const removePresence = (id) =>
   confirm(
-    'Voulez-vous vraiment supprimer cette présence ?',
+    "Voulez-vous vraiment supprimer cette présence ?",
     "Attention, la suppression d'une présence est irréversible ! Toutes les données de cette présence seront perdues !",
   ).then(() => interventionStore.removePresence(id));
 
 const editQuittance = (e, id) => {
-  const filteredQuittances = quittances.value.filter(
-    (q) => q.sapeur_id === parseInt(id),
-  );
+  const filteredQuittances = quittances.value.filter((q) => q.sapeur_id === parseInt(id));
   if (filteredQuittances.length === 1) {
     interventionStore.removeQuittance(filteredQuittances[0].id);
   } else {
@@ -196,11 +182,7 @@ const getPhaseTypeAt = (date) => {
   const res = phases.value
     .filter((p) => p.debut == null || new Date(p.debut) <= date)
     .sort((d1, d2) =>
-      d1.debut == null
-        ? 1
-        : d2.debut == null
-          ? -1
-          : new Date(d1.debut) < new Date(d2.debut),
+      d1.debut == null ? 1 : d2.debut == null ? -1 : new Date(d1.debut) < new Date(d2.debut),
     );
   if (res.length > 0) {
     return res[0].phase_type_id;
@@ -265,10 +247,7 @@ const totalHeures = computed(() => {
             <span class="badge bg-primary me-2">Entretien</span>
             <span class="badge bg-success me-2">Piquet</span>
           </div>
-          <div
-            ref="wrapper"
-            class="overflow-x-scroll overflow-y-visible position-relative"
-          >
+          <div ref="wrapper" class="overflow-x-scroll overflow-y-visible position-relative">
             <table class="table table-sm table-bordered">
               <thead>
                 <tr>
@@ -284,26 +263,10 @@ const totalHeures = computed(() => {
                   </th>
                 </tr>
                 <tr>
-                  <th
-                    v-for="(col, i) in columns"
-                    :key="'1' + i"
-                    class="ps-3 pe-3"
-                  ></th>
-                  <th
-                    v-for="(col, i) in columns"
-                    :key="'2' + i"
-                    class="ps-3 pe-3"
-                  ></th>
-                  <th
-                    v-for="(col, i) in columns"
-                    :key="'3' + i"
-                    class="ps-3 pe-3"
-                  ></th>
-                  <th
-                    v-for="(col, i) in columns"
-                    :key="'4' + i"
-                    class="ps-3 pe-3"
-                  ></th>
+                  <th v-for="(col, i) in columns" :key="'1' + i" class="ps-3 pe-3"></th>
+                  <th v-for="(col, i) in columns" :key="'2' + i" class="ps-3 pe-3"></th>
+                  <th v-for="(col, i) in columns" :key="'3' + i" class="ps-3 pe-3"></th>
+                  <th v-for="(col, i) in columns" :key="'4' + i" class="ps-3 pe-3"></th>
                 </tr>
               </thead>
               <tbody v-if="sortedSapeurs.length <= 0">
@@ -314,10 +277,7 @@ const totalHeures = computed(() => {
               <tbody v-for="s in sortedSapeurs" :key="s.id" class="no-wrap">
                 <tr>
                   <th class="ms-0 ps-1">
-                    <button
-                      class="btn btn-link border-0"
-                      @click="expandSap(s.id)"
-                    >
+                    <button class="btn btn-link border-0" @click="expandSap(s.id)">
                       <font-awesome-icon
                         v-if="toggles[s.id] || false"
                         :icon="['fas', 'angle-down']"
@@ -336,8 +296,7 @@ const totalHeures = computed(() => {
                       :disabled="!hasEditPermission"
                       class="form-check-input"
                       :checked="
-                        quittances.filter((q) => q.sapeur_id === parseInt(s.id))
-                          .length === 1
+                        quittances.filter((q) => q.sapeur_id === parseInt(s.id)).length === 1
                       "
                       @click="(e) => editQuittance(e, s.id)"
                     />
@@ -390,7 +349,8 @@ const totalHeures = computed(() => {
               <tfoot>
                 <tr>
                   <th :colspan="4 + 4 * columns.length">
-                    Nombre sapeurs : {{ sortedSapeurs.length }} &nbsp;|&nbsp; Total heures : {{ totalHeures }}h
+                    Nombre sapeurs : {{ sortedSapeurs.length }} &nbsp;|&nbsp; Total heures :
+                    {{ totalHeures }}h
                   </th>
                 </tr>
               </tfoot>

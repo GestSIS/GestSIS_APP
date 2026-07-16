@@ -1,9 +1,9 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref } from "vue";
 
-import AppNavbar from '/src/components/AppNavbar.vue';
-import AppModal from '/src/components/AppModal.vue';
-import AppSidebar from '/src/components/AppSidebar.vue';
+import AppNavbar from "/src/components/AppNavbar.vue";
+import AppModal from "/src/components/AppModal.vue";
+import AppSidebar from "/src/components/AppSidebar.vue";
 
 const hideSidebar = ref(false);
 

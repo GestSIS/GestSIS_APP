@@ -1,11 +1,11 @@
 <script setup>
-import { useCoursStore } from '../../stores/sapeur/Cours.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useGradeStore } from '../../stores/sapeur/Grade.js';
-import ParametreCours from './ParametreCours.vue';
-import ParametreFonction from './ParametreFonction.vue';
-import ParametreGrade from './ParametreGrade.vue';
-import { ref } from 'vue';
+import { useCoursStore } from "../../stores/sapeur/Cours.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useGradeStore } from "../../stores/sapeur/Grade.js";
+import ParametreCours from "./ParametreCours.vue";
+import ParametreFonction from "./ParametreFonction.vue";
+import ParametreGrade from "./ParametreGrade.vue";
+import { ref } from "vue";
 
 const coursStore = useCoursStore();
 const fonctionStore = useFonctionStore();
@@ -16,7 +16,7 @@ const loadCours = coursStore.fetchCours();
 const loadGrade = gradeStore.fetchGrades();
 
 await Promise.all([loadFonction, loadCours, loadGrade]);
-const tab = ref('cours');
+const tab = ref("cours");
 </script>
 
 <template>
@@ -26,11 +26,7 @@ const tab = ref('cours');
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres sapeurs</h3>
         </div>
-        <nav
-          class="nav flex-column nav-pills"
-          role="tablist"
-          aria-orientation="vertical"
-        >
+        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
           <a
             class="nav-link"
             :class="{ active: tab === 'cours' }"

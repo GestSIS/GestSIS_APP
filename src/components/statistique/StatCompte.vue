@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
+import { computed, ref, watchEffect } from "vue";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useStatistiqueStore } from "../../stores/statistique/Statistique.js";
 
 const exerciceComptableStore = useExerciceComptableStore();
 const compteStore = useCompteStore();
@@ -14,31 +14,29 @@ await exerciceComptableStore.fetchExercicesComptables();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await statistiqueStore.fetchStatistiqueCompte(
-    exerciceComptableStore.activeId,
-  );
+  await statistiqueStore.fetchStatistiqueCompte(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
 const allCompte = ref(false);
 const fields = [
-  { title: 'Compte', key: 'label' },
+  { title: "Compte", key: "label" },
   {
-    title: 'Nb écritures',
-    key: 'nb',
-    columnClass: 'text-end',
-    titleClass: 'text-end',
+    title: "Nb écritures",
+    key: "nb",
+    columnClass: "text-end",
+    titleClass: "text-end",
   },
   {
-    title: 'Total',
-    key: 'total',
+    title: "Total",
+    key: "total",
     type: Number,
-    columnClass: 'text-end',
-    titleClass: 'text-end',
+    columnClass: "text-end",
+    titleClass: "text-end",
   },
 ];
 
-const comptes = computed(() => compteStore.liste.sort((a, b) => a.tri - b.tri));
+const comptes = computed(() => compteStore.liste.slice().sort((a, b) => a.tri - b.tri));
 const stats = computed(() => statistiqueStore.comptes);
 const filteredData = computed(() => {
   const ids = new Set(stats.value.map((c) => c.compte_id));
@@ -46,7 +44,7 @@ const filteredData = computed(() => {
     .filter((e) => allCompte.value || ids.has(e.id))
     .map((c) => ({
       ...c,
-      ...(stats.value.find((s) => s.compte_id == c.id) ?? {}),
+      ...stats.value.find((s) => s.compte_id == c.id),
     }));
 });
 </script>
@@ -80,19 +78,13 @@ const filteredData = computed(() => {
             <tr>
               <th>Total :</th>
               <th class="text-end">
-                {{
-                  filteredData.reduce(
-                    (acc, a) => acc + (parseInt(a.nb) ?? 0),
-                    0,
-                  )
-                }}
+                {{ filteredData.reduce((acc, a) => acc + (parseInt(a.nb) ?? 0), 0) }}
               </th>
               <th class="text-end">
                 {{
                   filteredData
                     .reduce(
-                      (acc, a) =>
-                        acc + ((a.produit ? -1 : 1) * parseFloat(a.total) ?? 0),
+                      (acc, a) => acc + ((a.produit ? -1 : 1) * parseFloat(a.total) ?? 0),
                       0.0,
                     )
                     .toLocaleString(undefined, { minimumFractionDigits: 2 })

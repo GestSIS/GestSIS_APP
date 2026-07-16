@@ -1,10 +1,10 @@
 <script setup>
-import { ref, computed, watchEffect } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { ref, computed, watchEffect } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -18,8 +18,7 @@ watchEffect(async () => {
 const mutations = computed(() =>
   sapeurStore.active.mutations.map((m) => ({
     ...m,
-    localite: localiteStore.liste.find((l) => l.id == m.localite_id)
-      ?.designation,
+    localite: localiteStore.liste.find((l) => l.id == m.localite_id)?.designation,
   })),
 );
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
@@ -31,27 +30,26 @@ const { showModal, confirm } = useModalStore();
 
 const removeMutation = (mutation) =>
   confirm(
-    'Voulez-vous vraiment supprimer cette mutation ?',
+    "Voulez-vous vraiment supprimer cette mutation ?",
     "Attention, la suppression d'une mutation est irréversible ! Toutes les données de cette mutation seront perdues !",
   ).then(() => sapeurStore.removeMutation(mutation?.id));
 
-const editMutation = (mutation) =>
-  showModal({ component: 'ModalMutation', data: mutation });
+const editMutation = (mutation) => showModal({ component: "ModalMutation", data: mutation });
 
 const finService = () =>
   showModal({
-    component: 'ModalMutation',
-    data: { action: 'finService', ...mutations.value.find((m) => !m.sortie) },
+    component: "ModalMutation",
+    data: { action: "finService", ...mutations.value.find((m) => !m.sortie) },
   });
 
-const incorporation = () => showModal('ModalMutation');
+const incorporation = () => showModal("ModalMutation");
 
 const fields = [
-  { title: 'Incorporation', key: 'incorporation', type: Date },
-  { title: 'Sortie', key: 'sortie', type: Date },
-  { title: 'Motif', key: 'motif' },
-  { title: 'Localité', key: 'localite' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Incorporation", key: "incorporation", type: Date },
+  { title: "Sortie", key: "sortie", type: Date },
+  { title: "Motif", key: "motif" },
+  { title: "Localité", key: "localite" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -63,12 +61,7 @@ const fields = [
     <!-- form start -->
     <form role="form">
       <div class="card-body">
-        <base-table
-          :loading="loading"
-          :fields="fields"
-          :data="mutations"
-          no-data="Aucune mutation"
-        >
+        <base-table :loading="loading" :fields="fields" :data="mutations" no-data="Aucune mutation">
           <template #actions="{ rowData }">
             <button
               v-if="hasEditPermission"
@@ -94,8 +87,7 @@ const fields = [
           class="btn btn-outline-primary"
           @click="finService"
         >
-          <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />Fin
-          de service
+          <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />Fin de service
         </button>
         <button
           v-else-if="hasEditPermission"
@@ -103,10 +95,7 @@ const fields = [
           class="btn btn-outline-primary"
           @click="incorporation"
         >
-          <font-awesome-icon
-            class="me-1"
-            :icon="['fas', 'door-closed']"
-          />Incorporation
+          <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />Incorporation
         </button>
       </div>
     </form>

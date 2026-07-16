@@ -1,12 +1,12 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { groupedByData } from '../../tools/index.js';
-import RtaService from '../../services/RtaService.js';
-import useNotification from '../../composables/useNotification.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import MoyenContact from './MoyenContact.vue';
-import useHasPermission from '../../composables/usePermission.js';
-import permissions from '../../composables/permissions.js';
+import { computed, ref } from "vue";
+import { groupedByData } from "../../tools/index.js";
+import RtaService from "../../services/RtaService.js";
+import useNotification from "../../composables/useNotification.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import MoyenContact from "./MoyenContact.vue";
+import useHasPermission from "../../composables/usePermission.js";
+import permissions from "../../composables/permissions.js";
 
 const loading = ref(true);
 const communes = ref([]);
@@ -14,9 +14,7 @@ const communes = ref([]);
 const agriculteurs = ref([]);
 const loadData = async () => {
   loading.value = true;
-  await RtaService.getAgriculteurs().then(
-    (data) => (agriculteurs.value = data),
-  );
+  await RtaService.getAgriculteurs().then((data) => (agriculteurs.value = data));
   loading.value = false;
 };
 loadData();
@@ -24,7 +22,7 @@ loadData();
 const computedAgriculteurs = computed(() => {
   return Object.fromEntries([
     ...(communes.value ?? []).map((commune) => [commune, []]),
-    ...Object.entries(groupedByData(agriculteurs.value ?? [], 'communes')),
+    ...Object.entries(groupedByData(agriculteurs.value ?? [], "communes")),
   ]);
 });
 
@@ -40,13 +38,13 @@ const computedListes = computed(
 );
 const ajoutAgriculteur = () =>
   showModal({
-    component: 'ModalAgriculteur',
+    component: "ModalAgriculteur",
     callback: loadData,
     data: { agriculteur: {}, communes: computedListes.value },
   });
 const update = (agriculteur) =>
   showModal({
-    component: 'ModalAgriculteur',
+    component: "ModalAgriculteur",
     callback: loadData,
     data: { agriculteur, communes: computedListes.value },
   });
@@ -62,7 +60,7 @@ const reorder = (agriculteur, priorite) =>
     });
 const remove = (agriculteur) =>
   confirm(
-    'Êtes-vous sûr de vouloir supprimer cet agriculteur ?',
+    "Êtes-vous sûr de vouloir supprimer cet agriculteur ?",
     "Attention, la suppression d'un agriculteur est irréversible !",
   ).then(async () => {
     await RtaService.deleteAgriculteur(agriculteur.id);
@@ -71,7 +69,7 @@ const remove = (agriculteur) =>
 
 const ajoutListe = () =>
   showModal({
-    component: 'ModalCommunes',
+    component: "ModalCommunes",
     callback: (commune) => {
       if (commune) {
         communes.value = [...communes.value, commune];
@@ -81,7 +79,7 @@ const ajoutListe = () =>
 
 const modifierListe = (communes, agriculteurs) =>
   showModal({
-    component: 'ModalCommunes',
+    component: "ModalCommunes",
     data: { communes },
     callback: (commune) => {
       if (commune && commune.toUpperCase() !== communes.toUpperCase()) {
@@ -106,12 +104,12 @@ const modifierListe = (communes, agriculteurs) =>
 
 const hasEditPermission = useHasPermission(permissions.RTA.MODIFICATION);
 const fields = [
-  { title: 'Priorité', key: 'tri' },
-  { title: 'Nom', key: 'agriculteur' },
-  { title: 'Lieu-dit', key: 'lieudit' },
-  { title: 'Capacité', key: 'capacites', slot: 'capacites' },
-  { title: 'Contacts', key: 'moyensContact', slot: 'contacts' },
-  ...(hasEditPermission.value ? [{ title: 'Actions', slot: 'actions' }] : []),
+  { title: "Priorité", key: "tri" },
+  { title: "Nom", key: "agriculteur" },
+  { title: "Lieu-dit", key: "lieudit" },
+  { title: "Capacité", key: "capacites", slot: "capacites" },
+  { title: "Contacts", key: "moyensContact", slot: "contacts" },
+  ...(hasEditPermission.value ? [{ title: "Actions", slot: "actions" }] : []),
 ];
 </script>
 
@@ -132,27 +130,16 @@ const fields = [
       <base-card>
         <template #header>
           <div>
-            <button
-              type="button"
-              class="btn btn-outline-primary"
-              @click="ajoutAgriculteur()"
-            >
+            <button type="button" class="btn btn-outline-primary" @click="ajoutAgriculteur()">
               Ajouter agriculteur
             </button>
-            <button
-              type="button"
-              class="btn btn-outline-primary ms-2"
-              @click="ajoutListe()"
-            >
+            <button type="button" class="btn btn-outline-primary ms-2" @click="ajoutListe()">
               Ajouter une liste
             </button>
           </div>
         </template>
         <template #body-table>
-          <div
-            v-for="(agriculteurs, communes) in computedAgriculteurs"
-            :key="communes"
-          >
+          <div v-for="(agriculteurs, communes) in computedAgriculteurs" :key="communes">
             <h5 class="ms-3 mt-2">
               {{ communes }}
               <button
@@ -171,18 +158,11 @@ const fields = [
               no-data="Aucun agriculteur dans cette liste"
             >
               <template #capacites="{ rowData }">
-                {{
-                  rowData.capacites
-                    .map((c) => c.capacite + ' litres')
-                    .join(', ')
-                }}
+                {{ rowData.capacites.map((c) => c.capacite + " litres").join(", ") }}
               </template>
               <template #contacts="{ rowData }">
                 <ol class="mb-0">
-                  <li
-                    v-for="contact in rowData.moyens_contact"
-                    :key="contact.id"
-                  >
+                  <li v-for="contact in rowData.moyens_contact" :key="contact.id">
                     <MoyenContact :moyen-contact="contact" />
                   </li>
                 </ol>

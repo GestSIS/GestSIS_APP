@@ -1,15 +1,15 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { groupedByData, indexedData } from '../../tools/index.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
-import useHasPermission from '../../composables/usePermission.js';
-import permissions from '../../composables/permissions.js';
-import ArticleService from '../../services/materiel/ArticleService';
-import TagCouleur from './TagCouleur.vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur';
+import { computed, ref, watchEffect } from "vue";
+import { groupedByData, indexedData } from "../../tools/index.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
+import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
+import useHasPermission from "../../composables/usePermission.js";
+import permissions from "../../composables/permissions.js";
+import ArticleService from "../../services/materiel/ArticleService";
+import TagCouleur from "./TagCouleur.vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur";
 
 const { id } = defineProps({
   id: {
@@ -43,18 +43,16 @@ await Promise.all([
 
 // Partie pièces
 const piecesColonnes = [
-  { title: 'N°', key: 'numero' },
-  { title: 'Matériel type', key: 'type' },
-  { title: 'Taille', key: 'taille' },
-  { title: 'Remarque', key: 'remarque' },
-  { title: 'Attribué', key: 'attribution', type: 'date' },
-  { title: 'Actions', key: 'id', slot: 'actions' },
+  { title: "N°", key: "numero" },
+  { title: "Matériel type", key: "type" },
+  { title: "Taille", key: "taille" },
+  { title: "Remarque", key: "remarque" },
+  { title: "Attribué", key: "attribution", type: "date" },
+  { title: "Actions", key: "id", slot: "actions" },
 ];
 
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
-const indexedCategories = computed(() =>
-  indexedData(materielCategorieStore.liste),
-);
+const indexedCategories = computed(() => indexedData(materielCategorieStore.liste));
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedSapeurs = computed(() => indexedData(sapeurStore.liste));
 
@@ -65,12 +63,11 @@ const computedData = computed(() =>
         .map((a) => ({
           ...a,
           type: indexedTypes.value[a.materiel_type_id]?.designation,
-          categorie_id:
-            indexedTypes.value[a.materiel_type_id]?.materiel_categorie_id,
-          sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? '',
+          categorie_id: indexedTypes.value[a.materiel_type_id]?.materiel_categorie_id,
+          sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? "",
         }))
         .sort((a1, a2) => a1.type.localeCompare(a2.type)),
-      'categorie_id',
+      "categorie_id",
     ),
   ).map(([key, values]) => ({ key, data: values, categorie_id: key })),
 );
@@ -78,28 +75,28 @@ const computedData = computed(() =>
 const { showModal } = useModalStore();
 const infoMateriel = (materiel) =>
   showModal({
-    component: 'ModalArticleInfo',
+    component: "ModalArticleInfo",
     data: materiel,
     size: 1,
   });
 
 const editMateriel = (materiel) =>
   showModal({
-    component: 'ModalArticle',
+    component: "ModalArticle",
     data: materiel,
     callback: loadArticles,
   });
 
 const retourMateriel = (materiel) =>
   showModal({
-    component: 'ModalRetourUnique',
+    component: "ModalRetourUnique",
     data: materiel,
     callback: loadArticles,
   });
 
 const attribuer = () =>
   showModal({
-    component: 'ModalAttributionMultiple',
+    component: "ModalAttributionMultiple",
     data: ref({ sapeurId: id }),
     size: 2,
     callback: loadArticles,
@@ -121,11 +118,7 @@ const linearCategories = (categorieId) => {
   <base-card>
     <template #title>Matériel distribué ({{ articles.length }})</template>
     <template #header>
-      <button
-        v-if="hasEditPermission"
-        class="btn btn-primary"
-        @click="attribuer"
-      >
+      <button v-if="hasEditPermission" class="btn btn-primary" @click="attribuer">
         Attribuer du matériel
       </button>
     </template>

@@ -1,9 +1,9 @@
 <script setup>
-import { ref } from 'vue';
-import { useSapeurStore } from '../stores/sapeur/Sapeur';
-import { useModalStore } from '../stores/common/Modal';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import PublipostageService from '/src/services/PublipostageService.js';
+import { ref } from "vue";
+import { useSapeurStore } from "../stores/sapeur/Sapeur";
+import { useModalStore } from "../stores/common/Modal";
+import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
+import PublipostageService from "/src/services/PublipostageService.js";
 
 useSapeurStore().fetchListeSapeur();
 
@@ -16,7 +16,7 @@ const { showModal } = useModalStore();
 const resetSelection = () => (sapeurIds.value = []);
 const select = () => {
   showModal({
-    component: 'ModalSapeurSelect',
+    component: "ModalSapeurSelect",
     size: 1,
     callback: (res) => {
       if (res) {
@@ -38,9 +38,7 @@ const select = () => {
             <li class="breadcrumb-item">
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Publipostage
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Publipostage</li>
           </ol>
         </nav>
       </div>
@@ -56,9 +54,7 @@ const select = () => {
           </div>
           <div class="card-body">
             <h4 class="h5">Télécharger fichier Excel pour publipostage.</h4>
-            <button class="btn btn-primary mb-2" @click="publipostage">
-              Fichier Excel
-            </button>
+            <button class="btn btn-primary mb-2" @click="publipostage">Fichier Excel</button>
             <!-- <p>TODO: Aide pour réaliser le publipostage</p> -->
           </div>
         </div>
@@ -71,9 +67,7 @@ const select = () => {
           <div class="card-body">
             <h5>Sélection des sapeurs</h5>
             <div class="input-group mb-3">
-              <button class="btn btn-outline-primary" @click="select">
-                Sélection
-              </button>
+              <button class="btn btn-outline-primary" @click="select">Sélection</button>
               <input
                 type="text"
                 disabled
@@ -84,9 +78,7 @@ const select = () => {
                     : sapeurIds.length + ' sapeurs sélectionnés'
                 "
               />
-              <button class="btn btn-outline-danger" @click="resetSelection">
-                Reset
-              </button>
+              <button class="btn btn-outline-danger" @click="resetSelection">Reset</button>
             </div>
           </div>
         </div>

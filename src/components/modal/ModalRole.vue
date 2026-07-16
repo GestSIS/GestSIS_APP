@@ -1,7 +1,7 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useAuthStore } from '../../stores/auth/Auth.js';
+import { computed, reactive, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useAuthStore } from "../../stores/auth/Auth.js";
 
 const { data } = defineProps({
   data: {
@@ -19,14 +19,12 @@ const form = reactive({
   ...data,
 });
 
-const permissions = computed(() =>
-  authStore.permissions.sort((a, b) => a.tri - b.tri),
-);
+const permissions = computed(() => authStore.permissions.slice().sort((a, b) => a.tri - b.tri));
 
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  authStore[form.id ? 'updateRole' : 'createRole'](form)
+  authStore[form.id ? "updateRole" : "createRole"](form)
     .then(closeModal)
     .catch((err) => (errors.value = err));
 };
@@ -35,9 +33,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} un rôle
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un rôle</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -65,11 +61,7 @@ const save = async () => {
       </div>
       <div class="mb-3">
         <label for="designation">Permissions</label>
-        <div
-          v-for="permission in permissions"
-          :key="permission.id"
-          class="form-check"
-        >
+        <div v-for="permission in permissions" :key="permission.id" class="form-check">
           <input
             :id="'r' + permission.id"
             v-model="form.permissions"
@@ -77,24 +69,17 @@ const save = async () => {
             class="form-check-input"
             :value="permission.id"
           />
-          <label class="form-check-label" :for="'r' + permission.id">{{
-            permission.nom
-          }}</label>
+          <label class="form-check-label" :for="'r' + permission.id">{{ permission.nom }}</label>
         </div>
-        <div
-          class="invalid-feedback"
-          :class="{ 'd-block': errors['permissions'] }"
-        >
-          {{ errors['permissions'] }}
+        <div class="invalid-feedback" :class="{ 'd-block': errors['permissions'] }">
+          {{ errors["permissions"] }}
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

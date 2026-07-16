@@ -1,16 +1,15 @@
 <script setup>
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/auth/Auth.js';
+import { useRouter } from "vue-router";
+import { useAuthStore } from "../stores/auth/Auth.js";
 
 const authStore = useAuthStore();
 
-const decoded = atob('c3VwcG9ydEBnZXN0c2lzLmNo');
-const prefix = atob('bWFpbHRvOg==');
+const decoded = atob("c3VwcG9ydEBnZXN0c2lzLmNo");
+const prefix = atob("bWFpbHRvOg==");
 
 const router = useRouter();
 
-const login = () =>
-  router.push({ path: authStore.isLoggedIn ? 'accueil' : 'login' });
+const login = () => router.push({ path: authStore.isLoggedIn ? "accueil" : "login" });
 </script>
 
 <template>
@@ -28,13 +27,11 @@ const login = () =>
         <div class="container">
           <h1 class="jumbotron-heading">GestSIS</h1>
           <p class="lead text-muted">
-            Programme de gestion spécialement élaboré pour vous aider à gèrer
-            les données de votre SIS.
+            Programme de gestion spécialement élaboré pour vous aider à gèrer les données de votre
+            SIS.
           </p>
           <p>
-            <button class="btn btn-primary me-1" @click="login">
-              Accès GestSIS 2.0
-            </button>
+            <button class="btn btn-primary me-1" @click="login">Accès GestSIS 2.0</button>
           </p>
         </div>
       </section>
@@ -45,9 +42,8 @@ const login = () =>
           <div class="row">
             <div class="card col-12">
               <p>
-                Saisissez vous rapports d'intervention ainsi que vos présences
-                aux exercices en mode déconnecté directement sur une tablette ou
-                un smartphone.
+                Saisissez vous rapports d'intervention ainsi que vos présences aux exercices en mode
+                déconnecté directement sur une tablette ou un smartphone.
               </p>
               <p class="text-center">
                 <a

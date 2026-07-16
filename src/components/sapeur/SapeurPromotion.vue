@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useGradeStore } from '../../stores/sapeur/Grade.js';
-import useHasPermission from '../../composables/usePermission.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/composables/permissions.js';
+import { computed, ref, watchEffect } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useGradeStore } from "../../stores/sapeur/Grade.js";
+import useHasPermission from "../../composables/usePermission.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import permissions from "/src/composables/permissions.js";
 
 const sapeurStore = useSapeurStore();
 const gradeStore = useGradeStore();
@@ -19,30 +19,29 @@ await gradeStore.fetchGrades();
 
 const activeSapeurGrades = computed(() =>
   sapeurStore.active.grades
+    .slice()
     .sort((a, b) => b.date.localeCompare(a.date))
     .map((g) => ({
       ...g,
-      designation: gradeStore.liste.find((grade) => grade.id == g.grade_id)
-        ?.designation,
+      designation: gradeStore.liste.find((grade) => grade.id == g.grade_id)?.designation,
     })),
 );
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
 const { showModal, confirm } = useModalStore();
-const newGrade = () => showModal('ModalSapeurPromotion');
-const editGrade = (grade) =>
-  showModal({ component: 'ModalSapeurPromotion', data: grade });
+const newGrade = () => showModal("ModalSapeurPromotion");
+const editGrade = (grade) => showModal({ component: "ModalSapeurPromotion", data: grade });
 const supprimerGrade = (grade) =>
   confirm(
-    'Voulez-vous vraiment supprimer ce grade ?',
+    "Voulez-vous vraiment supprimer ce grade ?",
     "Attention, la suppression d'un grade est irréversible ! Toutes les données de ce grade seront perdues !",
   ).then(() => sapeurStore.removeSapeurGrade(grade?.id));
 
 const fields = [
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Remarques', key: 'remarque' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Date", key: "date", type: Date },
+  { title: "Désignation", key: "designation" },
+  { title: "Remarques", key: "remarque" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -50,12 +49,7 @@ const fields = [
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Promotions</h3>
-      <button
-        v-if="hasEditPermission"
-        type="button"
-        class="btn btn-primary"
-        @click="newGrade"
-      >
+      <button v-if="hasEditPermission" type="button" class="btn btn-primary" @click="newGrade">
         Ajouter une promotion
       </button>
     </div>

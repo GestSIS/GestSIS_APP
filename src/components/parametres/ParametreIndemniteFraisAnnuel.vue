@@ -1,11 +1,11 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, ref } from "vue";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const imputationStore = useImputationStore();
 const compteStore = useCompteStore();
@@ -38,14 +38,14 @@ const categories = computed(() => ecritureCategorieStore.liste);
 
 const formatType = (type) => {
   const mapping = {
-    0: 'Autre',
-    1: 'Solde',
-    2: 'Indemnité',
-    3: 'Frais forfaitaire',
-    4: 'Frais effectif',
-    5: 'Charges AVS/AC',
+    0: "Autre",
+    1: "Solde",
+    2: "Indemnité",
+    3: "Frais forfaitaire",
+    4: "Frais effectif",
+    5: "Charges AVS/AC",
   };
-  return mapping[type] || '';
+  return mapping[type] || "";
 };
 
 const typesAnnuel = computed(() =>
@@ -55,10 +55,9 @@ const typesAnnuel = computed(() =>
       ...f,
       fonctions: f.frais_indemnite_annuels || [],
       ecriture_categorie: f.id
-        ? categories.value.find((c) => c.id === f.ecriture_categorie_id)
-            ?.designation
-        : '',
-      compte: !f.id ? '' : `${compte?.numero} ${compte?.designation}`,
+        ? categories.value.find((c) => c.id === f.ecriture_categorie_id)?.designation
+        : "",
+      compte: !f.id ? "" : `${compte?.numero} ${compte?.designation}`,
       formatted_type: formatType(f.type),
     };
   }),
@@ -67,48 +66,42 @@ const typesAnnuel = computed(() =>
 const { confirm, showModal } = useModalStore();
 const montantAnnuelTypePourFonction = (type, fonction) => {
   const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);
-  return elem?.quantite * elem?.montant || '';
+  return elem?.quantite * elem?.montant || "";
 };
 const montantAnnuelTypePourFonctionDetails = (type, fonction) => {
   const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);
   if (!elem) {
-    return '';
+    return "";
   }
   const _ = (value) => {
     const numericalValue = Number.parseFloat(value);
-    return Number.isInteger(numericalValue)
-      ? parseInt(numericalValue)
-      : numericalValue;
+    return Number.isInteger(numericalValue) ? parseInt(numericalValue) : numericalValue;
   };
   const formattedUnite = elem?.type_unite_id
     ? unites.value.find((u) => u.id === elem?.type_unite_id)?.abreviation
-    : '';
+    : "";
 
   return `${_(elem?.quantite)} x ${_(elem?.montant)} ${formattedUnite}`;
 };
 
-const ajoutType = () =>
-  showModal({ component: 'ModalIndemniteFraisAnnuelType', data: {} });
+const ajoutType = () => showModal({ component: "ModalIndemniteFraisAnnuelType", data: {} });
 const updateType = (type) =>
   showModal({
-    component: 'ModalIndemniteFraisAnnuelType',
+    component: "ModalIndemniteFraisAnnuelType",
     data: { ...type },
   });
 const deleteType = (type) => {
-  const description =
-    type.type == 'frais' ? 'ce frais type' : 'cette indemnité type';
+  const description = type.type == "frais" ? "ce frais type" : "cette indemnité type";
   confirm(
     `Voulez-vous vraiment supprimer ${description} ?`,
-    'Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.',
+    "Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.",
   ).then(() => imputationStore.removeFraisIndemniteAnnuelType(type.id));
 };
 
 const addFonction = (type, fonction) => {
-  const elem = type?.frais_indemnite_annuels.find(
-    (e) => e.fonction_id == fonction.id,
-  );
+  const elem = type?.frais_indemnite_annuels.find((e) => e.fonction_id == fonction.id);
   showModal({
-    component: 'ModalIndemniteFraisAnnuel',
+    component: "ModalIndemniteFraisAnnuel",
     data: {
       fonction_id: fonction.id,
       frais_indemnite_annuel_type_id: type.id,
@@ -118,11 +111,9 @@ const addFonction = (type, fonction) => {
   });
 };
 const updateFonction = (type, fonction) => {
-  const elem = type.frais_indemnite_annuels.find(
-    (e) => e.fonction_id == fonction.id,
-  );
+  const elem = type.frais_indemnite_annuels.find((e) => e.fonction_id == fonction.id);
   showModal({
-    component: 'ModalIndemniteFraisAnnuel',
+    component: "ModalIndemniteFraisAnnuel",
     data: {
       fonction_id: fonction.id,
       frais_indemnite_annuel_type_id: type.frais_indemnite_annuel_type_id,
@@ -133,10 +124,10 @@ const updateFonction = (type, fonction) => {
 };
 const deleteFonction = (type, fonction) => {
   const elem = type.fonctions.find((e) => e.fonction_id == fonction.id);
-  const description = type.type == 'frais' ? 'ce frais' : 'cette indemnité';
+  const description = type.type == "frais" ? "ce frais" : "cette indemnité";
   confirm(
     `Voulez-vous vraiment supprimer ${description} ?`,
-    'Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.',
+    "Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.",
   ).then(() => imputationStore.removeFraisIndemniteAnnuel(elem.id));
 };
 </script>
@@ -146,15 +137,8 @@ const deleteFonction = (type, fonction) => {
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Frais &amp; indemnités annuels</h3>
       <div class="form-check form-switch mb-2">
-        <input
-          id="switch"
-          v-model="detailsTypes"
-          type="checkbox"
-          class="form-check-input"
-        />
-        <label class="form-check-label" for="switch"
-          >Afficher les détails</label
-        >
+        <input id="switch" v-model="detailsTypes" type="checkbox" class="form-check-input" />
+        <label class="form-check-label" for="switch">Afficher les détails</label>
       </div>
     </div>
     <div class="card-body table-responsive p-0">
@@ -162,11 +146,7 @@ const deleteFonction = (type, fonction) => {
         <thead>
           <tr>
             <th></th>
-            <th
-              v-for="type in typesAnnuel"
-              :key="type.id + '-' + type.type"
-              class="text-center"
-            >
+            <th v-for="type in typesAnnuel" :key="type.id + '-' + type.type" class="text-center">
               {{ type.designation }}
               <button
                 type="button"
@@ -184,11 +164,7 @@ const deleteFonction = (type, fonction) => {
               </button>
             </th>
             <th rowspan="4" class="text-center align-middle">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="ajoutType()"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="ajoutType()">
                 <font-awesome-icon size="2x" :icon="['far', 'plus-square']" />
               </button>
             </th>
@@ -214,12 +190,7 @@ const deleteFonction = (type, fonction) => {
           <tr>
             <th>Cumulable</th>
             <td v-for="type in typesAnnuel" :key="type.id" class="text-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                :checked="type.cumulable"
-                disabled
-              />
+              <input type="checkbox" class="form-check-input" :checked="type.cumulable" disabled />
             </td>
           </tr>
         </thead>
@@ -234,11 +205,7 @@ const deleteFonction = (type, fonction) => {
                 :icon="['fas', 'info-circle']"
               />&nbsp;{{ fonction.nom }}
             </td>
-            <td
-              v-for="type in typesAnnuel"
-              :key="type.id + '-' + type.type"
-              class="text-end"
-            >
+            <td v-for="type in typesAnnuel" :key="type.id + '-' + type.type" class="text-end">
               <template v-if="!detailsTypes">{{
                 montantAnnuelTypePourFonction(type, fonction)
               }}</template>

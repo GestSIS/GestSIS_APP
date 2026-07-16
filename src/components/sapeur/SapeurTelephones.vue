@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useBaseDataStore } from '../../stores/common/BaseData.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
-import useNotification from '../../composables/useNotification.js';
+import { computed, ref, watchEffect } from "vue";
+import { useBaseDataStore } from "../../stores/common/BaseData.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
+import useNotification from "../../composables/useNotification.js";
 
 const baseDataStore = useBaseDataStore();
 const sapeurStore = useSapeurStore();
@@ -32,15 +32,10 @@ const telephones = computed({
 });
 
 const activeSapeurTelephones = computed(() =>
-  sapeurStore.active.telephones
-    .slice(0)
-    .sort((t1, t2) => t1.priorite - t2.priorite),
+  sapeurStore.active.telephones.slice(0).sort((t1, t2) => t1.priorite - t2.priorite),
 );
 watchEffect(
-  () =>
-    (telephonesData.value = [
-      ...(activeSapeurTelephones.value || []).map((t) => ({ ...t })),
-    ]),
+  () => (telephonesData.value = (activeSapeurTelephones.value || []).map((t) => ({ ...t }))),
 );
 
 const sapeurType = computed(() => sapeurStore.active.data.type);
@@ -72,7 +67,7 @@ const saveTelephones = async () => {
 
   try {
     await Promise.all(operations);
-    awn.success('Modifications enregistrées');
+    awn.success("Modifications enregistrées");
   } catch (res) {
     awn.alert(res?.message || "Erreur lors de l'enregistrement");
   }
@@ -100,11 +95,7 @@ const removeTelephone = (priorite) => {
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Téléphones</h3>
-      <button
-        v-if="hasEditPermission"
-        class="btn btn-primary"
-        @click.prevent="saveTelephones"
-      >
+      <button v-if="hasEditPermission" class="btn btn-primary" @click.prevent="saveTelephones">
         Enregistrer
       </button>
     </div>
@@ -117,17 +108,13 @@ const removeTelephone = (priorite) => {
       <table v-else class="table table-sm">
         <thead>
           <tr>
-            <th class="col-1" :class="{ 'd-none': telephones.length <= 1 }">
-              Priorité
-            </th>
+            <th class="col-1" :class="{ 'd-none': telephones.length <= 1 }">Priorité</th>
             <th>Numéro</th>
             <th>Type</th>
             <th v-if="sapeurType === 0">
               RTA
               <font-awesome-icon
-                v-tooltip.bottom="
-                  'Cocher pour transmettre à la centrale d\'alarme RTA'
-                "
+                v-tooltip.bottom="'Cocher pour transmettre à la centrale d\'alarme RTA'"
                 class="ms-1"
                 :icon="['far', 'question-circle']"
               />
@@ -138,10 +125,7 @@ const removeTelephone = (priorite) => {
         <tr v-if="telephones.length <= 0">
           <td :colspan="hasEditPermission ? 5 : 4">Aucun numéro enregistré</td>
         </tr>
-        <tr
-          v-for="t in telephones.sort((t1, t2) => t1?.priorite > t2?.priorite)"
-          :key="t.id"
-        >
+        <tr v-for="t in telephones.sort((t1, t2) => t1?.priorite > t2?.priorite)" :key="t.id">
           <td class="text-center" :class="{ 'd-none': telephones.length <= 1 }">
             {{ t.priorite }}
           </td>
@@ -160,11 +144,7 @@ const removeTelephone = (priorite) => {
               class="form-select form-select-sm"
               :disabled="!hasEditPermission"
             >
-              <option
-                v-for="telType in telephoneTypes"
-                :key="telType.id"
-                :value="telType.id"
-              >
+              <option v-for="telType in telephoneTypes" :key="telType.id" :value="telType.id">
                 {{ telType.type }}
               </option>
             </select>
@@ -196,8 +176,7 @@ const removeTelephone = (priorite) => {
         :disabled="telephonesData.length >= 3"
         @click="addTelephone()"
       >
-        <font-awesome-icon class="me-1" :icon="['fas', 'plus']" />Ajouter un
-        numéro
+        <font-awesome-icon class="me-1" :icon="['fas', 'plus']" />Ajouter un numéro
       </button>
     </div>
   </div>

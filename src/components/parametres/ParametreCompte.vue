@@ -1,11 +1,11 @@
 <script setup>
-import { computed } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const compteStore = useCompteStore();
 const imputationStore = useImputationStore();
@@ -20,43 +20,35 @@ const loadUnites = uniteStore.fetchUnites();
 await Promise.all([loadIndemnites, loadFonctions, loadComptes, loadUnites]);
 
 const fields = [
-  { title: 'Numéro', key: 'numero' },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Produit / Charge', key: 'typeLabel' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Numéro", key: "numero" },
+  { title: "Désignation", key: "designation" },
+  { title: "Produit / Charge", key: "typeLabel" },
+  { title: "Actions", slot: "actions" },
 ];
 const listeCompte = computed(() =>
   compteStore.liste
-    .map((c) => ({ ...c, typeLabel: c.produit ? 'Produit' : 'Charge' }))
+    .map((c) => ({ ...c, typeLabel: c.produit ? "Produit" : "Charge" }))
     .sort((a, b) => a.numero.localeCompare(b.numero)),
 );
 
 const { showModal } = useModalStore();
 const awn = useNotification();
-const ajoutCompte = () => showModal({ component: 'ModalCompte', data: {} });
-const updateCompte = (compte) =>
-  showModal({ component: 'ModalCompte', data: { ...compte } });
+const ajoutCompte = () => showModal({ component: "ModalCompte", data: {} });
+const updateCompte = (compte) => showModal({ component: "ModalCompte", data: { ...compte } });
 const deleteCompte = (compteId) =>
   compteStore
     .removeCompte(compteId)
-    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
 </script>
 
 <template>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Comptes</h3>
-      <button type="button" class="btn btn-primary" @click="ajoutCompte">
-        Ajouter un compte
-      </button>
+      <button type="button" class="btn btn-primary" @click="ajoutCompte">Ajouter un compte</button>
     </div>
     <div class="card-body table-responsive p-0">
-      <base-table
-        :data="listeCompte"
-        :fields="fields"
-        no-data="Aucun compte"
-        :selectable="true"
-      >
+      <base-table :data="listeCompte" :fields="fields" no-data="Aucun compte" :selectable="true">
         <template #actions="{ rowData }">
           <button
             type="button"

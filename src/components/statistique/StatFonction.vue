@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
+import { computed, ref, watchEffect } from "vue";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useStatistiqueStore } from "../../stores/statistique/Statistique.js";
 
 const fonctionStore = useFonctionStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -14,16 +14,14 @@ await exerciceComptableStore.fetchExercicesComptables();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await statistiqueStore.fetchStatistiqueFonction(
-    exerciceComptableStore.activeId,
-  );
+  await statistiqueStore.fetchStatistiqueFonction(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
 const allFonctions = ref(false);
 const fields = [
-  { title: 'Fonction', key: 'nom' },
-  { title: 'Nombre', key: 'quantite' },
+  { title: "Fonction", key: "nom" },
+  { title: "Nombre", key: "quantite" },
 ];
 
 const fonctions = computed(() => fonctionStore.liste);
@@ -31,7 +29,8 @@ const sapeurFonctions = computed(() => statistiqueStore.fonctions);
 const occurences = computed(() => {
   return sapeurFonctions.value.reduce(
     (prev, { fonction_id, nb }) => (
-      (prev[fonction_id] = (prev[fonction_id] ?? 0) + parseFloat(nb)), prev
+      (prev[fonction_id] = (prev[fonction_id] ?? 0) + parseFloat(nb)),
+      prev
     ),
     {},
   );

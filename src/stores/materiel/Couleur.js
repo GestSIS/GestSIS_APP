@@ -1,7 +1,7 @@
-import CouleurService from '../../services/materiel/CouleurService.js';
-import { defineStore } from 'pinia';
+import CouleurService from "../../services/materiel/CouleurService.js";
+import { defineStore } from "pinia";
 
-export const useCouleurStore = defineStore('couleur', {
+export const useCouleurStore = defineStore("couleur", {
   state: () => ({
     liste: [],
   }),
@@ -20,7 +20,7 @@ export const useCouleurStore = defineStore('couleur', {
     },
     async updateCouleur(Couleur) {
       const data = await CouleurService.updateCouleur(Couleur);
-      this.liste = [...this.liste.map((m) => (m.id === data.id ? data : m))];
+      this.liste = this.liste.map((m) => (m.id === data.id ? data : m));
       return data;
     },
     async removeCouleur(CouleurId) {

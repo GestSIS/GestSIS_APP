@@ -1,10 +1,10 @@
 <script setup>
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { watchEffect } from 'vue';
-import { computed } from 'vue';
-import router from '../router';
-import { useRoute } from 'vue-router';
-import { useInterventionStore } from '../stores/intervention/Intervention.js';
+import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
+import { watchEffect } from "vue";
+import { computed } from "vue";
+import router from "../router";
+import { useRoute } from "vue-router";
+import { useInterventionStore } from "../stores/intervention/Intervention.js";
 
 const interventionStore = useInterventionStore();
 const route = useRoute();
@@ -12,17 +12,17 @@ const route = useRoute();
 const { id } = defineProps({
   id: {
     type: String,
-    default: 'new',
+    default: "new",
   },
 });
 
-const newMode = computed(() => id === 'new');
+const newMode = computed(() => id === "new");
 watchEffect(() => {
-  if (id !== 'new') {
+  if (id !== "new") {
     interventionStore.selectIntervention(id);
   } else {
-    if (route.name != 'intervention-details') {
-      router.push({ name: 'intervention-details', id: 'new' });
+    if (route.name != "intervention-details") {
+      router.push({ name: "intervention-details", id: "new" });
     }
   }
 });
@@ -31,11 +31,9 @@ const activeInterventionData = computed(() => interventionStore.active.data);
 
 const breadcrumbFinal = computed(() =>
   newMode.value
-    ? 'Nouveau'
-    : new Date(activeInterventionData.value.date_debut).toLocaleDateString(
-        'fr-CH',
-      ) +
-      ' - ' +
+    ? "Nouveau"
+    : new Date(activeInterventionData.value.date_debut).toLocaleDateString("fr-CH") +
+      " - " +
       activeInterventionData.value.objet,
 );
 </script>
@@ -49,9 +47,7 @@ const breadcrumbFinal = computed(() =>
             <router-link :to="{ name: 'accueil' }">Accueil</router-link>
           </li>
           <li class="breadcrumb-item">
-            <router-link :to="{ name: 'interventions' }"
-              >Interventions</router-link
-            >
+            <router-link :to="{ name: 'interventions' }">Interventions</router-link>
           </li>
           <li class="breadcrumb-item active" aria-current="page">
             {{ breadcrumbFinal }}

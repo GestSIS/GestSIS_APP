@@ -1,9 +1,9 @@
 <script setup>
-import { computed, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { computed, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const sapeurStore = useSapeurStore();
 const awn = useNotification();
@@ -18,8 +18,8 @@ const save = async () => {
     .saveActiveSapeur({
       iban: activeSapeur.value.iban,
     })
-    .then(() => awn.success('Modification enregistrée'))
-    .catch((err) => awn.alert(err?.message ?? 'Erreur lors la sauvegarde'));
+    .then(() => awn.success("Modification enregistrée"))
+    .catch((err) => awn.alert(err?.message ?? "Erreur lors la sauvegarde"));
 };
 </script>
 
@@ -29,11 +29,7 @@ const save = async () => {
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Informations bancaires</h3>
-          <button
-            v-if="hasEditPermission"
-            class="btn btn-primary"
-            @click.prevent="save"
-          >
+          <button v-if="hasEditPermission" class="btn btn-primary" @click.prevent="save">
             Enregistrer
           </button>
         </div>

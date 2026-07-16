@@ -1,8 +1,8 @@
 <script setup>
-import { reactive, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useAdminStore } from '../../stores/admin/Admin.js';
+import { reactive, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useAdminStore } from "../../stores/admin/Admin.js";
 
 const { callback, data } = defineProps({
   data: {
@@ -17,10 +17,10 @@ const { callback, data } = defineProps({
 
 const errors = ref({});
 const form = reactive({
-  nom: '',
-  abreviation: '',
+  nom: "",
+  abreviation: "",
   mobile: false,
-  api_key: '',
+  api_key: "",
   ...data,
 });
 
@@ -49,7 +49,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">{{ form.id ? 'Modifier' : 'Ajouter' }} Sis</h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} Sis</h5>
       <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
@@ -104,11 +104,9 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
-      <button type="button" class="btn btn-outline-secondary" @click="close">
-        Annuler
-      </button>
+      <button type="button" class="btn btn-outline-secondary" @click="close">Annuler</button>
     </div>
   </form>
 </template>

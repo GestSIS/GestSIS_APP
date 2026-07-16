@@ -1,16 +1,16 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
-import { useRouter } from 'vue-router';
-import { useInterventionStore } from '../../stores/intervention/Intervention.js';
-import { useInterventionTraitementStore } from '../../stores/intervention/InterventionTraitement.js';
-import { useStatFederalStore } from '../../stores/intervention/StatFederal.js';
-import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
+import { useRouter } from "vue-router";
+import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import { useInterventionTraitementStore } from "../../stores/intervention/InterventionTraitement.js";
+import { useStatFederalStore } from "../../stores/intervention/StatFederal.js";
+import { useTypeInterventionStore } from "../../stores/intervention/TypeIntervention.js";
 
 const router = useRouter();
 const sapeurStore = useSapeurStore();
@@ -41,7 +41,7 @@ const newMode = ref(false);
 const form = ref({});
 
 watchEffect(async () => {
-  newMode.value = id === 'new';
+  newMode.value = id === "new";
   if (!newMode.value) {
     await interventionStore.fetchIntervention(id);
     form.value = { ...interventionStore.active.data };
@@ -64,13 +64,9 @@ const interventionTraitements = computed(() => traitementStore.liste);
 const sapeurs = computed(() => sapeurStore.liste);
 
 const activeExerciceComptable = computed(() =>
-  exerciceComptableStore.liste.find(
-    (e) => e.id === exerciceComptableStore.activeId,
-  ),
+  exerciceComptableStore.liste.find((e) => e.id === exerciceComptableStore.activeId),
 );
-const hasEditPermission = useHasPermission(
-  permissions.INTERVENTION.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 const isValidWgs84 = computed(() => {
   const regex = /^-?\d+\.*\d*,\s*-?\d+\.*\d*$/;
   return regex.test(form.value?.wgs84);
@@ -94,7 +90,7 @@ const save = () => {
     interventionStore
       .createIntervention(form.value)
       .then((data) => {
-        router.push('/interventions/' + data.id);
+        router.push("/interventions/" + data.id);
         errors.value = {};
       })
       .catch((err) => {
@@ -106,7 +102,7 @@ const save = () => {
       .saveActiveIntervention(form.value)
       .then((res) => {
         errors.value = {};
-        awn.success(res?.message || 'Modifications enregistrées');
+        awn.success(res?.message || "Modifications enregistrées");
       })
       .catch((err) => {
         errors.value = err;
@@ -116,10 +112,10 @@ const save = () => {
 };
 
 const degre = [
-  { id: 1, type: 'Fausse-alarme' },
-  { id: 2, type: 'Petite' },
-  { id: 3, type: 'Moyenne' },
-  { id: 4, type: 'Grande' },
+  { id: 1, type: "Fausse-alarme" },
+  { id: 2, type: "Petite" },
+  { id: 3, type: "Moyenne" },
+  { id: 4, type: "Grande" },
 ];
 </script>
 
@@ -129,11 +125,7 @@ const degre = [
       <div class="row mb-2">
         <div class="col-auto me-auto"></div>
         <div class="col-auto">
-          <button
-            v-if="hasEditPermission"
-            type="submit"
-            class="btn btn-primary"
-          >
+          <button v-if="hasEditPermission" type="submit" class="btn btn-primary">
             Enregistrer
           </button>
         </div>

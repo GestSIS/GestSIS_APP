@@ -1,5 +1,5 @@
 <script setup>
-import { useModalStore } from '../../stores/common/Modal.js';
+import { useModalStore } from "../../stores/common/Modal.js";
 const { closeModal } = useModalStore();
 </script>
 

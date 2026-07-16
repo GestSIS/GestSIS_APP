@@ -1,27 +1,24 @@
 <script setup>
-import { useMissionStore } from '../../stores/intervention/Mission.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { computed } from 'vue';
+import { useMissionStore } from "../../stores/intervention/Mission.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { computed } from "vue";
 
 const missionStore = useMissionStore();
 await missionStore.fetchMissions();
 
 const fields = [
-  { title: 'Titre', key: 'titre' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Titre", key: "titre" },
+  { title: "Actions", slot: "actions" },
 ];
 
-const listeMission = computed(() =>
-  missionStore.liste.sort((a, b) => a.tri - b.tri),
-);
+const listeMission = computed(() => missionStore.liste.slice().sort((a, b) => a.tri - b.tri));
 
 const { confirm, showModal } = useModalStore();
-const ajoutMission = () => showModal({ component: 'ModalMission', data: {} });
-const updateMission = (mission) =>
-  showModal({ component: 'ModalMission', data: { ...mission } });
+const ajoutMission = () => showModal({ component: "ModalMission", data: {} });
+const updateMission = (mission) => showModal({ component: "ModalMission", data: { ...mission } });
 const deleteMission = (mission) =>
   confirm(
-    'Voulez-vous vraiment supprimer cette mission ?',
+    "Voulez-vous vraiment supprimer cette mission ?",
     "Attention, la suppression d'une mission est irréversible ! Toutes les données de cette mission seront perdues !",
   ).then(() => missionStore.removeMission(mission.id));
 </script>
@@ -35,12 +32,7 @@ const deleteMission = (mission) =>
       </button>
     </div>
     <div class="card-body table-responsive p-0">
-      <base-table
-        :data="listeMission"
-        :fields="fields"
-        no-data="Aucune mission"
-        :selectable="true"
-      >
+      <base-table :data="listeMission" :fields="fields" no-data="Aucune mission" :selectable="true">
         <template #actions="{ rowData }">
           <button
             type="button"

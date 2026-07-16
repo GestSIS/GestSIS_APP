@@ -1,8 +1,8 @@
 <script setup>
-import { reactive, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useAdminStore } from '../../stores/admin/Admin.js';
+import { reactive, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useAdminStore } from "../../stores/admin/Admin.js";
 
 const { callback, data } = defineProps({
   callback: {
@@ -17,8 +17,8 @@ const { callback, data } = defineProps({
 
 const errors = ref({});
 const form = reactive({
-  name: '',
-  email: '',
+  name: "",
+  email: "",
   admin: false,
   ...data,
 });
@@ -44,9 +44,7 @@ const save = () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} Utilisateur
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} Utilisateur</h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
@@ -88,15 +86,9 @@ const save = () => {
     </div>
     <div class="modal-footer">
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
-      <button
-        type="button"
-        class="btn btn-outline-secondary"
-        @click="closeModal"
-      >
-        Annuler
-      </button>
+      <button type="button" class="btn btn-outline-secondary" @click="closeModal">Annuler</button>
     </div>
   </form>
 </template>

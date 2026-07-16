@@ -1,17 +1,17 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useGradeStore } from '../../stores/sapeur/Grade.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useBaseDataStore } from '../../stores/common/BaseData.js';
-import permissions from '/src/composables/permissions.js';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useGradeStore } from "../../stores/sapeur/Grade.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useBaseDataStore } from "../../stores/common/BaseData.js";
+import permissions from "/src/composables/permissions.js";
 
-import SapeurService from '../../services/SapeurService.js';
-import SapeurTelephones from '/src/components/sapeur/SapeurTelephones.vue';
-import useHasPermission from '../../composables/usePermission.js';
+import SapeurService from "../../services/SapeurService.js";
+import SapeurTelephones from "/src/components/sapeur/SapeurTelephones.vue";
+import useHasPermission from "../../composables/usePermission.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -19,7 +19,7 @@ const gradeStore = useGradeStore();
 const localiteStore = useLocaliteStore();
 const baseDataStore = useBaseDataStore();
 const errors = ref({});
-const defaultPhoto = ref('');
+const defaultPhoto = ref("");
 const photo = ref(null); //'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=128',
 
 baseDataStore.fetchCivilites();
@@ -57,18 +57,18 @@ const awn = useNotification();
 
 const saveSapeur = async () => {
   let fields = [
-    'civilite_id',
-    'nom',
-    'prenom',
-    'rue',
-    'no_rue',
-    'localite_id',
-    'no_avs',
-    'cotisation_avs',
-    'email',
-    'date_naissance',
-    'suffixe',
-    'remarque',
+    "civilite_id",
+    "nom",
+    "prenom",
+    "rue",
+    "no_rue",
+    "localite_id",
+    "no_avs",
+    "cotisation_avs",
+    "email",
+    "date_naissance",
+    "suffixe",
+    "remarque",
   ];
   let saveSapeur = Object.assign({}, activeSapeur.value);
   for (const key of Object.keys(saveSapeur)) {
@@ -80,7 +80,7 @@ const saveSapeur = async () => {
     .saveActiveSapeur(saveSapeur)
     .then((res) => {
       errors.value = {};
-      awn.success(res.message || 'Modifications sauvegardées');
+      awn.success(res.message || "Modifications sauvegardées");
     })
     .catch((err) => {
       awn.alert(err.message || "Erreur lors de l'enregistrement des données");
@@ -96,7 +96,7 @@ const saveNonSapeurStatut = async () => {
     .saveNonSapeurStatut(saveSapeur)
     .then((res) => {
       errors.value = {};
-      awn.success(res.message || 'Modifications sauvegardées');
+      awn.success(res.message || "Modifications sauvegardées");
     })
     .catch((err) => {
       awn.alert(err.message || "Erreur lors de l'enregistrement des données");
@@ -111,7 +111,7 @@ const saveSapeurRefPro = () =>
       lieu_de_travail: activeSapeur.value.lieu_de_travail,
     })
     .then((res) => {
-      awn.success(res.message || 'Modifications sauvegardées');
+      awn.success(res.message || "Modifications sauvegardées");
     })
     .catch((err) => {
       awn.alert(err.message || "Erreur lors de l'enregistrement des données");
@@ -119,7 +119,7 @@ const saveSapeurRefPro = () =>
 const supprimerPhoto = () =>
   confirm(
     `Voulez-vous vraiment supprimer cette photo ?`,
-    'Attention, cette action est irréversible ! La photo sera perdue.',
+    "Attention, cette action est irréversible ! La photo sera perdue.",
   ).then(() =>
     SapeurService.deletePhoto(activeSapeurId.value).then(() => {
       photo.value = null;
@@ -127,18 +127,16 @@ const supprimerPhoto = () =>
   );
 const editPhoto = () =>
   showModal({
-    component: 'ModalPhotoSapeur',
+    component: "ModalPhotoSapeur",
     size: 1,
     data: photo.value,
     callback: (data) => {
       if (!data) {
         return;
       }
-      return SapeurService.updatePhoto(activeSapeurId.value, data?.blob).then(
-        () => {
-          photo.value = data?.image;
-        },
-      );
+      return SapeurService.updatePhoto(activeSapeurId.value, data?.blob).then(() => {
+        photo.value = data?.image;
+      });
     },
   });
 </script>
@@ -149,11 +147,7 @@ const editPhoto = () =>
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Données personnelles</h3>
-          <button
-            v-if="hasEditPermission"
-            class="btn btn-primary"
-            @click.prevent="saveSapeur"
-          >
+          <button v-if="hasEditPermission" class="btn btn-primary" @click.prevent="saveSapeur">
             Enregistrer
           </button>
         </div>
@@ -254,10 +248,7 @@ const editPhoto = () =>
                   :disabled="!hasEditPermission"
                   class="form-check-input"
                 />
-                <label
-                  class="form-check-label"
-                  for="m-sap-cotisation_avs"
-                ></label>
+                <label class="form-check-label" for="m-sap-cotisation_avs"></label>
               </div>
             </div>
           </div>
@@ -422,11 +413,7 @@ const editPhoto = () =>
           >
             Supprimer
           </button>
-          <button
-            v-if="hasEditPermission"
-            class="btn btn-outline-primary"
-            @click="editPhoto"
-          >
+          <button v-if="hasEditPermission" class="btn btn-outline-primary" @click="editPhoto">
             Modifier
           </button>
         </div>
@@ -472,9 +459,7 @@ const editPhoto = () =>
               />
               <label for="actif">Actif</label>
               <font-awesome-icon
-                v-tooltip.bottom="
-                  'Pour désactiver un sapeur, utiliser l\'onglet Mutations !'
-                "
+                v-tooltip.bottom="'Pour désactiver un sapeur, utiliser l\'onglet Mutations !'"
                 class="ms-1"
                 :icon="['far', 'question-circle']"
               />

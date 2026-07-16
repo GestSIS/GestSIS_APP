@@ -1,7 +1,7 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useAspsmsParamStore } from '../../stores/sms/AspsmsParam.js';
+import { computed, ref, watch } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useAspsmsParamStore } from "../../stores/sms/AspsmsParam.js";
 
 const aspsmsParamStore = useAspsmsParamStore();
 
@@ -24,14 +24,14 @@ params.value = aspsmsParams.value ? aspsmsParams.value : params.value;
 
 const awn = useNotification();
 const save = async () => {
-  if (params.value.password === '********') {
-    awn.success('Modifications enregistrées');
+  if (params.value.password === "********") {
+    awn.success("Modifications enregistrées");
     return;
   }
   try {
     const res = await aspsmsParamStore.updateAspsmsParams({ ...params.value });
     errors.value = {};
-    awn.success(res?.message || 'Modifications enregistrées');
+    awn.success(res?.message || "Modifications enregistrées");
   } catch (err) {
     errors.value = err;
     awn.alert(errors.value?.message || "Erreur lors de l'enregistrement");
@@ -45,9 +45,7 @@ const save = async () => {
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">ASPSMS</h3>
-          <button type="button" class="btn btn-primary" @click="save">
-            Enregistrer
-          </button>
+          <button type="button" class="btn btn-primary" @click="save">Enregistrer</button>
         </div>
         <div class="card-body">
           <div class="mb-3">
@@ -81,9 +79,7 @@ const save = async () => {
             />
           </div>
           <div class="mb-3">
-            <a href="https://www.aspsms.com/en/login/" target="_blank"
-              >Recharger des crédits</a
-            >
+            <a href="https://www.aspsms.com/en/login/" target="_blank">Recharger des crédits</a>
           </div>
         </div>
       </div>

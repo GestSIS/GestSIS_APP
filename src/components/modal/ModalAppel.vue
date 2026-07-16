@@ -1,10 +1,10 @@
 <script setup>
-import { computed, reactive, ref, watch } from 'vue';
-import { useInterventionStore } from '../../stores/intervention/Intervention.js';
-import { useTelephoneStore } from '../../stores/sapeur/Telephone.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { DateTime } from 'luxon';
-import BaseAutocomplete from '/src/components/base/BaseAutocomplete.vue';
+import { computed, reactive, ref, watch } from "vue";
+import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import { useTelephoneStore } from "../../stores/sapeur/Telephone.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { DateTime } from "luxon";
+import BaseAutocomplete from "/src/components/base/BaseAutocomplete.vue";
 
 const interventionStore = useInterventionStore();
 const telephoneStore = useTelephoneStore();
@@ -23,7 +23,7 @@ const form = reactive({
   ...data.appel,
   date2: DateTime.fromSQL(data.appel.date)?.toISO()?.slice(0, 16),
 });
-const format = 'yyyy-MM-dd HH:mm';
+const format = "yyyy-MM-dd HH:mm";
 
 const min = DateTime.fromSQL(data.min)?.toISO();
 const max = DateTime.fromSQL(data.max)?.toISO();
@@ -35,9 +35,7 @@ const { closeModal } = useModalStore();
 watch(
   () => form.nom,
   () => {
-    let result = listTelephones.value.filter(
-      (t) => form.nom.localeCompare(t.nom) === 0,
-    );
+    let result = listTelephones.value.filter((t) => form.nom.localeCompare(t.nom) === 0);
     if (result.length > 0) {
       form.numero = result[0].numero;
     }
@@ -58,10 +56,10 @@ const save = async () => {
   } catch (err) {
     errors.value = {
       ...err,
-      date: err['appels.0.date'],
-      nom: err['appels.0.nom'],
-      numero: err['appels.0.numero'],
-      commentaire: err['appels.0.commentaire'],
+      date: err["appels.0.date"],
+      nom: err["appels.0.nom"],
+      numero: err["appels.0.numero"],
+      commentaire: err["appels.0.commentaire"],
     };
   }
 };
@@ -70,9 +68,7 @@ const save = async () => {
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} un appel
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un appel</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -117,11 +113,9 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </div>

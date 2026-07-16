@@ -1,10 +1,10 @@
 <script setup>
-import { useModalStore } from '../../stores/common/Modal.js';
-import MesInfosService from '../../services/MesInfosService';
-import { useMesInfosStore } from '../../stores/mesinfos/MesInfos.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
+import { useModalStore } from "../../stores/common/Modal.js";
+import MesInfosService from "../../services/MesInfosService";
+import { useMesInfosStore } from "../../stores/mesinfos/MesInfos.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
 
 const infosStore = useMesInfosStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -28,9 +28,7 @@ const paiements = computed(() =>
     .sort((e1, e2) => e1.date.localeCompare(e2.date)),
 );
 const exerciceComptable = computed(() =>
-  exerciceComptableStore.liste.find(
-    (e) => e.id == exerciceComptableStore.activeId,
-  ),
+  exerciceComptableStore.liste.find((e) => e.id == exerciceComptableStore.activeId),
 );
 
 const { showModal, closeModal } = useModalStore();
@@ -39,13 +37,11 @@ const awn = useNotification();
 const downloadDecompte = (paiement) => {
   const filename = `${paiement.date}_decompte.pdf`;
 
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
   MesInfosService.printMonDecompte(paiement.decompte_id, filename)
     .then(closeModal)
     .catch((error) => {
-      awn.warning(
-        error?.message ?? 'Erreur lors de la génération de votre décompte',
-      );
+      awn.warning(error?.message ?? "Erreur lors de la génération de votre décompte");
       closeModal();
     });
 };
@@ -53,7 +49,7 @@ const downloadDecompte = (paiement) => {
 const resumeAnnuel = () => {
   if (paiements.value.length == 0) {
     awn.alert(
-      'Veuillez attendre que votre SIS ait généré un décompte avant de pouvoir télécharger votre certificat de salaire',
+      "Veuillez attendre que votre SIS ait généré un décompte avant de pouvoir télécharger votre certificat de salaire",
     );
     return;
   }
@@ -64,14 +60,12 @@ const resumeAnnuel = () => {
   }
   const filename = `${exerciceComptable.value?.annee}_resume.pdf`;
 
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
 
   MesInfosService.downloadMonResumeAnnuel(exerciceComptableId.value, filename)
     .then(closeModal)
     .catch((error) => {
-      awn.warning(
-        error?.message ?? 'Erreur lors de la génération de votre résumé annuel',
-      );
+      awn.warning(error?.message ?? "Erreur lors de la génération de votre résumé annuel");
       closeModal();
     });
 };
@@ -79,7 +73,7 @@ const resumeAnnuel = () => {
 const certificatSalaire = () => {
   if (paiements.value.length == 0) {
     awn.alert(
-      'Veuillez attendre que votre SIS ait généré un décompte avant de pouvoir télécharger votre certificat de salaire',
+      "Veuillez attendre que votre SIS ait généré un décompte avant de pouvoir télécharger votre certificat de salaire",
     );
     return;
   }
@@ -90,33 +84,27 @@ const certificatSalaire = () => {
   }
   const filename = `${exerciceComptable.value?.annee}_certificat_salaire.pdf`;
 
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
 
-  MesInfosService.downloadMonCertificatSalaire(
-    exerciceComptableId.value,
-    filename,
-  )
+  MesInfosService.downloadMonCertificatSalaire(exerciceComptableId.value, filename)
     .then(closeModal)
     .catch((error) => {
-      awn.warning(
-        error?.message ??
-          'Erreur lors de la génération de votre certificat de salaire',
-      );
+      awn.warning(error?.message ?? "Erreur lors de la génération de votre certificat de salaire");
       closeModal();
     });
 };
 
 const fields = [
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'Décompte', key: 'decompte' },
-  { title: 'Solde', key: 'solde' },
-  { title: 'Indemnité', key: 'indemnite' },
-  { title: 'Frais forfaitaires', key: 'frais_forfaitaire' },
-  { title: 'Frais effectifs', key: 'frais_effectif' },
-  { title: 'Retenue AVS/AC', key: 'avs_ac' },
-  { title: 'Autre', key: 'autre' },
-  { title: 'Total', key: 'total' },
-  { title: 'Actions', slot: 'actions', key: 'id' },
+  { title: "Date", key: "date", type: Date },
+  { title: "Décompte", key: "decompte" },
+  { title: "Solde", key: "solde" },
+  { title: "Indemnité", key: "indemnite" },
+  { title: "Frais forfaitaires", key: "frais_forfaitaire" },
+  { title: "Frais effectifs", key: "frais_effectif" },
+  { title: "Retenue AVS/AC", key: "avs_ac" },
+  { title: "Autre", key: "autre" },
+  { title: "Total", key: "total" },
+  { title: "Actions", slot: "actions", key: "id" },
 ];
 </script>
 
@@ -124,12 +112,8 @@ const fields = [
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Mes décomptes</h3>
-      <button class="btn btn-primary" @click="certificatSalaire">
-        Certificat de salaire
-      </button>
-      <button class="btn btn-primary" @click="resumeAnnuel">
-        Résumé annuel
-      </button>
+      <button class="btn btn-primary" @click="certificatSalaire">Certificat de salaire</button>
+      <button class="btn btn-primary" @click="resumeAnnuel">Résumé annuel</button>
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
@@ -142,10 +126,7 @@ const fields = [
         no-data="Aucun décompte pour le moment"
       >
         <template #actions="{ rowData }">
-          <button
-            class="btn btn-outline-primary border-0"
-            @click="downloadDecompte(rowData)"
-          >
+          <button class="btn btn-outline-primary border-0" @click="downloadDecompte(rowData)">
             <font-awesome-icon :icon="['far', 'file-pdf']" />
           </button>
         </template>

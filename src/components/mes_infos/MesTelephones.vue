@@ -1,6 +1,6 @@
 <script setup>
-import { computed } from 'vue';
-import { useBaseDataStore } from '../../stores/common/BaseData.js';
+import { computed } from "vue";
+import { useBaseDataStore } from "../../stores/common/BaseData.js";
 
 const model = defineModel({ type: Array });
 defineProps({
@@ -13,16 +13,16 @@ defineProps({
 const baseDataStore = useBaseDataStore();
 
 const telephones = computed(() =>
-  [...(model.value?.filter((t) => t)?.map((t) => ({ ...t })) ?? [])]?.sort(
-    (t1, t2) => t1.priorite?.toString()?.localeCompare(t2.priorite),
+  [...(model.value?.filter((t) => t)?.map((t) => ({ ...t })) ?? [])]?.sort((t1, t2) =>
+    t1.priorite?.toString()?.localeCompare(t2.priorite),
   ),
 );
 
 const fields = [
-  { title: 'Priorité', key: 'priorite' },
-  { title: 'Numéro', key: 'numero' },
-  { title: 'Type', key: 'type' },
-  { title: 'RTA', key: 'rta', type: Boolean },
+  { title: "Priorité", key: "priorite" },
+  { title: "Numéro", key: "numero" },
+  { title: "Type", key: "type" },
+  { title: "RTA", key: "rta", type: Boolean },
 ];
 const telephoneTypes = computed(() => baseDataStore.telephoneTypes);
 </script>
@@ -42,9 +42,7 @@ const telephoneTypes = computed(() => baseDataStore.telephoneTypes);
             <th v-if="sapeurType === 0">
               RTA
               <font-awesome-icon
-                v-tooltip.bottom="
-                  'Cocher pour transmettre à la centrale d\'alarme RTA'
-                "
+                v-tooltip.bottom="'Cocher pour transmettre à la centrale d\'alarme RTA'"
                 class="ms-1"
                 :icon="['far', 'question-circle']"
               />
@@ -54,10 +52,7 @@ const telephoneTypes = computed(() => baseDataStore.telephoneTypes);
         <tr v-if="telephones.length <= 0">
           <td colspan="4">Aucun numéro enregistré</td>
         </tr>
-        <tr
-          v-for="t in telephones.sort((t1, t2) => t1?.priorite > t2?.priorite)"
-          :key="t.id"
-        >
+        <tr v-for="t in telephones.sort((t1, t2) => t1?.priorite > t2?.priorite)" :key="t.id">
           <td class="text-center" :class="{ 'd-none': telephones.length <= 1 }">
             {{ t.priorite }}
           </td>
@@ -71,27 +66,14 @@ const telephoneTypes = computed(() => baseDataStore.telephoneTypes);
             />
           </td>
           <td>
-            <select
-              v-model="t.telephone_type_id"
-              class="form-select form-select-sm"
-              disabled
-            >
-              <option
-                v-for="type in telephoneTypes"
-                :key="type.id"
-                :value="type.id"
-              >
+            <select v-model="t.telephone_type_id" class="form-select form-select-sm" disabled>
+              <option v-for="type in telephoneTypes" :key="type.id" :value="type.id">
                 {{ type.type }}
               </option>
             </select>
           </td>
           <td v-if="sapeurType === 0" class="align-middle text-center">
-            <input
-              v-model="t.rta"
-              type="checkbox"
-              class="form-check-input"
-              disabled
-            />
+            <input v-model="t.rta" type="checkbox" class="form-check-input" disabled />
           </td>
         </tr>
       </table>

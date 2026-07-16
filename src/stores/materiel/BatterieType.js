@@ -1,7 +1,7 @@
-import BatterieTypeService from '../../services/materiel/BatterieTypeService.js';
-import { defineStore } from 'pinia';
+import BatterieTypeService from "../../services/materiel/BatterieTypeService.js";
+import { defineStore } from "pinia";
 
-export const useBatterieTypeStore = defineStore('batterie-type', {
+export const useBatterieTypeStore = defineStore("batterie-type", {
   state: () => ({
     liste: [],
   }),
@@ -20,7 +20,7 @@ export const useBatterieTypeStore = defineStore('batterie-type', {
     },
     async updateBatterieType(BatterieType) {
       const data = await BatterieTypeService.updateBatterieType(BatterieType);
-      this.liste = [...this.liste.map((m) => (m.id === data.id ? data : m))];
+      this.liste = this.liste.map((m) => (m.id === data.id ? data : m));
       return data;
     },
     async removeBatterieType(BatterieTypeId) {

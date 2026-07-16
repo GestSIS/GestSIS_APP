@@ -1,64 +1,64 @@
 <script setup>
-import permissions from '../composables/permissions.js';
+import permissions from "../composables/permissions.js";
 
 const routes = [
   {
-    to: { name: 'param-general' },
-    texte: 'Général',
+    to: { name: "param-general" },
+    texte: "Général",
   },
   {
-    to: { name: 'param-exercice-comptable' },
-    texte: 'Exercice Comptables',
+    to: { name: "param-exercice-comptable" },
+    texte: "Exercice Comptables",
     permission: permissions.COMPTABILITE.CONFIG,
   },
   {
-    to: { name: 'param-sapeur' },
-    texte: 'Sapeur',
+    to: { name: "param-sapeur" },
+    texte: "Sapeur",
     permission: permissions.SAPEUR.CONFIG,
   },
   {
-    to: { name: 'param-exercice' },
-    texte: 'Exercice',
+    to: { name: "param-exercice" },
+    texte: "Exercice",
     permission: permissions.EXERCICE.CONFIG,
   },
   {
-    to: { name: 'param-intervention' },
-    texte: 'Intervention',
+    to: { name: "param-intervention" },
+    texte: "Intervention",
     permission: permissions.INTERVENTION.CONFIG,
   },
   {
-    to: { name: 'param-materiel' },
-    texte: 'Matériel',
+    to: { name: "param-materiel" },
+    texte: "Matériel",
     permission: permissions.MATERIEL.CONFIG,
   },
   {
-    to: { name: 'param-sms' },
-    texte: 'Sms',
+    to: { name: "param-sms" },
+    texte: "Sms",
     permission: permissions.SMS.CONFIG,
   },
   {
-    to: { name: 'param-fiche-travail' },
-    texte: 'Fiche de travail',
+    to: { name: "param-fiche-travail" },
+    texte: "Fiche de travail",
     permission: permissions.FICHE_TRAVAIL.CONFIG,
   },
   {
-    to: { name: 'param-absence' },
-    texte: 'Absences',
+    to: { name: "param-absence" },
+    texte: "Absences",
     permission: permissions.ABSENCE.CONFIG,
   },
   {
-    to: { name: 'param-comptabilite' },
-    texte: 'Comptabilité',
+    to: { name: "param-comptabilite" },
+    texte: "Comptabilité",
     permission: permissions.COMPTABILITE.CONFIG,
   },
   {
-    to: { name: 'param-controle-medical' },
-    texte: 'Contrôles médicaux',
+    to: { name: "param-controle-medical" },
+    texte: "Contrôles médicaux",
     permission: permissions.CONTROLE_MEDICAL.CONFIG,
   },
   {
-    to: { name: 'param-roles' },
-    texte: 'Droits et rôles',
+    to: { name: "param-roles" },
+    texte: "Droits et rôles",
     permission: permissions.UTILISATEUR.CONFIG,
   },
 ];
@@ -72,9 +72,7 @@ const routes = [
           <li class="breadcrumb-item">
             <router-link :to="{ name: 'accueil' }">Accueil</router-link>
           </li>
-          <li class="breadcrumb-item active" aria-current="page">
-            Configuration
-          </li>
+          <li class="breadcrumb-item active" aria-current="page">Configuration</li>
         </ol>
       </div>
       <div class="col-md-4 d-flex justify-content-end"></div>

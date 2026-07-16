@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useAvsParamStore } from '../../stores/comptabilite/AvsParam.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useAvsParamStore } from "../../stores/comptabilite/AvsParam.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 
 const avsParamStore = useAvsParamStore();
 const compteStore = useCompteStore();
@@ -34,7 +34,7 @@ const save = async () => {
   try {
     const res = await avsParamStore.updateAvsParams(params.value);
     errors.value = {};
-    awn.success(res?.message || 'Modifications enregistrées');
+    awn.success(res?.message || "Modifications enregistrées");
   } catch (err) {
     errors.value = err;
     awn.alert(err?.message || "Erreur lors de l'enregistrement");
@@ -48,9 +48,7 @@ const save = async () => {
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Côtisations sociales</h3>
-          <button type="button" class="btn btn-primary" @click="save">
-            Enregistrer
-          </button>
+          <button type="button" class="btn btn-primary" @click="save">Enregistrer</button>
         </div>
         <div class="card-body">
           <div class="mb-3">
@@ -100,9 +98,7 @@ const save = async () => {
             />
           </div>
           <div class="mb-3">
-            <label for="franchise_imposition"
-              >Franchise imposition fédéral</label
-            >
+            <label for="franchise_imposition">Franchise imposition fédéral</label>
             <input
               id="franchise_imposition"
               v-model="params.franchise_imposition"
@@ -112,9 +108,7 @@ const save = async () => {
             />
           </div>
           <div class="mb-3">
-            <label for="franchise_imposition"
-              >Franchise imposition cantonale</label
-            >
+            <label for="franchise_imposition">Franchise imposition cantonale</label>
             <input
               id="franchise_imposition_cantonale"
               v-model="params.franchise_imposition_cantonale"

@@ -1,11 +1,11 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useMissionStore } from '../../stores/intervention/Mission.js';
-import { useInterventionStore } from '../../stores/intervention/Intervention.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { DateTime } from 'luxon';
-import BaseAutocomplete from '/src/components/base/BaseAutocomplete.vue';
+import { computed, reactive, ref } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useMissionStore } from "../../stores/intervention/Mission.js";
+import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { DateTime } from "luxon";
+import BaseAutocomplete from "/src/components/base/BaseAutocomplete.vue";
 
 const sapeurStore = useSapeurStore();
 const missionStore = useMissionStore();
@@ -25,14 +25,14 @@ const errors = ref({});
 const form = reactive({
   intervention_id: interventionStore.active.id,
   ...data.mission,
-  debut2: data.mission.debut?.replace(' ', 'T'),
-  fin2: data.mission.fin?.replace(' ', 'T'),
+  debut2: data.mission.debut?.replace(" ", "T"),
+  fin2: data.mission.fin?.replace(" ", "T"),
 });
 // min = data.min;//DateTime.fromSQL(data.min)slice(0, ).toISO().slice(0, 16);
 // max = data.max;//DateTime.fromSQL(data.max).toISO().slice(0, 16);
 
-const responsableMode = ref(data?.mission?.sapeur_id ? 'sapeur_id' : 'sapeur');
-const format = 'yyyy-MM-dd HH:mm';
+const responsableMode = ref(data?.mission?.sapeur_id ? "sapeur_id" : "sapeur");
+const format = "yyyy-MM-dd HH:mm";
 
 const listMissions = computed(() => missionStore.liste);
 const listeSapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
@@ -44,16 +44,16 @@ const save = async () => {
   form.debut = DateTime.fromISO(form.debut2)?.toFormat(format);
   form.fin = DateTime.fromISO(form.fin2)?.toFormat(format);
 
-  if (responsableMode.value == 'sapeur') {
+  if (responsableMode.value == "sapeur") {
     delete form.sapeur_id;
     if (!form.sapeur) {
-      errors.value.sapeur = 'Manquant';
+      errors.value.sapeur = "Manquant";
       return;
     }
   } else {
     delete form.sapeur;
     if (!form.sapeur_id) {
-      errors.value.sapeur_id = 'Manquant';
+      errors.value.sapeur_id = "Manquant";
       return;
     }
   }
@@ -68,11 +68,11 @@ const save = async () => {
   } catch (err) {
     errors.value = {
       ...err,
-      debut: err['missions.0.debut'],
-      fin: err['missions.0.fin'],
-      sapeur_id: err['missions.0.sapeur_id'],
-      sapeur: err['missions.0.sapeur'],
-      titre: err['missions.0.titre'],
+      debut: err["missions.0.debut"],
+      fin: err["missions.0.fin"],
+      sapeur_id: err["missions.0.sapeur_id"],
+      sapeur: err["missions.0.sapeur"],
+      titre: err["missions.0.titre"],
     };
   }
 };
@@ -103,9 +103,7 @@ const save = async () => {
           title="Titre"
         />
       </div>
-      <label class="form-check-label" for="flexSwitchCheckDefault">
-        Responsable
-      </label>
+      <label class="form-check-label" for="flexSwitchCheckDefault"> Responsable </label>
       <div class="form-check">
         <input
           id="sapeur_id"
@@ -167,11 +165,9 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="button" class="btn btn-primary" @click="save()">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </div>

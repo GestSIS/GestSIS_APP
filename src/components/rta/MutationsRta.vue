@@ -1,11 +1,11 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useRtaStore } from '../../stores/rta/Rta.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useGroupeStore } from '../../stores/groupe/Groupe.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useAuthStore } from '../../stores/auth/Auth.js';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useRtaStore } from "../../stores/rta/Rta.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useGroupeStore } from "../../stores/groupe/Groupe.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useAuthStore } from "../../stores/auth/Auth.js";
 
 const authStore = useAuthStore();
 const rtaStore = useRtaStore();
@@ -27,7 +27,7 @@ const reference = computed(() =>
   rtaStore.reference.map((f) => ({
     ...f,
     numeros: f.numeros.map((n) => ({ ...n, numero: formatNumero(n.numero) })),
-    fonction: f?.fonction || '',
+    fonction: f?.fonction || "",
   })),
 );
 const activeSisData = computed(() =>
@@ -35,7 +35,7 @@ const activeSisData = computed(() =>
 );
 
 const formatNumero = (numero) => {
-  const num = numero.replaceAll(' ', '');
+  const num = numero.replaceAll(" ", "");
   if (num.length === 10) {
     return `+41 ${num.slice(1, 3)} ${num.slice(3, 6)} ${num.slice(6, 8)} ${num.slice(8)}`;
   }
@@ -48,19 +48,12 @@ const actuel = computed(() =>
   rtaStore.actuel
     .map((s) => ({
       ...s,
-      localite: localiteStore.liste.find((l) => l.id == s.localite_id)
-        ?.designation,
-      fonction:
-        fonctionStore.liste.find((f) => f.id == s.fonction_id)?.nom ?? '',
+      localite: localiteStore.liste.find((l) => l.id == s.localite_id)?.designation,
+      fonction: fonctionStore.liste.find((f) => f.id == s.fonction_id)?.nom ?? "",
       sapeur_id: s.id,
       numeros: s.telephones.map((t) => ({
         numero: formatNumero(t.numero),
-        type:
-          t.telephone_type_id === 1
-            ? 'Privé'
-            : t.telephone_type_id === 2
-              ? 'Prof'
-              : 'Mobile',
+        type: t.telephone_type_id === 1 ? "Privé" : t.telephone_type_id === 2 ? "Prof" : "Mobile",
         tri: t.priorite,
       })),
       groupes: s.groupes
@@ -87,16 +80,12 @@ const sapeursSansNumero = computed(() =>
     .filter((s) => s.numeros.length === 0)
     .sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom)),
 );
-const sansNumeroIds = computed(
-  () => new Set(sapeursSansNumero.value.map((s) => s.sapeur_id)),
-);
+const sansNumeroIds = computed(() => new Set(sapeursSansNumero.value.map((s) => s.sapeur_id)));
 
 const mutations = computed(() => {
   const referenceIds = new Set(reference.value.map((s) => s.sapeur_id));
   const actuelIds = new Set(actuel.value.map((s) => s.sapeur_id));
-  const potentielModifieIds = new Set(
-    [...referenceIds].filter((id) => actuelIds.has(id)),
-  );
+  const potentielModifieIds = new Set([...referenceIds].filter((id) => actuelIds.has(id)));
 
   const sapeurCompare = (a, b) => a.nom_prenom.localeCompare(b.nom_prenom);
 
@@ -104,7 +93,7 @@ const mutations = computed(() => {
     .filter((s) => !referenceIds.has(s.sapeur_id))
     .map((s) => ({
       ...s,
-      statut: 'ajoute',
+      statut: "ajoute",
       changements: {},
     }))
     .sort(sapeurCompare);
@@ -112,7 +101,7 @@ const mutations = computed(() => {
     .filter((s) => !actuelIds.has(s.sapeur_id))
     .map((s) => ({
       ...s,
-      statut: 'supprime',
+      statut: "supprime",
       changements: {},
     }))
     .sort(sapeurCompare);
@@ -121,17 +110,8 @@ const mutations = computed(() => {
     .map((s) => {
       let modifie = false;
 
-      const referenceModifie = reference.value.find(
-        (s2) => s2.sapeur_id == s.sapeur_id,
-      );
-      const fields = [
-        'nom',
-        'prenom',
-        'fonction',
-        'localite',
-        'adresse',
-        'date_naissance',
-      ];
+      const referenceModifie = reference.value.find((s2) => s2.sapeur_id == s.sapeur_id);
+      const fields = ["nom", "prenom", "fonction", "localite", "adresse", "date_naissance"];
       let changements = {};
       // Fields
       fields.forEach((f) => {
@@ -142,32 +122,20 @@ const mutations = computed(() => {
       });
 
       // Groupes
-      const referenceGroupes = new Set(
-        referenceModifie.groupes.map((g) => g.no),
-      );
+      const referenceGroupes = new Set(referenceModifie.groupes.map((g) => g.no));
       const actuelGroupes = new Set(s.groupes.map((g) => g.no));
 
-      const groupesAjoute = s.groupes
-        .map((g) => g.no)
-        .filter((g) => !referenceGroupes.has(g));
+      const groupesAjoute = s.groupes.map((g) => g.no).filter((g) => !referenceGroupes.has(g));
       const groupesSupprime = referenceModifie.groupes
         .map((g) => g.no)
         .filter((g) => !actuelGroupes.has(g));
 
-      const groupesReference = new Map(
-        referenceModifie.groupes.map((g) => [g.no, g.description]),
-      );
+      const groupesReference = new Map(referenceModifie.groupes.map((g) => [g.no, g.description]));
       const groupesModifie = s.groupes.filter(
-        (g) =>
-          groupesReference.has(g.no) &&
-          groupesReference.get(g.no) !== g.description,
+        (g) => groupesReference.has(g.no) && groupesReference.get(g.no) !== g.description,
       );
 
-      if (
-        groupesAjoute.length > 0 ||
-        groupesSupprime.length > 0 ||
-        groupesModifie.length > 0
-      ) {
+      if (groupesAjoute.length > 0 || groupesSupprime.length > 0 || groupesModifie.length > 0) {
         modifie = true;
       }
 
@@ -180,9 +148,7 @@ const mutations = computed(() => {
 
       const groupes = [
         ...s.groupes,
-        ...referenceModifie.groupes.filter((g) =>
-          groupesSupprime.includes(g.no),
-        ),
+        ...referenceModifie.groupes.filter((g) => groupesSupprime.includes(g.no)),
       ];
 
       // RTA Numéros
@@ -190,9 +156,7 @@ const mutations = computed(() => {
       const currentNumeros = new Set(s.numeros.map((n) => n.numero));
 
       const numeros = [
-        ...s.numeros.map((n) =>
-          oldNumeros.has(n.numero) ? n : { ...n, added: true },
-        ),
+        ...s.numeros.map((n) => (oldNumeros.has(n.numero) ? n : { ...n, added: true })),
         ...referenceModifie.numeros
           .filter((n) => !currentNumeros.has(n.numero))
           .map((n) => ({ ...n, removed: true })),
@@ -208,7 +172,7 @@ const mutations = computed(() => {
         numeros,
       };
 
-      return { ...s, groupes, statut: 'modifie', changements };
+      return { ...s, groupes, statut: "modifie", changements };
     })
     .filter((m) => m.changements.modifie)
     .sort(sapeurCompare);
@@ -219,9 +183,7 @@ const mutations = computed(() => {
 });
 
 const nbNumero = computed(() => {
-  const numCount = mutations.value.map(
-    (s) => s.changements?.numeros?.length ?? s.numeros.length,
-  );
+  const numCount = mutations.value.map((s) => s.changements?.numeros?.length ?? s.numeros.length);
   return numCount.length > 0 ? Math.max(...numCount) : 0;
 });
 const nbGroupes = computed(() => {
@@ -241,31 +203,25 @@ watchEffect(() => {
 const awn = useNotification();
 
 const switchAll = (valeur) => {
-  mutations.value.forEach(
-    (m) => (unselected.value[m.sapeur_id] = !valeur.target.checked),
-  );
+  mutations.value.forEach((m) => (unselected.value[m.sapeur_id] = !valeur.target.checked));
 };
 
 const mutate = () => {
   const sis = activeSisData.value.nom;
 
   if (mutations.value.length === 0) {
-    awn.alert(
-      'Aucune mutation détectée entre la base RTA et les données actuelles',
-    );
+    awn.alert("Aucune mutation détectée entre la base RTA et les données actuelles");
     return;
   }
   if (!Object.values(unselected.value).some((v) => v === false)) {
-    awn.alert('Aucun sapeur sélectionné pour la mutation RTA');
+    awn.alert("Aucun sapeur sélectionné pour la mutation RTA");
     return;
   }
 
   const data = {
     sis,
     sapeurs: [
-      ...reference.value.filter(
-        (s) => (unselected.value[s.sapeur_id] ?? false) === true,
-      ),
+      ...reference.value.filter((s) => (unselected.value[s.sapeur_id] ?? false) === true),
       ...actuel.value.filter(
         (s) =>
           (unselected.value[s.sapeur_id] ?? false) === false &&
@@ -277,7 +233,7 @@ const mutate = () => {
   rtaStore
     .updateReferenceRta(data)
     .then(() => {
-      awn.success('Mutation transmise avec succès');
+      awn.success("Mutation transmise avec succès");
     })
     .catch((err) => {
       errors.value = err;
@@ -294,26 +250,19 @@ const mutate = () => {
     <div class="card-body pb-0">
       <div class="row g-3 align-items-center mb-3">
         <div class="alert alert-primary" role="alert">
-          La nouvelle intégration avec GestionRTA-Jura ne nécessite plus
-          d'identifiants. Vous pouvez désormais choisir qui est autorisé à
-          effectuer des mutations RTA dans
-          <em>configurations > droits et rôles</em>. Vous verrez ainsi un
-          nouveau groupe de permissions spécifique pour le RTA.
+          La nouvelle intégration avec GestionRTA-Jura ne nécessite plus d'identifiants. Vous pouvez
+          désormais choisir qui est autorisé à effectuer des mutations RTA dans
+          <em>configurations > droits et rôles</em>. Vous verrez ainsi un nouveau groupe de
+          permissions spécifique pour le RTA.
         </div>
-        <div
-          v-if="sapeursSansNumero.length"
-          class="alert alert-warning"
-          role="alert"
-        >
+        <div v-if="sapeursSansNumero.length" class="alert alert-warning" role="alert">
           <p class="mb-1">
-            Les sapeurs suivants font partie d'un groupe RTA mais n'ont aucun
-            numéro de téléphone. Ils ne peuvent pas être transmis au RTA :
+            Les sapeurs suivants font partie d'un groupe RTA mais n'ont aucun numéro de téléphone.
+            Ils ne peuvent pas être transmis au RTA :
           </p>
           <ul class="mb-0">
             <li v-for="s in sapeursSansNumero" :key="s.sapeur_id">
-              <router-link
-                :to="{ name: 'sapeur-details', params: { id: s.sapeur_id } }"
-              >
+              <router-link :to="{ name: 'sapeur-details', params: { id: s.sapeur_id } }">
                 {{ s.nom_prenom }}
               </router-link>
             </li>
@@ -361,8 +310,7 @@ const mutate = () => {
           <tr v-if="!mutations.length">
             <td></td>
             <td colspan="5">
-              Aucun changement détecté entre la base RTA et les données
-              actuelles.
+              Aucun changement détecté entre la base RTA et les données actuelles.
             </td>
           </tr>
           <tr
@@ -382,10 +330,7 @@ const mutate = () => {
                 :false-value="true"
                 :true-value="false"
               />
-              <label
-                class="form-check-label"
-                :for="'select-' + e.sapeur_id"
-              ></label>
+              <label class="form-check-label" :for="'select-' + e.sapeur_id"></label>
             </td>
             <td
               :class="{
@@ -399,7 +344,7 @@ const mutate = () => {
                 'text-warning': e.changements.date_naissance,
               }"
             >
-              {{ new Date(e.date_naissance).toLocaleDateString('fr-CH') }}
+              {{ new Date(e.date_naissance).toLocaleDateString("fr-CH") }}
             </td>
             <td
               :class="{
@@ -423,10 +368,7 @@ const mutate = () => {
               {{ e.fonction }}
             </td>
             <td
-              v-for="(n, i) in (e.changements?.numeros ?? e.numeros).slice(
-                0,
-                maxNbNumero,
-              )"
+              v-for="(n, i) in (e.changements?.numeros ?? e.numeros).slice(0, maxNbNumero)"
               :key="'n-' + n + '-' + i"
               :class="{
                 'text-success': e.statut == 'modifie' && n.added,
@@ -436,31 +378,23 @@ const mutate = () => {
               {{ n.numero }}
             </td>
             <td
-              v-for="n in nbNumero -
-              (e.changements?.numeros ?? e.numeros).length"
+              v-for="n in nbNumero - (e.changements?.numeros ?? e.numeros).length"
               :key="'n-comp-' + n"
             ></td>
             <td
               v-for="g in e.groupes"
               :key="'g-' + g.no"
               :class="{
-                'text-success':
-                  e.statut == 'modifie' &&
-                  e.changements.groupesAjoute.includes(g.no),
+                'text-success': e.statut == 'modifie' && e.changements.groupesAjoute.includes(g.no),
                 'text-warning':
-                  e.statut == 'modifie' &&
-                  e.changements.groupesModifie.includes(g.no),
+                  e.statut == 'modifie' && e.changements.groupesModifie.includes(g.no),
                 'text-danger':
-                  e.statut == 'modifie' &&
-                  e.changements.groupesSupprime.includes(g.no),
+                  e.statut == 'modifie' && e.changements.groupesSupprime.includes(g.no),
               }"
             >
               {{ g.no }}
             </td>
-            <td
-              v-for="g in nbGroupes - e.groupes.length"
-              :key="'g-comp-' + g"
-            ></td>
+            <td v-for="g in nbGroupes - e.groupes.length" :key="'g-comp-' + g"></td>
           </tr>
         </tbody>
       </table>

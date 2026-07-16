@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia';
-import AbsenceParamService from '../../services/AbsenceParamService.js';
+import { defineStore } from "pinia";
+import AbsenceParamService from "../../services/AbsenceParamService.js";
 
-export const useAbsenceParamStore = defineStore('absenceParam', {
+export const useAbsenceParamStore = defineStore("absenceParam", {
   state: () => ({
     params: null,
   }),

@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
-import { useInterventionStore } from '../../stores/intervention/Intervention.js';
-import { useVehiculeStore } from '../../stores/intervention/Vehicule.js';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
+import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import { useVehiculeStore } from "../../stores/intervention/Vehicule.js";
 
 const interventionStore = useInterventionStore();
 const vehiculeStore = useVehiculeStore();
@@ -33,38 +33,33 @@ watchEffect(async () => {
 const vehicules = computed(() =>
   vehiculeStore.liste.filter(
     (v) =>
-      v.statut === true ||
-      interventionStore.active.vehicules.find((vi) => vi.vehicule_id === v.id),
+      v.statut === true || interventionStore.active.vehicules.find((vi) => vi.vehicule_id === v.id),
   ),
 );
-const hasEditPermission = useHasPermission(
-  permissions.INTERVENTION.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
 const awn = useNotification();
 
 const editVehicule = async (vehiculeId) => {
   const event = selected.value[vehiculeId]
-    ? 'addInterventionVehicules'
-    : 'removeInterventionVehicules';
+    ? "addInterventionVehicules"
+    : "removeInterventionVehicules";
 
   interventionStore[event]([vehiculeId])
-    .then(() => awn.success('Modifications enregistrées'))
-    .catch((err) =>
-      awn.alert(err.message ?? "Erreur lors de l'enregistrement"),
-    );
+    .then(() => awn.success("Modifications enregistrées"))
+    .catch((err) => awn.alert(err.message ?? "Erreur lors de l'enregistrement"));
 };
 
 const fields = [
   {
-    title: 'Véhicule',
-    key: 'designation',
+    title: "Véhicule",
+    key: "designation",
   },
   {
-    title: 'Présent',
-    key: 'id',
-    slot: 'check',
-    columnClass: 'ps-4',
+    title: "Présent",
+    key: "id",
+    slot: "check",
+    columnClass: "ps-4",
   },
 ];
 </script>

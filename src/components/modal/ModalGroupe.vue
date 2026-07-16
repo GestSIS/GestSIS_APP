@@ -1,7 +1,7 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useGroupeStore } from '../../stores/groupe/Groupe.js';
+import { computed, reactive, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useGroupeStore } from "../../stores/groupe/Groupe.js";
 
 const { data } = defineProps({
   data: {
@@ -20,7 +20,7 @@ const groupeStore = useGroupeStore();
 const groupes = computed(() =>
   groupeStore.liste.map((g) => ({
     ...g,
-    label: (g.no ? g.no + ' ' : '') + g.designation,
+    label: (g.no ? g.no + " " : "") + g.designation,
   })),
 );
 
@@ -81,16 +81,12 @@ const save = async () => {
             :true-value="1"
             :false-value="0"
           />
-          <label class="form-check-label" for="modal-type"
-            >Groupe d'alarme</label
-          >
+          <label class="form-check-label" for="modal-type">Groupe d'alarme</label>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">Ajouter</button>
     </div>
   </form>

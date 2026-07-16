@@ -1,11 +1,11 @@
 <script setup>
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useAmendeStore } from '../../stores/comptabilite/Amende.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useAmendeStore } from "../../stores/comptabilite/Amende.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
 
 const uniteStore = useUniteStore();
 const fonctionStore = useFonctionStore();
@@ -27,16 +27,13 @@ const params = ref({
   amendes: [],
 });
 
-const listeAmende = computed(() =>
-  amendeStore.liste.sort((a, b) => a.order - b.order),
-);
+const listeAmende = computed(() => amendeStore.liste.slice().sort((a, b) => a.order - b.order));
 const listeCompte = computed(() => compteStore.liste);
 const listeCategorie = computed(() => ecritureCategorieStore.liste);
 
 if (listeAmende.value.length > 0) {
   params.value.compte_id = listeAmende.value[0]?.compte_id;
-  params.value.ecriture_categorie_id =
-    listeAmende.value[0]?.ecriture_categorie_id;
+  params.value.ecriture_categorie_id = listeAmende.value[0]?.ecriture_categorie_id;
   params.value.amendes = listeAmende.value.map((a) => ({
     montant: a.montant,
   }));
@@ -58,7 +55,7 @@ const save = async () => {
     .updateAmendes(params.value)
     .then((res) => {
       errors.value = {};
-      awn.success(res?.message || 'Modifications enregistrées');
+      awn.success(res?.message || "Modifications enregistrées");
     })
     .catch((err) => {
       errors.value = err;
@@ -71,9 +68,7 @@ const save = async () => {
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Amendes</h3>
-      <button type="button" class="btn btn-primary" @click="save()">
-        Enregistrer
-      </button>
+      <button type="button" class="btn btn-primary" @click="save()">Enregistrer</button>
     </div>
     <div class="card-body">
       <div class="row">

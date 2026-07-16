@@ -1,8 +1,8 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   addEvents(events) {
-    return Api.api().post('/mat-perso-event', { events });
+    return Api.api().post("/mat-perso-event", { events });
   },
   // updateEvent(event) {
   //   return Api.api().put(`/mat-perso-event-types/${event.id}`, event);

@@ -1,11 +1,11 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
+import { computed, reactive, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
 
 const compteStore = useCompteStore();
 const ecritureCategorieStore = useEcritureCategorieStore();
@@ -29,13 +29,11 @@ const columns = ref([]);
 
 // Calcul des différentes combinaisons existantes
 const configurations = new Set(
-  data?.fonctions
-    ?.filter((f) => f.fonction_id)
-    ?.map((f) => f.type + ' ' + f.compte_id) || [],
+  data?.fonctions?.filter((f) => f.fonction_id)?.map((f) => f.type + " " + f.compte_id) || [],
 );
 columns.value = Object.fromEntries(
   [...configurations]
-    .map((e) => [e, e.split(' ')])
+    .map((e) => [e, e.split(" ")])
     .map(([index, e]) => [
       index,
       {
@@ -49,8 +47,7 @@ columns.value = Object.fromEntries(
 data?.fonctions
   ?.filter((f) => f.fonction_id)
   ?.forEach((f) => {
-    columns.value[f.type + ' ' + f.compte_id].fonctions[f.fonction_id] =
-      f.tarif;
+    columns.value[f.type + " " + f.compte_id].fonctions[f.fonction_id] = f.tarif;
   });
 
 base.value = data?.fonctions?.filter((f) => !f.fonction_id) || [];
@@ -91,21 +88,18 @@ const save = () => {
   errors.value = {};
 
   // Contrôle qu'aucune colonne n'est dupliquée
-  const baseSet = new Set(base.value.map((e) => e.type + ' ' + e.compte_id));
+  const baseSet = new Set(base.value.map((e) => e.type + " " + e.compte_id));
   if (baseSet.size != base.value.length) {
-    awn.alert(
-      "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises.",
-    );
+    awn.alert("Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises.");
     return;
   }
 
   // Contrôle des données de base
   base.value.forEach((e, i) => {
-    if (!e.type) errors.value['base-type' + i] = true;
-    if (!e.compte_id) errors.value['base-compte' + i] = true;
-    if (!e.tarif || e.tarif < 0) errors.value['base-tarif' + i] = true;
-    if (!e.type_unite_id || e.type_unite_id <= 0)
-      errors.value['base-unite' + i] = true;
+    if (!e.type) errors.value["base-type" + i] = true;
+    if (!e.compte_id) errors.value["base-compte" + i] = true;
+    if (!e.tarif || e.tarif < 0) errors.value["base-tarif" + i] = true;
+    if (!e.type_unite_id || e.type_unite_id <= 0) errors.value["base-unite" + i] = true;
   });
 
   // Return en cas d'erreurs
@@ -132,9 +126,7 @@ const save = () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} une indemnité pour cours
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} une indemnité pour cours</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -222,16 +214,9 @@ const save = () => {
                 </tr>
                 <tr>
                   <td :colspan="base.length > 1 ? 6 : 5">
-                    <button
-                      type="button"
-                      class="btn btn-outline-primary"
-                      @click="ajoutType()"
-                    >
+                    <button type="button" class="btn btn-outline-primary" @click="ajoutType()">
                       Ajouter
-                      <font-awesome-icon
-                        size="1x"
-                        :icon="['far', 'plus-square']"
-                      />
+                      <font-awesome-icon size="1x" :icon="['far', 'plus-square']" />
                     </button>
                   </td>
                 </tr>
@@ -249,11 +234,9 @@ const save = () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

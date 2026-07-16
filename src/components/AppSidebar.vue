@@ -1,8 +1,8 @@
 <script setup>
-import { computed } from 'vue';
-import SisSelection from '/src/components/sis/SisSelection.vue';
-import links from '/src/router/menu.js';
-import { useAuthStore } from '../stores/auth/Auth.js';
+import { computed } from "vue";
+import SisSelection from "/src/components/sis/SisSelection.vue";
+import links from "/src/router/menu.js";
+import { useAuthStore } from "../stores/auth/Auth.js";
 
 const authStore = useAuthStore();
 

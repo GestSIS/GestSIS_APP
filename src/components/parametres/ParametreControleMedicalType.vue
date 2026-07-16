@@ -1,38 +1,37 @@
 <script setup>
-import { useControleMedicalTypeStore } from '../../stores/controleMedical/ControleMedicalType.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { computed } from 'vue';
-import useNotification from '../../composables/useNotification.js';
+import { useControleMedicalTypeStore } from "../../stores/controleMedical/ControleMedicalType.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
 
 const controleMedicalTypeStore = useControleMedicalTypeStore();
 await controleMedicalTypeStore.fetchTypes();
 
 const fields = [
-  { title: 'Tri', key: 'tri' },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Remarque', key: 'remarque' },
-  { title: 'Validité [ans]', key: 'duree_validite' },
-  { title: 'Expirable', key: 'expirable', type: Boolean },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Tri", key: "tri" },
+  { title: "Désignation", key: "designation" },
+  { title: "Remarque", key: "remarque" },
+  { title: "Validité [ans]", key: "duree_validite" },
+  { title: "Expirable", key: "expirable", type: Boolean },
+  { title: "Actions", slot: "actions" },
 ];
 const listeType = computed(() =>
-  controleMedicalTypeStore.liste.sort((a, b) => a.tri - b.tri),
+  controleMedicalTypeStore.liste.slice().sort((a, b) => a.tri - b.tri),
 );
 
 const { showModal } = useModalStore();
 const awn = useNotification();
-const ajoutType = () =>
-  showModal({ component: 'ModalControleMedicalType', data: {} });
+const ajoutType = () => showModal({ component: "ModalControleMedicalType", data: {} });
 const updateType = (type) =>
   showModal({
-    component: 'ModalControleMedicalType',
+    component: "ModalControleMedicalType",
     data: { ...type },
   });
 const deleteType = async (type) => {
   try {
     await controleMedicalTypeStore.removeType(type.id);
   } catch (res) {
-    awn.alert(res.message || 'Erreur lors de la suppression');
+    awn.alert(res.message || "Erreur lors de la suppression");
   }
 };
 </script>

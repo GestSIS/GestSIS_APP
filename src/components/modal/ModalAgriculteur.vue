@@ -1,7 +1,7 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import RtaService from '../../services/RtaService.js';
+import { computed, reactive, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import RtaService from "../../services/RtaService.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -17,19 +17,14 @@ const { data, callback } = defineProps({
 const errors = ref({});
 const form = reactive({
   ...data.agriculteur,
-  capacites: data.agriculteur.capacites?.map((g) => ({ ...g })) ?? [
-    { numero: '' },
-  ],
+  capacites: data.agriculteur.capacites?.map((g) => ({ ...g })) ?? [{ numero: "" }],
   moyens_contact: data.agriculteur.moyens_contact?.map((m) => ({ ...m })) ?? [
-    { type: 'Privé', numero: '' },
+    { type: "Privé", numero: "" },
   ],
 });
 
-const communes = computed(() =>
-  [...data.communes].map((c) => ({ id: c, designation: c })),
-);
-const ajoutMoyenContact = () =>
-  form.moyens_contact.push({ type: 'Portable', numero: '' });
+const communes = computed(() => [...data.communes].map((c) => ({ id: c, designation: c })));
+const ajoutMoyenContact = () => form.moyens_contact.push({ type: "Portable", numero: "" });
 const supprimerMoyenContact = (tel) => {
   form.moyens_contact = form.moyens_contact.filter((c) => c !== tel);
 };
@@ -41,9 +36,7 @@ const supprimerCapacite = (capacite) => {
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  const action = form.id
-    ? RtaService.updateAgriculteur
-    : RtaService.createAgriculteur;
+  const action = form.id ? RtaService.updateAgriculteur : RtaService.createAgriculteur;
   form.moyens_contact = form.moyens_contact
     .sort((m1, m2) => {
       const o = (type) => types.find((t) => t.id === type)?.order ?? 99;
@@ -59,24 +52,17 @@ const save = async () => {
 };
 
 const types = [
-  { designation: 'Mobile', id: 'Mobile', order: 1 },
-  { designation: 'Privé', id: 'Privé', order: 2 },
-  { designation: 'Prof', id: 'Prof', order: 3 },
+  { designation: "Mobile", id: "Mobile", order: 1 },
+  { designation: "Privé", id: "Privé", order: 2 },
+  { designation: "Prof", id: "Prof", order: 3 },
 ];
 </script>
 
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} un agriculteur
-      </h5>
-      <button
-        type="button"
-        class="btn-close"
-        aria-label="Fermer"
-        @click="closeModal()"
-      ></button>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un agriculteur</h5>
+      <button type="button" class="btn-close" aria-label="Fermer" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
@@ -100,12 +86,7 @@ const types = [
           :class="{ 'is-invalid': errors['lieudit'] }"
         />
       </div>
-      <base-select
-        v-model="form.communes"
-        class="mb-3"
-        label="Commune(s)"
-        :options="communes"
-      />
+      <base-select v-model="form.communes" class="mb-3" label="Commune(s)" :options="communes" />
       <div class="mb-3">
         <label>Capacités</label>
         <table class="table table-sm">
@@ -145,11 +126,7 @@ const types = [
           <tfoot>
             <tr>
               <td :colspan="form.capacites.length > 1 ? 2 : 1">
-                <button
-                  type="button"
-                  class="btn btn-sm btn-outline-primary"
-                  @click="ajoutCapacite"
-                >
+                <button type="button" class="btn btn-sm btn-outline-primary" @click="ajoutCapacite">
                   <font-awesome-icon :icon="['fas', 'plus']" />
                 </button>
               </td>
@@ -187,8 +164,7 @@ const types = [
                   type="adresse"
                   class="form-control form-control-sm"
                   :class="{
-                    'is-invalid':
-                      errors['moyens_contact[' + index + '].numero'],
+                    'is-invalid': errors['moyens_contact[' + index + '].numero'],
                   }"
                 />
               </td>
@@ -222,16 +198,11 @@ const types = [
       </div>
     </div>
     <div class="modal-footer">
-      <button
-        autofocus
-        type="button"
-        class="btn btn-secondary"
-        @click="closeModal(false)"
-      >
+      <button autofocus type="button" class="btn btn-secondary" @click="closeModal(false)">
         Annuler
       </button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

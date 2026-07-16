@@ -1,18 +1,18 @@
 <script setup>
-import { useModalStore } from '../stores/common/Modal';
-import { useLocaliteStore } from '../stores/common/Localite.js';
-import { useBaseDataStore } from '../stores/common/BaseData.js';
-import { useGroupeStore } from '../stores/groupe/Groupe.js';
-import { useFonctionStore } from '../stores/sapeur/Fonction';
-import { useGradeStore } from '../stores/sapeur/Grade';
-import permissions from '../composables/permissions.js';
+import { useModalStore } from "../stores/common/Modal";
+import { useLocaliteStore } from "../stores/common/Localite.js";
+import { useBaseDataStore } from "../stores/common/BaseData.js";
+import { useGroupeStore } from "../stores/groupe/Groupe.js";
+import { useFonctionStore } from "../stores/sapeur/Fonction";
+import { useGradeStore } from "../stores/sapeur/Grade";
+import permissions from "../composables/permissions.js";
 
-import SapeurService from '../services/SapeurService.js';
-import { DateTime } from 'luxon';
-import { downloadOutlookCsv, downloadVcard } from '../tools/exportSapeurs';
-import { computed, ref } from 'vue';
-import useNotification from '../composables/useNotification.js';
-import useHasPermission from '../composables/usePermission.js';
+import SapeurService from "../services/SapeurService.js";
+import { DateTime } from "luxon";
+import { downloadOutlookCsv, downloadVcard } from "../tools/exportSapeurs";
+import { computed, ref } from "vue";
+import useNotification from "../composables/useNotification.js";
+import useHasPermission from "../composables/usePermission.js";
 
 const localiteStore = useLocaliteStore();
 const baseDataStore = useBaseDataStore();
@@ -26,34 +26,22 @@ const loadGrades = gradeStore.fetchGrades();
 const loadFonctions = fonctionStore.fetchFonctions();
 const loadGroupes = groupeStore.fetchGroupes();
 
-await Promise.all([
-  loadLocalites,
-  loadCivilites,
-  loadFonctions,
-  loadGrades,
-  loadGroupes,
-]);
+await Promise.all([loadLocalites, loadCivilites, loadFonctions, loadGrades, loadGroupes]);
 
 const loading = ref(true);
 const selectedId = ref(null);
 const sapeurs = ref([]);
 
 const localites = computed(() =>
-  localiteStore.liste.sort((a, b) =>
-    a.designation.localeCompare(b.designation),
-  ),
+  localiteStore.liste.slice().sort((a, b) => a.designation.localeCompare(b.designation)),
 );
 const civilites = computed(() => baseDataStore.civilites);
 const groupes = computed(() => groupeStore.liste);
 const fonctions = computed(() => fonctionStore.liste.filter((f) => f.actif));
 const grades = computed(() => gradeStore.liste);
-const hasSapeurModificationPermission = useHasPermission(
-  permissions.SAPEUR.MODIFICATION,
-);
+const hasSapeurModificationPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 const hasSmsEnvoiePermission = useHasPermission(permissions.SMS.ENVOIE);
-const hasExerciceModificationPermission = useHasPermission(
-  permissions.EXERCICE.MODIFICATION,
-);
+const hasExerciceModificationPermission = useHasPermission(permissions.EXERCICE.MODIFICATION);
 
 const computedData = computed(() => {
   const idReducer = (map, e) => {
@@ -67,9 +55,7 @@ const computedData = computed(() => {
   const indexedGroupes = groupes.value.reduce(idReducer, new Map());
 
   const porteurIds = new Set(
-    fonctions.value
-      .filter((f) => f.nom.toLowerCase().includes('porteur'))
-      .map((f) => f.id),
+    fonctions.value.filter((f) => f.nom.toLowerCase().includes("porteur")).map((f) => f.id),
   );
   const b_id = 3;
   const c1_id = 6;
@@ -85,17 +71,16 @@ const computedData = computed(() => {
       c1: s.permis.find((p) => p.permis_type_id == c1_id) != undefined,
       c1_118: s.permis.find((p) => p.permis_type_id == c1_118_id) != undefined,
       fonctions: s.fonctions.filter(
-        (f) =>
-          f.fin == null || DateTime.fromSQL(f.fin).diff(DateTime.now()) >= 0,
+        (f) => f.fin == null || DateTime.fromSQL(f.fin).diff(DateTime.now()) >= 0,
       ),
-      fonction: indexedFonctions.get(s.fonction_id)?.nom || '',
-      localite: indexedLocalite.get(s.localite_id)?.designation || '',
+      fonction: indexedFonctions.get(s.fonction_id)?.nom || "",
+      localite: indexedLocalite.get(s.localite_id)?.designation || "",
       fonction_tri: indexedFonctions.get(s.fonction_id)?.tri || 0,
-      grade: indexedGrades.get(s.grade_id)?.designation || '',
+      grade: indexedGrades.get(s.grade_id)?.designation || "",
       grade_tri: indexedGrades.get(s.grade_id)?.tri || 0,
-      tel_1: s.telephones.length > 0 ? s.telephones[0].numero : '',
-      tel_2: s.telephones.length > 1 ? s.telephones[1].numero : '',
-      tel_3: s.telephones.length > 2 ? s.telephones[2].numero : '',
+      tel_1: s.telephones.length > 0 ? s.telephones[0].numero : "",
+      tel_2: s.telephones.length > 1 ? s.telephones[1].numero : "",
+      tel_3: s.telephones.length > 2 ? s.telephones[2].numero : "",
       rta_1: s.telephones.length > 0 ? s.telephones[0].rta : false,
       rta_2: s.telephones.length > 1 ? s.telephones[1].rta : false,
       rta_3: s.telephones.length > 2 ? s.telephones[2].rta : false,
@@ -106,7 +91,7 @@ const computedData = computed(() => {
         .filter((g) => g.type)
         .map((g) => g.no)
         .filter((g) => g)
-        .join(', '),
+        .join(", "),
     }))
     .sort((a, b) => b.fonction_tri - a.fonction_tri);
 });
@@ -136,7 +121,7 @@ const filteredGroupes = computed(() => {
     .filter((t) => ids.has(t.id))
     .map((e) => ({
       ...e,
-      label: (e.no ? e.no + ' ' : '') + e.designation,
+      label: (e.no ? e.no + " " : "") + e.designation,
     }));
 });
 
@@ -154,35 +139,30 @@ const awn = useNotification();
 const selectSapeur = (id) => (selectedId.value = id);
 
 const trombinoscope = () => {
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
 
-  SapeurService.downloadTrombinoscope('trombinoscope.pdf')
+  SapeurService.downloadTrombinoscope("trombinoscope.pdf")
     .then(closeModal)
     .catch((err) => {
       closeModal();
-      awn.alert(
-        err?.message ||
-          'Une erreur a eu lieu durant la génération du trombinoscope',
-      );
+      awn.alert(err?.message || "Une erreur a eu lieu durant la génération du trombinoscope");
     });
 };
 const listeFssp = () =>
   showModal({
-    component: 'ModalListeFssp',
+    component: "ModalListeFssp",
   });
 const listeFoad = () =>
   showModal({
-    component: 'ModalListeFoad',
+    component: "ModalListeFoad",
   });
 const sms = (sapeurs) => {
   if (!hasSmsEnvoiePermission.value) {
-    awn.alert(
-      "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS",
-    );
+    awn.alert("Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS");
     return;
   }
   showModal({
-    component: 'ModalSms',
+    component: "ModalSms",
     size: 1,
     data: sapeurs,
   });
@@ -191,44 +171,44 @@ const vcard = (sapeurs) => downloadVcard(sapeurs, localites.value);
 const outlookCsv = (sapeurs) => downloadOutlookCsv(sapeurs, localites.value);
 
 const fieldsBase = [
-  { title: 'Nom Prénom', key: 'nom_prenom' },
+  { title: "Nom Prénom", key: "nom_prenom" },
   {
-    title: 'Fonction principale',
-    key: 'fonction',
-    sortKey: 'fonction_tri',
+    title: "Fonction principale",
+    key: "fonction",
+    sortKey: "fonction_tri",
   },
-  { title: 'Localité', key: 'localite' },
-  { title: "Année d'incorporation", key: 'annee_incorporation' },
-  { title: 'PAR', key: 'porteur', type: Boolean },
-  { title: 'B', key: 'b', type: Boolean },
-  { title: 'C1', key: 'c1', type: Boolean },
-  { title: 'C1 118', key: 'c1_118', type: Boolean },
-  { title: 'Grade', key: 'grade', sortKey: 'grade_tri' },
-  { title: 'Groupes', key: 'formatedGroupes' },
+  { title: "Localité", key: "localite" },
+  { title: "Année d'incorporation", key: "annee_incorporation" },
+  { title: "PAR", key: "porteur", type: Boolean },
+  { title: "B", key: "b", type: Boolean },
+  { title: "C1", key: "c1", type: Boolean },
+  { title: "C1 118", key: "c1_118", type: Boolean },
+  { title: "Grade", key: "grade", sortKey: "grade_tri" },
+  { title: "Groupes", key: "formatedGroupes" },
   {
-    title: 'Tel n°1',
-    key: 'rta_1',
-    labelKey: 'tel_1',
+    title: "Tel n°1",
+    key: "rta_1",
+    labelKey: "tel_1",
     type: Boolean,
   },
   {
-    title: 'Tel n°2',
-    key: 'rta_2',
-    labelKey: 'tel_2',
+    title: "Tel n°2",
+    key: "rta_2",
+    labelKey: "tel_2",
     type: Boolean,
   },
   {
-    title: 'Tel n°3',
-    key: 'rta_3',
-    labelKey: 'tel_3',
+    title: "Tel n°3",
+    key: "rta_3",
+    labelKey: "tel_3",
     type: Boolean,
   },
-  { title: 'Naissance', key: 'date_naissance', type: Date },
+  { title: "Naissance", key: "date_naissance", type: Date },
   {
-    title: 'Actions',
-    slot: 'actions',
-    titleClass: 'align-middle text-center',
-    columnClass: 'align-middle text-center',
+    title: "Actions",
+    slot: "actions",
+    titleClass: "align-middle text-center",
+    columnClass: "align-middle text-center",
   },
 ];
 </script>
@@ -247,9 +227,7 @@ const fieldsBase = [
               <li class="breadcrumb-item">
                 <router-link :to="{ name: 'accueil' }">Accueil</router-link>
               </li>
-              <li class="breadcrumb-item active" aria-current="page">
-                Effectif
-              </li>
+              <li class="breadcrumb-item active" aria-current="page">Effectif</li>
             </ol>
           </nav>
         </div>
@@ -261,10 +239,7 @@ const fieldsBase = [
               <h5>Actions</h5>
             </div>
             <div class="card-body d-grid gap-2">
-              <button
-                class="btn btn-outline-primary"
-                @click="vcard(filteredData)"
-              >
+              <button class="btn btn-outline-primary" @click="vcard(filteredData)">
                 VCard tous
               </button>
               <!-- <button
@@ -301,15 +276,9 @@ const fieldsBase = [
               <h5>Impression</h5>
             </div>
             <div class="card-body d-grid gap-2">
-              <button class="btn btn-outline-primary" @click="listeFssp">
-                Liste FSSP
-              </button>
-              <button class="btn btn-outline-primary" @click="listeFoad">
-                Liste FOAD
-              </button>
-              <button class="btn btn-outline-primary" @click="trombinoscope">
-                Trombinoscope
-              </button>
+              <button class="btn btn-outline-primary" @click="listeFssp">Liste FSSP</button>
+              <button class="btn btn-outline-primary" @click="listeFoad">Liste FOAD</button>
+              <button class="btn btn-outline-primary" @click="trombinoscope">Trombinoscope</button>
             </div>
           </div>
         </div>
@@ -325,9 +294,7 @@ const fieldsBase = [
                   :options="filteredLocalites"
                   base-option="<Localité>"
                   :model-value="filters.localite_id"
-                  @update:model-value="
-                    (value) => setFilter('localite_id', value)
-                  "
+                  @update:model-value="(value) => setFilter('localite_id', value)"
                 />
                 <base-select
                   class="col-md-6 mb-1"
@@ -341,8 +308,7 @@ const fieldsBase = [
                         'fonctions',
                         parseInt(value)
                           ? (fonctions) =>
-                              fonctions.find((f) => f.fonction_id == value) !=
-                              undefined
+                              fonctions.find((f) => f.fonction_id == value) != undefined
                           : null,
                       )
                   "
@@ -352,9 +318,7 @@ const fieldsBase = [
                   :options="civilites"
                   base-option="<Civilité>"
                   :model-value="filters.civilite_id"
-                  @update:model-value="
-                    (value) => setFilter('civilite_id', value)
-                  "
+                  @update:model-value="(value) => setFilter('civilite_id', value)"
                 />
                 <base-select
                   class="col-md-6 mb-1"
@@ -374,17 +338,13 @@ const fieldsBase = [
                       setFilter(
                         'groupes',
                         parseInt(value)
-                          ? (groupes) =>
-                              groupes.find((f) => f.groupe_id == value) !=
-                              undefined
+                          ? (groupes) => groupes.find((f) => f.groupe_id == value) != undefined
                           : undefined,
                       )
                   "
                 />
                 <div v-if="canReset" class="col-md-6">
-                  <button class="btn btn-sm btn-warning w-100" @click="reset">
-                    Réinitialiser
-                  </button>
+                  <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
                 </div>
               </div>
             </div>
@@ -418,23 +378,14 @@ const fieldsBase = [
                     :to="{ name: 'sapeur-details', params: { id: rowData.id } }"
                     custom
                   >
-                    <button
-                      class="btn btn-outline-primary border-0"
-                      @click="navigate"
-                    >
+                    <button class="btn btn-outline-primary border-0" @click="navigate">
                       <font-awesome-icon :icon="['far', 'edit']" />
                     </button>
                   </router-link>
-                  <a
-                    class="btn btn-outline-primary border-0"
-                    :href="'mailto:' + rowData.email"
-                  >
+                  <a class="btn btn-outline-primary border-0" :href="'mailto:' + rowData.email">
                     <font-awesome-icon :icon="['fas', 'envelope']" />
                   </a>
-                  <button
-                    class="btn btn-outline-primary border-0"
-                    @click="vcard([rowData])"
-                  >
+                  <button class="btn btn-outline-primary border-0" @click="vcard([rowData])">
                     <font-awesome-icon :icon="['far', 'address-card']" />
                   </button>
                 </template>

@@ -1,7 +1,7 @@
 <script setup>
-import { onUnmounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/auth/Auth';
+import { onUnmounted, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useAuthStore } from "../stores/auth/Auth";
 
 const error = ref(null);
 const success = ref(null);
@@ -13,7 +13,7 @@ const router = useRouter();
 
 const token = route.query.token;
 if (!token) {
-  router.push({ name: 'accueil' });
+  router.push({ name: "accueil" });
 } else {
   useAuthStore()
     .confirmation(token)
@@ -24,9 +24,7 @@ if (!token) {
         sec.value -= 1;
         if (sec.value <= 0) {
           clearInterval(interval.value);
-          router.push(
-            route.query.redirect ? route.query.redirect : { name: 'accueil' },
-          );
+          router.push(route.query.redirect ? route.query.redirect : { name: "accueil" });
         }
       }, 1000);
     })
@@ -40,9 +38,7 @@ onUnmounted(() => {
 });
 
 const redirect = () => {
-  router.push(
-    route.query.redirect ? route.query.redirect : { name: 'accueil' },
-  );
+  router.push(route.query.redirect ? route.query.redirect : { name: "accueil" });
 };
 </script>
 
@@ -57,16 +53,10 @@ const redirect = () => {
         {{ sec }} secondes
       </h2>
       <div v-if="error" class="h3 mb-3">{{ error }}</div>
-      <button
-        class="btn btn-lg btn-primary btn-block"
-        type="submit"
-        @click="redirect"
-      >
+      <button class="btn btn-lg btn-primary btn-block" type="submit" @click="redirect">
         Accueil
       </button>
-      <p class="mt-5 mb-3 text-muted">
-        © GestSIS {{ new Date().getFullYear() }}
-      </p>
+      <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
     </form>
   </div>
 </template>
@@ -103,13 +93,13 @@ const redirect = () => {
   z-index: 2;
 }
 
-.form-signin input[type='email'] {
+.form-signin input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.form-signin input[type='password'] {
+.form-signin input[type="password"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;

@@ -1,10 +1,10 @@
 <script setup>
-import { computed, nextTick, useTemplateRef } from 'vue';
+import { computed, nextTick, useTemplateRef } from "vue";
 
-import { useEmplacementStore } from '../../stores/materiel/Emplacement';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import { indexedData } from '../../tools/index.js';
-import { Select } from 'vue3-select-component';
+import { useEmplacementStore } from "../../stores/materiel/Emplacement";
+import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import { indexedData } from "../../tools/index.js";
+import { Select } from "vue3-select-component";
 import {
   SelectRoot,
   SelectTrigger,
@@ -14,10 +14,10 @@ import {
   SelectListbox,
   SelectNoOptions,
   SelectOption,
-} from 'vue3-select-component/primitives';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
-import TagCouleur from './TagCouleur.vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur';
+} from "vue3-select-component/primitives";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
+import TagCouleur from "./TagCouleur.vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur";
 
 const props = defineProps({
   articles: {
@@ -31,7 +31,7 @@ const selectedArticles = defineModel({ default: () => [] });
 if (selectedArticles.value.length === 0) {
   selectedArticles.value.push({
     id: null,
-    materiel_type_id: '',
+    materiel_type_id: "",
     emplacement_id: null,
     taille: null,
     remarque: null,
@@ -72,9 +72,7 @@ const emplacements = computed(() => {
         ...e,
         value: e.id,
         emplacements: ids,
-        label: ids
-          .map((id) => indexedEmplacements.value[id].designation)
-          .join(' '),
+        label: ids.map((id) => indexedEmplacements.value[id].designation).join(" "),
       };
     })
     .sort((a, b) => a.tri - b.tri);
@@ -98,7 +96,7 @@ const numerosPourType = (materielTypeId) =>
     .filter((a) => a.materiel_type_id == materielTypeId)
     .map((a) => ({
       value: a.id,
-      label: a.numero?.length ? a.numero : '<sans numéro>',
+      label: a.numero?.length ? a.numero : "<sans numéro>",
     }))
     .sort((a, b) => a.label?.localeCompare(b.label));
 
@@ -110,7 +108,7 @@ const emplacementAncestors = (emplacementId) =>
 const articleReference = useTemplateRef(`articles-reference`);
 const addEmptyLine = () => {
   selectedArticles.value.push({
-    materiel_type_id: '',
+    materiel_type_id: "",
     numero: null,
     taille: null,
     remarque: null,
@@ -123,9 +121,7 @@ const addEmptyLine = () => {
 
 const selectMaterielTypeNumerote = (item, value) => {
   // Select première combinaison valable
-  const materiel = articlesAttribuable.value.find(
-    (m) => m.materiel_type_id == value,
-  );
+  const materiel = articlesAttribuable.value.find((m) => m.materiel_type_id == value);
   item.id = materiel?.id;
 };
 </script>
@@ -145,8 +141,8 @@ const selectMaterielTypeNumerote = (item, value) => {
     <tbody v-if="articlesAttribuable.length === 0">
       <tr>
         <td colspan="6">
-          Aucun article dans l'inventaire, utilisez l'attribution hors
-          inventaire ou ajouter du matériel au préalable.
+          Aucun article dans l'inventaire, utilisez l'attribution hors inventaire ou ajouter du
+          matériel au préalable.
         </td>
       </tr>
     </tbody>
@@ -159,9 +155,7 @@ const selectMaterielTypeNumerote = (item, value) => {
             :options="typesDisponible"
             :required="true"
             placeholder="&lt;Sélectionnez le matériel type&gt;"
-            @update:model-value="
-              (value) => selectMaterielTypeNumerote(item, value)
-            "
+            @update:model-value="(value) => selectMaterielTypeNumerote(item, value)"
           />
         </td>
         <td v-if="!item.materiel_type_id" colspan="3"></td>
@@ -188,9 +182,7 @@ const selectMaterielTypeNumerote = (item, value) => {
             v-model="item.id"
             :options="
               [
-                ...articlesAttribuable.filter(
-                  (a) => a.materiel_type_id == item.materiel_type_id,
-                ),
+                ...articlesAttribuable.filter((a) => a.materiel_type_id == item.materiel_type_id),
               ].sort((a, b) => a.taille?.localeCompare(b.taille))
             "
             display-key="taille"
@@ -202,21 +194,13 @@ const selectMaterielTypeNumerote = (item, value) => {
             :icon="['far', 'circle-question']"
           />
         </td>
-        <!-- data-assembled-select : hook requis pour styler le trigger d'une
-             composition de primitives (cf. SelectCouleur). -->
         <td v-if="item.materiel_type_id" data-assembled-select>
-          <select-root
-            v-model="item.id"
-            :options="articlesPourType(item.materiel_type_id)"
-          >
+          <select-root v-model="item.id" :options="articlesPourType(item.materiel_type_id)">
             <select-trigger>
               <select-value placeholder="Sélectionnez un emplacement">
                 <template #default="{ selectedOptions }">
                   <template v-for="sel in selectedOptions" :key="sel.value">
-                    <template
-                      v-for="article in [articleParId(sel.value)]"
-                      :key="article?.id"
-                    >
+                    <template v-for="article in [articleParId(sel.value)]" :key="article?.id">
                       <span v-if="article?.sapeur_id" class="badge bg-primary">
                         {{ indexedSapeurs[article.sapeur_id]?.nom_prenom }}
                       </span>
@@ -225,9 +209,7 @@ const selectMaterielTypeNumerote = (item, value) => {
                           ? emplacementAncestors(article.emplacement_id)
                           : []"
                         :key="id"
-                        :couleur="
-                          indexedCouleurs[indexedEmplacements[id].couleur_id]
-                        "
+                        :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
                       >
                         {{ indexedEmplacements[id].designation }}
                       </tag-couleur>
@@ -254,9 +236,7 @@ const selectMaterielTypeNumerote = (item, value) => {
                       ? emplacementAncestors(article.emplacement_id)
                       : []"
                     :key="id"
-                    :couleur="
-                      indexedCouleurs[indexedEmplacements[id].couleur_id]
-                    "
+                    :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
                   >
                     {{ indexedEmplacements[id].designation }}
                   </tag-couleur>

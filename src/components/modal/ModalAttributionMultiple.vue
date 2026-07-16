@@ -1,15 +1,15 @@
 <script setup>
-import { computed, onMounted, reactive, ref, useTemplateRef } from 'vue';
+import { computed, onMounted, reactive, ref, useTemplateRef } from "vue";
 
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useEmplacementStore } from '../../stores/materiel/Emplacement';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import ArticleService from '../../services/materiel/ArticleService';
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useEmplacementStore } from "../../stores/materiel/Emplacement";
+import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import ArticleService from "../../services/materiel/ArticleService";
 
-import ArticleCreation from '../materiel/ArticleCreation.vue';
-import ArticleSelecteur from '../materiel/ArticleSelecteur.vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import useNotification from '../../composables/useNotification.js';
+import ArticleCreation from "../materiel/ArticleCreation.vue";
+import ArticleSelecteur from "../materiel/ArticleSelecteur.vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import useNotification from "../../composables/useNotification.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -23,7 +23,7 @@ const { data, callback } = defineProps({
 });
 
 const awn = useNotification();
-const sapeur = useTemplateRef('sapeur');
+const sapeur = useTemplateRef("sapeur");
 onMounted(() => {
   sapeur.value.focus();
 });
@@ -51,14 +51,12 @@ await Promise.all([
 ]);
 
 const sapeurs = computed(() => sapeurStore.liste);
-const typesAttribuables = computed(() =>
-  materielTypeStore.liste.filter((t) => t.est_attribuable),
-);
+const typesAttribuables = computed(() => materielTypeStore.liste.filter((t) => t.est_attribuable));
 
 const { closeModal } = useModalStore();
 const save = async () => {
   if (!form.sapeur_id) {
-    awn.warning('Veuillez sélectionner un sapeur');
+    awn.warning("Veuillez sélectionner un sapeur");
     return;
   }
 
@@ -73,9 +71,7 @@ const save = async () => {
         callback();
         closeModal();
       })
-      .catch((error) =>
-        awn.alert(error.message ?? "Erreur lors de l'attribution du matériel"),
-      );
+      .catch((error) => awn.alert(error.message ?? "Erreur lors de l'attribution du matériel"));
   } else {
     // Création du matériel
     const articles = form.articlesHorsInventaire.map((a) => ({
@@ -89,9 +85,7 @@ const save = async () => {
         callback();
         closeModal();
       })
-      .catch((error) =>
-        awn.alert(error.message ?? "Erreur lors de l'attribution du matériel"),
-      );
+      .catch((error) => awn.alert(error.message ?? "Erreur lors de l'attribution du matériel"));
   }
 };
 </script>
@@ -156,9 +150,7 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
       <button type="submit" class="btn btn-primary">Attribuer</button>
     </div>
   </form>

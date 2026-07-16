@@ -1,66 +1,60 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getMesInfos() {
-    return Api.api().get('/mes-infos');
+    return Api.api().get("/mes-infos");
   },
   getMesFonctions() {
-    return Api.api().get('/mes-fonctions');
+    return Api.api().get("/mes-fonctions");
   },
   getMesGrades() {
-    return Api.api().get('/mes-grades');
+    return Api.api().get("/mes-grades");
   },
   getMesGroupes() {
-    return Api.api().get('/mes-groupes');
+    return Api.api().get("/mes-groupes");
   },
   getMesMutations() {
-    return Api.api().get('/mes-mutations');
+    return Api.api().get("/mes-mutations");
   },
   getMesCours() {
-    return Api.api().get('/mes-cours');
+    return Api.api().get("/mes-cours");
   },
   getMesPermis() {
-    return Api.api().get('/mes-permis');
+    return Api.api().get("/mes-permis");
   },
   getMonMateriel() {
-    return Api.api().get('/mon-materiel');
+    return Api.api().get("/mon-materiel");
   },
   getMesTravaux(exerciceComptableId) {
-    return Api.api().get('/mes-travaux/' + exerciceComptableId);
+    return Api.api().get("/mes-travaux/" + exerciceComptableId);
   },
   getMesExercices(exerciceComptableId) {
-    return Api.api().get('/mes-exercices/' + exerciceComptableId);
+    return Api.api().get("/mes-exercices/" + exerciceComptableId);
   },
   getMesControlesMedicaux() {
-    return Api.api().get('/mes-controles-medicaux');
+    return Api.api().get("/mes-controles-medicaux");
   },
   downloadMonJustificatif(controleMedicalId, filename) {
-    return Api.apiFileDownload(filename).get(
-      '/mon-justificatif/' + controleMedicalId
-    );
+    return Api.apiFileDownload(filename).get("/mon-justificatif/" + controleMedicalId);
   },
   getMesAbsences(exerciceComptableId) {
-    return Api.api().get('/mes-absences/' + exerciceComptableId);
+    return Api.api().get("/mes-absences/" + exerciceComptableId);
   },
   getMesInterventions(exerciceComptableId) {
-    return Api.api().get('/mes-interventions/' + exerciceComptableId);
+    return Api.api().get("/mes-interventions/" + exerciceComptableId);
   },
   getMesDecomptes(exerciceComptableId) {
-    return Api.api().get('/mes-decomptes/' + exerciceComptableId);
+    return Api.api().get("/mes-decomptes/" + exerciceComptableId);
   },
   printMonDecompte(decompteId, filename) {
-    return Api.apiFileDownload(filename).get(
-      `/mes-decomptes/${decompteId}/print`
-    );
+    return Api.apiFileDownload(filename).get(`/mes-decomptes/${decompteId}/print`);
   },
   downloadMonResumeAnnuel(exerciceComptableId, filename) {
     return Api.apiFileDownload(filename).get(
-      `mes-exercices-comptable/${exerciceComptableId}/print`
+      `mes-exercices-comptable/${exerciceComptableId}/print`,
     );
   },
   downloadMonCertificatSalaire(exerciceComptableId, filename) {
-    return Api.apiFileDownload(filename).get(
-      `/mon-certificat-salaire/${exerciceComptableId}`
-    );
+    return Api.apiFileDownload(filename).get(`/mon-certificat-salaire/${exerciceComptableId}`);
   },
 };

@@ -1,15 +1,15 @@
 <script setup>
-import MesDonneesPerso from './MesDonneesPerso.vue';
-import MesDonneesBancaires from './MesDonneesBancaires.vue';
-import MesReferencesProfessionelles from './MesReferencesProfessionelles.vue';
-import MesTelephones from './MesTelephones.vue';
+import MesDonneesPerso from "./MesDonneesPerso.vue";
+import MesDonneesBancaires from "./MesDonneesBancaires.vue";
+import MesReferencesProfessionelles from "./MesReferencesProfessionelles.vue";
+import MesTelephones from "./MesTelephones.vue";
 
-import { computed, ref } from 'vue';
-import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useGradeStore } from '../../stores/sapeur/Grade.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useBaseDataStore } from '../../stores/common/BaseData.js';
+import { computed, ref } from "vue";
+import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useGradeStore } from "../../stores/sapeur/Grade.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useBaseDataStore } from "../../stores/common/BaseData.js";
 
 const fonctionStore = useFonctionStore();
 const gradeStore = useGradeStore();
@@ -109,9 +109,7 @@ const estSapeur = computed(() => {
               <label for="actif">Actif</label>
               <font-awesome-icon
                 v-if="hasEditPermission"
-                v-tooltip.bottom="
-                  'Pour désactiver un sapeur, utiliser l\'onglet Mutations !'
-                "
+                v-tooltip.bottom="'Pour désactiver un sapeur, utiliser l\'onglet Mutations !'"
                 class="ms-1"
                 :icon="['far', 'question-circle']"
               />

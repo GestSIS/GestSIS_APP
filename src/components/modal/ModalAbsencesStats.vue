@@ -1,7 +1,7 @@
 <script setup>
-import { computed } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { computed } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const { data } = defineProps({
   data: {
@@ -33,9 +33,7 @@ const { closeModal } = useModalStore();
       <div v-else>Aucune absence</div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
     </div>
   </div>
 </template>

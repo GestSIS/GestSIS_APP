@@ -1,16 +1,16 @@
 <script setup>
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useSisParamStore } from '../../stores/params/SisParam.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useAuthStore } from '../../stores/auth/Auth.js';
-import SisParamService from '../../services/SisParamService';
-import permissions from '../../composables/permissions.js';
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useSisParamStore } from "../../stores/params/SisParam.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useAuthStore } from "../../stores/auth/Auth.js";
+import SisParamService from "../../services/SisParamService";
+import permissions from "../../composables/permissions.js";
 
-import Api from '/src/http/Request';
-import useHasPermission from '../../composables/usePermission.js';
+import Api from "/src/http/Request";
+import useHasPermission from "../../composables/usePermission.js";
 
 const localiteStore = useLocaliteStore();
 const sisParamStore = useSisParamStore();
@@ -24,16 +24,16 @@ await Promise.all([loadLocalites, loadSapeurs, loadParams, loadContacts]);
 await localiteStore.fetchLocalitesSis();
 
 const logo = ref(null);
-const logoUrl = ref('');
+const logoUrl = ref("");
 const loadingLogo = ref(true);
 const errors = ref({});
 const fields = [
-  { title: 'Npa', key: 'npa' },
-  { title: 'Localité', key: 'localite' },
+  { title: "Npa", key: "npa" },
+  { title: "Localité", key: "localite" },
 ];
 const listes = [
-  { id: 'news', designation: 'Newsletter' },
-  { id: 'facturation', designation: 'Facturation' },
+  { id: "news", designation: "Newsletter" },
+  { id: "facturation", designation: "Facturation" },
 ];
 
 const hasConfigGeneralPermission = useHasPermission(permissions.SIS.CONFIG);
@@ -60,13 +60,13 @@ const { confirm, showModal } = useModalStore();
 const formatLocalite = (localite) => localite?.designation;
 const addContact = (liste) =>
   showModal({
-    component: 'ModalSisContact',
+    component: "ModalSisContact",
     data: liste,
   });
 const removeContact = (contact) =>
   confirm(
-    'Voulez-vous vraiment supprimer cet email ?',
-    'Attention, cet email ne recevra plus les emails de cette liste de diffusion !',
+    "Voulez-vous vraiment supprimer cet email ?",
+    "Attention, cet email ne recevra plus les emails de cette liste de diffusion !",
   ).then(() => sisParamStore.removeSisContact(contact.id));
 
 const updateLocalitesSis = () => {
@@ -86,7 +86,7 @@ const updateLocalitesSis = () => {
   };
 
   showModal({
-    component: 'ModalLocaliteSelect',
+    component: "ModalLocaliteSelect",
     callback,
     size: 1,
     data: { ids: localitesSis.value.map((l) => l?.id ?? l) },
@@ -96,7 +96,7 @@ const save = async () => {
   try {
     const res = await sisParamStore.updateSisParams(sisParam.value);
     errors.value = {};
-    awn.success(res?.message || 'Modifications enregistrées');
+    awn.success(res?.message || "Modifications enregistrées");
   } catch (err) {
     errors.value = {
       ...err,
@@ -106,8 +106,7 @@ const save = async () => {
 };
 const loadSisLogo = () => {
   const timestamp = new Date().getTime();
-  logoUrl.value =
-    Api.API_URL + '/sis-logo/' + activeSisKey.value + '?t=' + timestamp;
+  logoUrl.value = Api.API_URL + "/sis-logo/" + activeSisKey.value + "?t=" + timestamp;
   loadingLogo.value = false;
 };
 loadSisLogo();
@@ -120,13 +119,13 @@ const onFileChange = (event) => {
 const awn = useNotification();
 const saveLogo = async () => {
   if (!logo.value) {
-    awn.warning('Veuillez sélectionner un logo');
+    awn.warning("Veuillez sélectionner un logo");
     return;
   }
   SisParamService.updateLogo(logo.value)
     .then((res) => {
       errors.value = {};
-      awn.success(res?.message || 'Modifications enregistrées');
+      awn.success(res?.message || "Modifications enregistrées");
       loadSisLogo();
     })
     .catch((e) => {
@@ -292,14 +291,10 @@ const saveLogo = async () => {
               <div
                 class="form-control"
                 :class="{
-                  'is-invalid':
-                    contacts.filter((c) => c.liste == liste.id).length === 0,
+                  'is-invalid': contacts.filter((c) => c.liste == liste.id).length === 0,
                 }"
               >
-                <template
-                  v-if="
-                    contacts.filter((c) => c.liste == liste.id).length === 0
-                  "
+                <template v-if="contacts.filter((c) => c.liste == liste.id).length === 0"
                   >1 email minimum requis</template
                 >
                 <span

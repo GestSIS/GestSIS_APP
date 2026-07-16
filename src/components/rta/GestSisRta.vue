@@ -1,9 +1,9 @@
 <script setup>
-import { computed } from 'vue';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useGroupeStore } from '../../stores/groupe/Groupe.js';
-import { useRtaStore } from '../../stores/rta/Rta.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { computed } from "vue";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useGroupeStore } from "../../stores/groupe/Groupe.js";
+import { useRtaStore } from "../../stores/rta/Rta.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 
 const rtaStore = useRtaStore();
 const localiteStore = useLocaliteStore();
@@ -18,7 +18,7 @@ rtaStore.fetchReferenceRta();
 const maxNbNumero = 3;
 
 const formatNumero = (numero) => {
-  const num = numero.replaceAll(' ', '');
+  const num = numero.replaceAll(" ", "");
   if (num.length === 10) {
     return `+41 ${num.slice(1, 3)} ${num.slice(3, 6)} ${num.slice(6, 8)} ${num.slice(8)}`;
   }
@@ -32,26 +32,19 @@ const reference = computed(() =>
   rtaStore.reference.map((f) => ({
     ...f,
     numeros: f.numeros.map((n) => ({ ...n, numero: formatNumero(n.numero) })),
-    fonction: f?.fonction || '',
+    fonction: f?.fonction || "",
   })),
 );
 const actuel = computed(() =>
   rtaStore.actuel
     .map((s) => ({
       ...s,
-      localite: localiteStore.liste.find((l) => l.id == s.localite_id)
-        ?.designation,
-      fonction:
-        fonctionStore.liste.find((f) => f.id == s.fonction_id)?.nom || '',
+      localite: localiteStore.liste.find((l) => l.id == s.localite_id)?.designation,
+      fonction: fonctionStore.liste.find((f) => f.id == s.fonction_id)?.nom || "",
       sapeur_id: s.id,
       numeros: s.telephones.map((t) => ({
         numero: formatNumero(t.numero),
-        type:
-          t.telephone_type_id === 1
-            ? 'Privé'
-            : t.telephone_type_id === 2
-              ? 'Prof'
-              : 'Mobile',
+        type: t.telephone_type_id === 1 ? "Privé" : t.telephone_type_id === 2 ? "Prof" : "Mobile",
         tri: t.priorite,
       })),
       telephones: null,
@@ -80,23 +73,14 @@ const mutations = computed(() => {
       if (!referenceIds.has(s.sapeur_id)) {
         return {
           ...s,
-          statut: 'ajoute',
+          statut: "ajoute",
           changements: {},
         };
       }
 
       // Modifie
-      const referenceModifie = reference.value.find(
-        (s2) => s2.sapeur_id == s.sapeur_id,
-      );
-      const fields = [
-        'nom',
-        'prenom',
-        'fonction',
-        'localite',
-        'adresse',
-        'date_naissance',
-      ];
+      const referenceModifie = reference.value.find((s2) => s2.sapeur_id == s.sapeur_id);
+      const fields = ["nom", "prenom", "fonction", "localite", "adresse", "date_naissance"];
       let changements = {};
       // Fields
       fields.forEach((f) => {
@@ -106,20 +90,12 @@ const mutations = computed(() => {
       });
 
       // Groupes
-      const referenceGroupes = new Set(
-        referenceModifie.groupes.map((g) => g.no),
-      );
-      const groupesAjoute = s.groupes
-        .map((g) => g.no)
-        .filter((g) => !referenceGroupes.has(g));
+      const referenceGroupes = new Set(referenceModifie.groupes.map((g) => g.no));
+      const groupesAjoute = s.groupes.map((g) => g.no).filter((g) => !referenceGroupes.has(g));
 
-      const groupesReference = new Map(
-        referenceModifie.groupes.map((g) => [g.no, g.description]),
-      );
+      const groupesReference = new Map(referenceModifie.groupes.map((g) => [g.no, g.description]));
       const groupesModifie = s.groupes.filter(
-        (g) =>
-          groupesReference.has(g.no) &&
-          groupesReference.get(g.no) !== g.description,
+        (g) => groupesReference.has(g.no) && groupesReference.get(g.no) !== g.description,
       );
 
       changements = {
@@ -135,15 +111,13 @@ const mutations = computed(() => {
 
       changements = {
         ...changements,
-        numerosAjoute: s.numeros
-          .filter((n) => !oldNumeros.has(n.numero))
-          .map((n) => n.numero),
+        numerosAjoute: s.numeros.filter((n) => !oldNumeros.has(n.numero)).map((n) => n.numero),
         numerosSupprime: referenceModifie.numeros
           .filter((n) => !currentNumeros.has(n.numero))
           .map((n) => n.numero),
       };
 
-      return { ...s, statut: 'modifie', changements };
+      return { ...s, statut: "modifie", changements };
     })
     .sort(sapeurCompare);
 });
@@ -180,8 +154,7 @@ const nbGroupes = computed(() => {
           <tr v-if="!mutations.length">
             <td></td>
             <td colspan="5">
-              Aucun sapeur possédant un numéro rta dans GestSIS n'appartient à
-              un groupe d'alarme.
+              Aucun sapeur possédant un numéro rta dans GestSIS n'appartient à un groupe d'alarme.
             </td>
           </tr>
           <tr
@@ -204,7 +177,7 @@ const nbGroupes = computed(() => {
                 'text-warning': e.changements.date_naissance,
               }"
             >
-              {{ new Date(e.date_naissance).toLocaleDateString('fr-CH') }}
+              {{ new Date(e.date_naissance).toLocaleDateString("fr-CH") }}
             </td>
             <td
               :class="{
@@ -232,40 +205,28 @@ const nbGroupes = computed(() => {
               :key="'n-' + n + '-' + i"
               :class="{
                 'text-success':
-                  e.statut == 'modifie' &&
-                  e.changements.numerosAjoute.includes(n.numero),
+                  e.statut == 'modifie' && e.changements.numerosAjoute.includes(n.numero),
                 'text-danger':
-                  e.statut == 'modifie' &&
-                  e.changements.numerosSupprime.includes(n.numero),
+                  e.statut == 'modifie' && e.changements.numerosSupprime.includes(n.numero),
               }"
             >
               {{ n.numero }}
             </td>
-            <td
-              v-for="n in nbNumero - e.numeros.length"
-              :key="'n-comp-' + n"
-            ></td>
+            <td v-for="n in nbNumero - e.numeros.length" :key="'n-comp-' + n"></td>
             <td
               v-for="g in e.groupes"
               :key="'g-' + g.no"
               :class="{
-                'text-success':
-                  e.statut == 'modifie' &&
-                  e.changements.groupesAjoute.includes(g.no),
+                'text-success': e.statut == 'modifie' && e.changements.groupesAjoute.includes(g.no),
                 'text-warning':
-                  e.statut == 'modifie' &&
-                  e.changements.groupesModifie.includes(g.no),
+                  e.statut == 'modifie' && e.changements.groupesModifie.includes(g.no),
                 'text-danger':
-                  e.statut == 'modifie' &&
-                  e.changements.groupesSupprime.includes(g.no),
+                  e.statut == 'modifie' && e.changements.groupesSupprime.includes(g.no),
               }"
             >
               {{ g.no }}
             </td>
-            <td
-              v-for="g in nbGroupes - e.groupes.length"
-              :key="'g-comp-' + g"
-            ></td>
+            <td v-for="g in nbGroupes - e.groupes.length" :key="'g-comp-' + g"></td>
           </tr>
         </tbody>
       </table>

@@ -3,33 +3,32 @@ const model = defineModel({
   type: Array,
   default: [],
 });
-const { label, baseOption, options, valueKey, displayKey, formatter } =
-  defineProps({
-    label: {
-      type: String,
-      default: () => '',
-    },
-    baseOption: {
-      type: String,
-      default: '',
-    },
-    options: {
-      type: Array,
-      required: true,
-    },
-    valueKey: {
-      type: String,
-      default: 'id',
-    },
-    displayKey: {
-      type: String,
-      default: 'designation',
-    },
-    formatter: {
-      type: Function,
-      default: null,
-    },
-  });
+const { label, baseOption, options, valueKey, displayKey, formatter } = defineProps({
+  label: {
+    type: String,
+    default: () => "",
+  },
+  baseOption: {
+    type: String,
+    default: "",
+  },
+  options: {
+    type: Array,
+    required: true,
+  },
+  valueKey: {
+    type: String,
+    default: "id",
+  },
+  displayKey: {
+    type: String,
+    default: "designation",
+  },
+  formatter: {
+    type: Function,
+    default: null,
+  },
+});
 </script>
 
 <template>

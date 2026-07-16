@@ -1,9 +1,9 @@
 <script setup>
-import { ref, reactive } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useEmplacementStore } from '../../stores/materiel/Emplacement.js';
-import SelectEmplacement from '../materiel/SelectEmplacement.vue';
-import SelectCouleur from '../materiel/SelectCouleur.vue';
+import { ref, reactive } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useEmplacementStore } from "../../stores/materiel/Emplacement.js";
+import SelectEmplacement from "../materiel/SelectEmplacement.vue";
+import SelectCouleur from "../materiel/SelectCouleur.vue";
 
 const { data } = defineProps({
   data: {
@@ -25,9 +25,9 @@ const form = reactive({
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  ((form.id || 0) === 0
-    ? emplacementStore.addEmplacement
-    : emplacementStore.updateEmplacement)(form)
+  ((form.id || 0) === 0 ? emplacementStore.addEmplacement : emplacementStore.updateEmplacement)(
+    form,
+  )
     .then(closeModal)
     .catch(
       (errors) =>
@@ -41,9 +41,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} un emplacement
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un emplacement</h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
@@ -57,16 +55,8 @@ const save = async () => {
           :class="{ 'is-invalid': errors['designation'] }"
         />
       </div>
-      <base-checkbox
-        v-model="form.est_etiquete"
-        label="Est etiqueté"
-        class="mb-3"
-      />
-      <base-checkbox
-        v-model="form.est_compartimentable"
-        label="Est compartimenté"
-        class="mb-3"
-      />
+      <base-checkbox v-model="form.est_etiquete" label="Est etiqueté" class="mb-3" />
+      <base-checkbox v-model="form.est_compartimentable" label="Est compartimenté" class="mb-3" />
       <base-checkbox v-model="form.statut" label="Actif" class="mb-3" />
       <select-emplacement
         v-model="form.parent_id"
@@ -88,11 +78,9 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
       <button type="sumit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

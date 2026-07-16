@@ -1,12 +1,12 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
-import { useEmplacementStore } from '../../stores/materiel/Emplacement';
-import { groupedByData, indexedData } from '../../tools/index.js';
-import TagCouleur from './TagCouleur.vue';
-import permissions from '../../composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
-import { useModalStore } from '../../stores/common/Modal';
+import { computed, ref } from "vue";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
+import { useEmplacementStore } from "../../stores/materiel/Emplacement";
+import { groupedByData, indexedData } from "../../tools/index.js";
+import TagCouleur from "./TagCouleur.vue";
+import permissions from "../../composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
+import { useModalStore } from "../../stores/common/Modal";
 
 const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
@@ -19,13 +19,13 @@ const hasConfigPermission = useHasPermission(permissions.MATERIEL.CONFIG);
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
 const emplacementsGroupedByParent = computed(() =>
-  groupedByData(emplacementStore.liste, 'parent_id'),
+  groupedByData(emplacementStore.liste, "parent_id"),
 );
 
-const filtre = ref('');
+const filtre = ref("");
 
 const computedData = computed(() => {
-  const lowerFilter = filtre.value.toLowerCase().trim(' ');
+  const lowerFilter = filtre.value.toLowerCase().trim(" ");
   const filteredIds = emplacementStore.liste
     .filter((e) => e.statut)
     .filter((e) => e.designation.toLowerCase().includes(lowerFilter))
@@ -41,9 +41,10 @@ const computedData = computed(() => {
     });
 
   const recursive = (parent_id, level = 0) => {
-    return [...(emplacementsGroupedByParent.value[parent_id] ?? [])].flatMap(
-      (elem) => [{ ...elem, level }, ...recursive(elem.id, level + 1)],
-    );
+    return [...(emplacementsGroupedByParent.value[parent_id] ?? [])].flatMap((elem) => [
+      { ...elem, level },
+      ...recursive(elem.id, level + 1),
+    ]);
   };
 
   return recursive(null).filter((e) => filteredIds.includes(e.id));
@@ -52,7 +53,7 @@ const computedData = computed(() => {
 const { showModal } = useModalStore();
 const ajoutEmplacement = () =>
   showModal({
-    component: 'ModalEmplacement',
+    component: "ModalEmplacement",
     data: {},
   });
 </script>
@@ -110,10 +111,5 @@ const ajoutEmplacement = () =>
       </router-link>
     </ul>
   </div>
-  <button
-    class="btn btn-sm btn-outline-primary w-100"
-    @click="ajoutEmplacement"
-  >
-    Ajouter
-  </button>
+  <button class="btn btn-sm btn-outline-primary w-100" @click="ajoutEmplacement">Ajouter</button>
 </template>

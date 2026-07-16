@@ -1,7 +1,7 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useGroupeStore } from '../../stores/groupe/Groupe.js';
+import { computed, ref, watchEffect } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useGroupeStore } from "../../stores/groupe/Groupe.js";
 
 const sapeurStore = useSapeurStore();
 const groupeStore = useGroupeStore();
@@ -22,14 +22,14 @@ const computedGroupes = computed(() => {
     return {
       id: groupe.id,
       designation: g?.designation,
-      numero: g?.no || '',
+      numero: g?.no || "",
     };
   });
 });
 
 const fields = [
-  { title: 'Numéro', key: 'numero' },
-  { title: 'Désignation', key: 'designation' },
+  { title: "Numéro", key: "numero" },
+  { title: "Désignation", key: "designation" },
 ];
 </script>
 

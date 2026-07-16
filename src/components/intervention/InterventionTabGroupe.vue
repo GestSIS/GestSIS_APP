@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useInterventionStore } from '../../stores/intervention/Intervention.js';
-import { useGroupeStore } from '../../stores/groupe/Groupe.js';
-import useHasPermission from '../../composables/usePermission.js';
-import permissions from '/src/composables/permissions.js';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import { useGroupeStore } from "../../stores/groupe/Groupe.js";
+import useHasPermission from "../../composables/usePermission.js";
+import permissions from "/src/composables/permissions.js";
 
 const interventionStore = useInterventionStore();
 const groupeStore = useGroupeStore();
@@ -24,10 +24,7 @@ watchEffect(async () => {
   loading.value = true;
   await interventionStore.fetchInterventionGroupes(id);
   selected.value = Object.fromEntries(
-    interventionStore.active.groupes.map((g) => [
-      g.no + '_' + g.designation,
-      true,
-    ]),
+    interventionStore.active.groupes.map((g) => [g.no + "_" + g.designation, true]),
   );
   loading.value = false;
 });
@@ -42,16 +39,14 @@ const groupes = computed(() => {
   return [...selectedGroupes, ...availableGroupes]
     .map((g) => ({
       ...g,
-      pseudo_id: g.no + '_' + g.designation,
-      label: g.no + ' ' + g.designation,
+      pseudo_id: g.no + "_" + g.designation,
+      label: g.no + " " + g.designation,
     }))
     .sort((g1, g2) => g1.no - g2.no);
 });
 
 // TODO: Check si intervention pas déjà imputé
-const hasEditPermission = useHasPermission(
-  permissions.INTERVENTION.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
 const awn = useNotification();
 
@@ -65,21 +60,19 @@ const editGroupe = async (groupeId) => {
     ? interventionStore.addInterventionGroupes([groupe])
     : interventionStore.removeInterventionGroupes([groupe.id])
   )
-    .then(() => awn.success('Modifications enregistrées'))
-    .catch((err) =>
-      awn.alert(err.message ?? "Erreur lors de l'enregistrement"),
-    );
+    .then(() => awn.success("Modifications enregistrées"))
+    .catch((err) => awn.alert(err.message ?? "Erreur lors de l'enregistrement"));
 };
 
 const fields = [
   {
-    title: 'Groupe',
-    key: 'label',
+    title: "Groupe",
+    key: "label",
   },
   {
-    title: 'Alarmé',
-    slot: 'check',
-    columnClass: 'ps-4',
+    title: "Alarmé",
+    slot: "check",
+    columnClass: "ps-4",
   },
 ];
 </script>
@@ -106,10 +99,7 @@ const fields = [
               class="form-check-input"
               @change="editGroupe(rowData.pseudo_id)"
             />
-            <label
-              class="form-check-label"
-              :for="'v-' + rowData.pseudo_id"
-            ></label>
+            <label class="form-check-label" :for="'v-' + rowData.pseudo_id"></label>
           </template>
         </base-table>
       </div>

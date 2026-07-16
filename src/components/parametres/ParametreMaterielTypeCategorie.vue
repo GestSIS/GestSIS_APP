@@ -1,12 +1,12 @@
 <script setup>
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
-import { computed } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { groupedByData, indexedData } from '../../tools/index.js';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
-import TagCouleur from '../materiel/TagCouleur.vue';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
+import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { groupedByData, indexedData } from "../../tools/index.js";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
+import TagCouleur from "../materiel/TagCouleur.vue";
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const couleurStore = useCouleurStore();
 const typeStore = useMaterielTypeStore();
@@ -19,20 +19,16 @@ await Promise.all([
 ]);
 
 const categories = computed(() =>
-  categorieStore.liste.sort((a, b) =>
-    a.designation.localeCompare(b.designation),
-  ),
+  categorieStore.liste.slice().sort((a, b) => a.designation.localeCompare(b.designation)),
 );
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedTypes = computed(() =>
   groupedByData(
-    typeStore.liste.sort((a, b) => a.designation.localeCompare(b.designation)),
-    'materiel_categorie_id',
+    typeStore.liste.slice().sort((a, b) => a.designation.localeCompare(b.designation)),
+    "materiel_categorie_id",
   ),
 );
-const indexedCategories = computed(() =>
-  groupedByData(categorieStore.liste, 'parent_id'),
-);
+const indexedCategories = computed(() => groupedByData(categorieStore.liste, "parent_id"));
 
 const computedData = computed(() => {
   let data = [];
@@ -41,22 +37,21 @@ const computedData = computed(() => {
     categories.forEach((c) => {
       data.push({
         ...c,
-        globalId: 'c' + c.id,
+        globalId: "c" + c.id,
         estCategorie: true,
         level: level,
-        tag: 'tag',
+        tag: "tag",
       });
 
-      if (indexedCategories.value[c.id])
-        recursive(indexedCategories.value[c.id], level + 1);
+      if (indexedCategories.value[c.id]) recursive(indexedCategories.value[c.id], level + 1);
 
       indexedTypes.value[c.id]?.forEach((t) => {
         data.push({
           ...t,
-          globalId: 't' + t.id,
+          globalId: "t" + t.id,
           estCategorie: false,
           level: level + 1,
-          tag: 'shirt',
+          tag: "shirt",
         });
       });
     });
@@ -72,39 +67,34 @@ const computedData = computed(() => {
 const { showModal, confirm } = useModalStore();
 const awn = useNotification();
 
-const ajoutCategorie = () =>
-  showModal({ component: 'ModalMaterielCategorie', data: {} });
-const ajoutType = () => showModal({ component: 'ModalMaterielType', data: {} });
+const ajoutCategorie = () => showModal({ component: "ModalMaterielCategorie", data: {} });
+const ajoutType = () => showModal({ component: "ModalMaterielType", data: {} });
 const update = (elem) =>
   showModal({
-    component: elem.estCategorie
-      ? 'ModalMaterielCategorie'
-      : 'ModalMaterielType',
+    component: elem.estCategorie ? "ModalMaterielCategorie" : "ModalMaterielType",
     data: { ...elem },
   });
 
 const remove = (elem) => {
-  const designation = elem.estCategorie ? 'cette catégorie' : 'ce type';
+  const designation = elem.estCategorie ? "cette catégorie" : "ce type";
   confirm(
     `Voulez-vous vraiment supprimer ${designation} ?`,
-    'Attention, la suppression de cet élément est irréversible !',
+    "Attention, la suppression de cet élément est irréversible !",
   ).then(() =>
-    (elem.estCategorie
-      ? categorieStore.removeMaterielCategorie
-      : typeStore.removeMaterielType)(elem.id).catch((res) =>
-      awn.alert(res.message || 'Erreur lors de la suppression'),
-    ),
+    (elem.estCategorie ? categorieStore.removeMaterielCategorie : typeStore.removeMaterielType)(
+      elem.id,
+    ).catch((res) => awn.alert(res.message || "Erreur lors de la suppression")),
   );
 };
 
 const fields = [
-  { title: 'Designation', slot: 'type' },
-  { title: 'Couleur', slot: 'couleur' },
-  { title: 'Attribuable', type: Boolean, key: 'est_attribuable' },
-  { title: 'Taille', type: Boolean, key: 'est_taillee' },
-  { title: 'Numéroté', type: Boolean, key: 'est_numerote' },
-  { title: 'Lavable', type: Boolean, key: 'est_lavable' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Designation", slot: "type" },
+  { title: "Couleur", slot: "couleur" },
+  { title: "Attribuable", type: Boolean, key: "est_attribuable" },
+  { title: "Taille", type: Boolean, key: "est_taillee" },
+  { title: "Numéroté", type: Boolean, key: "est_numerote" },
+  { title: "Lavable", type: Boolean, key: "est_lavable" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -112,19 +102,10 @@ const fields = [
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title me-auto">Catégories et type de matériel</h3>
-      <button
-        type="button"
-        class="btn btn-primary me-2"
-        @click="ajoutCategorie"
-      >
+      <button type="button" class="btn btn-primary me-2" @click="ajoutCategorie">
         Ajouter une catégorie
       </button>
-      <button
-        type="button"
-        class="btn btn-primary"
-        :selectable="true"
-        @click="ajoutType"
-      >
+      <button type="button" class="btn btn-primary" :selectable="true" @click="ajoutType">
         Ajouter un type de matériel
       </button>
     </div>
@@ -156,25 +137,15 @@ const fields = [
         </template>
         <template #couleur="{ rowData }">
           <template v-if="rowData.estCategorie">
-            <tag-couleur :couleur="indexedCouleurs[rowData.couleur_id]">
-              A
-            </tag-couleur>
+            <tag-couleur :couleur="indexedCouleurs[rowData.couleur_id]"> A </tag-couleur>
             {{ indexedCouleurs[rowData.couleur_id]?.nom }}
           </template>
         </template>
         <template #actions="{ rowData }">
-          <button
-            type="button"
-            class="btn btn-outline-primary border-0"
-            @click="update(rowData)"
-          >
+          <button type="button" class="btn btn-outline-primary border-0" @click="update(rowData)">
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
-          <button
-            type="button"
-            class="btn btn-outline-danger border-0"
-            @click="remove(rowData)"
-          >
+          <button type="button" class="btn btn-outline-danger border-0" @click="remove(rowData)">
             <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>
         </template>

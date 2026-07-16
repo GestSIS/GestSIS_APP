@@ -1,7 +1,7 @@
 <script setup>
-import { reactive, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { reactive, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 
 const { data } = defineProps({
   data: {
@@ -21,11 +21,11 @@ const { closeModal } = useModalStore();
 const presetDebutFin = () => {
   const annee = parseInt(form.annee);
   if (!form.designation) {
-    form.designation = 'Exercice comptable ' + annee;
+    form.designation = "Exercice comptable " + annee;
   }
   if (!form.debut) {
-    form.debut = annee + '-01-01';
-    form.fin = annee + '-12-31';
+    form.debut = annee + "-01-01";
+    form.fin = annee + "-12-31";
   }
 };
 
@@ -43,9 +43,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} un exercice comptable
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un exercice comptable</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -104,18 +102,14 @@ const save = async () => {
             :true-value="1"
             :false-value="0"
           />
-          <label class="form-check-label" for="exercice-comptable-boucle-modal"
-            >Bouclé</label
-          >
+          <label class="form-check-label" for="exercice-comptable-boucle-modal">Bouclé</label>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

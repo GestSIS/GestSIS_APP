@@ -1,6 +1,6 @@
 <script setup>
-import { computed } from 'vue';
-import { useAuthStore } from '../../stores/auth/Auth';
+import { computed } from "vue";
+import { useAuthStore } from "../../stores/auth/Auth";
 
 const { routes } = defineProps({
   routes: {
@@ -16,10 +16,7 @@ const permissions = computed(() => authStore.sis.permissions);
 
 const filteredRoutes = computed(() =>
   routes.filter(
-    (r) =>
-      isAdmin.value ||
-      r.permission === undefined ||
-      permissions.value.includes(r.permission),
+    (r) => isAdmin.value || r.permission === undefined || permissions.value.includes(r.permission),
   ),
 );
 </script>

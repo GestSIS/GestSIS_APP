@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useVehiculeStore } from '../../stores/intervention/Vehicule.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
+import { computed, ref, watchEffect } from "vue";
+import { useVehiculeStore } from "../../stores/intervention/Vehicule.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useStatistiqueStore } from "../../stores/statistique/Statistique.js";
 
 const vehiculeStore = useVehiculeStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -14,15 +14,13 @@ await exerciceComptableStore.fetchExercicesComptables();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await statistiqueStore.fetchStatistiqueVehicule(
-    exerciceComptableStore.activeId,
-  );
+  await statistiqueStore.fetchStatistiqueVehicule(exerciceComptableStore.activeId);
   loading.value = false;
 });
 const allVehicules = ref(false);
 const fields = [
-  { title: 'Véhicule', key: 'designation' },
-  { title: "Nombre d'interventions", key: 'nb' },
+  { title: "Véhicule", key: "designation" },
+  { title: "Nombre d'interventions", key: "nb" },
 ];
 
 const vehicules = computed(() => vehiculeStore.liste);
@@ -30,8 +28,7 @@ const vehiculesIntervention = computed(() => statistiqueStore.vehicules);
 const occurences = computed(() =>
   vehiculesIntervention.value.reduce(
     (prev, vehicule) => (
-      (prev[vehicule.vehicule_id] =
-        (prev[vehicule.vehicule_id] ?? 0) + parseInt(vehicule.nb)),
+      (prev[vehicule.vehicule_id] = (prev[vehicule.vehicule_id] ?? 0) + parseInt(vehicule.nb)),
       prev
     ),
     {},

@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref } from 'vue';
-import permissions from '../../composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
-import SapeurService from '../../services/SapeurService';
+import { computed, ref } from "vue";
+import permissions from "../../composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
+import SapeurService from "../../services/SapeurService";
 
 const { id } = defineProps({
   id: {
@@ -13,19 +13,17 @@ const { id } = defineProps({
 
 const listeSapeurs = (
   await SapeurService.getSapeurs({
-    'avec-materiel': true,
+    "avec-materiel": true,
   })
 ).map((s) => ({ ...s, nom_prenom: `${s.nom} ${s.prenom}` }));
 
-const hasSapeurEditPermission = useHasPermission(
-  permissions.SAPEUR.MODIFICATION,
-);
+const hasSapeurEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
-const filtre = ref('');
+const filtre = ref("");
 
 const sapeurs = computed(() =>
   listeSapeurs.filter((s) =>
-    s.nom_prenom.toLowerCase().includes(filtre.value.toLowerCase().trim(' ')),
+    s.nom_prenom.toLowerCase().includes(filtre.value.toLowerCase().trim(" ")),
   ),
 );
 </script>

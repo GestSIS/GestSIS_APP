@@ -1,17 +1,14 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getTraitements() {
-    return Api.api().get('/intervention-traitement');
+    return Api.api().get("/intervention-traitement");
   },
   addTraitement(traitement) {
-    return Api.api().post('/intervention-traitement', traitement);
+    return Api.api().post("/intervention-traitement", traitement);
   },
   updateTraitement(traitement) {
-    return Api.api().put(
-      `/intervention-traitement/${traitement.id}`,
-      traitement
-    );
+    return Api.api().put(`/intervention-traitement/${traitement.id}`, traitement);
   },
   removeTraitement(traitement_id) {
     return Api.api().delete(`/intervention-traitement/${traitement_id}`);

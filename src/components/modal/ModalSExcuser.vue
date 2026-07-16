@@ -1,10 +1,10 @@
 <script setup>
-import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
-import { useExcuseParamStore } from '../../stores/exercice/ExcuseParam.js';
-import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useModalStore } from '../../stores/common/Modal';
+import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
+import { useExcuseParamStore } from "../../stores/exercice/ExcuseParam.js";
+import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useModalStore } from "../../stores/common/Modal";
 
 const { callback, data } = defineProps({
   callback: {
@@ -28,16 +28,14 @@ const excuse = data.exercices.find((e) => e.exercice_id === data.exerciceId);
 const activeExcuse = ref({
   excuse_statut: 0,
   justificatif_file: null,
-  remarque: excuse?.remarque ?? '',
+  remarque: excuse?.remarque ?? "",
   exercice_id: excuse?.exercice_id ?? 0,
-  justification: excuse?.justification ?? '',
+  justification: excuse?.justification ?? "",
   excuse_type_id: excuse?.excuse_type_id ?? 0,
 });
 
 const excuseParams = computed(() => excuseParamStore.params);
-const excuseTypes = computed(() =>
-  excuseTypeStore.liste.filter((e) => e.statut == 1),
-);
+const excuseTypes = computed(() => excuseTypeStore.liste.filter((e) => e.statut == 1));
 
 const activeExercice = computed(() =>
   excuses.value.find((e) => e.exercice_id === activeExcuse.value.exercice_id),
@@ -71,14 +69,14 @@ const validate = () => {
     !estDansLeDelai(activeExercice.value?.date)
   ) {
     closeModal();
-    awn.warning('Excuse non-enregistrée');
+    awn.warning("Excuse non-enregistrée");
     return;
   }
 
   infosStore
     .addMonExcuse(activeExcuse.value)
     .then(() => {
-      awn.success('Excuse enregistrée');
+      awn.success("Excuse enregistrée");
       closeModal();
     })
     .catch((err) => {
@@ -88,7 +86,7 @@ const validate = () => {
 };
 const close = () => {
   closeModal();
-  awn.warning('Excuse non enregistrée');
+  awn.warning("Excuse non enregistrée");
 };
 </script>
 
@@ -151,9 +149,7 @@ const close = () => {
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['remarque'] }"
           ></textarea>
-          <div v-if="errors['remarque']" class="invalid-feedback">
-            Trop long
-          </div>
+          <div v-if="errors['remarque']" class="invalid-feedback">Trop long</div>
         </div>
         <div class="mb-3">
           <label>Justificatif</label>
@@ -169,9 +165,7 @@ const close = () => {
     </div>
     <div class="modal-footer">
       <button type="submit" class="btn btn-outline-primary">Valider</button>
-      <button type="button" class="btn btn-outline-secondary" @click="close">
-        Annuler
-      </button>
+      <button type="button" class="btn btn-outline-secondary" @click="close">Annuler</button>
     </div>
   </form>
 </template>

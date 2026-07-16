@@ -1,21 +1,21 @@
 <script setup>
-import { ref } from 'vue';
-import { useVehiculeStore } from '../../stores/intervention/Vehicule.js';
-import { useMaterielStore } from '../../stores/intervention/Materiel.js';
-import { useMissionStore } from '../../stores/intervention/Mission.js';
-import { useStatFederalStore } from '../../stores/intervention/StatFederal.js';
-import { useStatInterventionStore } from '../../stores/intervention/StatIntervention.js';
-import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
-import { useInterventionTraitementStore } from '../../stores/intervention/InterventionTraitement.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useTelephoneStore } from '../../stores/sapeur/Telephone.js';
-import ParametreMission from './ParametreMission.vue';
-import ParametreTelephone from './ParametreTelephone.vue';
-import ParametreMateriel from './ParametreMateriel.vue';
-import ParametreVehicule from './ParametreVehicule.vue';
-import ParametreTraitement from './ParametreTraitement.vue';
-import ParametreTypeIntervention from './ParametreTypeIntervention.vue';
-import ParametreStatFederal from './ParametreStatFederal.vue';
+import { ref } from "vue";
+import { useVehiculeStore } from "../../stores/intervention/Vehicule.js";
+import { useMaterielStore } from "../../stores/intervention/Materiel.js";
+import { useMissionStore } from "../../stores/intervention/Mission.js";
+import { useStatFederalStore } from "../../stores/intervention/StatFederal.js";
+import { useStatInterventionStore } from "../../stores/intervention/StatIntervention.js";
+import { useTypeInterventionStore } from "../../stores/intervention/TypeIntervention.js";
+import { useInterventionTraitementStore } from "../../stores/intervention/InterventionTraitement.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useTelephoneStore } from "../../stores/sapeur/Telephone.js";
+import ParametreMission from "./ParametreMission.vue";
+import ParametreTelephone from "./ParametreTelephone.vue";
+import ParametreMateriel from "./ParametreMateriel.vue";
+import ParametreVehicule from "./ParametreVehicule.vue";
+import ParametreTraitement from "./ParametreTraitement.vue";
+import ParametreTypeIntervention from "./ParametreTypeIntervention.vue";
+import ParametreStatFederal from "./ParametreStatFederal.vue";
 
 const vehiculeStore = useVehiculeStore();
 const materielStore = useMaterielStore();
@@ -48,7 +48,7 @@ await Promise.all([
   loadTraitement,
   loadUnite,
 ]);
-const tab = ref('vehicule');
+const tab = ref("vehicule");
 </script>
 
 <template>
@@ -58,11 +58,7 @@ const tab = ref('vehicule');
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres interventions</h3>
         </div>
-        <nav
-          class="nav flex-column nav-pills"
-          role="tablist"
-          aria-orientation="vertical"
-        >
+        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
           <a
             class="nav-link"
             :class="{ active: tab === 'vehicule' }"

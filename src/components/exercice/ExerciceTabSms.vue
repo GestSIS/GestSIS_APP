@@ -1,15 +1,15 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useExerciceStore } from '../../stores/exercice/Exercice.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useExerciceStore } from "../../stores/exercice/Exercice.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const { id } = defineProps({
   id: {
     type: String,
-    default: 'new',
+    default: "new",
   },
 });
 
@@ -18,10 +18,7 @@ const exerciceStore = useExerciceStore();
 const loading = ref(false);
 watchEffect(async () => {
   loading.value = true;
-  await Promise.all([
-    exerciceStore.fetchExercice(id),
-    exerciceStore.fetchExerciceSms(id),
-  ]);
+  await Promise.all([exerciceStore.fetchExercice(id), exerciceStore.fetchExerciceSms(id)]);
   loading.value = false;
 });
 
@@ -31,7 +28,7 @@ const smsListe = computed(() =>
     ...sms,
     date_programme: sms.date_programme.slice(0, 19),
     date_envoie: sms.date_envoie.slice(0, 19),
-    numeros: sms.sms_numeros.map((s) => s.numero).join('; '),
+    numeros: sms.sms_numeros.map((s) => s.numero).join("; "),
   })),
 );
 const hasSmsEnvoiePermission = useHasPermission(permissions.SMS.ENVOIE);
@@ -41,14 +38,12 @@ const awn = useNotification();
 
 const sendSms = () => {
   if (!hasSmsEnvoiePermission.value) {
-    awn.alert(
-      "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS",
-    );
+    awn.alert("Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS");
     return;
   }
 
   showModal({
-    component: 'ModalSmsExercice',
+    component: "ModalSmsExercice",
     size: 2,
     data: activeExerciceData.value,
   });
@@ -56,26 +51,26 @@ const sendSms = () => {
 
 const fields = [
   {
-    title: 'Date envoie',
-    key: 'date_programme',
-    titleClass: 'align-middle',
-    type: 'datetime',
+    title: "Date envoie",
+    key: "date_programme",
+    titleClass: "align-middle",
+    type: "datetime",
   },
   {
-    title: 'Programmé le',
-    key: 'date_envoie',
-    titleClass: 'align-middle',
-    type: 'datetime',
+    title: "Programmé le",
+    key: "date_envoie",
+    titleClass: "align-middle",
+    type: "datetime",
   },
   {
-    title: 'Message',
-    key: 'message',
-    type: 'multiline',
+    title: "Message",
+    key: "message",
+    type: "multiline",
   },
   {
-    title: 'Numéros',
-    key: 'numeros',
-    type: 'multiline',
+    title: "Numéros",
+    key: "numeros",
+    type: "multiline",
   },
 ];
 </script>

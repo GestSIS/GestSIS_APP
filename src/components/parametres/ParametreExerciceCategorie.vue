@@ -1,37 +1,36 @@
 <script setup>
-import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { computed } from 'vue';
-import useNotification from '../../composables/useNotification.js';
+import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
 
 const exerciceCategorieStore = useExerciceCategorieStore();
 await exerciceCategorieStore.fetchExerciceCategories();
 
 const fields = [
-  { title: 'Tri', key: 'tri' },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Durée de base [min]', key: 'duree_base' },
-  { title: 'Amendable', key: 'amendable', type: Boolean },
-  { title: 'Actif', key: 'statut', type: Boolean },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Tri", key: "tri" },
+  { title: "Désignation", key: "designation" },
+  { title: "Durée de base [min]", key: "duree_base" },
+  { title: "Amendable", key: "amendable", type: Boolean },
+  { title: "Actif", key: "statut", type: Boolean },
+  { title: "Actions", slot: "actions" },
 ];
 const listeCategorie = computed(() =>
-  exerciceCategorieStore.liste.sort((a, b) => a.tri - b.tri),
+  exerciceCategorieStore.liste.slice().sort((a, b) => a.tri - b.tri),
 );
 
 const { showModal } = useModalStore();
 const awn = useNotification();
-const ajoutCategorie = () =>
-  showModal({ component: 'ModalExerciceCategorie', data: {} });
+const ajoutCategorie = () => showModal({ component: "ModalExerciceCategorie", data: {} });
 const updateCategorie = (categorie) =>
   showModal({
-    component: 'ModalExerciceCategorie',
+    component: "ModalExerciceCategorie",
     data: { ...categorie },
   });
 const deleteCategorie = (categorie) =>
   exerciceCategorieStore
     .removeExerciceCategorie(categorie.id)
-    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
 </script>
 
 <template>

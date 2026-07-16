@@ -1,9 +1,9 @@
 <script setup>
-import { usePhaseTypeStore } from '../../stores/intervention/PhaseType.js';
-import { useInterventionStore } from '../../stores/intervention/Intervention.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { DateTime } from 'luxon';
-import { computed, reactive, ref } from 'vue';
+import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
+import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { DateTime } from "luxon";
+import { computed, reactive, ref } from "vue";
 
 const { data } = defineProps({
   data: {
@@ -37,7 +37,7 @@ if (form.debut === null && form.id) {
 const { closeModal } = useModalStore();
 
 const roundTime = (time, minutesToRound) => {
-  let [hours, minutes] = time.split(':');
+  let [hours, minutes] = time.split(":");
   hours = parseInt(hours);
   minutes = parseInt(minutes);
 
@@ -45,19 +45,19 @@ const roundTime = (time, minutesToRound) => {
   time = hours * 60 + minutes;
 
   let rounded = Math.round(time / minutesToRound) * minutesToRound;
-  let rHr = '' + Math.floor(rounded / 60);
-  let rMin = '' + (rounded % 60);
+  let rHr = "" + Math.floor(rounded / 60);
+  let rMin = "" + (rounded % 60);
 
-  return rHr.padStart(2, '0') + ':' + rMin.padStart(2, '0');
+  return rHr.padStart(2, "0") + ":" + rMin.padStart(2, "0");
 };
 const roundHour = () => {
   form.heure = roundTime(form.heure, 15);
 };
 const save = async () => {
   if (!form.heure || !form.date) {
-    errors.value = { ...errors.value, debut: 'Données invalide' };
+    errors.value = { ...errors.value, debut: "Données invalide" };
   }
-  form.debut = form.date + ' ' + form.heure.slice(0, 5);
+  form.debut = form.date + " " + form.heure.slice(0, 5);
 
   try {
     if (form.id) {
@@ -81,9 +81,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} une phase
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} une phase</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -142,11 +140,9 @@ const save = async () => {
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

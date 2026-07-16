@@ -1,8 +1,8 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { computed, reactive, ref } from "vue";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const { data } = defineProps({
   data: {
@@ -15,7 +15,7 @@ const errors = ref({});
 const form = reactive({
   ...data,
 });
-import { useUniteStore } from '../../stores/common/Unite.js';
+import { useUniteStore } from "../../stores/common/Unite.js";
 
 const fonctionStore = useFonctionStore();
 const imputationStore = useImputationStore();
@@ -27,9 +27,9 @@ const unites = computed(() => uniteStore.liste);
 const { closeModal } = useModalStore();
 
 const save = () =>
-  (form?.id
-    ? imputationStore.updateFraisIndemniteAnnuel
-    : imputationStore.addFraisIndemniteAnnuel)(form)
+  (form?.id ? imputationStore.updateFraisIndemniteAnnuel : imputationStore.addFraisIndemniteAnnuel)(
+    form,
+  )
     .then(closeModal)
     .catch((err) => (errors.value = err));
 </script>
@@ -38,10 +38,8 @@ const save = () =>
   <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
-        {{
-          form.type == 'frais' ? 'un frais annuel' : 'une indemnité annuelle'
-        }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
+        {{ form.type == "frais" ? "un frais annuel" : "une indemnité annuelle" }}
       </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
@@ -89,11 +87,9 @@ const save = () =>
       />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

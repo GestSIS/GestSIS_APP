@@ -1,12 +1,12 @@
 <script setup>
-import ParametreMaterielTypeCategorie from './ParametreMaterielTypeCategorie.vue';
-import ParametreMaterielCouleur from './ParametreMaterielCouleur.vue';
-import ParametreMaterielEmplacement from './ParametreMaterielEmplacement.vue';
-import ParametreBatterieType from './ParametreBatterieType.vue';
-import ParametreTuyauDiametre from './ParametreTuyauDiametre.vue';
-import { ref } from 'vue';
+import ParametreMaterielTypeCategorie from "./ParametreMaterielTypeCategorie.vue";
+import ParametreMaterielCouleur from "./ParametreMaterielCouleur.vue";
+import ParametreMaterielEmplacement from "./ParametreMaterielEmplacement.vue";
+import ParametreBatterieType from "./ParametreBatterieType.vue";
+import ParametreTuyauDiametre from "./ParametreTuyauDiametre.vue";
+import { ref } from "vue";
 
-const tab = ref('categorie');
+const tab = ref("categorie");
 </script>
 
 <template>
@@ -16,11 +16,7 @@ const tab = ref('categorie');
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres matériel personnel</h3>
         </div>
-        <nav
-          class="nav flex-column nav-pills"
-          role="tablist"
-          aria-orientation="vertical"
-        >
+        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
           <a
             class="nav-link"
             :class="{ active: tab === 'categorie' }"

@@ -1,16 +1,16 @@
 <script setup>
-import { computed, ref } from 'vue';
-import useNotification from '../composables/useNotification.js';
-import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
-import { useMedecinStore } from '../stores/controleMedical/Medecin.js';
-import { useControleMedicalTypeStore } from '../stores/controleMedical/ControleMedicalType.js';
-import { useModalStore } from '../stores/common/Modal';
-import permissions from '../composables/permissions.js';
+import { computed, ref } from "vue";
+import useNotification from "../composables/useNotification.js";
+import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
+import { useMedecinStore } from "../stores/controleMedical/Medecin.js";
+import { useControleMedicalTypeStore } from "../stores/controleMedical/ControleMedicalType.js";
+import { useModalStore } from "../stores/common/Modal";
+import permissions from "../composables/permissions.js";
 
-import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
-import SapeurService from '/src/services/SapeurService.js';
-import useHasPermission from '../composables/usePermission.js';
-import { useControleMedicalStore } from '../stores/controleMedical/ControleMedical.js';
+import ControlesMedicauxService from "/src/services/ControlesMedicauxService.js";
+import SapeurService from "/src/services/SapeurService.js";
+import useHasPermission from "../composables/usePermission.js";
+import { useControleMedicalStore } from "../stores/controleMedical/ControleMedical.js";
 
 const sapeurStore = useSapeurStore();
 const medecinStore = useMedecinStore();
@@ -22,12 +22,7 @@ const loadMedecins = medecinStore.fetchMedecins();
 const loadControlesMedicauxTypes = controleMedicalTypeStore.fetchTypes();
 const loadControlesMedicaux = controleMedicalStore.fetchControlesMedicaux();
 
-await Promise.all([
-  loadSapeurs,
-  loadMedecins,
-  loadControlesMedicauxTypes,
-  loadControlesMedicaux,
-]);
+await Promise.all([loadSapeurs, loadMedecins, loadControlesMedicauxTypes, loadControlesMedicaux]);
 
 const latest = ref(true);
 const loading = ref(false);
@@ -46,26 +41,20 @@ const computedData = computed(() => {
     .map((s) => {
       const sapeur = sapeurs.value.find((sap) => sap.id == s.sapeur_id);
       const age = Math.floor(
-        (now - new Date(sapeur?.date_naissance || 0).getTime()) /
-          1000 /
-          (60 * 60 * 24) /
-          365.25,
+        (now - new Date(sapeur?.date_naissance || 0).getTime()) / 1000 / (60 * 60 * 24) / 365.25,
       );
       return {
         ...s,
         sapeur: sapeur?.nom_prenom,
         sapeurActif: sapeur?.actif,
         age,
-        type: types.value.find((t) => t.id == s.controle_medical_type_id)
-          ?.designation,
+        type: types.value.find((t) => t.id == s.controle_medical_type_id)?.designation,
         medecin: medecins.value.find((m) => m.id == s.medecin_id)?.designation,
       };
     })
     .filter((c) => c.sapeurActif)
     .sort(
-      (a, b) =>
-        a.sapeur.localeCompare(b.sapeur) ||
-        b.consultation.localeCompare(a.consultation),
+      (a, b) => a.sapeur.localeCompare(b.sapeur) || b.consultation.localeCompare(a.consultation),
     );
 
   // Additional filter check
@@ -75,17 +64,15 @@ const computedData = computed(() => {
 
   const index = new Set();
   return data.reduce((acc, e) => {
-    if (!index.has(e.sapeur + '_' + e.controle_medical_type_id)) {
-      index.add(e.sapeur + '_' + e.controle_medical_type_id);
+    if (!index.has(e.sapeur + "_" + e.controle_medical_type_id)) {
+      index.add(e.sapeur + "_" + e.controle_medical_type_id);
       acc.push(e);
     }
     return acc;
   }, []);
 });
 const filteredTypes = computed(() => {
-  const ids = new Set(
-    controlesMedicaux.value.map((e) => e.controle_medical_type_id),
-  );
+  const ids = new Set(controlesMedicaux.value.map((e) => e.controle_medical_type_id));
   return types.value.filter((t) => ids.has(t.id));
 });
 const filteredMedecins = computed(() => {
@@ -136,7 +123,7 @@ const sms = (controleMedicaux) => {
         telephones: telephones.find((t) => t.id == s.id)?.telephones,
       }));
     showModal({
-      component: 'ModalSms',
+      component: "ModalSms",
       size: 1,
       data: sap,
     });
@@ -146,18 +133,18 @@ const email = (controleMedicaux) => {
   const ids = new Set(controleMedicaux.map((c) => c.sapeur_id));
   const sap = sapeurs.value.filter((e) => ids.has(e.id));
 
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href =
-    'mailto:?bcc=' +
+    "mailto:?bcc=" +
     sap
       .map((s) => s?.email)
       .filter((s) => s)
-      .join(', ');
+      .join(", ");
   link.click();
 };
 const supprimer = async (controle) =>
   confirm(
-    'Voulez-vous vraiment supprimer ce contrôle médical ?',
+    "Voulez-vous vraiment supprimer ce contrôle médical ?",
     "Attention, la suppression d'un contrôle est irréversible ! Il vous sera cependant possible d'en ajouter un nouveau'.",
   ).then(() => controleMedicalStore.removeControleMedical(controle.id));
 
@@ -166,11 +153,8 @@ const onRowClass = (dataItem, isSelected) => {
     return;
   }
 
-  if (
-    (dataItem.validite && Date.parse(dataItem.validite) < new Date()) ||
-    !dataItem.accepter
-  ) {
-    return 'table-danger';
+  if ((dataItem.validite && Date.parse(dataItem.validite) < new Date()) || !dataItem.accepter) {
+    return "table-danger";
   }
 };
 const onAnneeFilter = (setFilter, key, value) => {
@@ -182,27 +166,27 @@ const onAnneeFilter = (setFilter, key, value) => {
 };
 
 const fields = [
-  { title: 'Sapeur', key: 'sapeur' },
-  { title: 'Age', key: 'age' },
-  { title: 'Type', key: 'type' },
-  { title: 'Medecin', key: 'medecin' },
-  { title: 'Consultation', key: 'consultation', type: Date },
-  { title: 'Validité', key: 'validite', type: Date },
-  { title: 'Designation', key: 'designation' },
-  { title: 'Accepté', key: 'accepter', type: Boolean },
+  { title: "Sapeur", key: "sapeur" },
+  { title: "Age", key: "age" },
+  { title: "Type", key: "type" },
+  { title: "Medecin", key: "medecin" },
+  { title: "Consultation", key: "consultation", type: Date },
+  { title: "Validité", key: "validite", type: Date },
+  { title: "Designation", key: "designation" },
+  { title: "Accepté", key: "accepter", type: Boolean },
   // { title: 'En cours', key: 'en_cours', type: Boolean },
   {
-    title: 'Doc',
-    key: 'doc',
-    slot: 'doc',
-    titleClass: 'align-middle text-center',
-    columnClass: 'align-middle text-center',
+    title: "Doc",
+    key: "doc",
+    slot: "doc",
+    titleClass: "align-middle text-center",
+    columnClass: "align-middle text-center",
   },
   {
-    title: 'Actions',
-    slot: 'actions',
-    titleClass: 'align-middle text-center',
-    columnClass: 'align-middle text-center',
+    title: "Actions",
+    slot: "actions",
+    titleClass: "align-middle text-center",
+    columnClass: "align-middle text-center",
   },
 ];
 </script>
@@ -221,9 +205,7 @@ const fields = [
               <li class="breadcrumb-item">
                 <router-link :to="{ name: 'accueil' }">Accueil</router-link>
               </li>
-              <li class="breadcrumb-item active" aria-current="page">
-                Contrôles Medicaux
-              </li>
+              <li class="breadcrumb-item active" aria-current="page">Contrôles Medicaux</li>
             </ol>
           </nav>
         </div>
@@ -249,28 +231,18 @@ const fields = [
                 custom
                 :to="'/controles-medicaux/' + selectedItem?.id"
               >
-                <button
-                  :disabled="!selectedItem"
-                  class="btn btn-outline-primary"
-                  @click="navigate"
-                >
+                <button :disabled="!selectedItem" class="btn btn-outline-primary" @click="navigate">
                   Modifier
                 </button>
               </router-link>
               <div class="row">
                 <div class="col-6">
-                  <button
-                    class="btn btn-outline-primary col-12"
-                    @click="sms(filteredData)"
-                  >
+                  <button class="btn btn-outline-primary col-12" @click="sms(filteredData)">
                     SMS
                   </button>
                 </div>
                 <div class="col-6">
-                  <button
-                    class="btn btn-outline-primary col-12"
-                    @click="email(filteredData)"
-                  >
+                  <button class="btn btn-outline-primary col-12" @click="email(filteredData)">
                     Email
                   </button>
                 </div>
@@ -317,9 +289,7 @@ const fields = [
                   base-option="<Type>"
                   :options="filteredTypes"
                   :model-value="filters.controle_medical_type_id"
-                  @update:model-value="
-                    (v) => setFilter('controle_medical_type_id', v)
-                  "
+                  @update:model-value="(v) => setFilter('controle_medical_type_id', v)"
                 />
                 <base-select
                   class="col-md-6"
@@ -340,9 +310,7 @@ const fields = [
                     }))
                   "
                   :model-value="filters.consultation"
-                  @update:model-value="
-                    (v) => onAnneeFilter(setFilter, 'consultation', v)
-                  "
+                  @update:model-value="(v) => onAnneeFilter(setFilter, 'consultation', v)"
                 />
                 <base-select
                   class="col-md-6"
@@ -354,14 +322,10 @@ const fields = [
                     }))
                   "
                   :model-value="filters.validite"
-                  @update:model-value="
-                    (v) => onAnneeFilter(setFilter, 'validite', v)
-                  "
+                  @update:model-value="(v) => onAnneeFilter(setFilter, 'validite', v)"
                 />
                 <div v-if="canReset" class="col-md-6 mt-2">
-                  <button class="btn btn-sm btn-warning w-100" @click="reset">
-                    Réinitialiser
-                  </button>
+                  <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
                 </div>
               </div>
             </div>
@@ -402,10 +366,7 @@ const fields = [
                     }"
                     custom
                   >
-                    <button
-                      class="btn btn-outline-primary border-0"
-                      @click="navigate"
-                    >
+                    <button class="btn btn-outline-primary border-0" @click="navigate">
                       <font-awesome-icon :icon="['far', 'edit']" />
                     </button>
                   </router-link>

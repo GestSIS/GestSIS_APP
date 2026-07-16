@@ -1,42 +1,39 @@
 <script setup>
-import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { computed } from 'vue';
-import useNotification from '../../composables/useNotification.js';
+import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
 
 const excuseTypeStore = useExcuseTypeStore();
 await excuseTypeStore.fetchExcuseTypes();
 
 const fields = [
-  { title: 'Tri', key: 'tri' },
-  { title: 'Abréviation', key: 'abreviation' },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Amende', key: 'amende', type: Boolean },
+  { title: "Tri", key: "tri" },
+  { title: "Abréviation", key: "abreviation" },
+  { title: "Désignation", key: "designation" },
+  { title: "Amende", key: "amende", type: Boolean },
   {
-    title: 'Disponibilité',
-    key: 'statut',
+    title: "Disponibilité",
+    key: "statut",
     formatter: (statut) =>
       ({
-        0: 'Désactivé',
+        0: "Désactivé",
         1: "Exercice + S'excuser",
-        2: 'Exercice',
+        2: "Exercice",
       })[statut],
   },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Actions", slot: "actions" },
 ];
-const listeExcuse = computed(() =>
-  excuseTypeStore.liste.sort((a, b) => a.tri - b.tri),
-);
+const listeExcuse = computed(() => excuseTypeStore.liste.slice().sort((a, b) => a.tri - b.tri));
 
 const { showModal } = useModalStore();
 const awn = useNotification();
-const ajoutExcuse = () => showModal({ component: 'ModalExcuseType', data: {} });
-const updateExcuse = (excuse) =>
-  showModal({ component: 'ModalExcuseType', data: { ...excuse } });
+const ajoutExcuse = () => showModal({ component: "ModalExcuseType", data: {} });
+const updateExcuse = (excuse) => showModal({ component: "ModalExcuseType", data: { ...excuse } });
 const deleteExcuse = (excuse) =>
   excuseTypeStore
     .removeExcuseType(excuse.id)
-    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
 </script>
 
 <template>

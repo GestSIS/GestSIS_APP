@@ -1,7 +1,7 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useAuthStore } from '../../stores/auth/Auth.js';
+import { computed, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useAuthStore } from "../../stores/auth/Auth.js";
 
 const authStore = useAuthStore();
 
@@ -11,9 +11,7 @@ const loadRoles = authStore.fetchRoles();
 await Promise.all([loadPermissions, loadRoles]);
 
 const selectedId = ref(null);
-const permissions = computed(() =>
-  authStore.permissions.sort((a, b) => a.tri - b.tri),
-);
+const permissions = computed(() => authStore.permissions.slice().sort((a, b) => a.tri - b.tri));
 
 const formattedRoles = computed(() => {
   return authStore.roles.map((r) => ({
@@ -24,7 +22,7 @@ const formattedRoles = computed(() => {
 const groupedPermissions = computed(() => {
   return Object.entries(
     permissions.value.reduce((acc, p) => {
-      const keyParts = p.api_key.split('.');
+      const keyParts = p.api_key.split(".");
       const key = keyParts[0];
       const permission = keyParts[1];
       if (!(key in acc)) {
@@ -39,23 +37,23 @@ const groupedPermissions = computed(() => {
 const { confirm, showModal } = useModalStore();
 const selectRole = (role) => (selectedId.value = role.id);
 
-const edit = (role) => showModal({ component: 'ModalRole', data: role });
-const newRole = () => showModal({ component: 'ModalRole', data: {} });
+const edit = (role) => showModal({ component: "ModalRole", data: role });
+const newRole = () => showModal({ component: "ModalRole", data: {} });
 const remove = (role) =>
   confirm(
-    'Voulez-vous vraiment supprimer ce rôle ?',
+    "Voulez-vous vraiment supprimer ce rôle ?",
     "Attention, la suppression d'un rôle est irréversible ! Les utilisateurs ayant ce rôle perdront ces permissions.",
   ).then(() => authStore.deleteRole(role.id));
 
 const moduleMapping = (key) => {
   // Permet d'améliorer certains textes à afficher
   const mapping = {
-    controle_medical: 'Contrôles médicaux',
-    comptabilite: 'Comptabilité',
-    organisation: 'Groupes',
-    sis: 'Config générale',
-    mat_perso: 'Matériel personnel',
-    fiche_travail: 'Fiche de travail',
+    controle_medical: "Contrôles médicaux",
+    comptabilite: "Comptabilité",
+    organisation: "Groupes",
+    sis: "Config générale",
+    mat_perso: "Matériel personnel",
+    fiche_travail: "Fiche de travail",
   };
   if (key in mapping) {
     return mapping[key];
@@ -65,8 +63,8 @@ const moduleMapping = (key) => {
 const permissionMapping = (key) => {
   // Permet d'améliorer certains textes à afficher
   const mapping = {
-    saisie_perso: 'Saisie perso',
-    saisie_commune: 'Saisie commune',
+    saisie_perso: "Saisie perso",
+    saisie_commune: "Saisie commune",
   };
   if (key in mapping) {
     return mapping[key];
@@ -79,17 +77,10 @@ const permissionMapping = (key) => {
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Rôles</h3>
-      <button type="button" class="btn btn-primary" @click="newRole">
-        Nouveau rôle
-      </button>
+      <button type="button" class="btn btn-primary" @click="newRole">Nouveau rôle</button>
     </div>
     <div class="card-body table-responsive p-0">
-      <table
-        id="sap-cours"
-        class="table table-sm table-bordered"
-        cellspacing="0"
-        width="100%"
-      >
+      <table id="sap-cours" class="table table-sm table-bordered" cellspacing="0" width="100%">
         <thead>
           <tr>
             <th colspan="2" class="sticky"></th>
@@ -108,16 +99,10 @@ const permissionMapping = (key) => {
             <th class="sticky" data-field="date">Rôle</th>
             <th class="sticky" data-field="designation">Désignation</th>
             <template
-              v-for="[key, perms] in groupedPermissions.filter(
-                ([, perms]) => perms.length !== 1,
-              )"
+              v-for="[key, perms] in groupedPermissions.filter(([, perms]) => perms.length !== 1)"
               :key="key"
             >
-              <th
-                v-for="(p, i) in perms"
-                :key="i"
-                class="text-center text-capitalize"
-              >
+              <th v-for="(p, i) in perms" :key="i" class="text-center text-capitalize">
                 {{ permissionMapping(p.permission) }}
               </th>
             </template>
@@ -144,18 +129,10 @@ const permissionMapping = (key) => {
               <label class="form-check-label" :for="p.id + '-' + r.id"></label>
             </td>
             <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-primary border-0"
-                @click="edit(r)"
-              >
+              <button type="button" class="btn btn-outline-primary border-0" @click="edit(r)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="remove(r)"
-              >
+              <button type="button" class="btn btn-outline-danger border-0" @click="remove(r)">
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>

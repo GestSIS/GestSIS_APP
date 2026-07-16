@@ -1,8 +1,8 @@
 <script setup>
-import { TokenService } from '../services/StorageService.js';
-import * as data from '../../releases.json';
-import { computed, ref } from 'vue';
-import { useAuthStore } from '../stores/auth/Auth.js';
+import { TokenService } from "../services/StorageService.js";
+import * as data from "../../releases.json";
+import { computed, ref } from "vue";
+import { useAuthStore } from "../stores/auth/Auth.js";
 
 const authStore = useAuthStore();
 
@@ -14,12 +14,10 @@ const refreshToken = ref(TokenService.getRefreshToken());
 
 const isAdmin = computed(() => authStore.admin);
 
-const date =
-  localStorage.getItem('latestReleaseDate') ?? releases.value[0].date;
-const version =
-  localStorage.getItem('latestSeenVersion') ?? releases.value[0].version;
-localStorage.setItem('latestReleaseDate', releases.value[0].date);
-localStorage.setItem('latestSeenVersion', releases.value[0].version);
+const date = localStorage.getItem("latestReleaseDate") ?? releases.value[0].date;
+const version = localStorage.getItem("latestSeenVersion") ?? releases.value[0].version;
+localStorage.setItem("latestReleaseDate", releases.value[0].date);
+localStorage.setItem("latestSeenVersion", releases.value[0].version);
 
 const latestReadIndex = releases.value.findIndex((r) => r.date == date);
 if (latestReadIndex < 0) {
@@ -74,14 +72,12 @@ const copyToClipboard = (text) => navigator.clipboard.writeText(text);
               <ul>
                 <li v-for="(change, j) in changes" :key="j">
                   <span v-for="(t, k) in change.split('`')" :key="k"
-                    >{{ !(k % 2) ? t : '' }}<em v-if="k % 2">{{ t }}</em></span
+                    >{{ !(k % 2) ? t : "" }}<em v-if="k % 2">{{ t }}</em></span
                   >
                 </li>
               </ul>
             </div>
-            <button v-if="!all" class="btn btn-primary" @click="all = true">
-              Tout afficher
-            </button>
+            <button v-if="!all" class="btn btn-primary" @click="all = true">Tout afficher</button>
           </div>
         </div>
       </div>
@@ -92,10 +88,7 @@ const copyToClipboard = (text) => navigator.clipboard.writeText(text);
           </div>
           <div class="card-body">
             <h1>GestSIS</h1>
-            <p>
-              Application métier pour la gestion d'un service d'incendie et de
-              secours.
-            </p>
+            <p>Application métier pour la gestion d'un service d'incendie et de secours.</p>
             <p>Auteur : Bastien Wermeille</p>
             <p>
               Code source :
@@ -103,9 +96,7 @@ const copyToClipboard = (text) => navigator.clipboard.writeText(text);
                 <font-awesome-icon :icon="['fab', 'github']" /> GitHub
               </a>
             </p>
-            <p>
-              GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés
-            </p>
+            <p>GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés</p>
           </div>
         </div>
         <div class="card card-primary card-outline mb-3">
@@ -133,9 +124,7 @@ const copyToClipboard = (text) => navigator.clipboard.writeText(text);
             <p>Contacter par <a href="mailto:support@gestsis.ch">email</a></p>
             <p>
               Télécharger
-              <a
-                target="_blank"
-                href="https://anydesk.com/fr/downloads/thank-you?dv=win_exe"
+              <a target="_blank" href="https://anydesk.com/fr/downloads/thank-you?dv=win_exe"
                 >anydesk</a
               >
             </p>
@@ -147,14 +136,10 @@ const copyToClipboard = (text) => navigator.clipboard.writeText(text);
           </div>
           <div class="card-body">
             <div class="mb-3">
-              <button class="btn btn-primary" @click="refreshTokens">
-                Refresh tokens
-              </button>
+              <button class="btn btn-primary" @click="refreshTokens">Refresh tokens</button>
             </div>
             <div class="mb-3">
-              <label for="copy-to-clipboard" class="form-label"
-                >Access Token</label
-              >
+              <label for="copy-to-clipboard" class="form-label">Access Token</label>
               <div class="input-group">
                 <input
                   type="text"
@@ -175,9 +160,7 @@ const copyToClipboard = (text) => navigator.clipboard.writeText(text);
                 </button>
               </div>
               <div class="mb-3">
-                <label for="copy-to-clipboard" class="form-label"
-                  >Refresh Token</label
-                >
+                <label for="copy-to-clipboard" class="form-label">Refresh Token</label>
                 <div class="input-group">
                   <input
                     type="text"

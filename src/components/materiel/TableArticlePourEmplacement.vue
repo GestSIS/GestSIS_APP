@@ -1,13 +1,13 @@
 <script setup>
-import { computed } from 'vue';
-import ArticleService from '../../services/materiel/ArticleService';
-import TagCouleur from './TagCouleur.vue';
-import { indexedData } from '../../tools/index.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
-import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
-import useHasPermission from '../../composables/usePermission.js';
-import permissions from '../../composables/permissions.js';
+import { computed } from "vue";
+import ArticleService from "../../services/materiel/ArticleService";
+import TagCouleur from "./TagCouleur.vue";
+import { indexedData } from "../../tools/index.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
+import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
+import useHasPermission from "../../composables/usePermission.js";
+import permissions from "../../composables/permissions.js";
 
 const { loading, articles, hideDownload, emplacement, refresh } = defineProps({
   loading: {
@@ -38,9 +38,7 @@ const couleurStore = useCouleurStore();
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
-const indexedCategories = computed(() =>
-  indexedData(materielCategorieStore.liste),
-);
+const indexedCategories = computed(() => indexedData(materielCategorieStore.liste));
 const linearCategories = (categorieId) => {
   if (categorieId === null) {
     return [];
@@ -53,43 +51,41 @@ const linearCategories = (categorieId) => {
 };
 
 const piecesColonnes = computed(() => [
-  { title: 'Type', key: 'typeDesignation' },
-  ...(emplacement?.est_compartimentable
-    ? [{ title: 'Compartiment', key: 'compartiment' }]
-    : []),
-  { title: 'Numéro', key: 'numero' },
-  { title: 'Taille', key: 'taille' },
-  { title: 'Remarque', key: 'remarque' },
-  { title: 'Ajouté', key: 'created_at', type: 'date' },
-  { title: 'Actions', key: 'id', slot: 'actions' },
+  { title: "Type", key: "typeDesignation" },
+  ...(emplacement?.est_compartimentable ? [{ title: "Compartiment", key: "compartiment" }] : []),
+  { title: "Numéro", key: "numero" },
+  { title: "Taille", key: "taille" },
+  { title: "Remarque", key: "remarque" },
+  { title: "Ajouté", key: "created_at", type: "date" },
+  { title: "Actions", key: "id", slot: "actions" },
 ]);
 
 const { showModal, confirm } = useModalStore();
 const infoMateriel = (materiel) =>
   //TODO: Gérer le cas affichageIndividuel
   showModal({
-    component: 'ModalArticleInfo',
+    component: "ModalArticleInfo",
     data: materiel,
     size: 1,
   });
 
 const editMateriel = (materiel) =>
   showModal({
-    component: 'ModalArticle',
+    component: "ModalArticle",
     data: materiel,
     callback: refresh,
   });
 
 const attribuerMateriel = (materiel) =>
   showModal({
-    component: 'ModalAttributionUnique',
+    component: "ModalAttributionUnique",
     data: materiel,
     callback: refresh,
   });
 
 const supprimer = (article) =>
   confirm(
-    'Voulez-vous vraiment supprimer cet article ?',
+    "Voulez-vous vraiment supprimer cet article ?",
     "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
   )
     .then(() => ArticleService.supprimerArticles([article.id]))
@@ -131,11 +127,7 @@ const supprimer = (article) =>
         <font-awesome-icon :icon="['far', 'edit']" />
       </button>
       <button
-        v-if="
-          hasEditPermission &&
-          rowData.type.est_attribuable &&
-          rowData.sapeur_id !== null
-        "
+        v-if="hasEditPermission && rowData.type.est_attribuable && rowData.sapeur_id !== null"
         title="Retour"
         class="btn btn-outline-primary border-0"
         @click="retourMateriel(rowData)"
@@ -143,11 +135,7 @@ const supprimer = (article) =>
         <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
       </button>
       <button
-        v-if="
-          hasEditPermission &&
-          rowData.type.est_attribuable &&
-          rowData.sapeur_id === null
-        "
+        v-if="hasEditPermission && rowData.type.est_attribuable && rowData.sapeur_id === null"
         title="Attribuer"
         class="btn btn-outline-primary border-0"
         @click="attribuerMateriel(rowData)"

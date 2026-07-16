@@ -1,9 +1,9 @@
 <script setup>
-import { computed } from 'vue';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import { useModalStore } from '../../stores/common/Modal';
-import { useTuyauDiametreStore } from '../../stores/materiel/TuyauDiametre';
-import { useBatterieTypeStore } from '../../stores/materiel/BatterieType';
+import { computed } from "vue";
+import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import { useModalStore } from "../../stores/common/Modal";
+import { useTuyauDiametreStore } from "../../stores/materiel/TuyauDiametre";
+import { useBatterieTypeStore } from "../../stores/materiel/BatterieType";
 
 const { id } = defineProps({
   id: {
@@ -22,16 +22,14 @@ await Promise.all([
   batterieStore.fetchBatterieTypes(),
 ]);
 
-const materielType = computed(() =>
-  materielTypeStore.liste.find((m) => m.id === parseInt(id)),
-);
+const materielType = computed(() => materielTypeStore.liste.find((m) => m.id === parseInt(id)));
 
-const formatEmptyString = (str) => (str === '' ? '-' : str);
+const formatEmptyString = (str) => (str === "" ? "-" : str);
 
 const { showModal } = useModalStore();
 const editMateriel = () =>
   showModal({
-    component: 'ModalMaterielType',
+    component: "ModalMaterielType",
     data: { ...materielType.value },
   });
 </script>
@@ -42,11 +40,7 @@ const editMateriel = () =>
       <base-card>
         <template #title>Description du matériel</template>
         <template #header>
-          <button
-            type="button"
-            class="btn btn-primary btn-sm"
-            @click="editMateriel"
-          >
+          <button type="button" class="btn btn-primary btn-sm" @click="editMateriel">
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
         </template>
@@ -66,7 +60,7 @@ const editMateriel = () =>
             </tr>
             <tr>
               <th>Prix</th>
-              <td>{{ materielType.prix || 'Inconnu' }}</td>
+              <td>{{ materielType.prix || "Inconnu" }}</td>
             </tr>
             <tr>
               <th>Remarque</th>
@@ -85,9 +79,7 @@ const editMateriel = () =>
               </th>
               <td>
                 <span v-if="materielType.est_numerote" class="p-0">{{
-                  materielType.prefix === ''
-                    ? 'Aucun préfixe'
-                    : materielType.prefix
+                  materielType.prefix === "" ? "Aucun préfixe" : materielType.prefix
                 }}</span>
                 <span v-else class="p-0">(Pas d'étiquettage individuel)</span>
               </td>
@@ -109,9 +101,8 @@ const editMateriel = () =>
               <th class="col-3 pe-3">Diamètre</th>
               <td>
                 {{
-                  diametreStore.liste.find(
-                    (d) => d.id === materielType.tuyau.tuyau_diametre_id,
-                  )?.diametre
+                  diametreStore.liste.find((d) => d.id === materielType.tuyau.tuyau_diametre_id)
+                    ?.diametre
                 }}
                 mm
               </td>
@@ -119,7 +110,7 @@ const editMateriel = () =>
             <tr>
               <th class="col-3 pe-3">Roulé</th>
               <td>
-                {{ materielType.tuyau.separement ? 'Separément' : 'Dévidoir' }}
+                {{ materielType.tuyau.separement ? "Separément" : "Dévidoir" }}
               </td>
             </tr>
           </table>
@@ -139,9 +130,8 @@ const editMateriel = () =>
               <th class="col-3 pe-3">Modèle</th>
               <td>
                 {{
-                  batterieStore.liste.find(
-                    (b) => b.id === materielType.batterie.batterie_type_id,
-                  )?.nom
+                  batterieStore.liste.find((b) => b.id === materielType.batterie.batterie_type_id)
+                    ?.nom
                 }}
               </td>
             </tr>

@@ -1,13 +1,13 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import MultiStep from '../base/MultiStep.vue';
-import useNotification from '../../composables/useNotification.js';
+import { computed, ref } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import MultiStep from "../base/MultiStep.vue";
+import useNotification from "../../composables/useNotification.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -34,9 +34,7 @@ const ecritures = ref([]);
 const successMessageVisibility = ref(true);
 
 const sapeurs = computed(() => sapeurStore.liste);
-const indemnitesTypes = computed(
-  () => imputationStore.fraisIndemnites.interventions,
-);
+const indemnitesTypes = computed(() => imputationStore.fraisIndemnites.interventions);
 const fonctions = computed(() => fonctionStore.liste);
 const comptes = computed(() => compteStore.liste);
 const unites = computed(() => uniteStore.liste);
@@ -67,13 +65,11 @@ const imputer = () => {
       phase.value = 2;
       ecritures.value = data.ecritures;
     })
-    .catch((err) =>
-      awn.alert(err?.message ?? "Impossible d'effectuer cette action"),
-    );
+    .catch((err) => awn.alert(err?.message ?? "Impossible d'effectuer cette action"));
 };
 const formatCompte = (compte) => {
-  if (!compte) return '';
-  return compte?.numero + ' - ' + compte?.designation;
+  if (!compte) return "";
+  return compte?.numero + " - " + compte?.designation;
 };
 </script>
 <template>
@@ -83,10 +79,7 @@ const formatCompte = (compte) => {
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
-      <multi-step
-        :steps="['Type de frais', 'Résultat']"
-        :active-index="phase - 1"
-      />
+      <multi-step :steps="['Type de frais', 'Résultat']" :active-index="phase - 1" />
       <div v-if="phase === 1" class="row">
         <div
           :class="{
@@ -113,9 +106,7 @@ const formatCompte = (compte) => {
             </thead>
             <tbody>
               <tr v-if="indemnitesTypes.length == 0">
-                <td colspan="11">
-                  Aucune indemnité type pour intervention de configuré
-                </td>
+                <td colspan="11">Aucune indemnité type pour intervention de configuré</td>
               </tr>
               <tr
                 v-for="(indemnite, index) in indemnitesTypes"
@@ -149,17 +140,10 @@ const formatCompte = (compte) => {
                 <td>{{ indemnite.taux_nuit }}</td>
                 <td>{{ indemnite.taux_weekend }}</td>
                 <td>
-                  {{
-                    unites.find((u) => u.id == indemnite.type_unite_id)
-                      ?.abreviation
-                  }}
+                  {{ unites.find((u) => u.id == indemnite.type_unite_id)?.abreviation }}
                 </td>
                 <td>
-                  {{
-                    formatCompte(
-                      comptes.find((f) => f.id == indemnite.compte_id),
-                    )
-                  }}
+                  {{ formatCompte(comptes.find((f) => f.id == indemnite.compte_id)) }}
                 </td>
                 <td class="text-center">
                   <input
@@ -169,10 +153,7 @@ const formatCompte = (compte) => {
                     :checked="indemnite.par_fonction"
                     disabled
                   />
-                  <label
-                    class="form-check-label"
-                    for="checkbox-fonction"
-                  ></label>
+                  <label class="form-check-label" for="checkbox-fonction"></label>
                 </td>
               </tr>
             </tbody>
@@ -188,10 +169,7 @@ const formatCompte = (compte) => {
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="fonction in activeIndemnite.fonctions"
-                :key="fonction.id"
-              >
+              <tr v-for="fonction in activeIndemnite.fonctions" :key="fonction.id">
                 <td>{{ fonctions.find((f) => f.id == fonction.id)?.nom }}</td>
                 <td>{{ fonction.tarif }}</td>
               </tr>
@@ -200,10 +178,7 @@ const formatCompte = (compte) => {
         </div>
       </div>
       <div v-if="phase === 2">
-        <div
-          v-if="successMessageVisibility"
-          class="alert alert-dismissible alert-success"
-        >
+        <div v-if="successMessageVisibility" class="alert alert-dismissible alert-success">
           <button
             type="button"
             class="btn-close"
@@ -230,16 +205,11 @@ const formatCompte = (compte) => {
           <tbody>
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
               <td>
-                {{
-                  sapeurs.find((f) => f.id == ecriture.sapeur_id)?.nom_prenom
-                }}
+                {{ sapeurs.find((f) => f.id == ecriture.sapeur_id)?.nom_prenom }}
               </td>
               <td>{{ ecriture.quantite }}</td>
               <td>
-                {{
-                  unites.find((u) => u.id == ecriture.type_unite_id)
-                    ?.abreviation
-                }}
+                {{ unites.find((u) => u.id == ecriture.type_unite_id)?.abreviation }}
               </td>
               <td>{{ ecriture.tarif }}</td>
               <td>{{ ecriture.tarif_min }}</td>
@@ -261,7 +231,7 @@ const formatCompte = (compte) => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">
-        {{ phase === 1 ? 'Annuler' : 'Fermer' }}
+        {{ phase === 1 ? "Annuler" : "Fermer" }}
       </button>
       <button
         v-if="phase === 1"

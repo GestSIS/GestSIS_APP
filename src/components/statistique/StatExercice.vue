@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useExerciceStore } from '../../stores/exercice/Exercice.js';
-import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
+import { computed, ref, watchEffect } from "vue";
+import { useExerciceStore } from "../../stores/exercice/Exercice.js";
+import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 
 const exerciceStore = useExerciceStore();
 const exerciceCategorieStore = useExerciceCategorieStore();
@@ -20,13 +20,13 @@ watchEffect(async () => {
 
 const allCategories = ref(false);
 const fields = [
-  { title: 'Catégorie', key: 'designation' },
-  { title: 'Amendable', key: 'amendable', type: Boolean },
+  { title: "Catégorie", key: "designation" },
+  { title: "Amendable", key: "amendable", type: Boolean },
   {
-    title: 'Nombre',
-    key: 'nb',
-    titleClass: 'text-center',
-    columnClass: 'text-center',
+    title: "Nombre",
+    key: "nb",
+    titleClass: "text-center",
+    columnClass: "text-center",
   },
 ];
 
@@ -40,10 +40,7 @@ const categoriesOccurence = computed(() => {
 });
 const filteredCategories = computed(() => {
   return categories.value
-    .filter(
-      (c) =>
-        categoriesOccurence.value[c.id] || (allCategories.value && c.statut),
-    )
+    .filter((c) => categoriesOccurence.value[c.id] || (allCategories.value && c.statut))
     .map((e) => ({ ...e, nb: categoriesOccurence.value[e.id] ?? 0 }));
 });
 </script>
@@ -55,12 +52,7 @@ const filteredCategories = computed(() => {
         <div class="card-header d-flex justify-content-between">
           <h3>Stats Exercice</h3>
           <div class="form-check form-switch mb-2">
-            <input
-              id="switch"
-              v-model="allCategories"
-              type="checkbox"
-              class="form-check-input"
-            />
+            <input id="switch" v-model="allCategories" type="checkbox" class="form-check-input" />
             <label class="form-check-label" for="switch"
               >Afficher les catégories sans exercice</label
             >

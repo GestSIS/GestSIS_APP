@@ -1,9 +1,9 @@
 <script setup>
-import { computed } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useStatInterventionStore } from '../../stores/intervention/StatIntervention.js';
-import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
-import { useModalStore } from '../../stores/common/Modal';
+import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useStatInterventionStore } from "../../stores/intervention/StatIntervention.js";
+import { useTypeInterventionStore } from "../../stores/intervention/TypeIntervention.js";
+import { useModalStore } from "../../stores/common/Modal";
 
 const statInterventionStore = useStatInterventionStore();
 const typeInterventionStore = useTypeInterventionStore();
@@ -14,39 +14,35 @@ const loadTypeIntervention = typeInterventionStore.fetchTypeInterventions();
 await Promise.all([loadStatIntervention, loadTypeIntervention]);
 
 const fieldsType = [
-  { title: 'Tri', key: 'tri' },
-  { title: "Type d'intervention", key: 'designation' },
-  { title: 'Statistique', key: 'statistique' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Tri", key: "tri" },
+  { title: "Type d'intervention", key: "designation" },
+  { title: "Statistique", key: "statistique" },
+  { title: "Actions", slot: "actions" },
 ];
 const fieldsStat = [
-  { title: 'Tri', key: 'tri' },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Tri", key: "tri" },
+  { title: "Désignation", key: "designation" },
+  { title: "Actions", slot: "actions" },
 ];
 
 const listeType = computed(() =>
   typeInterventionStore.liste
     .map((t) => ({
       ...t,
-      statistique: statInterventionStore.liste.find(
-        (s) => s.id == t.stat_intervention_id,
-      )?.designation,
+      statistique: statInterventionStore.liste.find((s) => s.id == t.stat_intervention_id)
+        ?.designation,
     }))
     .sort((a, b) => a.tri - b.tri),
 );
-const listeStat = computed(() =>
-  statInterventionStore.liste.sort((a, b) => a.tri - b.tri),
-);
+const listeStat = computed(() => statInterventionStore.liste.slice().sort((a, b) => a.tri - b.tri));
 
 const { showModal } = useModalStore();
 
-const ajoutType = () =>
-  showModal({ component: 'ModalTypeIntervention', data: {} });
+const ajoutType = () => showModal({ component: "ModalTypeIntervention", data: {} });
 
 const updateType = (type) =>
   showModal({
-    component: 'ModalTypeIntervention',
+    component: "ModalTypeIntervention",
     data: { ...type },
   });
 
@@ -54,21 +50,20 @@ const awn = useNotification();
 const deleteType = (type) =>
   typeInterventionStore
     .removeTypeIntervention(type.id)
-    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
 
-const ajoutStat = () =>
-  showModal({ component: 'ModalStatIntervention', data: {} });
+const ajoutStat = () => showModal({ component: "ModalStatIntervention", data: {} });
 
 const updateStat = (stat) =>
   showModal({
-    component: 'ModalStatIntervention',
+    component: "ModalStatIntervention",
     data: { ...stat },
   });
 
 const deleteStat = (stat) =>
   statInterventionStore
     .removeStatIntervention(stat.id)
-    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
 </script>
 
 <template>
@@ -117,11 +112,7 @@ const deleteStat = (stat) =>
           </button>
         </div>
         <div class="card-body table-responsive p-0">
-          <base-table
-            :data="listeStat"
-            :fields="fieldsStat"
-            no-data="Aucune statistique"
-          >
+          <base-table :data="listeStat" :fields="fieldsStat" no-data="Aucune statistique">
             <template #actions="{ rowData }">
               <button
                 type="button"

@@ -1,15 +1,15 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
-import { useEmplacementStore } from '../../stores/materiel/Emplacement';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import TagCouleur from './TagCouleur.vue';
-import { indexedData } from '../../tools/index.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import LavageService from '../../services/materiel/LavageService';
-import useHasPermission from '../../composables/usePermission.js';
-import permissions from '../../composables/permissions.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur';
+import { computed, ref } from "vue";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
+import { useEmplacementStore } from "../../stores/materiel/Emplacement";
+import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import TagCouleur from "./TagCouleur.vue";
+import { indexedData } from "../../tools/index.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import LavageService from "../../services/materiel/LavageService";
+import useHasPermission from "../../composables/usePermission.js";
+import permissions from "../../composables/permissions.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur";
 
 const sapeurStore = useSapeurStore();
 const emplacementStore = useEmplacementStore();
@@ -37,13 +37,13 @@ loadLavages();
 
 // Partie pièces
 const piecesColonnes = [
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'Matériel', key: 'designation' },
-  { title: 'Numéro', key: 'numero' },
-  { title: 'Emplacement', key: 'emplacement_sort', slot: 'emplacement' },
-  { title: 'Lavages', key: 'nbLavages', slot: 'lavages' },
-  { title: 'Remarque', key: 'remarque' },
-  { title: 'Actions', key: 'id', slot: 'actions' },
+  { title: "Date", key: "date", type: Date },
+  { title: "Matériel", key: "designation" },
+  { title: "Numéro", key: "numero" },
+  { title: "Emplacement", key: "emplacement_sort", slot: "emplacement" },
+  { title: "Lavages", key: "nbLavages", slot: "lavages" },
+  { title: "Remarque", key: "remarque" },
+  { title: "Actions", key: "id", slot: "actions" },
 ];
 
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
@@ -71,34 +71,33 @@ const computedData = computed(() =>
       nbLavages: a.article.lavages.length,
       designation: indexedTypes.value[a.article.materiel_type_id]?.designation,
       emplacements: linearEmplacements(a.article.emplacement_id),
-      emplacement:
-        indexedEmplacements.value[a.emplacement_id]?.designation ?? '',
-      sapeur: indexedSapeurs.value[a.article.sapeur_id]?.nom_prenom ?? '',
+      emplacement: indexedEmplacements.value[a.emplacement_id]?.designation ?? "",
+      sapeur: indexedSapeurs.value[a.article.sapeur_id]?.nom_prenom ?? "",
     }))
     .map((a) => ({
       ...a,
-      emplacement_sort: a.sapeur + 'ZZZZ' + a.emplacement,
+      emplacement_sort: a.sapeur + "ZZZZ" + a.emplacement,
     })),
 );
 
 const { showModal, confirm } = useModalStore();
 const infoMateriel = (materiel) =>
   showModal({
-    component: 'ModalArticleInfo',
+    component: "ModalArticleInfo",
     data: materiel,
     size: 1,
   });
 
 const ajouterLavages = () =>
   showModal({
-    component: 'ModalLavageMultiple',
+    component: "ModalLavageMultiple",
     size: 2,
     callback: loadLavages,
   });
 
 const supprimer = (lavage) =>
   confirm(
-    'Voulez-vous vraiment supprimer ce lavage ?',
+    "Voulez-vous vraiment supprimer ce lavage ?",
     "Attention, la suppression d'un lavage est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
   )
     .then(() => LavageService.supprimerLavages([lavage.id]))
@@ -109,11 +108,7 @@ const supprimer = (lavage) =>
   <div class="card mb-2">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="m-0">Lavages ({{ lavages.length }})</h5>
-      <button
-        v-if="hasEditPermission"
-        class="btn btn-primary"
-        @click="ajouterLavages"
-      >
+      <button v-if="hasEditPermission" class="btn btn-primary" @click="ajouterLavages">
         Ajouter
       </button>
     </div>

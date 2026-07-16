@@ -1,7 +1,7 @@
-import TuyauDiametreService from '../../services/materiel/TuyauDiametreService.js';
-import { defineStore } from 'pinia';
+import TuyauDiametreService from "../../services/materiel/TuyauDiametreService.js";
+import { defineStore } from "pinia";
 
-export const useTuyauDiametreStore = defineStore('tuyau-diametre', {
+export const useTuyauDiametreStore = defineStore("tuyau-diametre", {
   state: () => ({
     liste: [],
   }),
@@ -20,7 +20,7 @@ export const useTuyauDiametreStore = defineStore('tuyau-diametre', {
     },
     async updateTuyauDiametre(tuyauDiametre) {
       const data = await TuyauDiametreService.updateTuyauDiametre(tuyauDiametre);
-      this.liste = [...this.liste.map((m) => (m.id === data.id ? data : m))];
+      this.liste = this.liste.map((m) => (m.id === data.id ? data : m));
       return data;
     },
     async removeTuyauDiametre(id) {

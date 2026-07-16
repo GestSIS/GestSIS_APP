@@ -1,13 +1,13 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getPermisType() {
-    return Api.api().get('/permis');
+    return Api.api().get("/permis");
   },
   getCivilites() {
-    return Api.api().get('/civilites');
+    return Api.api().get("/civilites");
   },
   getTelephones() {
-    return Api.api().get('/telephone-types');
+    return Api.api().get("/telephone-types");
   },
 };

@@ -1,11 +1,11 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getCategories() {
-    return Api.api().get('/materiel-categories');
+    return Api.api().get("/materiel-categories");
   },
   addCategorie(categorie) {
-    return Api.api().post('/materiel-categories', categorie);
+    return Api.api().post("/materiel-categories", categorie);
   },
   updateCategorie(categorie) {
     return Api.api().put(`/materiel-categories/${categorie.id}`, categorie);

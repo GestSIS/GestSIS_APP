@@ -1,5 +1,5 @@
 <script setup>
-import { useModalStore } from '../../stores/common/Modal.js';
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -32,17 +32,10 @@ const submit = async (confirm) => {
       <p>{{ data.question }}</p>
     </div>
     <div class="modal-footer">
-      <button
-        autofocus
-        type="button"
-        class="btn btn-secondary"
-        @click="submit(false)"
-      >
+      <button autofocus type="button" class="btn btn-secondary" @click="submit(false)">
         Annuler
       </button>
-      <button type="button" class="btn btn-primary" @click="submit(true)">
-        Confirmer
-      </button>
+      <button type="button" class="btn btn-primary" @click="submit(true)">Confirmer</button>
     </div>
   </div>
 </template>

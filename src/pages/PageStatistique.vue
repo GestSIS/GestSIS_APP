@@ -1,37 +1,37 @@
 <script setup>
-import permissions from '../composables/permissions.js';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import permissions from "../composables/permissions.js";
+import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 
 const routes = [
-  { to: { name: 'stat-dashboard' }, texte: 'Résumé' },
+  { to: { name: "stat-dashboard" }, texte: "Résumé" },
   {
-    to: { name: 'stat-sapeur' },
-    texte: 'Sapeur',
+    to: { name: "stat-sapeur" },
+    texte: "Sapeur",
     permission: permissions.SAPEUR.LECTURE,
   },
   {
-    to: { name: 'stat-exercice-simple' },
-    texte: 'Exercice',
+    to: { name: "stat-exercice-simple" },
+    texte: "Exercice",
     permission: permissions.EXERCICE.PRESENCE,
   },
   {
-    to: { name: 'stat-exercice-presence' },
-    texte: 'Présences exercices',
+    to: { name: "stat-exercice-presence" },
+    texte: "Présences exercices",
     permission: permissions.EXERCICE.PRESENCE,
   },
   {
-    to: { name: 'stat-intervention' },
-    texte: 'Intervention',
+    to: { name: "stat-intervention" },
+    texte: "Intervention",
     permission: permissions.INTERVENTION.MODIFICATION,
   },
   {
-    to: { name: 'stat-intervention-presence' },
-    texte: 'Présences interventions',
+    to: { name: "stat-intervention-presence" },
+    texte: "Présences interventions",
     permission: permissions.INTERVENTION.LECTURE,
   },
   {
-    to: { name: 'stat-comptabilite' },
-    texte: 'Comptabilité',
+    to: { name: "stat-comptabilite" },
+    texte: "Comptabilité",
     permission: permissions.COMPTABILITE.LECTURE,
   },
 ];
@@ -46,9 +46,7 @@ const routes = [
             <li class="breadcrumb-item">
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              Statistique
-            </li>
+            <li class="breadcrumb-item active" aria-current="page">Statistique</li>
           </ol>
         </nav>
       </div>

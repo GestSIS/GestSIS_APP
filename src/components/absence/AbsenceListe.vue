@@ -1,12 +1,12 @@
 <script setup>
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import permissions from '../../composables/permissions.js';
-import { computed, ref, watchEffect } from 'vue';
-import useHasPermission from '../../composables/usePermission.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useAbsenceStore } from '../../stores/absence/Absence.js';
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import permissions from "../../composables/permissions.js";
+import { computed, ref, watchEffect } from "vue";
+import useHasPermission from "../../composables/usePermission.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useAbsenceStore } from "../../stores/absence/Absence.js";
 
 const localiteStore = useLocaliteStore();
 const sapeurStore = useSapeurStore();
@@ -27,7 +27,7 @@ await Promise.all([loadSapeurs, loadLocalites]);
 
 const sapeurs = computed(() => sapeurStore.liste);
 const absences = computed(() =>
-  absenceStore.liste.sort((a, b) => (a.debut ?? '').localeCompare(b.debut ?? '')),
+  absenceStore.liste.slice().sort((a, b) => (a.debut ?? "").localeCompare(b.debut ?? "")),
 );
 const hasEditPermission = useHasPermission(permissions.ABSENCE.MODIFICATION);
 
@@ -39,44 +39,43 @@ const computedData = computed(() => {
 });
 
 const { showModal, confirm } = useModalStore();
-const addAbsence = () => showModal({ component: 'ModalAbsence' });
+const addAbsence = () => showModal({ component: "ModalAbsence" });
 
-const modifierAbsence = (absence) =>
-  showModal({ component: 'ModalAbsence', data: absence });
+const modifierAbsence = (absence) => showModal({ component: "ModalAbsence", data: absence });
 
 const removeAbsence = (id) =>
   confirm(
-    'Voulez-vous vraiment supprimer cette absence ?',
+    "Voulez-vous vraiment supprimer cette absence ?",
     "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
   ).then(() => absenceStore.removeAbsence(id));
 
 const onRowClass = (dataItem, isSelected) => {
   if (dataItem.statut == 0) {
-    return 'text-danger';
+    return "text-danger";
   }
   if (isSelected) {
-    return '';
+    return "";
   }
 
   const statutsClass = {
-    0: '', //'Annulé',
-    1: '', //'A saisir',
-    2: '', //'Saisie',
-    3: '', //'Validé',
-    4: 'table-success', //'Imputée'
+    0: "", //'Annulé',
+    1: "", //'A saisir',
+    2: "", //'Saisie',
+    3: "", //'Validé',
+    4: "table-success", //'Imputée'
   };
   return statutsClass[dataItem.statut];
 };
 
 const fields = [
-  { title: 'Sapeur', key: 'nom_prenom' },
-  { title: 'Départ', key: 'debut', type: Date },
-  { title: 'Retour', key: 'fin', type: Date },
+  { title: "Sapeur", key: "nom_prenom" },
+  { title: "Départ", key: "debut", type: Date },
+  { title: "Retour", key: "fin", type: Date },
   {
-    title: 'Actions',
-    slot: 'actions',
-    titleClass: 'align-middle text-center',
-    columnClass: 'align-middle text-center',
+    title: "Actions",
+    slot: "actions",
+    titleClass: "align-middle text-center",
+    columnClass: "align-middle text-center",
   },
 ];
 </script>
@@ -90,11 +89,7 @@ const fields = [
             <h5>Actions</h5>
           </div>
           <div class="card-body d-grid gap-2">
-            <button
-              v-if="hasEditPermission"
-              class="btn btn-outline-primary"
-              @click="addAbsence"
-            >
+            <button v-if="hasEditPermission" class="btn btn-outline-primary" @click="addAbsence">
               Ajouter une absence
             </button>
           </div>

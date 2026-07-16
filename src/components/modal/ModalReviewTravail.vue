@@ -1,10 +1,10 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useTravailStore } from '../../stores/travail/Travail.js';
+import { computed, reactive, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useTravailStore } from "../../stores/travail/Travail.js";
 
 const { data } = defineProps({
   data: {
@@ -21,9 +21,7 @@ const errors = ref({});
 const form = reactive({
   exercice_comptable_id: null,
   ...data,
-  sapeurs: [
-    { sapeur_id: data?.sapeur_id ?? null, quantite: data?.quantite ?? null },
-  ],
+  sapeurs: [{ sapeur_id: data?.sapeur_id ?? null, quantite: data?.quantite ?? null }],
 });
 const initialQuantite = ref(data.quantite);
 
@@ -103,10 +101,7 @@ const review = (accepte) => {
         <span class="input-group-text">
           {{
             unites.find(
-              (u) =>
-                u.id ==
-                travailTypes.find((t) => t.id == form.travail_type_id)
-                  ?.type_unite_id,
+              (u) => u.id == travailTypes.find((t) => t.id == form.travail_type_id)?.type_unite_id,
             )?.unite
           }}</span
         >
@@ -146,10 +141,7 @@ const review = (accepte) => {
           :required="initialQuantite != form.quantite"
         ></textarea>
         <label v-if="initialQuantite != form.quantite" class="text-danger"
-          ><em
-            >Quantité modifiée, justifiez ce changement pour plus de
-            transparence</em
-          ></label
+          ><em>Quantité modifiée, justifiez ce changement pour plus de transparence</em></label
         >
       </div>
 
@@ -158,24 +150,14 @@ const review = (accepte) => {
           <button type="submit" class="btn btn-primary col-12">Accepter</button>
         </div>
         <div class="col-6">
-          <button
-            type="button"
-            class="btn btn-danger col-12"
-            @click="review(false)"
-          >
+          <button type="button" class="btn btn-danger col-12" @click="review(false)">
             Refuser
           </button>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button
-        type="button"
-        class="btn btn-outline-secondary"
-        @click="closeModal()"
-      >
-        Annuler
-      </button>
+      <button type="button" class="btn btn-outline-secondary" @click="closeModal()">Annuler</button>
     </div>
   </form>
 </template>

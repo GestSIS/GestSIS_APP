@@ -1,11 +1,11 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
-import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
-import { useGroupeStore } from '../../stores/groupe/Groupe.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import useNotification from '../../composables/useNotification.js';
+import { computed, ref, watch } from "vue";
+import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
+import { useGroupeStore } from "../../stores/groupe/Groupe.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import useNotification from "../../composables/useNotification.js";
 
 const { data } = defineProps({
   data: {
@@ -31,25 +31,25 @@ fonctionStore.fetchFonctions();
 
 const formatDate = (date) => {
   var monthNames = [
-    'janvier',
-    'février',
-    'mars',
-    'avril',
-    'mai',
-    'juin',
-    'juillet',
-    'août',
-    'septembre',
-    'octobre',
-    'novembre',
-    'décembre',
+    "janvier",
+    "février",
+    "mars",
+    "avril",
+    "mai",
+    "juin",
+    "juillet",
+    "août",
+    "septembre",
+    "octobre",
+    "novembre",
+    "décembre",
   ];
 
   var day = date.getDate();
   var monthIndex = date.getMonth();
   var year = date.getFullYear();
 
-  return day + ' ' + monthNames[monthIndex] + ' ' + year;
+  return day + " " + monthNames[monthIndex] + " " + year;
 };
 
 const categories = computed(() => exerciceCategorieStore.liste);
@@ -57,9 +57,7 @@ const groupes = computed(() => groupeStore.liste);
 const fonctions = computed(() => fonctionStore.liste);
 const activeSapeurExercice = computed(() => sapeurStore.active.exercices);
 const activeSapeurGroupe = computed(() => sapeurStore.active.groupes);
-const activeSapeurFonction = computed(() =>
-  sapeurStore.active.fonctions.filter((f) => !f.fin),
-);
+const activeSapeurFonction = computed(() => sapeurStore.active.fonctions.filter((f) => !f.fin));
 const exercices = computed(() => {
   return activeSapeurExercice.value
     .filter(
@@ -68,8 +66,7 @@ const exercices = computed(() => {
     .map((e) => ({
       ...e,
       info: `${
-        categories.value.find((c) => c.id == e.exercice_categorie_id)
-          ?.designation
+        categories.value.find((c) => c.id == e.exercice_categorie_id)?.designation
       } : ${e.communications}`,
     }));
 });
@@ -101,9 +98,7 @@ const etatSelection = (items, selection) => {
 const exercicesSelectedState = computed(() =>
   etatSelection(exercices.value, selectedExercices.value),
 );
-const groupesSelectedState = computed(() =>
-  etatSelection(sapGroupes.value, selectedGroupes.value),
-);
+const groupesSelectedState = computed(() => etatSelection(sapGroupes.value, selectedGroupes.value));
 const fonctionsSelectedState = computed(() =>
   etatSelection(sapFonctions.value, selectedFonctions.value),
 );
@@ -132,30 +127,22 @@ const awn = useNotification();
 
 const save = async () => {
   const mapToId = (e) => e.id;
-  const fonctionsASupprimer = sapFonctions.value.filter(
-    (f) => selectedFonctions.value[f.id],
-  );
+  const fonctionsASupprimer = sapFonctions.value.filter((f) => selectedFonctions.value[f.id]);
 
   // La date n'est requise que si l'on termine des fonctions, et elle doit être
   // postérieure au début de chacune des fonctions concernées.
   if (
     fonctionsASupprimer.length > 0 &&
     (!mutationDate.value ||
-      fonctionsASupprimer.some(
-        (f) => new Date(f.debut) >= new Date(mutationDate.value),
-      ))
+      fonctionsASupprimer.some((f) => new Date(f.debut) >= new Date(mutationDate.value)))
   ) {
-    errors.value.date = 'Date requise';
+    errors.value.date = "Date requise";
     return;
   }
   errors.value = {};
 
-  const exercicesASupprimer = exercices.value.filter(
-    (e) => selectedExercices.value[e.id],
-  );
-  const groupesAQuitter = sapGroupes.value.filter(
-    (g) => selectedGroupes.value[g.id],
-  );
+  const exercicesASupprimer = exercices.value.filter((e) => selectedExercices.value[e.id]);
+  const groupesAQuitter = sapGroupes.value.filter((g) => selectedGroupes.value[g.id]);
 
   const actions = [];
   if (fonctionsASupprimer.length) {
@@ -167,9 +154,7 @@ const save = async () => {
     );
   }
   if (exercicesASupprimer.length) {
-    actions.push(
-      sapeurStore.supprimerConvocation(exercicesASupprimer.map(mapToId)),
-    );
+    actions.push(sapeurStore.supprimerConvocation(exercicesASupprimer.map(mapToId)));
   }
   if (groupesAQuitter.length) {
     actions.push(sapeurStore.quitterGroupes(groupesAQuitter.map(mapToId)));
@@ -178,38 +163,32 @@ const save = async () => {
   try {
     await Promise.all(actions);
     if (actions.length) {
-      awn.success('Traitement effectué');
+      awn.success("Traitement effectué");
     }
     closeModal();
   } catch (err) {
-    awn.alert(err?.message ?? 'Une erreur est survenue lors du traitement');
+    awn.alert(err?.message ?? "Une erreur est survenue lors du traitement");
   }
 };
 const selectGroupe = (state, groupeId) => {
   if (groupeId) {
     selectedGroupes.value[groupeId] = state;
   } else {
-    selectedGroupes.value = Object.fromEntries(
-      sapGroupes.value.map((g) => [g.id, state]),
-    );
+    selectedGroupes.value = Object.fromEntries(sapGroupes.value.map((g) => [g.id, state]));
   }
 };
 const selectExercice = (state, exerciceId) => {
   if (exerciceId) {
     selectedExercices.value[exerciceId] = state;
   } else {
-    selectedExercices.value = Object.fromEntries(
-      exercices.value.map((e) => [e.id, state]),
-    );
+    selectedExercices.value = Object.fromEntries(exercices.value.map((e) => [e.id, state]));
   }
 };
 const selectFonction = (state, fonctionId) => {
   if (fonctionId) {
     selectedFonctions.value[fonctionId] = state;
   } else {
-    selectedFonctions.value = Object.fromEntries(
-      sapFonctions.value.map((f) => [f.id, state]),
-    );
+    selectedFonctions.value = Object.fromEntries(sapFonctions.value.map((f) => [f.id, state]));
   }
 };
 </script>
@@ -217,9 +196,7 @@ const selectFonction = (state, fonctionId) => {
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title">
-        Suppression des groupes, exercices et fonctions
-      </h5>
+      <h5 class="modal-title">Suppression des groupes, exercices et fonctions</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -240,9 +217,7 @@ const selectFonction = (state, fonctionId) => {
           />
         </div>
         <div class="col-auto">
-          <small v-if="errors.date" class="invalid-feedback">
-            Date requise
-          </small>
+          <small v-if="errors.date" class="invalid-feedback"> Date requise </small>
         </div>
       </form>
       <table id="mutation-desactivation-table" class="table table-sm">
@@ -337,12 +312,8 @@ const selectFonction = (state, fonctionId) => {
       </table>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save()">
-        Traitement
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
+      <button type="button" class="btn btn-primary" @click="save()">Traitement</button>
     </div>
   </div>
 </template>

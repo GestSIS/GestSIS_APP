@@ -1,10 +1,10 @@
 <script setup>
-import { ref, useTemplateRef } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { ref, useTemplateRef } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useModalStore } from "../../stores/common/Modal.js";
 
-import { Cropper } from 'vue-advanced-cropper';
-import 'vue-advanced-cropper/dist/style.css';
+import { Cropper } from "vue-advanced-cropper";
+import "vue-advanced-cropper/dist/style.css";
 
 const { callback, data } = defineProps({
   data: {
@@ -27,7 +27,7 @@ fileReader.value.onload = function () {
 const { closeModal } = useModalStore();
 const awn = useNotification();
 
-const cropperComponent = useTemplateRef('cropper');
+const cropperComponent = useTemplateRef("cropper");
 const loadFile = (event) => {
   var files = event.target.files || event.dataTransfer.files;
   if (!files.length) {
@@ -52,14 +52,14 @@ const save = () => {
       .catch((err) => {
         awn.alert(err?.message || "Erreur lors de la modification de l'image");
       });
-  }, 'image/jpeg');
+  }, "image/jpeg");
 };
 </script>
 
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">{{ data ? 'Modifier' : 'Ajouter' }} une photo</h5>
+      <h5 class="modal-title">{{ data ? "Modifier" : "Ajouter" }} une photo</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -87,11 +87,9 @@ const save = () => {
       ></cropper>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary" :disabled="!img">
-        {{ data ? 'Modifier' : 'Ajouter' }}
+        {{ data ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

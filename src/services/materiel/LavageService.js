@@ -1,4 +1,4 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   creerLavages(lavages) {

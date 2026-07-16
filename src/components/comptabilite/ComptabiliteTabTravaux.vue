@@ -1,19 +1,19 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useTravailStore } from '../../stores/travail/Travail.js';
-import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useTravailStore } from "../../stores/travail/Travail.js";
+import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import permissions from '../../composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import GenericDetailsRow from "../table/GenericDetailsRow.vue";
+import permissions from "../../composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const uniteStore = useUniteStore();
 const travailStore = useTravailStore();
@@ -32,9 +32,7 @@ sapeurStore.fetchListeSapeur();
 travailTypeStore.fetchTravailTypes();
 compteStore.fetchComptes();
 
-const activeExerciceComptableId = computed(
-  () => exerciceComptableStore.activeId,
-);
+const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);
 
 const loading = ref(false);
 watchEffect(async () => {
@@ -53,22 +51,16 @@ const travaux = computed(() => travailStore.liste.filter((t) => t.statut >= 1));
 const sapeurs = computed(() => sapeurStore.liste);
 const travailTypes = computed(() => travailTypeStore.liste);
 const unites = computed(() => uniteStore.liste);
-const hasEditPermission = useHasPermission(
-  permissions.COMPTABILITE.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.COMPTABILITE.MODIFICATION);
 
 const computedData = computed(() => {
   return travaux.value.map((e) => ({
     ...e,
-    travail_type: travailTypes.value.find((t) => t.id == e.travail_type_id)
-      ?.designation,
+    travail_type: travailTypes.value.find((t) => t.id == e.travail_type_id)?.designation,
     sapeur: sapeurs.value.find((s) => s.id == e.sapeur_id)?.nom_prenom,
     auteur: sapeurs.value.find((s) => s.id == e.auteur_id)?.nom_prenom,
     unite: unites.value.find(
-      (u) =>
-        u.id ==
-        travailTypes.value.find((t) => t.id == e.travail_type_id)
-          ?.type_unite_id,
+      (u) => u.id == travailTypes.value.find((t) => t.id == e.travail_type_id)?.type_unite_id,
     )?.unite,
     getData: () => Promise.resolve(e.ecritures),
   }));
@@ -86,12 +78,10 @@ const awn = useNotification();
 const { confirm, showModal } = useModalStore();
 
 const imputer = (travailId) => {
-  const ids = travailId
-    ? [travailId]
-    : travaux.value.filter((t) => t.statut == 1).map((t) => t.id);
+  const ids = travailId ? [travailId] : travaux.value.filter((t) => t.statut == 1).map((t) => t.id);
 
   if (!ids.length) {
-    awn.warning('Aucun travail à impossible');
+    awn.warning("Aucun travail à impossible");
     return;
   }
 
@@ -99,7 +89,7 @@ const imputer = (travailId) => {
     .imputerTravail(ids)
     .then((res) => {
       travailStore.fetchTravaux(activeExerciceComptableId.value);
-      awn.success(res?.message ?? 'Travaux imputé avec succès');
+      awn.success(res?.message ?? "Travaux imputé avec succès");
     })
     .catch((err) => {
       awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
@@ -107,13 +97,13 @@ const imputer = (travailId) => {
 };
 const annulerImputer = (travailId) =>
   confirm(
-    'Voulez-vous vraiment supprimer cette imputation ?',
+    "Voulez-vous vraiment supprimer cette imputation ?",
     "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau ce travail.",
   ).then(() =>
     imputationStore
       .annulerImputationTravail(travailId)
       .then((res) => {
-        awn.success(res?.message ?? 'Travaux imputé avec succès');
+        awn.success(res?.message ?? "Travaux imputé avec succès");
       })
       .catch((err) => {
         awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
@@ -125,71 +115,71 @@ const onRowClass = (dataItem, isSelected) => {
     return;
   }
 
-  return dataItem?.statut == 2 ? 'table-success' : 'table-warning';
+  return dataItem?.statut == 2 ? "table-success" : "table-warning";
 };
 
 const detailRowOptions = {
   fields: [
     {
-      title: 'Type',
-      key: 'type',
+      title: "Type",
+      key: "type",
       formatter: (type) => {
         const mapping = {
-          0: 'Autre',
-          1: 'Solde',
-          2: 'Indemnité',
-          3: 'Frais forfaitaire',
-          4: 'Frais effectif',
-          5: 'Charges AVS/AC',
+          0: "Autre",
+          1: "Solde",
+          2: "Indemnité",
+          3: "Frais forfaitaire",
+          4: "Frais effectif",
+          5: "Charges AVS/AC",
         };
-        return mapping[type] || '';
+        return mapping[type] || "";
       },
     },
     {
-      title: 'Tarif',
-      key: 'tarif',
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      title: "Tarif",
+      key: "tarif",
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
     {
-      title: 'Quantite',
-      key: 'quantite',
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      title: "Quantite",
+      key: "quantite",
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
     {
-      title: 'Total',
-      key: 'total',
+      title: "Total",
+      key: "total",
       formatter: (total, ecriture) => (ecriture.module == 5 ? -total : total),
       type: Number,
-      titleClass: 'text-center',
-      columnClass: 'text-end',
+      titleClass: "text-center",
+      columnClass: "text-end",
     },
   ],
 };
 const fields = [
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'Sapeur', key: 'sapeur' },
-  { title: 'Travail', key: 'travail_type' },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Quantité', key: 'quantite' },
-  { title: 'Unité', key: 'unite' },
-  { title: 'Auteur', key: 'auteur' },
-  { title: 'Date demande', key: 'date_demande', type: Date },
+  { title: "Date", key: "date", type: Date },
+  { title: "Sapeur", key: "sapeur" },
+  { title: "Travail", key: "travail_type" },
+  { title: "Désignation", key: "designation" },
+  { title: "Quantité", key: "quantite" },
+  { title: "Unité", key: "unite" },
+  { title: "Auteur", key: "auteur" },
+  { title: "Date demande", key: "date_demande", type: Date },
   {
-    title: 'Statut',
-    key: 'statut',
+    title: "Statut",
+    key: "statut",
     formatter(statut) {
       return {
-        [-1]: 'Refusé',
-        0: 'En attente',
-        1: 'Accepté',
-        2: 'Imputé',
+        [-1]: "Refusé",
+        0: "En attente",
+        1: "Accepté",
+        2: "Imputé",
       }[statut];
     },
   },
-  { title: 'Justification', key: 'justification' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Justification", key: "justification" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -221,9 +211,7 @@ const fields = [
             >
               Annuler l'imputation du travail
             </button>
-            <button class="btn btn-outline-primary" @click="imputer()">
-              Tout imputer
-            </button>
+            <button class="btn btn-outline-primary" @click="imputer()">Tout imputer</button>
             <!-- <button
             v-if="selectedItem?.ecritures?.length"
             class="btn btn-outline-danger"
@@ -254,9 +242,7 @@ const fields = [
                 :options="filteredTravailTypes"
                 base-option="<Type>"
                 :model-value="filters.travail_type_id"
-                @update:model-value="
-                  (value) => setFilter('travail_type_id', value)
-                "
+                @update:model-value="(value) => setFilter('travail_type_id', value)"
               />
               <base-select
                 class="col-md-4"
@@ -270,9 +256,7 @@ const fields = [
                 @update:model-value="(value) => setFilter('statut', value)"
               />
               <div v-if="canReset" class="col-md-4">
-                <button class="btn btn-sm btn-warning w-100" @click="reset">
-                  Réinitialiser
-                </button>
+                <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
               </div>
             </div>
           </form>
@@ -296,10 +280,7 @@ const fields = [
               @selected="selected"
             >
               <template #detail-row="{ rowData }">
-                <generic-details-row
-                  :options="detailRowOptions"
-                  :row-data="rowData"
-                />
+                <generic-details-row :options="detailRowOptions" :row-data="rowData" />
               </template>
               <template #actions="{ rowData }">
                 <button

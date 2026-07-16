@@ -1,11 +1,11 @@
-import Api from '/src/http/Request';
+import Api from "/src/http/Request";
 
 export default {
   getHeuresTypes() {
-    return Api.api().get('/heure-exercice-types');
+    return Api.api().get("/heure-exercice-types");
   },
   addHeureType(heureType) {
-    return Api.api().post('/heure-exercice-types', heureType);
+    return Api.api().post("/heure-exercice-types", heureType);
   },
   updateHeureType(heureType) {
     return Api.api().put(`/heure-exercice-types/${heureType.id}`, heureType);

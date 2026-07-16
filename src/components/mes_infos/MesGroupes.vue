@@ -1,7 +1,7 @@
 <script setup>
-import { computed } from 'vue';
-import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
-import { useGroupeStore } from '../../stores/groupe/Groupe.js';
+import { computed } from "vue";
+import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
+import { useGroupeStore } from "../../stores/groupe/Groupe.js";
 
 const infosStore = useMesInfosStore();
 const groupeStore = useGroupeStore();
@@ -12,8 +12,7 @@ const groupes = computed(() =>
   infosStore.groupes
     .map((t) => ({
       ...t,
-      designation: groupeStore.liste.find((e) => e.id == t.groupe_id)
-        ?.designation,
+      designation: groupeStore.liste.find((e) => e.id == t.groupe_id)?.designation,
       numero: groupeStore.liste.find((e) => e.id == t.groupe_id)?.no,
       type: groupeStore.liste.find((e) => e.id == t.groupe_id)?.type,
     }))
@@ -21,8 +20,8 @@ const groupes = computed(() =>
 );
 
 const fields = [
-  { title: 'Numéro', key: 'numero', columnClass: 'col-2' },
-  { title: 'Désignation', key: 'designation' },
+  { title: "Numéro", key: "numero", columnClass: "col-2" },
+  { title: "Désignation", key: "designation" },
 ];
 </script>
 

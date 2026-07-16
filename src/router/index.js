@@ -1,19 +1,19 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
-import Public from '../pages/PagePublic.vue';
-import Home from '../pages/PageHome.vue';
-import permissions from '../composables/permissions.js';
-import { useAuthStore } from '../stores/auth/Auth.js';
+import { createRouter, createWebHashHistory } from "vue-router";
+import Public from "../pages/PagePublic.vue";
+import Home from "../pages/PageHome.vue";
+import permissions from "../composables/permissions.js";
+import { useAuthStore } from "../stores/auth/Auth.js";
 
-import { TokenService } from '../services/StorageService.js';
+import { TokenService } from "../services/StorageService.js";
 
-import NProgress from 'nprogress';
-import useHasPermission from '../composables/usePermission.js';
+import NProgress from "nprogress";
+import useHasPermission from "../composables/usePermission.js";
 
 const redirect = async (to, from) => {
   const authStore = useAuthStore();
   const isLoggedIn = !!authStore.user;
   return {
-    name: isLoggedIn ? 'dashboard' : 'login', // back to safety route //
+    name: isLoggedIn ? "dashboard" : "login", // back to safety route //
     query: { redirectFrom: to.fullPath },
   };
 };
@@ -22,15 +22,17 @@ const adminGuard = () => async (to, from) => {
   const authStore = useAuthStore();
   const isAdmin = authStore.admin;
   if (!isAdmin) {
-    return { name: 'accueil' };
+    return { name: "accueil" };
   }
 };
 
-const permissionGuard = (...perms) => async (to, from) => {
-  if (!useHasPermission(perms).value) {
-    return await redirect(to, from);
-  }
-};
+const permissionGuard =
+  (...perms) =>
+  async (to, from) => {
+    if (!useHasPermission(perms).value) {
+      return await redirect(to, from);
+    }
+  };
 
 const sapeurGuard = () => async (to, from) => {
   const authStore = useAuthStore();
@@ -45,7 +47,7 @@ const travauxGuard = () => async (to, from) => {
   const authStore = useAuthStore();
   const isAdmin = authStore.admin;
   if (!isAdmin) {
-    return { name: 'en-travaux' };
+    return { name: "en-travaux" };
   }
 };
 
@@ -53,603 +55,564 @@ const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/login',
-      name: 'login',
-      meta: { layout: 'empty', public: true, onlyWhenLoggedOut: true },
-      component: () => import('/src/pages/PageLogin.vue'),
+      path: "/login",
+      name: "login",
+      meta: { layout: "empty", public: true, onlyWhenLoggedOut: true },
+      component: () => import("/src/pages/PageLogin.vue"),
     },
     {
-      path: '/confirmation',
-      name: 'confirmation',
-      meta: { layout: 'no-sidebar', public: true },
-      component: () => import('/src/pages/PageConfirmation.vue'),
+      path: "/confirmation",
+      name: "confirmation",
+      meta: { layout: "no-sidebar", public: true },
+      component: () => import("/src/pages/PageConfirmation.vue"),
     },
     {
-      path: '/reset-mdp',
-      name: 'reset-password',
-      meta: { layout: 'no-sidebar', public: true },
-      component: () => import('/src/pages/PageResetPassword.vue'),
+      path: "/reset-mdp",
+      name: "reset-password",
+      meta: { layout: "no-sidebar", public: true },
+      component: () => import("/src/pages/PageResetPassword.vue"),
     },
     {
-      path: '/mdp-oublie',
-      name: 'forgotten-password',
-      meta: { layout: 'no-sidebar', public: true },
-      component: () => import('/src/pages/PageForgottenPassword.vue'),
+      path: "/mdp-oublie",
+      name: "forgotten-password",
+      meta: { layout: "no-sidebar", public: true },
+      component: () => import("/src/pages/PageForgottenPassword.vue"),
     },
     {
-      path: '/register',
-      name: 'register',
-      meta: { layout: 'empty', public: true, onlyWhenLoggedOut: true },
-      component: () => import('/src/pages/PageRegister.vue'),
+      path: "/register",
+      name: "register",
+      meta: { layout: "empty", public: true, onlyWhenLoggedOut: true },
+      component: () => import("/src/pages/PageRegister.vue"),
     },
     {
-      path: '/',
-      name: 'public',
-      meta: { layout: 'empty', public: true },
+      path: "/",
+      name: "public",
+      meta: { layout: "empty", public: true },
       component: Public,
     },
     {
-      path: '/en-travaux',
-      name: 'en-travaux',
-      component: () => import('/src/pages/PageEnTravaux.vue'),
+      path: "/en-travaux",
+      name: "en-travaux",
+      component: () => import("/src/pages/PageEnTravaux.vue"),
     },
     {
-      path: '/accueil',
-      name: 'accueil',
-      meta: { layout: 'no-sidebar' },
+      path: "/accueil",
+      name: "accueil",
+      meta: { layout: "no-sidebar" },
       component: Home,
     },
     {
-      path: '/mes-infos',
-      name: 'mon-dashboard',
-      component: () => import('/src/pages/PageMesInfos.vue'),
+      path: "/mes-infos",
+      name: "mon-dashboard",
+      component: () => import("/src/pages/PageMesInfos.vue"),
       beforeEnter: sapeurGuard(),
       children: [
         {
-          path: '',
-          name: 'mes-infos',
+          path: "",
+          name: "mes-infos",
           beforeEnter: sapeurGuard(),
-          component: () => import('/src/components/mes_infos/MesInfos.vue'),
+          component: () => import("/src/components/mes_infos/MesInfos.vue"),
         },
         {
-          path: 'exercices',
-          name: 'mes-exercices',
+          path: "exercices",
+          name: "mes-exercices",
           beforeEnter: sapeurGuard(),
-          component: () => import('/src/components/mes_infos/MesExercices.vue'),
+          component: () => import("/src/components/mes_infos/MesExercices.vue"),
         },
         {
-          path: 'interventions',
-          name: 'mes-interventions',
+          path: "interventions",
+          name: "mes-interventions",
           beforeEnter: sapeurGuard(),
-          component: () =>
-            import('/src/components/mes_infos/MesInterventions.vue'),
+          component: () => import("/src/components/mes_infos/MesInterventions.vue"),
         },
         {
-          path: 'absences',
-          name: 'mes-absences',
+          path: "absences",
+          name: "mes-absences",
           beforeEnter: sapeurGuard(),
-          component: () => import('/src/components/mes_infos/MesAbsences.vue'),
+          component: () => import("/src/components/mes_infos/MesAbsences.vue"),
         },
         {
-          path: 'materiel',
-          name: 'mon-materiel',
+          path: "materiel",
+          name: "mon-materiel",
           beforeEnter: sapeurGuard(),
-          component: () => import('/src/components/mes_infos/MonMateriel.vue'),
+          component: () => import("/src/components/mes_infos/MonMateriel.vue"),
         },
         {
-          path: 'travaux',
-          name: 'mes-travaux',
+          path: "travaux",
+          name: "mes-travaux",
           beforeEnter: sapeurGuard(),
-          component: () => import('/src/components/mes_infos/MesTravaux.vue'),
+          component: () => import("/src/components/mes_infos/MesTravaux.vue"),
         },
         {
-          path: 'decomptes',
-          name: 'mes-decomptes',
+          path: "decomptes",
+          name: "mes-decomptes",
           beforeEnter: sapeurGuard(),
-          component: () => import('/src/components/mes_infos/MesDecomptes.vue'),
+          component: () => import("/src/components/mes_infos/MesDecomptes.vue"),
         },
         {
-          path: 'controles-medicaux',
-          name: 'mes-controles-medicaux',
+          path: "controles-medicaux",
+          name: "mes-controles-medicaux",
           beforeEnter: sapeurGuard(),
-          component: () =>
-            import('/src/components/mes_infos/MesControlesMedicaux.vue'),
+          component: () => import("/src/components/mes_infos/MesControlesMedicaux.vue"),
         },
         {
-          path: 'cours',
-          name: 'mes-cours',
+          path: "cours",
+          name: "mes-cours",
           beforeEnter: sapeurGuard(),
-          component: () => import('/src/components/mes_infos/MesCours.vue'),
+          component: () => import("/src/components/mes_infos/MesCours.vue"),
         },
         {
-          path: 'fonctions',
-          name: 'mes-fonctions',
+          path: "fonctions",
+          name: "mes-fonctions",
           beforeEnter: sapeurGuard(),
-          component: () => import('/src/components/mes_infos/MesFonctions.vue'),
+          component: () => import("/src/components/mes_infos/MesFonctions.vue"),
         },
         {
-          path: 'grades',
-          name: 'mes-grades',
+          path: "grades",
+          name: "mes-grades",
           beforeEnter: sapeurGuard(),
-          component: () => import('/src/components/mes_infos/MesGrades.vue'),
+          component: () => import("/src/components/mes_infos/MesGrades.vue"),
         },
         {
-          path: 'groupes',
-          name: 'mes-groupes',
+          path: "groupes",
+          name: "mes-groupes",
           beforeEnter: sapeurGuard(),
-          component: () => import('/src/components/mes_infos/MesGroupes.vue'),
+          component: () => import("/src/components/mes_infos/MesGroupes.vue"),
         },
         {
-          path: 'mutations',
-          name: 'mes-mutations',
+          path: "mutations",
+          name: "mes-mutations",
           beforeEnter: sapeurGuard(),
-          component: () => import('/src/components/mes_infos/MesMutations.vue'),
+          component: () => import("/src/components/mes_infos/MesMutations.vue"),
         },
         {
-          path: 'permis',
-          name: 'mes-permis',
+          path: "permis",
+          name: "mes-permis",
           beforeEnter: sapeurGuard(),
-          component: () => import('/src/components/mes_infos/MesPermis.vue'),
+          component: () => import("/src/components/mes_infos/MesPermis.vue"),
         },
       ],
     },
     {
-      path: '/utilisateur',
-      name: 'utilisateur',
-      component: () => import('/src/pages/PageUser.vue'),
+      path: "/utilisateur",
+      name: "utilisateur",
+      component: () => import("/src/pages/PageUser.vue"),
     },
     {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: () => import('/src/pages/PageDashboard.vue'),
+      path: "/dashboard",
+      name: "dashboard",
+      component: () => import("/src/pages/PageDashboard.vue"),
     },
     {
-      path: '/sapeurs/:id',
-      name: 'sapeur-index',
+      path: "/sapeurs/:id",
+      name: "sapeur-index",
       beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
-      component: () => import('/src/pages/PageSapeurs.vue'),
+      component: () => import("/src/pages/PageSapeurs.vue"),
       props: true,
       children: [
         {
-          path: 'details',
-          name: 'sapeur-details',
+          path: "details",
+          name: "sapeur-details",
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
-          component: () => import('../components/sapeur/SapeurTabGeneral.vue'),
+          component: () => import("../components/sapeur/SapeurTabGeneral.vue"),
         },
         {
-          path: 'mutations',
-          name: 'sapeur-mutations',
+          path: "mutations",
+          name: "sapeur-mutations",
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
-          component: () => import('../components/sapeur/SapeurMutations.vue'),
+          component: () => import("../components/sapeur/SapeurMutations.vue"),
         },
         {
-          path: 'controles-medicaux',
-          name: 'sapeur-controles-medicaux',
+          path: "controles-medicaux",
+          name: "sapeur-controles-medicaux",
           beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.TOUT),
-          component: () =>
-            import('../components/sapeur/SapeurControlesMedicaux.vue'),
+          component: () => import("../components/sapeur/SapeurControlesMedicaux.vue"),
         },
         {
-          path: 'fonctions',
-          name: 'sapeur-fonctions',
+          path: "fonctions",
+          name: "sapeur-fonctions",
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
-          component: () => import('../components/sapeur/SapeurFonction.vue'),
+          component: () => import("../components/sapeur/SapeurFonction.vue"),
         },
         {
-          path: 'cours',
-          name: 'sapeur-cours',
+          path: "cours",
+          name: "sapeur-cours",
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
-          component: () => import('../components/sapeur/SapeurCours.vue'),
+          component: () => import("../components/sapeur/SapeurCours.vue"),
         },
         {
-          path: 'promotions',
-          name: 'sapeur-promotions',
+          path: "promotions",
+          name: "sapeur-promotions",
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
-          component: () => import('../components/sapeur/SapeurPromotion.vue'),
+          component: () => import("../components/sapeur/SapeurPromotion.vue"),
         },
         {
-          path: 'materiels',
-          name: 'sapeur-materiels',
+          path: "materiels",
+          name: "sapeur-materiels",
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
-          component: () => import('../components/sapeur/SapeurMateriel.vue'),
+          component: () => import("../components/sapeur/SapeurMateriel.vue"),
         },
         {
-          path: 'organisation',
-          name: 'sapeur-organisation',
+          path: "organisation",
+          name: "sapeur-organisation",
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
-          component: () =>
-            import('../components/sapeur/SapeurOrganisation.vue'),
+          component: () => import("../components/sapeur/SapeurOrganisation.vue"),
         },
         {
-          path: 'permis',
-          name: 'sapeur-permis',
+          path: "permis",
+          name: "sapeur-permis",
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
-          component: () => import('../components/sapeur/SapeurPermis.vue'),
+          component: () => import("../components/sapeur/SapeurPermis.vue"),
         },
         {
-          path: 'banque',
-          name: 'sapeur-banque',
+          path: "banque",
+          name: "sapeur-banque",
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
-          component: () => import('../components/sapeur/SapeurBanque.vue'),
+          component: () => import("../components/sapeur/SapeurBanque.vue"),
         },
         {
-          path: 'exercices',
-          name: 'sapeur-exercices',
+          path: "exercices",
+          name: "sapeur-exercices",
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
-          component: () => import('../components/sapeur/SapeurExercice.vue'),
+          component: () => import("../components/sapeur/SapeurExercice.vue"),
         },
       ],
     },
     {
-      path: '/effectif',
-      name: 'effectif',
+      path: "/effectif",
+      name: "effectif",
       beforeEnter: permissionGuard(permissions.EFFECTIF.TOUT),
-      component: () => import('/src/pages/PageEffectif.vue'),
+      component: () => import("/src/pages/PageEffectif.vue"),
     },
     {
-      path: '/exercices/:id',
+      path: "/exercices/:id",
       beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
       props: true,
-      component: () => import('/src/pages/PageExercice.vue'),
+      component: () => import("/src/pages/PageExercice.vue"),
       children: [
         {
-          path: '',
-          name: 'exercice-details',
+          path: "",
+          name: "exercice-details",
           props: true,
           beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
-          component: () =>
-            import('../components/exercice/ExerciceTabGeneral.vue'),
+          component: () => import("../components/exercice/ExerciceTabGeneral.vue"),
         },
         {
-          path: 'presence',
-          name: 'exercice-presence',
+          path: "presence",
+          name: "exercice-presence",
           props: true,
           beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
-          component: () =>
-            import('../components/exercice/ExerciceTabSapeurs.vue'),
+          component: () => import("../components/exercice/ExerciceTabSapeurs.vue"),
         },
         {
-          path: 'sms',
-          name: 'exercice-sms',
+          path: "sms",
+          name: "exercice-sms",
           props: true,
           beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
-          component: () => import('../components/exercice/ExerciceTabSms.vue'),
+          component: () => import("../components/exercice/ExerciceTabSms.vue"),
         },
       ],
     },
     {
-      path: '/exercices',
+      path: "/exercices",
       beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
-      component: () => import('/src/pages/PageExercices.vue'),
+      component: () => import("/src/pages/PageExercices.vue"),
       children: [
         {
-          path: '',
-          name: 'exercices',
+          path: "",
+          name: "exercices",
           beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
-          component: () => import('/src/components/exercice/ExerciceListe.vue'),
+          component: () => import("/src/components/exercice/ExerciceListe.vue"),
         },
         {
-          path: 'absences',
-          name: 'exercices-absences',
+          path: "absences",
+          name: "exercices-absences",
           beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
-          component: () =>
-            import('/src/components/exercice/ExerciceAbsences.vue'),
+          component: () => import("/src/components/exercice/ExerciceAbsences.vue"),
         },
       ],
     },
     {
-      path: '/absences',
+      path: "/absences",
       beforeEnter: permissionGuard(permissions.ABSENCE.LECTURE),
-      component: () => import('/src/pages/PageAbsences.vue'),
+      component: () => import("/src/pages/PageAbsences.vue"),
       children: [
         {
-          path: '',
-          name: 'absences',
+          path: "",
+          name: "absences",
           beforeEnter: permissionGuard(permissions.ABSENCE.LECTURE),
-          component: () =>
-            import('/src/components/absence/AbsenceDashboard.vue'),
+          component: () => import("/src/components/absence/AbsenceDashboard.vue"),
         },
         {
-          path: 'liste',
-          name: 'absences-liste',
+          path: "liste",
+          name: "absences-liste",
           beforeEnter: permissionGuard(permissions.ABSENCE.LECTURE),
-          component: () => import('/src/components/absence/AbsenceListe.vue'),
+          component: () => import("/src/components/absence/AbsenceListe.vue"),
         },
       ],
     },
     {
-      path: '/cours',
-      name: 'cours',
+      path: "/cours",
+      name: "cours",
       beforeEnter: permissionGuard(permissions.COURS.LECTURE),
-      component: () => import('/src/pages/PageCours.vue'),
+      component: () => import("/src/pages/PageCours.vue"),
     },
     {
-      path: '/fiche-travail',
-      name: 'fiche-travail',
+      path: "/fiche-travail",
+      name: "fiche-travail",
       beforeEnter: permissionGuard(
         permissions.FICHE_TRAVAIL.LECTURE,
         permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
-        permissions.FICHE_TRAVAIL.SAISIE_PERSO
+        permissions.FICHE_TRAVAIL.SAISIE_PERSO,
       ),
-      component: () => import('/src/pages/PageTravaux.vue'),
+      component: () => import("/src/pages/PageTravaux.vue"),
     },
     {
-      path: '/organisation',
-      name: 'organisation',
+      path: "/organisation",
+      name: "organisation",
       beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
-      component: () => import('/src/pages/PageOrganisation.vue'),
+      component: () => import("/src/pages/PageOrganisation.vue"),
     },
     {
-      path: '/interventions/:id',
+      path: "/interventions/:id",
       beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
       props: true,
-      component: () => import('/src/pages/PageIntervention.vue'),
+      component: () => import("/src/pages/PageIntervention.vue"),
       children: [
         {
-          path: '',
-          name: 'intervention-details',
+          path: "",
+          name: "intervention-details",
           props: true,
           beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
-          component: () =>
-            import('/src/components/intervention/InterventionTabGeneral.vue'),
+          component: () => import("/src/components/intervention/InterventionTabGeneral.vue"),
         },
         {
-          path: 'resume',
-          name: 'intervention-resume',
+          path: "resume",
+          name: "intervention-resume",
           props: true,
           beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
-          component: () =>
-            import('/src/components/intervention/InterventionTabResume.vue'),
+          component: () => import("/src/components/intervention/InterventionTabResume.vue"),
         },
         {
-          path: 'presence',
-          name: 'intervention-presence',
+          path: "presence",
+          name: "intervention-presence",
           props: true,
           beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
-          component: () =>
-            import('/src/components/intervention/InterventionTabSapeurs.vue'),
+          component: () => import("/src/components/intervention/InterventionTabSapeurs.vue"),
         },
         {
-          path: 'journal',
-          name: 'intervention-journal',
+          path: "journal",
+          name: "intervention-journal",
           props: true,
           beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
-          component: () =>
-            import('/src/components/intervention/InterventionTabJournal.vue'),
+          component: () => import("/src/components/intervention/InterventionTabJournal.vue"),
         },
         {
-          path: 'materiel-vehicule',
-          name: 'intervention-materiel-vehicule',
+          path: "materiel-vehicule",
+          name: "intervention-materiel-vehicule",
           props: true,
           beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
           component: () =>
-            import(
-              '/src/components/intervention/InterventionTabMaterielVehicule.vue'
-            ),
+            import("/src/components/intervention/InterventionTabMaterielVehicule.vue"),
         },
       ],
     },
     {
-      path: '/interventions',
-      name: 'interventions',
+      path: "/interventions",
+      name: "interventions",
       beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
-      component: () => import('/src/pages/PageInterventions.vue'),
+      component: () => import("/src/pages/PageInterventions.vue"),
     },
     {
-      path: '/comptabilite',
-      name: 'comptabilite',
+      path: "/comptabilite",
+      name: "comptabilite",
       beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
-      component: () => import('/src/pages/PageComptabilite.vue'),
+      component: () => import("/src/pages/PageComptabilite.vue"),
       children: [
         {
-          path: '',
-          name: 'comptabilite-decompte',
+          path: "",
+          name: "comptabilite-decompte",
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
-          component: () =>
-            import('/src/components/comptabilite/ComptabiliteTabDecomptes.vue'),
+          component: () => import("/src/components/comptabilite/ComptabiliteTabDecomptes.vue"),
         },
         {
-          path: 'comptes',
-          name: 'comptabilite-compte',
+          path: "comptes",
+          name: "comptabilite-compte",
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
-          component: () =>
-            import('/src/components/comptabilite/ComptabiliteTabComptes.vue'),
+          component: () => import("/src/components/comptabilite/ComptabiliteTabComptes.vue"),
         },
         {
-          path: 'exercices',
-          name: 'comptabilite-exercice',
+          path: "exercices",
+          name: "comptabilite-exercice",
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
-          component: () =>
-            import('/src/components/comptabilite/ComptabiliteTabExercice.vue'),
+          component: () => import("/src/components/comptabilite/ComptabiliteTabExercice.vue"),
         },
         {
-          path: 'interventions',
-          name: 'comptabilite-intervention',
+          path: "interventions",
+          name: "comptabilite-intervention",
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
-          component: () =>
-            import(
-              '/src/components/comptabilite/ComptabiliteTabIntervention.vue'
-            ),
+          component: () => import("/src/components/comptabilite/ComptabiliteTabIntervention.vue"),
         },
         {
-          path: 'cours',
-          name: 'comptabilite-cours',
+          path: "cours",
+          name: "comptabilite-cours",
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
-          component: () =>
-            import('/src/components/comptabilite/ComptabiliteTabCours.vue'),
+          component: () => import("/src/components/comptabilite/ComptabiliteTabCours.vue"),
         },
         {
-          path: 'travaux',
-          name: 'comptabilite-travaux',
+          path: "travaux",
+          name: "comptabilite-travaux",
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
-          component: () =>
-            import('/src/components/comptabilite/ComptabiliteTabTravaux.vue'),
+          component: () => import("/src/components/comptabilite/ComptabiliteTabTravaux.vue"),
         },
         {
-          path: 'annuel',
-          name: 'comptabilite-annuel',
+          path: "annuel",
+          name: "comptabilite-annuel",
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
-          component: () =>
-            import('/src/components/comptabilite/ComptabiliteTabAnnuel.vue'),
+          component: () => import("/src/components/comptabilite/ComptabiliteTabAnnuel.vue"),
         },
         {
-          path: 'sapeurs',
-          name: 'comptabilite-sapeurs',
+          path: "sapeurs",
+          name: "comptabilite-sapeurs",
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
-          component: () =>
-            import('/src/components/comptabilite/ComptabiliteTabSapeur.vue'),
+          component: () => import("/src/components/comptabilite/ComptabiliteTabSapeur.vue"),
         },
         {
-          path: 'divers',
-          name: 'comptabilite-divers',
+          path: "divers",
+          name: "comptabilite-divers",
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
-          component: () =>
-            import('/src/components/comptabilite/ComptabiliteTabDivers.vue'),
+          component: () => import("/src/components/comptabilite/ComptabiliteTabDivers.vue"),
         },
         {
-          path: 'amendes',
-          name: 'comptabilite-amendes',
+          path: "amendes",
+          name: "comptabilite-amendes",
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
-          component: () =>
-            import('/src/components/comptabilite/ComptabiliteTabAmendes.vue'),
+          component: () => import("/src/components/comptabilite/ComptabiliteTabAmendes.vue"),
         },
       ],
     },
     {
-      path: '/publipostage',
-      name: 'publipostage',
-      component: () => import('/src/pages/PagePublipostage.vue'),
+      path: "/publipostage",
+      name: "publipostage",
+      component: () => import("/src/pages/PagePublipostage.vue"),
       beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
     },
     {
-      path: '/statistique',
-      name: 'statistique',
-      component: () => import('/src/pages/PageStatistique.vue'),
+      path: "/statistique",
+      name: "statistique",
+      component: () => import("/src/pages/PageStatistique.vue"),
       children: [
         {
-          path: '',
-          name: 'stat-dashboard',
-          component: () =>
-            import('/src/components/statistique/StatDashboard.vue'),
+          path: "",
+          name: "stat-dashboard",
+          component: () => import("/src/components/statistique/StatDashboard.vue"),
         },
         {
-          path: 'sapeur',
-          name: 'stat-sapeur',
-          component: () => import('/src/components/statistique/StatSapeur.vue'),
+          path: "sapeur",
+          name: "stat-sapeur",
+          component: () => import("/src/components/statistique/StatSapeur.vue"),
         },
         {
-          path: 'exercice',
-          name: 'stat-exercice-simple',
-          component: () =>
-            import('/src/components/statistique/StatExercice.vue'),
+          path: "exercice",
+          name: "stat-exercice-simple",
+          component: () => import("/src/components/statistique/StatExercice.vue"),
         },
         {
-          path: 'exercice-presence',
-          name: 'stat-exercice-presence',
-          component: () =>
-            import('/src/components/statistique/StatExercicePresence.vue'),
+          path: "exercice-presence",
+          name: "stat-exercice-presence",
+          component: () => import("/src/components/statistique/StatExercicePresence.vue"),
         },
         {
-          path: 'intervention',
-          name: 'stat-intervention',
-          component: () =>
-            import('/src/components/statistique/StatIntervention.vue'),
+          path: "intervention",
+          name: "stat-intervention",
+          component: () => import("/src/components/statistique/StatIntervention.vue"),
         },
         {
-          path: 'intervention-presence',
-          name: 'stat-intervention-presence',
-          component: () =>
-            import('/src/components/statistique/StatInterventionPresence.vue'),
+          path: "intervention-presence",
+          name: "stat-intervention-presence",
+          component: () => import("/src/components/statistique/StatInterventionPresence.vue"),
         },
         {
-          path: 'comptabilite',
-          name: 'stat-comptabilite',
-          component: () =>
-            import('/src/components/statistique/StatComptabilite.vue'),
+          path: "comptabilite",
+          name: "stat-comptabilite",
+          component: () => import("/src/components/statistique/StatComptabilite.vue"),
         },
       ],
     },
     {
-      path: '/controles-medicaux',
-      name: 'controles-medicaux',
+      path: "/controles-medicaux",
+      name: "controles-medicaux",
       beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.TOUT),
-      component: () => import('/src/pages/PageControlesMedicaux.vue'),
+      component: () => import("/src/pages/PageControlesMedicaux.vue"),
     },
     {
-      path: '/controles-medicaux/:id',
-      name: 'controle-medical',
+      path: "/controles-medicaux/:id",
+      name: "controle-medical",
       beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.TOUT),
       props: true,
-      component: () => import('/src/pages/PageControleMedical.vue'),
+      component: () => import("/src/pages/PageControleMedical.vue"),
     },
     {
-      path: '/materiel',
+      path: "/materiel",
       beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
-      component: () => import('/src/pages/PageMateriel.vue'),
+      component: () => import("/src/pages/PageMateriel.vue"),
       children: [
         {
-          path: 'par-type',
+          path: "par-type",
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
           children: [
             {
-              path: '',
-              name: 'materiel-par-type',
-              component: () =>
-                import('/src/components/materiel/TabParType.vue'),
+              path: "",
+              name: "materiel-par-type",
+              component: () => import("/src/components/materiel/TabParType.vue"),
             },
             {
-              path: ':id',
-              name: 'materiel-par-type-details',
+              path: ":id",
+              name: "materiel-par-type-details",
               props: true,
-              component: () =>
-                import('/src/components/materiel/TabParType.vue'),
+              component: () => import("/src/components/materiel/TabParType.vue"),
             },
           ],
         },
         {
-          path: 'par-emplacement',
+          path: "par-emplacement",
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
           children: [
             {
-              path: '',
-              name: 'materiel-par-emplacement',
-              component: () =>
-                import('/src/components/materiel/TabParEmplacement.vue'),
+              path: "",
+              name: "materiel-par-emplacement",
+              component: () => import("/src/components/materiel/TabParEmplacement.vue"),
             },
             {
-              path: ':id',
-              name: 'materiel-par-emplacement-details',
+              path: ":id",
+              name: "materiel-par-emplacement-details",
               props: true,
-              component: () =>
-                import('/src/components/materiel/TabParEmplacement.vue'),
+              component: () => import("/src/components/materiel/TabParEmplacement.vue"),
             },
           ],
         },
         {
-          path: 'par-sapeur',
+          path: "par-sapeur",
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
           children: [
             {
-              path: '',
-              name: 'materiel-par-sapeur',
-              component: () =>
-                import('/src/components/materiel/TabParSapeur.vue'),
+              path: "",
+              name: "materiel-par-sapeur",
+              component: () => import("/src/components/materiel/TabParSapeur.vue"),
             },
             {
-              path: ':id',
-              name: 'materiel-par-sapeur-details',
+              path: ":id",
+              name: "materiel-par-sapeur-details",
               props: true,
-              component: () =>
-                import('/src/components/materiel/TabParSapeur.vue'),
+              component: () => import("/src/components/materiel/TabParSapeur.vue"),
             },
           ],
         },
         {
-          path: 'lavages',
-          name: 'materiel-lavages',
+          path: "lavages",
+          name: "materiel-lavages",
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
-          component: () =>
-            import('/src/components/materiel/TabLavages.vue'),
+          component: () => import("/src/components/materiel/TabLavages.vue"),
         },
         //   {
         //     path: 'inventaire',
@@ -661,28 +624,26 @@ const router = createRouter({
       ],
     },
     {
-      path: '/utilisateurs',
+      path: "/utilisateurs",
       beforeEnter: permissionGuard(permissions.UTILISATEUR.TOUT),
       props: true,
-      component: () => import('/src/pages/PageUtilisateurs.vue'),
+      component: () => import("/src/pages/PageUtilisateurs.vue"),
       children: [
         {
-          path: '',
-          name: 'utilisateurs',
-          component: () =>
-            import('/src/components/utilisateur/ListeUtilisateur.vue'),
+          path: "",
+          name: "utilisateurs",
+          component: () => import("/src/components/utilisateur/ListeUtilisateur.vue"),
         },
         {
-          path: 'manquants',
-          name: 'utilisateurs-manquants',
-          component: () =>
-            import('/src/components/utilisateur/SapeurSansCompte.vue'),
+          path: "manquants",
+          name: "utilisateurs-manquants",
+          component: () => import("/src/components/utilisateur/SapeurSansCompte.vue"),
         },
       ],
     },
     {
-      path: '/configuration',
-      name: 'parametres',
+      path: "/configuration",
+      name: "parametres",
       beforeEnter: permissionGuard(
         permissions.COMPTABILITE.CONFIG,
         permissions.CONTROLE_MEDICAL.CONFIG,
@@ -694,13 +655,13 @@ const router = createRouter({
         permissions.SAPEUR.CONFIG,
         permissions.SIS.CONFIG,
         permissions.SMS.CONFIG,
-        permissions.UTILISATEUR.CONFIG
+        permissions.UTILISATEUR.CONFIG,
       ),
-      component: () => import('/src/pages/PageConfiguration.vue'),
+      component: () => import("/src/pages/PageConfiguration.vue"),
       children: [
         {
-          path: '',
-          name: 'param-general',
+          path: "",
+          name: "param-general",
           beforeEnter: permissionGuard(
             permissions.COMPTABILITE.CONFIG,
             permissions.CONTROLE_MEDICAL.CONFIG,
@@ -712,177 +673,158 @@ const router = createRouter({
             permissions.SAPEUR.CONFIG,
             permissions.SIS.CONFIG,
             permissions.SMS.CONFIG,
-            permissions.UTILISATEUR.CONFIG
+            permissions.UTILISATEUR.CONFIG,
           ),
-          component: () =>
-            import('/src/components/parametres/ParametreTabGeneral.vue'),
+          component: () => import("/src/components/parametres/ParametreTabGeneral.vue"),
         },
         {
-          path: 'exercice-comptable',
-          name: 'param-exercice-comptable',
+          path: "exercice-comptable",
+          name: "param-exercice-comptable",
           beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
-          component: () =>
-            import(
-              '/src/components/parametres/ParametreTabExerciceComptable.vue'
-            ),
+          component: () => import("/src/components/parametres/ParametreTabExerciceComptable.vue"),
         },
         {
-          path: 'sapeur',
-          name: 'param-sapeur',
+          path: "sapeur",
+          name: "param-sapeur",
           beforeEnter: permissionGuard(permissions.SAPEUR.CONFIG),
-          component: () =>
-            import('/src/components/parametres/ParametreTabSapeur.vue'),
+          component: () => import("/src/components/parametres/ParametreTabSapeur.vue"),
         },
         {
-          path: 'exercice',
-          name: 'param-exercice',
+          path: "exercice",
+          name: "param-exercice",
           beforeEnter: permissionGuard(permissions.EXERCICE.CONFIG),
-          component: () =>
-            import('/src/components/parametres/ParametreTabExercice.vue'),
+          component: () => import("/src/components/parametres/ParametreTabExercice.vue"),
         },
         {
-          path: 'intervention',
-          name: 'param-intervention',
+          path: "intervention",
+          name: "param-intervention",
           beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
-          component: () =>
-            import('/src/components/parametres/ParametreTabIntervention.vue'),
+          component: () => import("/src/components/parametres/ParametreTabIntervention.vue"),
         },
         {
-          path: 'fiche-travail',
-          name: 'param-fiche-travail',
+          path: "fiche-travail",
+          name: "param-fiche-travail",
           beforeEnter: permissionGuard(permissions.FICHE_TRAVAIL.CONFIG),
-          component: () =>
-            import('/src/components/parametres/ParametreTabFicheTravail.vue'),
+          component: () => import("/src/components/parametres/ParametreTabFicheTravail.vue"),
         },
         {
-          path: 'sms',
-          name: 'param-sms',
+          path: "sms",
+          name: "param-sms",
           beforeEnter: permissionGuard(permissions.SMS.CONFIG),
-          component: () =>
-            import('/src/components/parametres/ParametreTabSms.vue'),
+          component: () => import("/src/components/parametres/ParametreTabSms.vue"),
         },
         {
-          path: 'absence',
-          name: 'param-absence',
+          path: "absence",
+          name: "param-absence",
           beforeEnter: permissionGuard(permissions.ABSENCE.CONFIG),
-          component: () =>
-            import('/src/components/parametres/ParametreTabAbsence.vue'),
+          component: () => import("/src/components/parametres/ParametreTabAbsence.vue"),
         },
         {
-          path: 'comptabilite',
-          name: 'param-comptabilite',
+          path: "comptabilite",
+          name: "param-comptabilite",
           beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
-          component: () =>
-            import('/src/components/parametres/ParametreTabComptabilite.vue'),
+          component: () => import("/src/components/parametres/ParametreTabComptabilite.vue"),
         },
         {
-          path: 'controle-medical',
-          name: 'param-controle-medical',
+          path: "controle-medical",
+          name: "param-controle-medical",
           beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.CONFIG),
-          component: () =>
-            import(
-              '/src/components/parametres/ParametreTabControleMedical.vue'
-            ),
+          component: () => import("/src/components/parametres/ParametreTabControleMedical.vue"),
         },
         {
-          path: 'materiel',
-          name: 'param-materiel',
+          path: "materiel",
+          name: "param-materiel",
           beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
-          component: () =>
-            import(
-              '/src/components/parametres/ParametreTabMateriel.vue'
-            ),
+          component: () => import("/src/components/parametres/ParametreTabMateriel.vue"),
         },
         {
-          path: 'roles',
-          name: 'param-roles',
+          path: "roles",
+          name: "param-roles",
           beforeEnter: permissionGuard(permissions.UTILISATEUR.CONFIG),
-          component: () =>
-            import('/src/components/parametres/ParametreTabRole.vue'),
+          component: () => import("/src/components/parametres/ParametreTabRole.vue"),
         },
       ],
     },
     {
-      path: '/rta',
-      name: 'rta',
+      path: "/rta",
+      name: "rta",
       beforeEnter: permissionGuard(permissions.RTA.LECTURE),
-      component: () => import('/src/pages/PageRta.vue'),
-      redirect: { name: 'rta-mutations' },
+      component: () => import("/src/pages/PageRta.vue"),
+      redirect: { name: "rta-mutations" },
       children: [
         {
-          path: 'mutations',
-          name: 'rta-mutations',
+          path: "mutations",
+          name: "rta-mutations",
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
-          component: () =>
-            import('/src/components/rta/MutationsRta.vue'),
+          component: () => import("/src/components/rta/MutationsRta.vue"),
         },
         {
-          path: 'reference',
-          name: 'rta-reference',
+          path: "reference",
+          name: "rta-reference",
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
-          component: () => import('/src/components/rta/ReferenceRta.vue'),
+          component: () => import("/src/components/rta/ReferenceRta.vue"),
         },
         {
-          path: 'gestsis',
-          name: 'rta-gestsis',
+          path: "gestsis",
+          name: "rta-gestsis",
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
-          component: () => import('/src/components/rta/GestSisRta.vue'),
+          component: () => import("/src/components/rta/GestSisRta.vue"),
         },
         {
-          path: 'fichiers',
-          name: 'rta-fichiers',
+          path: "fichiers",
+          name: "rta-fichiers",
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
-          component: () => import('/src/components/rta/Fichiers.vue'),
+          component: () => import("/src/components/rta/Fichiers.vue"),
         },
         {
-          path: 'demandes',
-          name: 'rta-demandes',
+          path: "demandes",
+          name: "rta-demandes",
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
-          component: () => import('/src/components/rta/Demandes.vue'),
+          component: () => import("/src/components/rta/Demandes.vue"),
         },
         {
-          path: 'agriculteurs',
-          name: 'rta-agriculteurs',
+          path: "agriculteurs",
+          name: "rta-agriculteurs",
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
-          component: () => import('/src/components/rta/Agriculteurs.vue'),
+          component: () => import("/src/components/rta/Agriculteurs.vue"),
         },
       ],
     },
     {
-      path: '/about',
-      name: 'about',
-      component: () => import('/src/pages/PageAbout.vue'),
+      path: "/about",
+      name: "about",
+      component: () => import("/src/pages/PageAbout.vue"),
     },
     {
-      path: '/alarmes',
-      name: 'alarmes',
+      path: "/alarmes",
+      name: "alarmes",
       beforeEnter: adminGuard(),
-      component: () => import('/src/pages/PageAlarmes.vue'),
+      component: () => import("/src/pages/PageAlarmes.vue"),
     },
     {
-      path: '/admin',
-      name: 'admin',
+      path: "/admin",
+      name: "admin",
       beforeEnter: adminGuard(),
-      component: () => import('/src/pages/PageAdmin.vue'),
+      component: () => import("/src/pages/PageAdmin.vue"),
       children: [
         {
-          path: 'sis',
-          name: 'admin-sis',
+          path: "sis",
+          name: "admin-sis",
           beforeEnter: adminGuard(),
-          component: () => import('/src/components/admin/AdminSis.vue'),
+          component: () => import("/src/components/admin/AdminSis.vue"),
         },
         {
-          path: 'users',
-          name: 'admin-users',
+          path: "users",
+          name: "admin-users",
           beforeEnter: adminGuard(),
-          component: () => import('/src/components/admin/AdminUsers.vue'),
+          component: () => import("/src/components/admin/AdminUsers.vue"),
         },
         {
-          path: 'users/:id',
-          name: 'admin-user',
+          path: "users/:id",
+          name: "admin-user",
           props: true,
           beforeEnter: adminGuard(),
-          component: () => import('/src/components/admin/AdminUser.vue'),
+          component: () => import("/src/components/admin/AdminUser.vue"),
         },
       ],
     },
@@ -893,14 +835,12 @@ router.beforeEach(async (to, from) => {
   NProgress.start();
 
   const isPublic = to.matched.some((record) => record.meta.public);
-  const onlyWhenLoggedOut = to.matched.some(
-    (record) => record.meta.onlyWhenLoggedOut
-  );
+  const onlyWhenLoggedOut = to.matched.some((record) => record.meta.onlyWhenLoggedOut);
   const loggedIn = !!TokenService.getAccessToken();
 
   if (!isPublic && !loggedIn) {
     return {
-      name: 'login',
+      name: "login",
       query: { redirect: to.fullPath }, // Store the full path to redirect the user to after login
     };
   }
@@ -908,7 +848,7 @@ router.beforeEach(async (to, from) => {
   // Do not allow user to visit login page or register page if they are logged in
   if (loggedIn && onlyWhenLoggedOut) {
     return {
-      name: 'accueil',
+      name: "accueil",
       query: { redirect: to.fullPath }, // Store the full path to redirect the user to after login
     };
   }

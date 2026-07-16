@@ -1,8 +1,8 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useAuthStore } from '../../stores/auth/Auth.js';
-import useNotification from '../../composables/useNotification.js';
+import { computed, reactive, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useAuthStore } from "../../stores/auth/Auth.js";
+import useNotification from "../../composables/useNotification.js";
 
 const { data } = defineProps({
   data: {
@@ -21,14 +21,12 @@ const form = reactive({
   sis_ids: [],
   ...data,
 });
-const token = ref('');
+const token = ref("");
 
 const permissions = computed(() =>
   [...authStore.permissions]
     .sort((a, b) => a.tri - b.tri)
-    .filter(
-      (p) => authStore.admin || authStore.sis.permissions.includes(p.api_key),
-    ),
+    .filter((p) => authStore.admin || authStore.sis.permissions.includes(p.api_key)),
 );
 
 // Uniquement les SIS de l'utilisateur (tous les SIS pour un admin)
@@ -49,10 +47,10 @@ const save = async () => {
   }
 
   if (!form.sis_ids?.length && !authStore.admin) {
-    awn.alert('Veuillez sélectionner au moins un SIS');
+    awn.alert("Veuillez sélectionner au moins un SIS");
     return;
   }
-  authStore[form.id ? 'updateApiToken' : 'createApiToken'](form)
+  authStore[form.id ? "updateApiToken" : "createApiToken"](form)
     .then((res) => {
       console.log(res);
       token.value = res.token;
@@ -61,7 +59,7 @@ const save = async () => {
       // Le backend renvoie soit { error: { champ: [...] } } (validation),
       // soit { error: "message" } (permissions/SIS manquants).
       const payload = err?.error ?? err;
-      if (typeof payload === 'string') {
+      if (typeof payload === "string") {
         awn.alert(payload);
       } else {
         errors.value = payload ?? {};
@@ -71,23 +69,21 @@ const save = async () => {
 
 const copyToClipboard = (text) => {
   navigator.clipboard.writeText(text);
-  awn.success('Jeton copié dans le presse-papier');
+  awn.success("Jeton copié dans le presse-papier");
 };
 </script>
 
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} un jeton d'API
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un jeton d'API</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div v-if="token" class="modal-body">
       <div class="alert alert-info">
         <p>
-          Voici votre jeton d'API, il ne vous sera plus jamais affiché. Veuillez
-          le copier et le conserver précieusement.
+          Voici votre jeton d'API, il ne vous sera plus jamais affiché. Veuillez le copier et le
+          conserver précieusement.
         </p>
       </div>
 
@@ -160,21 +156,15 @@ const copyToClipboard = (text) => {
             class="form-check-input"
             :value="sis.id"
           />
-          <label class="form-check-label" :for="'s' + sis.id">{{
-            sis.nom
-          }}</label>
+          <label class="form-check-label" :for="'s' + sis.id">{{ sis.nom }}</label>
         </div>
         <div class="invalid-feedback" :class="{ 'd-block': errors['sis_ids'] }">
-          {{ errors['sis_ids'] }}
+          {{ errors["sis_ids"] }}
         </div>
       </div>
       <div class="mb-3">
         <label for="designation">Permissions</label>
-        <div
-          v-for="permission in permissions"
-          :key="permission.id"
-          class="form-check"
-        >
+        <div v-for="permission in permissions" :key="permission.id" class="form-check">
           <input
             :id="'r' + permission.id"
             v-model="form.permission_ids"
@@ -182,24 +172,17 @@ const copyToClipboard = (text) => {
             class="form-check-input"
             :value="permission.id"
           />
-          <label class="form-check-label" :for="'r' + permission.id">{{
-            permission.nom
-          }}</label>
+          <label class="form-check-label" :for="'r' + permission.id">{{ permission.nom }}</label>
         </div>
-        <div
-          class="invalid-feedback"
-          :class="{ 'd-block': errors['permission_ids'] }"
-        >
-          {{ errors['permission_ids'] }}
+        <div class="invalid-feedback" :class="{ 'd-block': errors['permission_ids'] }">
+          {{ errors["permission_ids"] }}
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

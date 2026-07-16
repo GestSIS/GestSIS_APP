@@ -1,7 +1,7 @@
-import UniteService from '../../services/UniteService.js';
-import { defineStore } from 'pinia';
+import UniteService from "../../services/UniteService.js";
+import { defineStore } from "pinia";
 
-export const useUniteStore = defineStore('Unite', {
+export const useUniteStore = defineStore("Unite", {
   state: () => ({
     liste: [],
   }),
@@ -19,7 +19,7 @@ export const useUniteStore = defineStore('Unite', {
     },
     async updateUnite(Unite) {
       const data = await UniteService.updateUnite(Unite);
-      this.liste = [...this.liste.map((m) => (m.id === data.id ? data : m))];
+      this.liste = this.liste.map((m) => (m.id === data.id ? data : m));
       return data;
     },
     async removeUnite(UniteId) {

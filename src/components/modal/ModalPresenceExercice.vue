@@ -1,15 +1,15 @@
 <script setup>
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
-import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import ExerciceService from '../../services/ExerciceService';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
-import { useExerciceStore } from '../../stores/exercice/Exercice.js';
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
+import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import ExerciceService from "../../services/ExerciceService";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
+import { useExerciceStore } from "../../stores/exercice/Exercice.js";
 
 const localiteStore = useLocaliteStore();
 const sapeurStore = useSapeurStore();
@@ -29,16 +29,12 @@ const { callback, data } = defineProps({
 });
 
 const excusesTypes = computed(() => excuseTypeStore.liste);
-const sapeur = computed(() =>
-  sapeurStore.liste.find((s) => s.id == sapeurStore.active.id),
-);
+const sapeur = computed(() => sapeurStore.liste.find((s) => s.id == sapeurStore.active.id));
 const localites = computed(() => localiteStore.liste);
 const categories = computed(() => exerciceCategorieStore.liste);
 const activeSapeurExercice = computed(() => sapeurStore.active.exercices);
 const hasPresencePermission = useHasPermission(permissions.EXERCICE.PRESENCE);
-const hasValidationPermission = useHasPermission(
-  permissions.EXERCICE.VALIDATION,
-);
+const hasValidationPermission = useHasPermission(permissions.EXERCICE.VALIDATION);
 const computeExercices = computed(() => {
   return activeSapeurExercice.value
     .map((exercice) => ({
@@ -46,21 +42,14 @@ const computeExercices = computed(() => {
       canceled: exercice.statut == 0,
       date: new Date(exercice.date),
       heure: exercice.heure.substr(0, 5),
-      categorie: categories.value.find(
-        (e) => e.id == exercice.exercice_categorie_id,
-      )?.designation,
-      localite: localites.value.find((l) => l.id == exercice.localite_id)
-        ?.designation,
-      amendable: categories.value.find(
-        (c) => c.id == exercice.exercice_categorie_id,
-      )?.amendable,
+      categorie: categories.value.find((e) => e.id == exercice.exercice_categorie_id)?.designation,
+      localite: localites.value.find((l) => l.id == exercice.localite_id)?.designation,
+      amendable: categories.value.find((c) => c.id == exercice.exercice_categorie_id)?.amendable,
     }))
     .sort((a, b) => a.date - b.date);
 });
 
-const presences = ref([
-  ...computeExercices.value.map((e) => ({ ...e.presence, ...e })),
-]);
+const presences = ref(computeExercices.value.map((e) => ({ ...e.presence, ...e })));
 
 const { closeModal, confirm, showModal } = useModalStore();
 const awn = useNotification();
@@ -69,8 +58,7 @@ const canEditAbsence = (exercice) => {
   // Possible de l'éditer si permission de validation ou si pas encore validé
   return (
     exercice.statut > 0 &&
-    (hasValidationPermission.value ||
-      (hasPresencePermission.value && exercice.statut <= 2))
+    (hasValidationPermission.value || (hasPresencePermission.value && exercice.statut <= 2))
   );
 };
 const canEditPresence = (exercice) => {
@@ -82,11 +70,8 @@ const canEditPresence = (exercice) => {
 };
 const savePresence = async (sapeur) => {
   try {
-    const res = await exerciceStore.editPresenceExercice(
-      sapeur?.presence?.id,
-      sapeur,
-    );
-    awn.success(res?.message || 'Modifications enregistrées');
+    const res = await exerciceStore.editPresenceExercice(sapeur?.presence?.id, sapeur);
+    awn.success(res?.message || "Modifications enregistrées");
   } catch (err) {
     awn.alert(err?.message || "Erreur lors de l'enregistrement");
   }
@@ -109,7 +94,7 @@ const selectRemplace = (sapeur) => {
 const detailExcuse = (sapeur) => {
   const savedPresences = presences.value.map((p) => ({ ...p }));
   showModal({
-    component: 'ModalExcuse',
+    component: "ModalExcuse",
     data: sapeur,
     callback: (presence) => {
       if (presence !== null && presence !== undefined) {
@@ -117,13 +102,13 @@ const detailExcuse = (sapeur) => {
         presence.remplace = 0;
         savePresence(presence);
         presences.value = [
-          ...presences.value?.map((p) =>
+          ...(presences.value?.map((p) =>
             parseInt(p.id) == parseInt(presence.id) ? presence : p,
-          ),
+          ) ?? []),
         ];
       }
       showModal({
-        component: 'ModalPresenceExercice',
+        component: "ModalPresenceExercice",
         size: 2,
       });
       return Promise.resolve(false);
@@ -132,7 +117,7 @@ const detailExcuse = (sapeur) => {
 };
 const addExcuse = (sapeur) => {
   showModal({
-    component: 'ModalExcuse',
+    component: "ModalExcuse",
     data: sapeur,
     callback: async (presence) => {
       if (presence !== null && presence !== undefined) {
@@ -140,14 +125,12 @@ const addExcuse = (sapeur) => {
         presence.absent = 1;
         presence.remplace = 0;
         await savePresence(presence);
-        presences.value = [
-          ...presences.value.map((p) =>
-            parseInt(p.id) == parseInt(presence.id) ? presence : p,
-          ),
-        ];
+        presences.value = presences.value.map((p) =>
+          parseInt(p.id) == parseInt(presence.id) ? presence : p,
+        );
       }
       showModal({
-        component: 'ModalPresenceExercice',
+        component: "ModalPresenceExercice",
         size: 2,
       });
       return Promise.resolve(false);
@@ -157,14 +140,14 @@ const addExcuse = (sapeur) => {
 const removeExcuse = async (sapeur) => {
   try {
     await confirm(
-      'Voulez-vous vraiment supprimer cette excuse ?',
+      "Voulez-vous vraiment supprimer cette excuse ?",
       "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
     );
     await exerciceStore.removeExcuse(sapeur?.presence);
   } catch {}
 
   showModal({
-    component: 'ModalPresenceExercice',
+    component: "ModalPresenceExercice",
     size: 2,
   });
 };
@@ -172,19 +155,15 @@ const downloadJustificatif = (sapeur) => {
   ExerciceService.downloadExcuseJustificatif(
     sapeur.exercice_id,
     sapeur.sapeur_id,
-    'justificatif.pdf',
-  ).catch((err) =>
-    awn.alert(err?.message ?? 'Erreur lors du chargement du justificatif'),
-  );
+    "justificatif.pdf",
+  ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
 };
 </script>
 
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title">
-        Modifier présences de {{ sapeur?.nom_prenom }}
-      </h5>
+      <h5 class="modal-title">Modifier présences de {{ sapeur?.nom_prenom }}</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body table-responsive p-0">
@@ -212,7 +191,7 @@ const downloadJustificatif = (sapeur) => {
           <tr v-for="e in presences" :key="e.id">
             <td>
               <component :is="e.canceled ? 'del' : 'span'">
-                {{ e.date.toLocaleDateString('fr-CH') }}
+                {{ e.date.toLocaleDateString("fr-CH") }}
               </component>
             </td>
             <td>
@@ -263,9 +242,7 @@ const downloadJustificatif = (sapeur) => {
                 class="form-check-input"
                 :true-value="1"
                 :false-value="0"
-                :disabled="
-                  !canEditAbsence(e) || (!canEditPresence(e) && e.present)
-                "
+                :disabled="!canEditAbsence(e) || (!canEditPresence(e) && e.present)"
                 @change="selectAbsent(e)"
               />
             </td>
@@ -276,9 +253,7 @@ const downloadJustificatif = (sapeur) => {
                 class="form-check-input"
                 :true-value="1"
                 :false-value="0"
-                :disabled="
-                  !canEditAbsence(e) || (!canEditPresence(e) && e.present)
-                "
+                :disabled="!canEditAbsence(e) || (!canEditPresence(e) && e.present)"
                 @change="selectRemplace(e)"
               />
             </td>
@@ -294,10 +269,7 @@ const downloadJustificatif = (sapeur) => {
                     'text-bg-success': e.excuse_statut == 1,
                   }"
                   @click="detailExcuse(e)"
-                  >{{
-                    excusesTypes.find((i) => i.id == e.excuse_type_id)
-                      ?.designation
-                  }}</span
+                  >{{ excusesTypes.find((i) => i.id == e.excuse_type_id)?.designation }}</span
                 >
                 <button
                   v-if="e.justificatif_filename"
@@ -337,20 +309,16 @@ const downloadJustificatif = (sapeur) => {
                 }"
                 >{{
                   {
-                    '-2': 'Amendée',
-                    '-1': 'Refusée',
-                    '0': 'A traiter',
-                    '1': 'Acceptée',
+                    "-2": "Amendée",
+                    "-1": "Refusée",
+                    "0": "A traiter",
+                    "1": "Acceptée",
                   }[e.excuse_statut.toString()]
                 }}</span
               >
             </td>
             <td>
-              <router-link
-                v-slot="{ navigate }"
-                :to="'/exercices/' + e.exercice_id"
-                custom
-              >
+              <router-link v-slot="{ navigate }" :to="'/exercices/' + e.exercice_id" custom>
                 <button
                   type="button"
                   title="modifier"
@@ -371,9 +339,7 @@ const downloadJustificatif = (sapeur) => {
       </table>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
     </div>
   </div>
 </template>

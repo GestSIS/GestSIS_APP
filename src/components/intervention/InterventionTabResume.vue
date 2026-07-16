@@ -1,9 +1,9 @@
 <script setup>
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
-import { reactive, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useInterventionStore } from '../../stores/intervention/Intervention.js';
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
+import { reactive, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 
 const interventionStore = useInterventionStore();
 
@@ -16,7 +16,7 @@ const { id } = defineProps({
 
 const loading = ref(true);
 const form = reactive({
-  description: '',
+  description: "",
 });
 
 watchEffect(async () => {
@@ -26,9 +26,7 @@ watchEffect(async () => {
   loading.value = false;
 });
 
-const hasEditPermission = useHasPermission(
-  permissions.INTERVENTION.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
 const awn = useNotification();
 const errors = ref({});
@@ -38,7 +36,7 @@ const save = async () => {
       id,
       ...form,
     });
-    awn.success(res?.message || 'Modifications enregistrées');
+    awn.success(res?.message || "Modifications enregistrées");
   } catch (err) {
     errors.value = err;
     awn.alert(err?.message || "Erreur lors de l'enregistrement");
@@ -52,11 +50,7 @@ const save = async () => {
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Résumé</h3>
-          <button
-            v-if="hasEditPermission"
-            class="btn btn-primary"
-            @click.prevent="save"
-          >
+          <button v-if="hasEditPermission" class="btn btn-primary" @click.prevent="save">
             Enregistrer
           </button>
         </div>

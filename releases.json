@@ -4,9 +4,7 @@
       "date": "02.07.2027",
       "version": "1.0",
       "app": "GestSIS Mobile 2.6.8",
-      "changes": [
-        "Correction d'un bug dans les exercices contenant des sapeurs inactifs"
-      ]
+      "changes": ["Correction d'un bug dans les exercices contenant des sapeurs inactifs"]
     },
     {
       "date": "02.07.2027",
@@ -62,9 +60,7 @@
       "date": "03.06.2026",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "GestSIS est maintenance open-source et disponible sur Github"
-      ]
+      "changes": ["GestSIS est maintenance open-source et disponible sur Github"]
     },
     {
       "date": "31.05.2026",
@@ -107,9 +103,7 @@
       "date": "19.03.2026",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Amélioration affichage des numéros de téléphones dans module RTA"
-      ]
+      "changes": ["Amélioration affichage des numéros de téléphones dans module RTA"]
     },
     {
       "date": "03.03.2026",
@@ -123,17 +117,13 @@
       "date": "29.01.2026",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Ajout support des suffixes pour les numéros de groupes"
-      ]
+      "changes": ["Ajout support des suffixes pour les numéros de groupes"]
     },
     {
       "date": "18.01.2026",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Fichiers ISO20022, support des caractères spéciaux dans les champs de texte"
-      ]
+      "changes": ["Fichiers ISO20022, support des caractères spéciaux dans les champs de texte"]
     },
     {
       "date": "07.01.2026",
@@ -147,9 +137,7 @@
       "date": "23.12.2025",
       "version": "1.0",
       "app": "GestSIS Mobile 2.6.4",
-      "changes": [
-        "Correction d'un bug pour la saisie du chef d'intervention et de la localité"
-      ]
+      "changes": ["Correction d'un bug pour la saisie du chef d'intervention et de la localité"]
     },
     {
       "date": "13.12.2025",
@@ -163,9 +151,7 @@
       "date": "12.12.2025",
       "version": "1.0",
       "app": "GestSIS Mobile 2.6.3",
-      "changes": [
-        "Mise à jour de sécurité"
-      ]
+      "changes": ["Mise à jour de sécurité"]
     },
     {
       "date": "12.12.2025",
@@ -180,33 +166,25 @@
       "date": "03.12.2025",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Nouvelle intégration avec `GestionRTA-Jura`, plus besoin d'identifiants"
-      ]
+      "changes": ["Nouvelle intégration avec `GestionRTA-Jura`, plus besoin d'identifiants"]
     },
     {
       "date": "13.11.2025",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Statistiques sapeurs par localités"
-      ]
+      "changes": ["Statistiques sapeurs par localités"]
     },
     {
       "date": "30.07.2025",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Mise en évidence des sapeurs inactif dans l'affichage du matériel par sapeur"
-      ]
+      "changes": ["Mise en évidence des sapeurs inactif dans l'affichage du matériel par sapeur"]
     },
     {
       "date": "20.07.2025",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Intervention sauvegarde automatique pour le résumé et groupes"
-      ]
+      "changes": ["Intervention sauvegarde automatique pour le résumé et groupes"]
     },
     {
       "date": "16.07.2025",
@@ -221,9 +199,7 @@
       "date": "04.07.2025",
       "version": "1.0",
       "app": "GestSIS Mobile 2.6.1",
-      "changes": [
-        "Correction d'un problème d'affichage du clavier par dessus les champs de saisie"
-      ]
+      "changes": ["Correction d'un problème d'affichage du clavier par dessus les champs de saisie"]
     },
     {
       "date": "04.07.2025",
@@ -239,9 +215,7 @@
       "date": "24.06.2025",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Excuse, augmentation de la taille de la justification"
-      ]
+      "changes": ["Excuse, augmentation de la taille de la justification"]
     },
     {
       "date": "15.06.2025",
@@ -274,9 +248,7 @@
       "date": "11.06.2025",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Amélioration de l'affichage de matériel groupé par type"
-      ]
+      "changes": ["Amélioration de l'affichage de matériel groupé par type"]
     },
     {
       "date": "09.06.2025",
@@ -304,17 +276,13 @@
       "date": "20.04.2025",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Amélioration de l'affiche des configuration d'imputation"
-      ]
+      "changes": ["Amélioration de l'affiche des configuration d'imputation"]
     },
     {
       "date": "18.04.2025",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Amélioration des messages d'erreurs en cas de saisie incorrecte pour s'excuser"
-      ]
+      "changes": ["Amélioration des messages d'erreurs en cas de saisie incorrecte pour s'excuser"]
     },
     {
       "date": "14.04.2025",
@@ -338,9 +306,7 @@
       "date": "11.04.2025",
       "version": "1.0",
       "app": "GestSIS Mobile 2.6.0",
-      "changes": [
-        "Amélioration de l'interface de saisie des excuses pour le module `Exercice`"
-      ]
+      "changes": ["Amélioration de l'interface de saisie des excuses pour le module `Exercice`"]
     },
     {
       "date": "11.04.2025",
@@ -386,41 +352,31 @@
       "date": "09.03.2025",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Résolution d'un bug au chargement de certaines pages du module `mes-infos`"
-      ]
+      "changes": ["Résolution d'un bug au chargement de certaines pages du module `mes-infos`"]
     },
     {
       "date": "14.02.2025",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Mise en évidence en rouge des exercices annulés dans les statistiques."
-      ]
+      "changes": ["Mise en évidence en rouge des exercices annulés dans les statistiques."]
     },
     {
       "date": "11.02.2025",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Correction d'un problème pour les convocations pdf avec un texte très long."
-      ]
+      "changes": ["Correction d'un problème pour les convocations pdf avec un texte très long."]
     },
     {
       "date": "09.02.2025",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Amélioration de l'ajout d'événements pour du matériel personnel"
-      ]
+      "changes": ["Amélioration de l'ajout d'événements pour du matériel personnel"]
     },
     {
       "date": "26.01.2025",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Amélioration de la navigation pour le module `utilisateur`"
-      ]
+      "changes": ["Amélioration de la navigation pour le module `utilisateur`"]
     },
     {
       "date": "25.01.2025",
@@ -457,9 +413,7 @@
       "date": "14.12.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Choix de l'affichage de la durée pour les exercices"
-      ]
+      "changes": ["Choix de l'affichage de la durée pour les exercices"]
     },
     {
       "date": "22.11.2024",
@@ -476,9 +430,7 @@
       "date": "30.09.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Ajout de fenêtres de confirmation pour les suppressions"
-      ]
+      "changes": ["Ajout de fenêtres de confirmation pour les suppressions"]
     },
     {
       "date": "27.09.2024",
@@ -530,9 +482,7 @@
       "date": "03.07.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Correction d'un problème d'affichage des cours imputés"
-      ]
+      "changes": ["Correction d'un problème d'affichage des cours imputés"]
     },
     {
       "date": "01.07.2024",
@@ -547,17 +497,13 @@
       "date": "18.05.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Ajout export de la liste FOAD sur la page effectif"
-      ]
+      "changes": ["Ajout export de la liste FOAD sur la page effectif"]
     },
     {
       "date": "13.05.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Tableau de bord des absences, possibilité d'afficher les personnes absentes"
-      ]
+      "changes": ["Tableau de bord des absences, possibilité d'afficher les personnes absentes"]
     },
     {
       "date": "10.05.2024",
@@ -573,41 +519,31 @@
       "date": "06.05.2024",
       "version": "1.0",
       "app": "GestSIS Mobile 2.5.1",
-      "changes": [
-        "Mise à jour de compatibilité pour Android 14"
-      ]
+      "changes": ["Mise à jour de compatibilité pour Android 14"]
     },
     {
       "date": "16.04.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Statistiques sapeurs interventions"
-      ]
+      "changes": ["Statistiques sapeurs interventions"]
     },
     {
       "date": "04.04.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Mise à jour des grades pour les cours selon directive cantonale"
-      ]
+      "changes": ["Mise à jour des grades pour les cours selon directive cantonale"]
     },
     {
       "date": "13.03.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Excuses consultables uniquement avec la permission `exercice.presence`"
-      ]
+      "changes": ["Excuses consultables uniquement avec la permission `exercice.presence`"]
     },
     {
       "date": "12.03.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Résolution d'un problème pour l'export des données RTA"
-      ]
+      "changes": ["Résolution d'un problème pour l'export des données RTA"]
     },
     {
       "date": "11.03.2024",
@@ -653,9 +589,7 @@
       "date": "07.02.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Ajout option `pro-rata` pour l'imputation des interventions"
-      ]
+      "changes": ["Ajout option `pro-rata` pour l'imputation des interventions"]
     },
     {
       "date": "04.02.2024",
@@ -689,9 +623,7 @@
       "date": "23.01.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Ajout d'un trombinoscope dans la page `effectif`"
-      ]
+      "changes": ["Ajout d'un trombinoscope dans la page `effectif`"]
     },
     {
       "date": "17.01.2024",
@@ -706,17 +638,13 @@
       "date": "17.01.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Amélioration de la validation des indemnités types pour intervention"
-      ]
+      "changes": ["Amélioration de la validation des indemnités types pour intervention"]
     },
     {
       "date": "11.01.2024",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Résumé des comptes, correction du total pour la partie résumé"
-      ]
+      "changes": ["Résumé des comptes, correction du total pour la partie résumé"]
     },
     {
       "date": "03.01.2024",
@@ -740,18 +668,13 @@
       "date": "28.12.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Amélioration affichage écritures pour onglet sapeurs"
-      ]
+      "changes": ["Amélioration affichage écritures pour onglet sapeurs"]
     },
     {
       "date": "17.12.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Ajout d'icons pour les permis TPP et OACP",
-        "Ajout de la section `Mes permis`"
-      ]
+      "changes": ["Ajout d'icons pour les permis TPP et OACP", "Ajout de la section `Mes permis`"]
     },
     {
       "date": "16.12.2023",
@@ -766,34 +689,25 @@
       "date": "11.12.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Correction des filtres de la page travaux"
-      ]
+      "changes": ["Correction des filtres de la page travaux"]
     },
     {
       "date": "09.12.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Possibilité de saisir des fonctions aux civiles"
-      ]
+      "changes": ["Possibilité de saisir des fonctions aux civiles"]
     },
     {
       "date": "06.12.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Convoquer/déconvoquer tous les sapeurs dans exercices"
-      ]
+      "changes": ["Convoquer/déconvoquer tous les sapeurs dans exercices"]
     },
     {
       "date": "05.12.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Ajout lien platform RTA",
-        "Mise en valeur des utilisateurs inactifs"
-      ]
+      "changes": ["Ajout lien platform RTA", "Mise en valeur des utilisateurs inactifs"]
     },
     {
       "date": "21.11.2023",
@@ -818,17 +732,13 @@
       "date": "14.11.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Affichage du NPA dans la fiche sapeur"
-      ]
+      "changes": ["Affichage du NPA dans la fiche sapeur"]
     },
     {
       "date": "11.11.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Correction d'un problème d'affichage des alarmes dans GestSIS Mobile"
-      ]
+      "changes": ["Correction d'un problème d'affichage des alarmes dans GestSIS Mobile"]
     },
     {
       "date": "06.11.2023",
@@ -842,18 +752,13 @@
       "date": "02.11.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Tableau de bord des absence, première colonne fixe",
-        "Ajout de localités"
-      ]
+      "changes": ["Tableau de bord des absence, première colonne fixe", "Ajout de localités"]
     },
     {
       "date": "21.10.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Diverses améliorations graphiques pour l'affichage sur mobile"
-      ]
+      "changes": ["Diverses améliorations graphiques pour l'affichage sur mobile"]
     },
     {
       "date": "14.10.2023",
@@ -889,17 +794,13 @@
       "date": "11.09.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Bouton SMS en fin de ligne pour pages exercices"
-      ]
+      "changes": ["Bouton SMS en fin de ligne pour pages exercices"]
     },
     {
       "date": "31.08.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Nouveau onglet `Mes contrôles médicaux` dans le module `Mes Infos`"
-      ]
+      "changes": ["Nouveau onglet `Mes contrôles médicaux` dans le module `Mes Infos`"]
     },
     {
       "date": "29.08.2023",
@@ -914,9 +815,7 @@
       "date": "17.08.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Correction d'export de la date d'anniversaire dans le fichiers vcard"
-      ]
+      "changes": ["Correction d'export de la date d'anniversaire dans le fichiers vcard"]
     },
     {
       "date": "10.08.2023",
@@ -931,17 +830,13 @@
       "date": "07.08.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Gestion des groupes portant le même numéro dans intervention"
-      ]
+      "changes": ["Gestion des groupes portant le même numéro dans intervention"]
     },
     {
       "date": "06.08.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Saisie des travaux depuis `Ma fiche de travail` si permissions suffisantes"
-      ]
+      "changes": ["Saisie des travaux depuis `Ma fiche de travail` si permissions suffisantes"]
     },
     {
       "date": "27.07.2023",
@@ -964,25 +859,19 @@
       "date": "28.06.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Amélioration de la saisie des véhicules pour les interventions"
-      ]
+      "changes": ["Amélioration de la saisie des véhicules pour les interventions"]
     },
     {
       "date": "18.06.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Amélioration de l'interface de saisie des excuses"
-      ]
+      "changes": ["Amélioration de l'interface de saisie des excuses"]
     },
     {
       "date": "06.06.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Reconnexion automatique lors de session prolongée"
-      ]
+      "changes": ["Reconnexion automatique lors de session prolongée"]
     },
     {
       "date": "04.06.2023",
@@ -997,9 +886,7 @@
       "date": "01.06.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Page sapeur améliorée pour affichage mobile"
-      ]
+      "changes": ["Page sapeur améliorée pour affichage mobile"]
     },
     {
       "date": "23.05.2023",
@@ -1014,9 +901,7 @@
       "date": "08.05.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Ajout message de confirmations lors des sauvegardes dans intervention"
-      ]
+      "changes": ["Ajout message de confirmations lors des sauvegardes dans intervention"]
     },
     {
       "date": "07.05.2023",
@@ -1031,9 +916,7 @@
       "date": "05.05.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Amélioration de l'affichage des données pour mes infos"
-      ]
+      "changes": ["Amélioration de l'affichage des données pour mes infos"]
     },
     {
       "date": "04.05.2023",
@@ -1083,17 +966,13 @@
       "date": "29.03.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Renommage de la catégorie `politique` en `civil`"
-      ]
+      "changes": ["Renommage de la catégorie `politique` en `civil`"]
     },
     {
       "date": "27.03.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Statistiques pour effectif misent à jour selon l'exercice comptable"
-      ]
+      "changes": ["Statistiques pour effectif misent à jour selon l'exercice comptable"]
     },
     {
       "date": "17.03.2023",
@@ -1167,17 +1046,13 @@
       "date": "15.02.2023",
       "version": "2.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Correction d'un problème pour l'affichage des téléphones dans `mes infos`"
-      ]
+      "changes": ["Correction d'un problème pour l'affichage des téléphones dans `mes infos`"]
     },
     {
       "date": "07.02.2023",
       "version": "2.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Mise en place de l'infrastructure pour documenter le projet"
-      ]
+      "changes": ["Mise en place de l'infrastructure pour documenter le projet"]
     },
     {
       "date": "02.02.2023",
@@ -1224,9 +1099,7 @@
       "date": "26.01.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Amélioration de l'interface administrateur"
-      ]
+      "changes": ["Amélioration de l'interface administrateur"]
     },
     {
       "date": "25.01.2023",
@@ -1296,9 +1169,7 @@
       "date": "09.01.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Envoie d'email pour sapeurs d'un exercice"
-      ]
+      "changes": ["Envoie d'email pour sapeurs d'un exercice"]
     },
     {
       "date": "06.01.2023",
@@ -1325,9 +1196,7 @@
       "date": "05.01.2023",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Support saisie responsable de mission hors sapeur du SIS"
-      ]
+      "changes": ["Support saisie responsable de mission hors sapeur du SIS"]
     },
     {
       "date": "04.01.2023",
@@ -1369,9 +1238,7 @@
       "date": "23.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Fenêtres de chargement dans `Mes décomptes`"
-      ]
+      "changes": ["Fenêtres de chargement dans `Mes décomptes`"]
     },
     {
       "date": "22.12.2022",
@@ -1406,10 +1273,7 @@
       "date": "19.12.2022",
       "version": "2.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Correction de divers problèmes d'affichage",
-        "Fiche sapeur dans `Mes infos`"
-      ]
+      "changes": ["Correction de divers problèmes d'affichage", "Fiche sapeur dans `Mes infos`"]
     },
     {
       "date": "16.12.2022",
@@ -1433,9 +1297,7 @@
       "date": "14.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Homogénéisation de l'interface du module `Comptabilité`"
-      ]
+      "changes": ["Homogénéisation de l'interface du module `Comptabilité`"]
     },
     {
       "date": "13.12.2022",
@@ -1481,9 +1343,7 @@
       "date": "07.12.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Refonte du système de navigation de la page sapeurs"
-      ]
+      "changes": ["Refonte du système de navigation de la page sapeurs"]
     },
     {
       "date": "06.12.2022",
@@ -1569,9 +1429,7 @@
       "date": "26.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Documentation des taux AVS/AI/APG et AC"
-      ]
+      "changes": ["Documentation des taux AVS/AI/APG et AC"]
     },
     {
       "date": "25.11.2022",
@@ -1621,9 +1479,7 @@
       "date": "18.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Bouton pour le renvoie de l'email de confirmation"
-      ]
+      "changes": ["Bouton pour le renvoie de l'email de confirmation"]
     },
     {
       "date": "17.11.2022",
@@ -1652,9 +1508,7 @@
       "date": "14.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Filtrage des sapeurs inactif pour les contrôles médicaux"
-      ]
+      "changes": ["Filtrage des sapeurs inactif pour les contrôles médicaux"]
     },
     {
       "date": "13.11.2022",
@@ -1669,25 +1523,19 @@
       "date": "11.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Possibilité de saisir les présences directement depuis l'affichage des sapeurs"
-      ]
+      "changes": ["Possibilité de saisir les présences directement depuis l'affichage des sapeurs"]
     },
     {
       "date": "10.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Ajout des dates pour statistiques présences aux exercices"
-      ]
+      "changes": ["Ajout des dates pour statistiques présences aux exercices"]
     },
     {
       "date": "09.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Formattage de dates"
-      ]
+      "changes": ["Formattage de dates"]
     },
     {
       "date": "04.11.2022",
@@ -1702,9 +1550,7 @@
       "date": "03.11.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Envoie de SMS depuis l'effectif"
-      ]
+      "changes": ["Envoie de SMS depuis l'effectif"]
     },
     {
       "date": "29.10.2022",
@@ -1736,9 +1582,7 @@
       "date": "23.10.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Etats de sortie pour les amendes"
-      ]
+      "changes": ["Etats de sortie pour les amendes"]
     },
     {
       "date": "20.10.2022",
@@ -1755,26 +1599,19 @@
       "date": "19.10.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Amélioration du décompte par sapeur",
-        "Ajout des certificats de salaire"
-      ]
+      "changes": ["Amélioration du décompte par sapeur", "Ajout des certificats de salaire"]
     },
     {
       "date": "17.10.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Affichage du champ `nb intervention` dans le rapport d'intervention"
-      ]
+      "changes": ["Affichage du champ `nb intervention` dans le rapport d'intervention"]
     },
     {
       "date": "14.10.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Ajout des rôles pour le future module matériel personnel"
-      ]
+      "changes": ["Ajout des rôles pour le future module matériel personnel"]
     },
     {
       "date": "10.10.2022",
@@ -1799,9 +1636,7 @@
       "date": "23.08.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Affichage des informations liées au `rapport de police` pour les interventions"
-      ]
+      "changes": ["Affichage des informations liées au `rapport de police` pour les interventions"]
     },
     {
       "date": "13.08.2022",
@@ -1873,17 +1708,13 @@
       "date": "09.07.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Rapport d'intervention v2 avec le nouveau service d'impression"
-      ]
+      "changes": ["Rapport d'intervention v2 avec le nouveau service d'impression"]
     },
     {
       "date": "05.07.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Mise en place d'un nouveau système pour la génération des PDFs"
-      ]
+      "changes": ["Mise en place d'un nouveau système pour la génération des PDFs"]
     },
     {
       "date": "26.06.2022",
@@ -1935,10 +1766,7 @@
       "date": "08.06.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Annuler et réactiver exercice",
-        "Suppression d'exercice"
-      ]
+      "changes": ["Annuler et réactiver exercice", "Suppression d'exercice"]
     },
     {
       "date": "06.06.2022",
@@ -1963,9 +1791,7 @@
       "date": "29.05.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Ajout du champ `durée` pour les cours"
-      ]
+      "changes": ["Ajout du champ `durée` pour les cours"]
     },
     {
       "date": "28.05.2022",
@@ -1979,9 +1805,7 @@
       "date": "27.05.2022",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": [
-        "Système de notification pour les mise à jours"
-      ]
+      "changes": ["Système de notification pour les mise à jours"]
     },
     {
       "date": "26.05.2022",
@@ -2021,17 +1845,13 @@
       "date": "10.05.2022",
       "version": "1.0",
       "app": "GestSIS_Mobile 2.0.6",
-      "changes": [
-        "Nouvelle version de GestSIS Mobile en production"
-      ]
+      "changes": ["Nouvelle version de GestSIS Mobile en production"]
     },
     {
       "date": "09.05.2022",
       "version": "1.0",
       "app": "GestionRTA-Jura",
-      "changes": [
-        "Correction d'un problème pour gérer les sapeurs supprimés sans localité"
-      ]
+      "changes": ["Correction d'un problème pour gérer les sapeurs supprimés sans localité"]
     },
     {
       "date": "09.05.2022",
@@ -2069,9 +1889,7 @@
       "date": "29.04.2022",
       "version": "1.0",
       "app": "GestSIS_Mobile 2.0.6 (beta)",
-      "changes": [
-        "Choix du thème résilient au redémarrage de l'application"
-      ]
+      "changes": ["Choix du thème résilient au redémarrage de l'application"]
     },
     {
       "date": "28.04.2022",

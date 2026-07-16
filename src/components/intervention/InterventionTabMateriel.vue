@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import useHasPermission from '../../composables/usePermission.js';
-import permissions from '/src/composables/permissions.js';
-import { useInterventionStore } from '../../stores/intervention/Intervention.js';
-import { useMaterielStore } from '../../stores/intervention/Materiel.js';
+import { computed, ref, watchEffect } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import useHasPermission from "../../composables/usePermission.js";
+import permissions from "/src/composables/permissions.js";
+import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import { useMaterielStore } from "../../stores/intervention/Materiel.js";
 
 const interventionStore = useInterventionStore();
 const materielStore = useMaterielStore();
@@ -28,34 +28,31 @@ watchEffect(async () => {
 const activeMateriels = computed(() =>
   interventionStore.active.materiels.map((m) => ({
     ...m,
-    designation: materielStore.liste?.find((mat) => mat.id == m.materiel_id)
-      ?.designation,
+    designation: materielStore.liste?.find((mat) => mat.id == m.materiel_id)?.designation,
   })),
 );
 
-const hasEditPermission = useHasPermission(
-  permissions.INTERVENTION.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
 const { confirm, showModal } = useModalStore();
 
-const newMateriel = () => showModal('ModalInterventionMateriel');
+const newMateriel = () => showModal("ModalInterventionMateriel");
 
 const editMateriel = (materielId) =>
-  showModal('ModalInterventionMateriel', {
+  showModal("ModalInterventionMateriel", {
     data: activeMateriels.value.find((m) => m.id == materielId),
   });
 
 const supprimerMateriel = (materielId) =>
   confirm(
-    'Voulez-vous vraiment supprimer cette absence ?',
+    "Voulez-vous vraiment supprimer cette absence ?",
     "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
   ).then(() => interventionStore.removeInterventionMateriel(materielId));
 
 const fields = [
-  { title: 'Matériel', key: 'designation' },
-  { title: 'Quantité', key: 'quantite' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Matériel", key: "designation" },
+  { title: "Quantité", key: "quantite" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -64,12 +61,7 @@ const fields = [
     <div class="card card-primary card-outline mb-3">
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Matériel consommable et en prêt</h3>
-        <button
-          v-if="hasEditPermission"
-          type="button"
-          class="btn btn-primary"
-          @click="newMateriel"
-        >
+        <button v-if="hasEditPermission" type="button" class="btn btn-primary" @click="newMateriel">
           Ajouter du matériel
         </button>
       </div>

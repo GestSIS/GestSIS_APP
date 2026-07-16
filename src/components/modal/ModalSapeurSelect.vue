@@ -1,13 +1,13 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useGradeStore } from '../../stores/sapeur/Grade.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useModalStore } from '../../stores/common/Modal';
-import { useBaseDataStore } from '../../stores/common/BaseData.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useGroupeStore } from '../../stores/groupe/Groupe.js';
+import { computed, reactive, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useGradeStore } from "../../stores/sapeur/Grade.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useModalStore } from "../../stores/common/Modal";
+import { useBaseDataStore } from "../../stores/common/BaseData.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useGroupeStore } from "../../stores/groupe/Groupe.js";
 
 // TODO:
 // - Date anniversaire
@@ -25,7 +25,7 @@ const { callback, data } = defineProps({
 
 const civil = ref(true);
 const inactif = ref(false);
-const groupBy = ref('groupe');
+const groupBy = ref("groupe");
 const chosenSapeurs = ref(data.ids.slice(0));
 const selectedGeneric = ref({
   groupe: {},
@@ -72,8 +72,7 @@ const permis = computed(() => baseDataStore.permisTypes);
 
 const filteredSapeurs = computed(() => {
   return sapeurs.value.filter(
-    (s) =>
-      (inactif.value ? true : s?.actif) && (civil.value ? true : s?.type == 0),
+    (s) => (inactif.value ? true : s?.actif) && (civil.value ? true : s?.type == 0),
   );
 });
 const filteredLocalites = computed(() => {
@@ -101,7 +100,7 @@ const listeSapeurSelect = computed(() => {
     );
   }
 
-  if (groupBy.value == 'groupe') {
+  if (groupBy.value == "groupe") {
     return flattenedSapeurGroupe.value;
   }
   return [];
@@ -117,15 +116,11 @@ const flattenedSapeurGroupe = computed(() => {
         leaf: false,
         id: groupe.id,
         expanded: expand,
-        empty:
-          !groupe.groupes.length &&
-          !groupe.sapeurs.filter(filtreSapeur()).length,
+        empty: !groupe.groupes.length && !groupe.sapeurs.filter(filtreSapeur()).length,
       },
     ];
     if (expand) {
-      groupe.groupes.forEach(
-        (g) => (flaten = [...flaten, ...recursive(g, level + 1)]),
-      );
+      groupe.groupes.forEach((g) => (flaten = [...flaten, ...recursive(g, level + 1)]));
       groupe.sapeurs
         .filter(filtreSapeur())
         .map((s) => filteredSapeurs.value.find((sap) => sap.id == s))
@@ -148,24 +143,20 @@ const flattenedSapeurGroupe = computed(() => {
     return flaten;
   };
 
-  treeGroupesSapeurs.value.forEach(
-    (i) => (flattened = [...flattened, ...recursive(i, 0)]),
-  );
+  treeGroupesSapeurs.value.forEach((i) => (flattened = [...flattened, ...recursive(i, 0)]));
   return flattened;
 });
 const addSapeurState = computed(() => {
   return (
     Object.entries(selectedGeneric.value.sapeur).find(
-      ([id, selected]) =>
-        selected && !chosenSapeurs.value.includes(parseInt(id)),
+      ([id, selected]) => selected && !chosenSapeurs.value.includes(parseInt(id)),
     ) != null
   );
 });
 const removeSapeurState = computed(() => {
   return (
     Object.entries(selectedGeneric.value.sapeur).find(
-      ([id, selected]) =>
-        selected && chosenSapeurs.value.includes(parseInt(id)),
+      ([id, selected]) => selected && chosenSapeurs.value.includes(parseInt(id)),
     ) != null
   );
 });
@@ -241,7 +232,7 @@ const save = () => {
 const select = (id, leaf = true) => {
   if (leaf) {
     selectSapeur(id);
-  } else if (groupBy.value == 'groupe') {
+  } else if (groupBy.value == "groupe") {
     selectGroupe(id);
   } else {
     selectGeneric(id);
@@ -252,8 +243,7 @@ const selectSapeur = (id) => {
 };
 const selectGeneric = (id) => {
   const option = selectOptions[groupBy.value];
-  const comparison =
-    option.comparison ?? ((sapeur, value) => sapeur[groupBy.value] == value);
+  const comparison = option.comparison ?? ((sapeur, value) => sapeur[groupBy.value] == value);
 
   // Get group state
   const state = selectedGeneric.value[groupBy.value][id] ?? false;
@@ -294,12 +284,11 @@ const selectGroupSingle = (groupe, state, first = false) => {
 };
 const filtreSapeur = () => {
   return (s) =>
-    filteredSapeurs.value.find(
-      (sap) => sap.id == s?.sapeur_id || sap.id == s,
-    ) != null && !chosenSapeurs.value.includes(s.sapeur_id || s);
+    filteredSapeurs.value.find((sap) => sap.id == s?.sapeur_id || sap.id == s) != null &&
+    !chosenSapeurs.value.includes(s.sapeur_id || s);
 };
 const groupeFormatter = (g) => {
-  return g.no ? g.no + ' ' + g.designation : g.designation;
+  return g.no ? g.no + " " + g.designation : g.designation;
 };
 const toggleGroupe = (id) => {
   expanded.value = {
@@ -318,14 +307,12 @@ const addSapeurs = () => {
   );
 };
 const removeSapeurs = () => {
-  const sapeursToRemove = new Set([
-    ...Object.entries(selectedGeneric.value.sapeur)
+  const sapeursToRemove = new Set(
+    Object.entries(selectedGeneric.value.sapeur)
       .filter(([, selected]) => selected)
       .map(([id]) => parseInt(id)),
-  ]);
-  chosenSapeurs.value = chosenSapeurs.value.filter(
-    (id) => !sapeursToRemove.has(id),
   );
+  chosenSapeurs.value = chosenSapeurs.value.filter((id) => !sapeursToRemove.has(id));
 };
 const addSingleSapeur = (id) => {
   chosenSapeurs.value = [...chosenSapeurs.value, id];
@@ -334,66 +321,65 @@ const removeSingleSapeur = (id) => {
   chosenSapeurs.value = chosenSapeurs.value.filter((item) => item != id);
 };
 const computeId = (item) => {
-  return item.leaf == true || item.leaf == undefined ? item.id : 'g' + item.id;
+  return item.leaf == true || item.leaf == undefined ? item.id : "g" + item.id;
 };
 
 const selectOptions = {
   none: {
-    label: 'Alphabétique',
+    label: "Alphabétique",
   },
   groupe: {
-    label: 'Groupes',
+    label: "Groupes",
   },
   localite_id: {
     generic: true,
-    label: 'Localité',
+    label: "Localité",
     collection: () => filteredLocalites.value,
-    displayKey: 'designation',
+    displayKey: "designation",
   },
   fonction_id: {
     generic: true,
-    label: 'Fonction',
-    comparison: (sapeur, value) =>
-      sapeur.fonctions.map((f) => f.fonction_id).includes(value),
+    label: "Fonction",
+    comparison: (sapeur, value) => sapeur.fonctions.map((f) => f.fonction_id).includes(value),
     collection: () => fonctions.value,
-    displayKey: 'nom',
+    displayKey: "nom",
   },
   permis_type_id: {
     generic: true,
-    label: 'Permis de conduire',
+    label: "Permis de conduire",
     comparison: (sapeur, value) => sapeur.permis.includes(value),
     collection: () => permis.value,
-    displayKey: 'type',
+    displayKey: "type",
   },
   grade_id: {
     generic: true,
-    label: 'Grade',
+    label: "Grade",
     collection: () => grades.value,
-    displayKey: 'designation',
+    displayKey: "designation",
   },
   civilite_id: {
     generic: true,
-    label: 'Civilité',
+    label: "Civilité",
     collection: () => civilites.value,
-    displayKey: 'designation',
+    displayKey: "designation",
   },
   annee_incorporation: {
     generic: true,
-    label: 'Année incorporation',
+    label: "Année incorporation",
     collection: () =>
       [...new Set(filteredSapeurs.value.map((s) => s.annee_incorporation))]
         .sort()
         .map((annee) => ({ designation: annee, id: annee })),
-    displayKey: 'designation',
+    displayKey: "designation",
   },
   type: {
     generic: true,
-    label: 'Type',
+    label: "Type",
     collection: () => [
-      { id: 0, designation: 'Sapeur' },
-      { id: 1, designation: 'Civil' },
+      { id: 0, designation: "Sapeur" },
+      { id: 1, designation: "Civil" },
     ],
-    displayKey: 'designation',
+    displayKey: "designation",
   },
 };
 </script>
@@ -408,14 +394,8 @@ const selectOptions = {
       <div class="row mt-2">
         <div class="col-6">
           <div class="mb-2 d-flex align-items-center">
-            <label class="form-select-label mb-0 me-2" for="group-by"
-              >Afficher&nbsp;par</label
-            >
-            <select
-              id="group-by"
-              v-model="groupBy"
-              class="form-select form-select-sm"
-            >
+            <label class="form-select-label mb-0 me-2" for="group-by">Afficher&nbsp;par</label>
+            <select id="group-by" v-model="groupBy" class="form-select form-select-sm">
               <option
                 v-for="[key, { label }] in Object.entries(selectOptions)"
                 :key="key"
@@ -436,9 +416,7 @@ const selectOptions = {
                 type="checkbox"
                 role="switch"
               />
-              <label class="form-check-label" for="switch-civil"
-                >Inclure les civil</label
-              >
+              <label class="form-check-label" for="switch-civil">Inclure les civil</label>
             </div>
             <div class="form-check form-switch ms-3">
               <input
@@ -448,9 +426,7 @@ const selectOptions = {
                 type="checkbox"
                 role="switch"
               />
-              <label class="form-check-label" for="switch-actif"
-                >Inclure les inactif</label
-              >
+              <label class="form-check-label" for="switch-actif">Inclure les inactif</label>
             </div>
           </div>
         </div>
@@ -458,9 +434,7 @@ const selectOptions = {
       <hr />
       <div class="row mb-2">
         <div class="col-6 d-flex justify-content-between align-items-center">
-          <h6 class="mb-0">
-            Sapeurs sélectionnés ({{ chosenSapeurs.length }})
-          </h6>
+          <h6 class="mb-0">Sapeurs sélectionnés ({{ chosenSapeurs.length }})</h6>
           <button
             type="button"
             class="btn btn-outline-danger"
@@ -517,10 +491,7 @@ const selectOptions = {
                 </td>
                 <td>
                   {{ item.nom_prenom }}
-                  <font-awesome-icon
-                    v-if="item.type !== 0"
-                    :icon="['far', 'handshake']"
-                  />
+                  <font-awesome-icon v-if="item.type !== 0" :icon="['far', 'handshake']" />
                 </td>
                 <td>
                   <button
@@ -552,8 +523,7 @@ const selectOptions = {
                 :key="item.parent_id + '-' + item.id"
                 class="clickable"
                 :class="{
-                  'table-primary':
-                    selectedGeneric[item.leaf ? 'sapeur' : groupBy][item.id],
+                  'table-primary': selectedGeneric[item.leaf ? 'sapeur' : groupBy][item.id],
                   'text-muted': item.empty,
                 }"
                 @dblclick="toggleGroupe(item.id)"
@@ -562,27 +532,19 @@ const selectOptions = {
                   <font-awesome-icon
                     v-if="!item.leaf"
                     class="me-2 ms-2"
-                    :icon="[
-                      'fas',
-                      item.expanded ? 'angle-down' : 'angle-right',
-                    ]"
+                    :icon="['fas', item.expanded ? 'angle-down' : 'angle-right']"
                     @click="toggleGroupe(item.id)"
                   />
 
                   <div class="form-check d-inline-block">
                     <input
                       :id="computeId(item)"
-                      v-model="
-                        selectedGeneric[item.leaf ? 'sapeur' : groupBy][item.id]
-                      "
+                      v-model="selectedGeneric[item.leaf ? 'sapeur' : groupBy][item.id]"
                       type="checkbox"
                       class="form-check-input"
                       @click="select(item.id, item.leaf)"
                     />
-                    <label
-                      class="form-check-label"
-                      :for="computeId(item)"
-                    ></label>
+                    <label class="form-check-label" :for="computeId(item)"></label>
                   </div>
                   {{ item.designation }}
                   <font-awesome-icon
@@ -616,9 +578,7 @@ const selectOptions = {
                 <td v-if="sapeurs.length > 0" colspan="3">
                   Tous les sapeurs sont déjà présent dans l'exercice
                 </td>
-                <td v-if="sapeurs.length == 0" colspan="3">
-                  Aucun sapeur dans GestSIS
-                </td>
+                <td v-if="sapeurs.length == 0" colspan="3">Aucun sapeur dans GestSIS</td>
               </tr>
               <tr
                 v-for="item in availableSapeur"
@@ -639,10 +599,7 @@ const selectOptions = {
                 </td>
                 <td>
                   {{ item.nom_prenom }}
-                  <font-awesome-icon
-                    v-if="item.type !== 0"
-                    :icon="['far', 'handshake']"
-                  />
+                  <font-awesome-icon v-if="item.type !== 0" :icon="['far', 'handshake']" />
                 </td>
                 <td>
                   <button
@@ -660,12 +617,8 @@ const selectOptions = {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-outline-primary" @click="save">
-        Enregistrer
-      </button>
-      <button type="button" class="btn btn-outline-secondary" @click="close">
-        Annuler
-      </button>
+      <button type="button" class="btn btn-outline-primary" @click="save">Enregistrer</button>
+      <button type="button" class="btn btn-outline-secondary" @click="close">Annuler</button>
     </div>
   </div>
 </template>

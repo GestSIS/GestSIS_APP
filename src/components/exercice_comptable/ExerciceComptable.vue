@@ -1,18 +1,16 @@
 <script setup>
-import { computed, useTemplateRef } from 'vue';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { computed, useTemplateRef } from "vue";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const exerciceComptableStore = useExerciceComptableStore();
 
 const listeExerciceComptable = computed(() =>
-  exerciceComptableStore.liste.sort((a, b) => b.annee - a.annee),
+  exerciceComptableStore.liste.slice().sort((a, b) => b.annee - a.annee),
 );
 const activeExerciceComptable = computed(() =>
-  exerciceComptableStore.liste.find(
-    (e) => e.id == exerciceComptableStore.activeId,
-  ),
+  exerciceComptableStore.liste.find((e) => e.id == exerciceComptableStore.activeId),
 );
 const hasConfigPermission = useHasPermission(permissions.COMPTABILITE.CONFIG);
 
@@ -20,7 +18,7 @@ if (listeExerciceComptable.value.length === 0) {
   exerciceComptableStore.fetchExercicesComptables();
 }
 
-const dropdownComponent = useTemplateRef('dropdown');
+const dropdownComponent = useTemplateRef("dropdown");
 const selectExercice = (id) => {
   dropdownComponent.value.close();
   exerciceComptableStore.selectExerciceComptable(id);
@@ -28,10 +26,7 @@ const selectExercice = (id) => {
 </script>
 
 <template>
-  <div
-    v-if="activeExerciceComptable"
-    class="exercice-comptable d-flex align-items-center"
-  >
+  <div v-if="activeExerciceComptable" class="exercice-comptable d-flex align-items-center">
     <span>Exercice comptable</span>
     <base-dropdown
       ref="dropdown"

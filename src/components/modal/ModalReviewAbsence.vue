@@ -1,15 +1,15 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useExerciceStore } from '../../stores/exercice/Exercice.js';
-import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
-import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import ExerciceService from '../../services/ExerciceService';
-import SapeurService from '../../services/SapeurService';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useExerciceStore } from "../../stores/exercice/Exercice.js";
+import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
+import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import ExerciceService from "../../services/ExerciceService";
+import SapeurService from "../../services/SapeurService";
 
 const { data } = defineProps({
   data: {
@@ -40,9 +40,7 @@ const absences = computed(() => exerciceStore.absences);
 const exercices = computed(() => exerciceStore.liste);
 const categories = computed(() => exerciceCategorieStore.liste);
 const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
-const activeExerciceComptableId = computed(
-  () => exerciceComptableStore.activeId,
-);
+const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);
 const excuseTypes = computed(() => excuseTypeStore.liste);
 const localites = computed(() => localiteStore.liste);
 
@@ -53,11 +51,9 @@ const computedData = computed(() => {
     ?.map((e) => ({
       ...e.presence,
       ...e,
-      excuse: excuseTypes.value.find((t) => t.id == e.excuse_type_id)
-        ?.designation,
+      excuse: excuseTypes.value.find((t) => t.id == e.excuse_type_id)?.designation,
       localite: localites.value.find((l) => l.id == e.localite_id)?.designation,
-      categorie: categories.value.find((c) => c.id == e.exercice_categorie_id)
-        ?.designation,
+      categorie: categories.value.find((c) => c.id == e.exercice_categorie_id)?.designation,
     }))
     ?.sort((e1, e2) => e1.date?.localeCompare(e2.date));
 });
@@ -84,7 +80,7 @@ if (data?.id) {
   form.value = computedAbsences.value.find((a) => a.id == data.id);
 } else if (!computedAbsences.value.length) {
   closeModal();
-  awn.warning('Attention, aucune absence à traiter');
+  awn.warning("Attention, aucune absence à traiter");
 } else {
   form.value = computedAbsences.value[0];
 }
@@ -102,32 +98,25 @@ watchEffect(async () => {
     activeSapeurExercices.value = res;
     loading.value = false;
   } catch {
-    awn.alert(
-      'Une erreur a eu lieu durant la récupération des exercices du sapeur',
-    );
+    awn.alert("Une erreur a eu lieu durant la récupération des exercices du sapeur");
   }
 });
 
 const review = async (state) => {
   form.value.excuse_statut = state;
   try {
-    const res = await exerciceStore.editPresenceExercice(
-      form.value?.id,
-      form.value,
-    );
+    const res = await exerciceStore.editPresenceExercice(form.value?.id, form.value);
     activeSapeurExercices.value = activeSapeurExercices.value.map((e) =>
       e.presence.id === res.id ? { ...e, presence: res } : e,
     );
-    awn.success(res?.message || 'Modifications enregistrées');
+    awn.success(res?.message || "Modifications enregistrées");
   } catch (err) {
     return awn.alert(err?.message || "Erreur lors de l'enregistrement");
   }
 };
 const nextAbsence = () => {
   // Switch to next absence
-  const activeIndex = computedAbsences.value.findIndex(
-    (a) => a.id == form.value?.id,
-  );
+  const activeIndex = computedAbsences.value.findIndex((a) => a.id == form.value?.id);
   if (computedAbsences.value.length - 1 > activeIndex) {
     form.value = { ...computedAbsences.value[activeIndex + 1] };
   } else {
@@ -140,9 +129,7 @@ const nextAbsence = () => {
 };
 const previousAbsence = () => {
   // Switch to next absence
-  const activeIndex = computedAbsences.value.findIndex(
-    (a) => a.id == form.value?.id,
-  );
+  const activeIndex = computedAbsences.value.findIndex((a) => a.id == form.value?.id);
   if (activeIndex > 0) {
     form.value = { ...computedAbsences.value[activeIndex - 1] };
   } else {
@@ -157,26 +144,24 @@ const downloadJustificatif = (exercice) => {
   ExerciceService.downloadExcuseJustificatif(
     exercice.exercice_id,
     exercice.sapeur_id,
-    'justificatif.pdf',
-  ).catch((err) =>
-    awn.alert(err?.message ?? 'Erreur lors du chargement du justificatif'),
-  );
+    "justificatif.pdf",
+  ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
 };
 const rowClass = (rowData) => {
-  return rowData.id == form.value.exercice_id ? 'table-primary' : '';
+  return rowData.id == form.value.exercice_id ? "table-primary" : "";
 };
 
 const fields = [
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'Categorie', key: 'categorie' },
-  { title: 'Exercice', key: 'designation' },
-  { title: 'Localité', key: 'localite' },
-  { title: 'Convoqué', type: Boolean, key: 'convoque' },
-  { title: 'Présent', type: Boolean, key: 'present' },
-  { title: 'Absent', type: Boolean, key: 'absent' },
-  { title: 'Remplacé', type: Boolean, key: 'remplace' },
-  { title: 'Excuse', slot: 'excuse', key: 'excuse_statut' },
-  { title: 'Statut', slot: 'statut', key: 'excuse_statut' },
+  { title: "Date", key: "date", type: Date },
+  { title: "Categorie", key: "categorie" },
+  { title: "Exercice", key: "designation" },
+  { title: "Localité", key: "localite" },
+  { title: "Convoqué", type: Boolean, key: "convoque" },
+  { title: "Présent", type: Boolean, key: "present" },
+  { title: "Absent", type: Boolean, key: "absent" },
+  { title: "Remplacé", type: Boolean, key: "remplace" },
+  { title: "Excuse", slot: "excuse", key: "excuse_statut" },
+  { title: "Statut", slot: "statut", key: "excuse_statut" },
 ];
 </script>
 
@@ -290,9 +275,7 @@ const fields = [
           </div> -->
 
           <div class="mb-3">
-            <label for="justification"
-              >Justification <em>(optionnel)</em></label
-            >
+            <label for="justification">Justification <em>(optionnel)</em></label>
             <textarea
               id="justification"
               ref="justification"
@@ -301,21 +284,13 @@ const fields = [
               placeholder="(optionnel)"
             ></textarea>
           </div>
-          <div
-            class="btn-group btn-group-sm mb-3"
-            role="group"
-            aria-label="Small button group"
-          >
+          <div class="btn-group btn-group-sm mb-3" role="group" aria-label="Small button group">
             <button
               type="button"
               class="btn"
-              :class="
-                'btn-' + (form.excuse_statut == -2 ? '' : 'outline-') + 'danger'
-              "
+              :class="'btn-' + (form.excuse_statut == -2 ? '' : 'outline-') + 'danger'"
               :disabled="
-                !categories.find(
-                  (c) => c.id == activeExercice?.exercice_categorie_id,
-                )?.amendable
+                !categories.find((c) => c.id == activeExercice?.exercice_categorie_id)?.amendable
               "
               @click="review(-2)"
             >
@@ -324,11 +299,7 @@ const fields = [
             <button
               type="button"
               class="btn"
-              :class="
-                'btn-' +
-                (form.excuse_statut == -1 ? '' : 'outline-') +
-                'warning'
-              "
+              :class="'btn-' + (form.excuse_statut == -1 ? '' : 'outline-') + 'warning'"
               @click="review(-1)"
             >
               Refusé
@@ -336,9 +307,7 @@ const fields = [
             <button
               type="button"
               class="btn"
-              :class="
-                'btn-' + (form.excuse_statut == 0 ? '' : 'outline-') + 'primary'
-              "
+              :class="'btn-' + (form.excuse_statut == 0 ? '' : 'outline-') + 'primary'"
               @click="review(0)"
             >
               A traiter
@@ -346,9 +315,7 @@ const fields = [
             <button
               type="button"
               class="btn"
-              :class="
-                'btn-' + (form.excuse_statut == 1 ? '' : 'outline-') + 'success'
-              "
+              :class="'btn-' + (form.excuse_statut == 1 ? '' : 'outline-') + 'success'"
               @click="review(1)"
             >
               Accepté
@@ -368,9 +335,7 @@ const fields = [
             <template #excuse="{ value, rowData }">
               <div class="text-center">
                 <span
-                  v-if="
-                    rowData.excuse_type_id && rowData.excuse_type_id !== true
-                  "
+                  v-if="rowData.excuse_type_id && rowData.excuse_type_id !== true"
                   class="badge rounded-pill"
                   :class="{
                     'text-bg-danger': value == -2,
@@ -378,10 +343,7 @@ const fields = [
                     'text-bg-secondary': value == 0,
                     'text-bg-success': value == 1,
                   }"
-                  >{{
-                    excuseTypes.find((e) => e.id == rowData?.excuse_type_id)
-                      ?.designation
-                  }}</span
+                  >{{ excuseTypes.find((e) => e.id == rowData?.excuse_type_id)?.designation }}</span
                 >
                 <button
                   v-if="rowData.justificatif_filename != ''"
@@ -405,10 +367,10 @@ const fields = [
                   }"
                   >{{
                     {
-                      '-2': 'Amendée',
-                      '-1': 'Refusée',
-                      '0': 'A traiter',
-                      '1': 'Acceptée',
+                      "-2": "Amendée",
+                      "-1": "Refusée",
+                      "0": "A traiter",
+                      "1": "Acceptée",
                     }[value.toString()]
                   }}</span
                 >
@@ -418,49 +380,22 @@ const fields = [
               <tr>
                 <th colspan="4">Total</th>
                 <th class="text-center">
-                  {{
-                    computedData.reduce(
-                      (acc, e) => acc + (e.convoque ? 1 : 0),
-                      0,
-                    )
-                  }}
+                  {{ computedData.reduce((acc, e) => acc + (e.convoque ? 1 : 0), 0) }}
                 </th>
                 <th class="text-center">
-                  {{
-                    computedData.reduce(
-                      (acc, e) => acc + (e.present ? 1 : 0),
-                      0,
-                    )
-                  }}
+                  {{ computedData.reduce((acc, e) => acc + (e.present ? 1 : 0), 0) }}
                 </th>
                 <th class="text-center">
-                  {{
-                    computedData.reduce((acc, e) => acc + (e.absent ? 1 : 0), 0)
-                  }}
+                  {{ computedData.reduce((acc, e) => acc + (e.absent ? 1 : 0), 0) }}
                 </th>
                 <th class="text-center">
-                  {{
-                    computedData.reduce(
-                      (acc, e) => acc + (e.remplace ? 1 : 0),
-                      0,
-                    )
-                  }}
+                  {{ computedData.reduce((acc, e) => acc + (e.remplace ? 1 : 0), 0) }}
                 </th>
                 <th class="text-center">
-                  {{
-                    computedData.reduce(
-                      (acc, e) => acc + (e.excuse_type_id ? 1 : 0),
-                      0,
-                    )
-                  }}
+                  {{ computedData.reduce((acc, e) => acc + (e.excuse_type_id ? 1 : 0), 0) }}
                 </th>
                 <th class="text-center">
-                  {{
-                    computedData.reduce(
-                      (acc, e) => acc + (e.excuse_statut == -2 ? 1 : 0),
-                      0,
-                    )
-                  }}
+                  {{ computedData.reduce((acc, e) => acc + (e.excuse_statut == -2 ? 1 : 0), 0) }}
                 </th>
               </tr>
             </template>
@@ -481,20 +416,13 @@ const fields = [
         type="button"
         class="btn btn-outline-primary"
         :disabled="
-          !computedAbsences ||
-          computedAbsences[computedAbsences.length - 1]?.id == form?.id
+          !computedAbsences || computedAbsences[computedAbsences.length - 1]?.id == form?.id
         "
         @click="nextAbsence()"
       >
         Suivant
       </button>
-      <button
-        type="button"
-        class="btn btn-outline-secondary"
-        @click="closeModal()"
-      >
-        Fermer
-      </button>
+      <button type="button" class="btn btn-outline-secondary" @click="closeModal()">Fermer</button>
     </div>
   </div>
 </template>

@@ -1,16 +1,16 @@
 <script setup>
-import { useModalStore } from '../stores/common/Modal';
-import permissions from '../composables/permissions.js';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { computed, ref, watch, watchEffect } from 'vue';
-import useHasPermission from '../composables/usePermission.js';
-import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
-import { useLocaliteStore } from '../stores/common/Localite.js';
-import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
-import { useInterventionStore } from '../stores/intervention/Intervention.js';
-import { useInterventionTraitementStore } from '../stores/intervention/InterventionTraitement.js';
-import { useStatFederalStore } from '../stores/intervention/StatFederal.js';
-import { useTypeInterventionStore } from '../stores/intervention/TypeIntervention.js';
+import { useModalStore } from "../stores/common/Modal";
+import permissions from "../composables/permissions.js";
+import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
+import { computed, ref, watch, watchEffect } from "vue";
+import useHasPermission from "../composables/usePermission.js";
+import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
+import { useLocaliteStore } from "../stores/common/Localite.js";
+import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
+import { useInterventionStore } from "../stores/intervention/Intervention.js";
+import { useInterventionTraitementStore } from "../stores/intervention/InterventionTraitement.js";
+import { useStatFederalStore } from "../stores/intervention/StatFederal.js";
+import { useTypeInterventionStore } from "../stores/intervention/TypeIntervention.js";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -31,9 +31,7 @@ await exerciceComptableStore.fetchExercicesComptables();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await interventionStore.fetchListeIntervention(
-    exerciceComptableStore.activeId,
-  );
+  await interventionStore.fetchListeIntervention(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
@@ -48,42 +46,28 @@ await Promise.all([
 const selectedId = ref(null);
 
 const interventions = computed(() =>
-  interventionStore.liste.sort((a, b) =>
-    b.date_debut.localeCompare(a.date_debut),
-  ),
+  interventionStore.liste.slice().sort((a, b) => b.date_debut.localeCompare(a.date_debut)),
 );
 const types = computed(() => typeInterventionStore.liste);
 const stats = computed(() => statFederalStore.liste);
 const traitements = computed(() => traitementStore.liste);
 const localites = computed(() =>
-  localiteStore.liste.sort((a, b) =>
-    a.designation.localeCompare(b.designation),
-  ),
+  localiteStore.liste.slice().sort((a, b) => a.designation.localeCompare(b.designation)),
 );
-const hasValidationPermission = useHasPermission(
-  permissions.INTERVENTION.VALIDATION,
-);
-const hasEditPermission = useHasPermission(
-  permissions.INTERVENTION.MODIFICATION,
-);
+const hasValidationPermission = useHasPermission(permissions.INTERVENTION.VALIDATION);
+const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
 const computedData = computed(() => {
   return interventions.value.map((e) => ({
     ...e,
-    type_intervention: types.value.find((c) => c.id == e.type_intervention_id)
-      ?.designation,
+    type_intervention: types.value.find((c) => c.id == e.type_intervention_id)?.designation,
     localite: localites.value.find((l) => l.id == e.localite_id)?.designation,
-    stat_federal: stats.value.find((l) => l.id == e.stat_federal_id)
-      ?.designation,
-    traitement: traitements.value.find(
-      (l) => l.id == e.intervention_traitement_id,
-    )?.designation,
+    stat_federal: stats.value.find((l) => l.id == e.stat_federal_id)?.designation,
+    traitement: traitements.value.find((l) => l.id == e.intervention_traitement_id)?.designation,
   }));
 });
 const filteredInterventionsTypes = computed(() => {
-  const ids = new Set(
-    interventions.value.map((i) => parseInt(i.type_intervention_id)),
-  );
+  const ids = new Set(interventions.value.map((i) => parseInt(i.type_intervention_id)));
   return types.value.filter((t) => ids.has(t.id));
 });
 const filteredLocalites = computed(() => {
@@ -91,16 +75,13 @@ const filteredLocalites = computed(() => {
   return localites.value.filter((t) => ids.has(t.id));
 });
 const filteredStatFederal = computed(() => {
-  const ids = new Set(
-    interventions.value.map((i) => parseInt(i.stat_federal_id)),
-  );
+  const ids = new Set(interventions.value.map((i) => parseInt(i.stat_federal_id)));
   return stats.value.filter((t) => ids.has(t.id));
 });
 const canDelete = computed(() => {
   return (
     selectedId.value &&
-    interventions.value.filter((i) => i.id == selectedId.value && i.statut < 3)
-      .length > 0
+    interventions.value.filter((i) => i.id == selectedId.value && i.statut < 3).length > 0
   );
 });
 
@@ -115,11 +96,9 @@ const supprimerIntervention = (id) =>
 const validerIntervention = (id) => interventionStore.validerIntervention(id);
 
 const rapportIntervention = () => {
-  const intervention = interventions.value.find(
-    (i) => i.id == selectedId.value,
-  );
+  const intervention = interventions.value.find((i) => i.id == selectedId.value);
   showModal({
-    component: 'ModalRapportIntervention',
+    component: "ModalRapportIntervention",
     size: 1,
     data: {
       interventionId: selectedId.value,
@@ -133,53 +112,53 @@ const onRowClass = (dataItem, isSelected) => {
     return;
   }
   const statutsClass = {
-    0: '', // 'A saisir',
-    1: '', // 'En attente de validation',
-    2: '', // 'Validée',
-    3: 'table-success', //'Imputée'
+    0: "", // 'A saisir',
+    1: "", // 'En attente de validation',
+    2: "", // 'Validée',
+    3: "table-success", //'Imputée'
   };
   return statutsClass[dataItem.statut];
 };
 
 const fields = [
-  { title: 'Date', key: 'date_debut', type: Date },
+  { title: "Date", key: "date_debut", type: Date },
   {
-    title: 'Heure',
-    key: 'heure_debut',
+    title: "Heure",
+    key: "heure_debut",
     formatter: (value) => value.slice(0, 5),
   },
-  { title: "Type d'intervention", key: 'type_intervention' },
-  { title: 'Localité', key: 'localite' },
-  { title: 'Lieu', key: 'lieu', columnClass: 'align-middle' },
-  { title: 'Stat fédérale', key: 'stat_federal' },
-  { title: 'Traitement', key: 'traitement' },
+  { title: "Type d'intervention", key: "type_intervention" },
+  { title: "Localité", key: "localite" },
+  { title: "Lieu", key: "lieu", columnClass: "align-middle" },
+  { title: "Stat fédérale", key: "stat_federal" },
+  { title: "Traitement", key: "traitement" },
   {
-    title: 'Étendue',
-    key: 'degre',
+    title: "Étendue",
+    key: "degre",
     formatter: (value) => {
       const degre = {
-        1: 'Fausse-alarme',
-        2: 'Petite',
-        3: 'Moyenne',
-        4: 'Grande',
+        1: "Fausse-alarme",
+        2: "Petite",
+        3: "Moyenne",
+        4: "Grande",
       };
       return degre[value];
     },
   },
   {
-    title: 'Statut',
-    key: 'statut',
+    title: "Statut",
+    key: "statut",
     formatter: (value) => {
       const statuts = {
-        0: 'A saisir',
-        1: 'A valider',
-        2: 'Validée',
-        3: 'Imputée',
+        0: "A saisir",
+        1: "A valider",
+        2: "Validée",
+        3: "Imputée",
       };
       return statuts[value];
     },
   },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -197,9 +176,7 @@ const fields = [
               <li class="breadcrumb-item">
                 <router-link :to="{ name: 'accueil' }">Accueil</router-link>
               </li>
-              <li class="breadcrumb-item active" aria-current="page">
-                Interventions
-              </li>
+              <li class="breadcrumb-item active" aria-current="page">Interventions</li>
             </ol>
           </nav>
         </div>
@@ -219,25 +196,13 @@ const fields = [
                 custom
                 :to="{ name: 'intervention-details', params: { id: 'new' } }"
               >
-                <button
-                  v-if="hasEditPermission"
-                  class="btn btn-outline-primary"
-                  @click="navigate"
-                >
+                <button v-if="hasEditPermission" class="btn btn-outline-primary" @click="navigate">
                   Ajouter une intervention
                 </button>
               </router-link>
-              <router-link
-                v-slot="{ navigate }"
-                custom
-                :to="'/interventions/' + selectedId"
-              >
-                <button
-                  :disabled="!selectedId"
-                  class="btn btn-outline-primary"
-                  @click="navigate"
-                >
-                  {{ hasEditPermission ? 'Modifier' : 'Aperçu' }}
+              <router-link v-slot="{ navigate }" custom :to="'/interventions/' + selectedId">
+                <button :disabled="!selectedId" class="btn btn-outline-primary" @click="navigate">
+                  {{ hasEditPermission ? "Modifier" : "Aperçu" }}
                 </button>
               </router-link>
               <button
@@ -279,36 +244,28 @@ const fields = [
                   :options="filteredLocalites"
                   base-option="<Localité>"
                   :model-value="filters.localite_id"
-                  @update:model-value="
-                    (value) => setFilter('localite_id', value)
-                  "
+                  @update:model-value="(value) => setFilter('localite_id', value)"
                 />
                 <base-select
                   class="mb-1 col-md-4"
                   :options="filteredInterventionsTypes"
                   base-option="<Type>"
                   :model-value="filters.type_intervention_id"
-                  @update:model-value="
-                    (value) => setFilter('type_intervention_id', value)
-                  "
+                  @update:model-value="(value) => setFilter('type_intervention_id', value)"
                 />
                 <base-select
                   class="mb-1 col-md-4"
                   :options="filteredStatFederal"
                   base-option="<Statistique fédérale>"
                   :model-value="filters.stat_federal_id"
-                  @update:model-value="
-                    (value) => setFilter('stat_federal_id', value)
-                  "
+                  @update:model-value="(value) => setFilter('stat_federal_id', value)"
                 />
                 <base-select
                   class="mb-1 col-md-4"
                   :options="traitements"
                   base-option="<Traitement>"
                   :model-value="filters.intervention_traitement_id"
-                  @update:model-value="
-                    (value) => setFilter('intervention_traitement_id', value)
-                  "
+                  @update:model-value="(value) => setFilter('intervention_traitement_id', value)"
                 />
                 <base-select
                   class="mb-1 col-md-4"
@@ -323,9 +280,7 @@ const fields = [
                   @update:model-value="(value) => setFilter('degre', value)"
                 />
                 <div v-if="canReset" class="col-md-4">
-                  <button class="btn btn-sm btn-warning w-100" @click="reset">
-                    Réinitialiser
-                  </button>
+                  <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
                 </div>
               </div>
             </div>
@@ -346,15 +301,8 @@ const fields = [
                 @selected="select"
               >
                 <template #actions="{ rowData }">
-                  <router-link
-                    v-slot="{ navigate }"
-                    :to="'/interventions/' + rowData.id"
-                    custom
-                  >
-                    <button
-                      class="btn btn-outline-primary border-0"
-                      @click="navigate"
-                    >
+                  <router-link v-slot="{ navigate }" :to="'/interventions/' + rowData.id" custom>
+                    <button class="btn btn-outline-primary border-0" @click="navigate">
                       <font-awesome-icon :icon="['far', 'edit']" />
                     </button>
                   </router-link>

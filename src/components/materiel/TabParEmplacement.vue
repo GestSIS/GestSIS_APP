@@ -1,12 +1,13 @@
 <script setup>
-import ListeArticlePourEmplacement from './ListeArticlePourEmplacement.vue';
-import NavigationParEmplacement from './NavigationParEmplacement.vue';
-import EmplacementDetail from './EmplacementDetail.vue';
+import ListeArticlePourEmplacement from "./ListeArticlePourEmplacement.vue";
+import NavigationParEmplacement from "./NavigationParEmplacement.vue";
+import EmplacementDetail from "./EmplacementDetail.vue";
 
 const { id } = defineProps({
   id: {
     type: String,
     required: false,
+    default: "",
   },
 });
 
@@ -40,9 +41,7 @@ const { id } = defineProps({
         <div class="card-header">
           <h5 class="m-0">Aucun type sélectionné</h5>
         </div>
-        <div class="card-body">
-          Sélectionnez un matériel type dans la liste de gauche
-        </div>
+        <div class="card-body">Sélectionnez un matériel type dans la liste de gauche</div>
       </div>
     </div>
   </div>

@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useDecompteStore } from '../../stores/comptabilite/Decompte.js';
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useDecompteStore } from "../../stores/comptabilite/Decompte.js";
 
 const { callback, data } = defineProps({
   callback: {
@@ -19,12 +19,12 @@ const { callback, data } = defineProps({
 
 const config = ref({
   errors: {},
-  mode: 'genererDecompte',
+  mode: "genererDecompte",
 });
 const params = ref({
   sapeurIds: [],
   date: new Date().toJSON().slice(0, 10),
-  designation: '',
+  designation: "",
   exercice_comptable_id: null,
   sapeur_id: null,
   exercice_id: null,
@@ -43,9 +43,7 @@ const params = ref({
 const decompteStore = useDecompteStore();
 const exerciceComptableStore = useExerciceComptableStore();
 const listeExerciceComptable = computed(() => exerciceComptableStore.liste);
-const activeExerciceComptableId = computed(
-  () => exerciceComptableStore.activeId,
-);
+const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);
 
 if (data.remount) {
   config.value = data.state.config;
@@ -54,24 +52,24 @@ if (data.remount) {
   params.value.exercice_comptable_id = activeExerciceComptableId.value;
   params.value.sapeur_id = data?.sapeurId;
   params.value.exercice_id = data?.exerciceId;
-  params.value.designation = `Décompte ${data?.designation ?? ''}`;
+  params.value.designation = `Décompte ${data?.designation ?? ""}`;
 
   config.value.mode = params.value.sapeur_id
-    ? 'sapeur'
+    ? "sapeur"
     : params.value.exercice_id
-      ? 'exercice'
-      : 'annuel';
+      ? "exercice"
+      : "annuel";
 }
 
 const { closeModal, showModal } = useModalStore();
 const awn = useNotification();
 
 const creer = () => {
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
   const action =
-    config.value.mode === 'sapeur'
+    config.value.mode === "sapeur"
       ? decompteStore.genererDecompteSapeur
-      : config.value.mode === 'exercice'
+      : config.value.mode === "exercice"
         ? decompteStore.genererDecompteExercice
         : decompteStore.genererDecompteAnnuel;
   action(params.value)
@@ -85,7 +83,7 @@ const creer = () => {
     .catch((err) => {
       closeModal();
       config.value.errors = err;
-      awn.alert(err?.message ?? 'Erreur lors de la création du décompte');
+      awn.alert(err?.message ?? "Erreur lors de la création du décompte");
     });
 };
 
@@ -99,14 +97,14 @@ const select = () => {
     },
   };
   showModal({
-    component: 'ModalSapeurSelect',
+    component: "ModalSapeurSelect",
     size: 1,
     callback: (res) => {
       if (res) {
         save.data.state.params.sapeurIds = res.tous;
       }
       showModal({
-        component: 'ModalDecompte',
+        component: "ModalDecompte",
         callback: save.callback,
         data: save.data,
       });
@@ -174,9 +172,7 @@ const resetSelection = () => {
             type="checkbox"
             role="switch"
           />
-          <label class="form-check-label" for="ecritures-exercice"
-            >Exercices &amp; séances</label
-          >
+          <label class="form-check-label" for="ecritures-exercice">Exercices &amp; séances</label>
         </div>
         <div class="form-check form-switch">
           <input
@@ -186,9 +182,7 @@ const resetSelection = () => {
             type="checkbox"
             role="switch"
           />
-          <label class="form-check-label" for="ecritures-intervention"
-            >Interventions</label
-          >
+          <label class="form-check-label" for="ecritures-intervention">Interventions</label>
         </div>
         <div class="form-check form-switch">
           <input
@@ -208,9 +202,7 @@ const resetSelection = () => {
             type="checkbox"
             role="switch"
           />
-          <label class="form-check-label" for="ecritures-travail"
-            >Fiches de travail</label
-          >
+          <label class="form-check-label" for="ecritures-travail">Fiches de travail</label>
         </div>
         <div class="form-check form-switch">
           <input
@@ -220,9 +212,7 @@ const resetSelection = () => {
             type="checkbox"
             role="switch"
           />
-          <label class="form-check-label" for="ecritures-divers"
-            >Ecritures diverses</label
-          >
+          <label class="form-check-label" for="ecritures-divers">Ecritures diverses</label>
         </div>
         <div class="form-check form-switch">
           <input
@@ -232,9 +222,7 @@ const resetSelection = () => {
             type="checkbox"
             role="switch"
           />
-          <label class="form-check-label" for="ecritures-annuel"
-            >Indemnités et frais annuels</label
-          >
+          <label class="form-check-label" for="ecritures-annuel">Indemnités et frais annuels</label>
         </div>
         <div class="form-check form-switch">
           <input
@@ -251,9 +239,7 @@ const resetSelection = () => {
       <div v-if="!params.exercice_id" class="mb-3">
         <h5>Sélection des sapeurs</h5>
         <div class="input-group mb-3">
-          <button type="button" class="btn btn-outline-primary" @click="select">
-            Sélection
-          </button>
+          <button type="button" class="btn btn-outline-primary" @click="select">Sélection</button>
           <input
             type="text"
             disabled
@@ -264,11 +250,7 @@ const resetSelection = () => {
                 : params.sapeurIds.length + ' sapeurs sélectionnés'
             "
           />
-          <button
-            type="button"
-            class="btn btn-outline-danger"
-            @click="resetSelection"
-          >
+          <button type="button" class="btn btn-outline-danger" @click="resetSelection">
             Reset
           </button>
         </div>
@@ -282,21 +264,13 @@ const resetSelection = () => {
             type="checkbox"
             class="form-check-input"
           />
-          <label class="form-check-label" for="m-sap-cotisation_avs"
-            >Déduction</label
-          >
+          <label class="form-check-label" for="m-sap-cotisation_avs">Déduction</label>
         </div>
       </div>
     </div>
     <div class="modal-footer">
       <button type="submit" class="btn btn-primary">Créer</button>
-      <button
-        type="button"
-        class="btn btn-outline-secondary"
-        @click="closeModal"
-      >
-        Annuler
-      </button>
+      <button type="button" class="btn btn-outline-secondary" @click="closeModal">Annuler</button>
     </div>
   </form>
 </template>

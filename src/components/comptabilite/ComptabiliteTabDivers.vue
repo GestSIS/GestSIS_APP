@@ -1,15 +1,15 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '../../composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import permissions from "../../composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const uniteStore = useUniteStore();
 const sapeurStore = useSapeurStore();
@@ -25,9 +25,7 @@ uniteStore.fetchUnites();
 compteStore.fetchComptes();
 ecritureCategorieStore.fetchEcritureCategories();
 
-const activeExerciceComptableId = computed(
-  () => exerciceComptableStore.activeId,
-);
+const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);
 
 const loading = ref(false);
 watchEffect(async () => {
@@ -44,31 +42,27 @@ const comptes = computed(() => compteStore.liste);
 const unites = computed(() => uniteStore.liste);
 const categories = computed(() => ecritureCategorieStore.liste);
 const ecritures = computed(() => imputationStore.ecritures.divers);
-const hasEditPermission = useHasPermission(
-  permissions.COMPTABILITE.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.COMPTABILITE.MODIFICATION);
 
 const computedData = computed(() => {
-  const formatCompte = (compte) => compte?.numero + ' ' + compte?.designation;
+  const formatCompte = (compte) => compte?.numero + " " + compte?.designation;
   const formatType = (type) => {
     const mapping = {
-      0: 'Autre',
-      1: 'Solde',
-      2: 'Indemnité',
-      3: 'Frais forfaitaire',
-      4: 'Frais effectif',
-      5: 'Charges AVS/AC',
+      0: "Autre",
+      1: "Solde",
+      2: "Indemnité",
+      3: "Frais forfaitaire",
+      4: "Frais effectif",
+      5: "Charges AVS/AC",
     };
-    return mapping[type] || '';
+    return mapping[type] || "";
   };
 
   return ecritures.value?.map((e) => ({
     ...e,
     sapeur: sapeurs.value.find((s) => s.id == e.sapeur_id)?.nom_prenom,
     unite: unites.value.find((u) => u.id == e.type_unite_id)?.unite,
-    ecriture_categorie: categories.value.find(
-      (c) => c.id == e.ecriture_categorie_id,
-    )?.designation,
+    ecriture_categorie: categories.value.find((c) => c.id == e.ecriture_categorie_id)?.designation,
     compte: formatCompte(comptes.value.find((c) => c.id == e.compte_id)),
     ecritureType: formatType(e.type),
   }));
@@ -90,29 +84,23 @@ const awn = useNotification();
 const { confirm, showModal } = useModalStore();
 
 const newEcriture = () => {
-  showModal({ component: 'ModalEcritureDivers', data: {} });
+  showModal({ component: "ModalEcritureDivers", data: {} });
 };
 const editEcriture = (ecriture) => {
   if (!ecriture.decompte_id) {
-    showModal({ component: 'ModalEcritureDivers', data: ecriture });
+    showModal({ component: "ModalEcritureDivers", data: ecriture });
   } else {
-    awn.alert(
-      'Impossible de modifier une écriture déjà présente dans un décompte',
-    );
+    awn.alert("Impossible de modifier une écriture déjà présente dans un décompte");
   }
 };
 const deleteEcriture = (ecritureId) => {
   confirm(
-    'Voulez-vous vraiment supprimer cette écriture ?',
+    "Voulez-vous vraiment supprimer cette écriture ?",
     "Attention, la suppression d'une écriture est irréversible ! Toutes les données de cette écriture seront perdues !",
   ).then(() =>
     imputationStore
       .removeEcriture(ecritureId)
-      .catch((err) =>
-        awn.alert(
-          err?.message ?? 'Erreur, impossible de supprimer cette écriture',
-        ),
-      ),
+      .catch((err) => awn.alert(err?.message ?? "Erreur, impossible de supprimer cette écriture")),
   );
 };
 const onRowClass = (dataItem, isSelected) => {
@@ -120,30 +108,30 @@ const onRowClass = (dataItem, isSelected) => {
     return;
   }
   const statutsClass = {
-    0: '', //'A saisir',
-    1: '', //'En attente de validation',
-    2: '', // 'Validé',
-    3: 'table-success', //'Imputé'
+    0: "", //'A saisir',
+    1: "", //'En attente de validation',
+    2: "", // 'Validé',
+    3: "table-success", //'Imputé'
   };
   return statutsClass[dataItem.statut];
 };
 
 const fields = [
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'Designation', key: 'designation' },
-  { title: 'Sapeur', key: 'sapeur' },
-  { title: 'Type', key: 'ecritureType' },
-  { title: 'Compte', key: 'compte' },
-  { title: 'Catégorie', key: 'ecriture_categorie' },
-  { title: 'Quantité', key: 'quantite' },
-  { title: 'Unité', key: 'unite' },
-  { title: 'Tarif', key: 'tarif', type: Number },
-  { title: 'Total', key: 'total', type: Number },
+  { title: "Date", key: "date", type: Date },
+  { title: "Designation", key: "designation" },
+  { title: "Sapeur", key: "sapeur" },
+  { title: "Type", key: "ecritureType" },
+  { title: "Compte", key: "compte" },
+  { title: "Catégorie", key: "ecriture_categorie" },
+  { title: "Quantité", key: "quantite" },
+  { title: "Unité", key: "unite" },
+  { title: "Tarif", key: "tarif", type: Number },
+  { title: "Total", key: "total", type: Number },
   {
-    title: 'Actions',
-    slot: 'actions',
-    titleClass: 'align-middle text-center',
-    columnClass: 'align-middle text-center',
+    title: "Actions",
+    slot: "actions",
+    titleClass: "align-middle text-center",
+    columnClass: "align-middle text-center",
   },
 ];
 </script>
@@ -161,9 +149,7 @@ const fields = [
             <h3 class="card-title">Actions</h3>
           </div>
           <div class="card-body d-grid gap-1">
-            <button class="btn btn-outline-primary" @click="newEcriture">
-              Nouveau
-            </button>
+            <button class="btn btn-outline-primary" @click="newEcriture">Nouveau</button>
             <button
               class="btn btn-outline-primary"
               :disabled="!selectedItem"
@@ -222,14 +208,10 @@ const fields = [
                 base-option="&lt;Catégorie comptable&gt;"
                 :options="filteredCategories"
                 :model-value="filters.ecriture_categorie_id"
-                @update:model-value="
-                  (value) => setFilter('ecriture_categorie_id', value)
-                "
+                @update:model-value="(value) => setFilter('ecriture_categorie_id', value)"
               />
               <div v-if="canReset" class="col-md-4">
-                <button class="btn btn-sm btn-warning w-100" @click="reset">
-                  Réinitialiser
-                </button>
+                <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
               </div>
             </div>
           </form>

@@ -1,9 +1,9 @@
 <script setup>
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import AdminService from '../../services/AdminService';
-import { useModalStore } from '../../stores/common/Modal';
-import { useAdminStore } from '../../stores/admin/Admin';
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import AdminService from "../../services/AdminService";
+import { useModalStore } from "../../stores/common/Modal";
+import { useAdminStore } from "../../stores/admin/Admin";
 
 const { id } = defineProps({
   id: {
@@ -36,58 +36,58 @@ const awn = useNotification();
 const tokenForUser = (user) =>
   AdminService.getUserToken(user.id).then((data) => {
     navigator.clipboard.writeText(data.accessToken);
-    awn.success('Token copié dans le press papier');
+    awn.success("Token copié dans le press papier");
   });
-const editUser = (user) => showModal({ component: 'ModalUser', data: user });
+const editUser = (user) => showModal({ component: "ModalUser", data: user });
 
 const computedDataRoles = computed(() =>
   (user.value.user_roles || []).map((ur) => {
     const role = roles.value.find((r) => r.id === ur.role_id);
-    if (!role) return { ...ur, organisation: 'N/A', role: 'N/A' };
+    if (!role) return { ...ur, organisation: "N/A", role: "N/A" };
     return {
       ...ur,
-      organisation: sis.value.find((s) => s.id === role.sis_id)?.nom || 'N/A',
+      organisation: sis.value.find((s) => s.id === role.sis_id)?.nom || "N/A",
       role: role.nom,
     };
-  })
+  }),
 );
 const computedDataSapeurs = computed(() =>
   (user.value.sapeur || []).map((e) => {
     return {
       ...e,
-      organisation: sis.value.find((s) => s.id === e.sis_id)?.nom || 'N/A',
+      organisation: sis.value.find((s) => s.id === e.sis_id)?.nom || "N/A",
     };
-  })
+  }),
 );
 
 const ajouterRole = () =>
   showModal({
-    component: 'ModalAdminUserRole',
+    component: "ModalAdminUserRole",
     data: { user_id: user.value.id },
     callback: loadUser,
   });
 const supprimerRole = (userRole) =>
   confirm(
-    'Voulez-vous vraiment enlever ce rôle à cet utilisateur ?',
-    "Attention, l'action est irréversible."
+    "Voulez-vous vraiment enlever ce rôle à cet utilisateur ?",
+    "Attention, l'action est irréversible.",
   ).then(() => {
     adminStore
       .removeUserRole(userRole?.id)
-      .then((res) => awn.success(res?.message || 'Rôle supprimé'))
+      .then((res) => awn.success(res?.message || "Rôle supprimé"))
       .then(loadUser)
-      .catch((e) => awn.alert(e?.message || 'Erreur lors de la suppression'));
+      .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression"));
   });
 
 const fieldsRoles = [
-  { title: 'id', key: 'id' },
-  { title: 'organisation', key: 'organisation' },
-  { title: 'role', key: 'role' },
-  { title: 'Actions', key: 'id', slot: 'actions' },
+  { title: "id", key: "id" },
+  { title: "organisation", key: "organisation" },
+  { title: "role", key: "role" },
+  { title: "Actions", key: "id", slot: "actions" },
 ];
 const fieldsSapeurs = [
-  { title: 'id', key: 'id' },
-  { title: 'organisation', key: 'organisation' },
-  { title: 'sapeur_id', key: 'sapeur_id' },
+  { title: "id", key: "id" },
+  { title: "organisation", key: "organisation" },
+  { title: "sapeur_id", key: "sapeur_id" },
   // { title: 'Actions', key: 'id', slot: 'actions' },
 ];
 </script>
@@ -98,9 +98,7 @@ const fieldsSapeurs = [
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Données</h3>
-          <button class="btn btn-primary" @click="editUser(user)">
-            Modifier
-          </button>
+          <button class="btn btn-primary" @click="editUser(user)">Modifier</button>
         </div>
         <div class="card-body">
           <div class="mb-3">
@@ -179,9 +177,7 @@ const fieldsSapeurs = [
             </template>
             <template #foot>
               <tr>
-                <th :colspan="fieldsRoles.length">
-                  Nb roles: {{ user.user_roles?.length }}
-                </th>
+                <th :colspan="fieldsRoles.length">Nb roles: {{ user.user_roles?.length }}</th>
               </tr>
             </template>
           </base-table>
@@ -204,9 +200,7 @@ const fieldsSapeurs = [
           >
             <template #foot>
               <tr>
-                <th :colspan="fieldsSapeurs.length">
-                  Nb sapeur: {{ user.sapeur?.length }}
-                </th>
+                <th :colspan="fieldsSapeurs.length">Nb sapeur: {{ user.sapeur?.length }}</th>
               </tr>
             </template>
           </base-table>

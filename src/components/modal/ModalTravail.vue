@@ -1,16 +1,16 @@
 <script setup>
-import { computed, nextTick, reactive, ref, useTemplateRef } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
-import { useAuthStore } from '../../stores/auth/Auth.js';
+import { computed, nextTick, reactive, ref, useTemplateRef } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
+import { useAuthStore } from "../../stores/auth/Auth.js";
 
-import permissions from '../../composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
-import { useTravailStore } from '../../stores/travail/Travail.js';
+import permissions from "../../composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
+import { useTravailStore } from "../../stores/travail/Travail.js";
 
 const { callback, data } = defineProps({
   callback: {
@@ -45,16 +45,11 @@ const form = reactive({
 const unites = computed(() => uniteStore.liste);
 const travailTypes = computed(() => travailTypeStore.liste);
 const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
-const hasSaisieCommunePermission = useHasPermission(
-  permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
-);
+const hasSaisieCommunePermission = useHasPermission(permissions.FICHE_TRAVAIL.SAISIE_COMMUNE);
 
 const activeUnite = computed(() =>
   unites.value.find(
-    (u) =>
-      u.id ===
-      travailTypes.value.find((t) => t.id === form.travail_type_id)
-        ?.type_unite_id,
+    (u) => u.id === travailTypes.value.find((t) => t.id === form.travail_type_id)?.type_unite_id,
   ),
 );
 
@@ -81,7 +76,7 @@ const save = async () => {
   // Contrôle qu'aucune colonne n'est dupliquée
   const sapeurIds = new Set(form.sapeurs.map((e) => e.sapeur_id));
   if (sapeurIds.size != form.sapeurs.length) {
-    awn.alert('Erreur, un sapeur a été saisie à double.');
+    awn.alert("Erreur, un sapeur a été saisie à double.");
     return;
   }
 
@@ -129,9 +124,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} un travail
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un travail</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -174,13 +167,8 @@ const save = async () => {
         display-key="nom_prenom"
         :options="sapeurs"
       />
-      <label v-if="form?.id || !hasSaisieCommunePermission" for="quantite"
-        >Quantité</label
-      >
-      <div
-        v-if="form?.id || !hasSaisieCommunePermission"
-        class="input-group input-group-sm mb-3"
-      >
+      <label v-if="form?.id || !hasSaisieCommunePermission" for="quantite">Quantité</label>
+      <div v-if="form?.id || !hasSaisieCommunePermission" class="input-group input-group-sm mb-3">
         <input
           id="quantite"
           v-model="form.sapeurs[0].quantite"
@@ -194,10 +182,7 @@ const save = async () => {
         <span class="input-group-text">
           {{
             unites.find(
-              (u) =>
-                u.id ==
-                travailTypes.find((t) => t.id == form.travail_type_id)
-                  ?.type_unite_id,
+              (u) => u.id == travailTypes.find((t) => t.id == form.travail_type_id)?.type_unite_id,
             )?.unite
           }}</span
         >
@@ -245,9 +230,7 @@ const save = async () => {
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': errors['base-quantite' + i] }"
                   />
-                  <span class="input-group-text">
-                    {{ activeUnite?.unite }}</span
-                  >
+                  <span class="input-group-text"> {{ activeUnite?.unite }}</span>
                 </div>
               </td>
               <td class="text-center">
@@ -263,11 +246,7 @@ const save = async () => {
             </tr>
             <tr>
               <td colspan="3">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary"
-                  @click="ajoutType()"
-                >
+                <button type="button" class="btn btn-outline-primary" @click="ajoutType()">
                   Ajouter
                   <font-awesome-icon size="1x" :icon="['far', 'plus-square']" />
                 </button>
@@ -278,11 +257,9 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

@@ -1,37 +1,36 @@
 <script setup>
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { computed } from 'vue';
-import useNotification from '../../composables/useNotification.js';
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
 
 const ecritureCategorieStore = useEcritureCategorieStore();
 await ecritureCategorieStore.fetchEcritureCategories();
 
 const fields = [
-  { title: 'Tri', key: 'tri' },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Tri", key: "tri" },
+  { title: "Désignation", key: "designation" },
+  { title: "Actions", slot: "actions" },
 ];
 const listeCategorie = computed(() =>
-  ecritureCategorieStore.liste.sort((a, b) => a.tri - b.tri),
+  ecritureCategorieStore.liste.slice().sort((a, b) => a.tri - b.tri),
 );
 
 const { showModal } = useModalStore();
 const awn = useNotification();
 
-const ajoutCategorie = () =>
-  showModal({ component: 'ModalEcritureCategorie', data: {} });
+const ajoutCategorie = () => showModal({ component: "ModalEcritureCategorie", data: {} });
 
 const updateCategorie = (categorie) =>
   showModal({
-    component: 'ModalEcritureCategorie',
+    component: "ModalEcritureCategorie",
     data: { ...categorie },
   });
 
 const deleteCategorie = (compteId) =>
   ecritureCategorieStore
     .removeEcritureCategorie(compteId)
-    .catch((res) => awn.alert(res.message || 'Erreur lors de la suppression'));
+    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
 </script>
 
 <template>

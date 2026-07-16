@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import SelectEmplacement from '../materiel/SelectEmplacement.vue';
+import { computed, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import SelectEmplacement from "../materiel/SelectEmplacement.vue";
 
 const { data } = defineProps({
   data: {
@@ -17,33 +17,29 @@ const activeItem = ref({ ...data });
 const typeStore = useMaterielTypeStore();
 await typeStore.fetchMaterielTypes();
 
-const type = computed(() =>
-  typeStore.liste.find((t) => t.id == activeItem.value.materiel_type_id),
-);
+const type = computed(() => typeStore.liste.find((t) => t.id == activeItem.value.materiel_type_id));
 
 const { closeModal } = useModalStore();
 
 const events = computed(() => [
   ...(data?.lavages ?? []).map((l) => ({
-    evenement: 'Lavage',
+    evenement: "Lavage",
     date: l.date,
     id: l.id,
   })),
-  { evenement: 'Création', date: data.created_at?.slice(0, 10), id: 0 },
+  { evenement: "Création", date: data.created_at?.slice(0, 10), id: 0 },
 ]);
 
 const fields = [
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'Evénement', key: 'evenement' },
+  { title: "Date", key: "date", type: Date },
+  { title: "Evénement", key: "evenement" },
 ];
 </script>
 
 <template>
   <div>
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ activeItem.id ? 'Modifier' : 'Ajouter' }} un article
-      </h5>
+      <h5 class="modal-title">{{ activeItem.id ? "Modifier" : "Ajouter" }} un article</h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
@@ -128,18 +124,12 @@ const fields = [
           </div>
         </div>
         <div class="col-4">
-          <base-table
-            :fields="fields"
-            :data="events"
-            :selectable="true"
-          ></base-table>
+          <base-table :fields="fields" :data="events" :selectable="true"></base-table>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
     </div>
   </div>
 </template>

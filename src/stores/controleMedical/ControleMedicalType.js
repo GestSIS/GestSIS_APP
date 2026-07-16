@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia';
-import ControlesMedicauxTypeService from '../../services/ControlesMedicauxTypeService.js';
+import { defineStore } from "pinia";
+import ControlesMedicauxTypeService from "../../services/ControlesMedicauxTypeService.js";
 
-export const useControleMedicalTypeStore = defineStore('controleMedicalType', {
+export const useControleMedicalTypeStore = defineStore("controleMedicalType", {
   state: () => ({
     liste: [],
   }),
@@ -22,7 +22,7 @@ export const useControleMedicalTypeStore = defineStore('controleMedicalType', {
     },
     async updateType(type) {
       const data = await ControlesMedicauxTypeService.updateType(type);
-      this.liste = [...this.liste.map((m) => (m.id === data.id ? data : m))];
+      this.liste = this.liste.map((m) => (m.id === data.id ? data : m));
       return data;
     },
     async removeType(typeId) {

@@ -1,15 +1,15 @@
 <script setup>
-import permissions from '../composables/permissions.js';
-import { computed, ref, watchEffect } from 'vue';
-import { useModalStore } from '../stores/common/Modal';
-import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
-import { useTravailStore } from '../stores/travail/Travail.js';
-import { useTravailTypeStore } from '../stores/travail/TravailType.js';
-import { useUniteStore } from '../stores/common/Unite.js';
-import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
-import { useAuthStore } from '../stores/auth/Auth.js';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import useHasPermission from '../composables/usePermission.js';
+import permissions from "../composables/permissions.js";
+import { computed, ref, watchEffect } from "vue";
+import { useModalStore } from "../stores/common/Modal";
+import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
+import { useTravailStore } from "../stores/travail/Travail.js";
+import { useTravailTypeStore } from "../stores/travail/TravailType.js";
+import { useUniteStore } from "../stores/common/Unite.js";
+import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
+import { useAuthStore } from "../stores/auth/Auth.js";
+import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
+import useHasPermission from "../composables/usePermission.js";
 
 const authStore = useAuthStore();
 const sapeurStore = useSapeurStore();
@@ -37,15 +37,11 @@ const activeSapeurId = computed(() => authStore.sapeurId);
 const travaux = computed(() =>
   travailStore.liste.map((t) => ({
     ...t,
-    travail_type: travailTypeStore.liste.find((e) => e.id == t.travail_type_id)
-      ?.designation,
+    travail_type: travailTypeStore.liste.find((e) => e.id == t.travail_type_id)?.designation,
     sapeur: sapeurStore.liste.find((s) => s.id == t.sapeur_id)?.nom_prenom,
     auteur: sapeurStore.liste.find((s) => s.id == t.auteur_id)?.nom_prenom,
     unite: uniteStore.liste.find(
-      (u) =>
-        u.id ==
-        travailTypeStore.liste.find((e) => e.id == t.travail_type_id)
-          ?.type_unite_id,
+      (u) => u.id == travailTypeStore.liste.find((e) => e.id == t.travail_type_id)?.type_unite_id,
     )?.unite,
   })),
 );
@@ -56,9 +52,7 @@ const hasEditPermission = useHasPermission([
   permissions.FICHE_TRAVAIL.SAISIE_PERSO,
   permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
 ]);
-const hasValidationPermission = useHasPermission(
-  permissions.FICHE_TRAVAIL.VALIDATION,
-);
+const hasValidationPermission = useHasPermission(permissions.FICHE_TRAVAIL.VALIDATION);
 const filteredSapeurs = computed(() => {
   const ids = new Set(travaux.value.map((i) => parseInt(i.sapeur_id)));
   return sapeurs.value.filter((t) => ids.has(t.id));
@@ -74,13 +68,11 @@ const selectedItem = computed(() => {
 const { confirm, showModal } = useModalStore();
 const select = (row) => (selectedId.value = row?.id);
 
-const createTravail = () => showModal({ component: 'ModalTravail' });
+const createTravail = () => showModal({ component: "ModalTravail" });
 
-const updateTravail = (travail) =>
-  showModal({ component: 'ModalTravail', data: travail });
+const updateTravail = (travail) => showModal({ component: "ModalTravail", data: travail });
 
-const reviewTravail = (travail) =>
-  showModal({ component: 'ModalReviewTravail', data: travail });
+const reviewTravail = (travail) => showModal({ component: "ModalReviewTravail", data: travail });
 
 const cancelReviewTravail = (travail) =>
   confirm(
@@ -90,7 +82,7 @@ const cancelReviewTravail = (travail) =>
 
 const supprimerTravail = (travail) =>
   confirm(
-    'Voulez-vous vraiment supprimer ce travail ?',
+    "Voulez-vous vraiment supprimer ce travail ?",
     "Attention, la suppression d'un travail est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
   ).then(() => travailStore.removeTravail(travail?.id));
 
@@ -99,37 +91,37 @@ const onRowClass = (dataItem, isSelected) => {
     return;
   }
   const statutsClass = {
-    [-1]: 'table-warning', // 'Refusé',
-    0: '', // 'En attente',
-    1: 'table-success', // 'Accepté'
-    2: 'table-success', // 'Imputé'
+    [-1]: "table-warning", // 'Refusé',
+    0: "", // 'En attente',
+    1: "table-success", // 'Accepté'
+    2: "table-success", // 'Imputé'
   };
   return statutsClass[dataItem.statut];
 };
 
 const fields = [
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'Sapeur', key: 'sapeur' },
-  { title: 'Travail', key: 'travail_type' },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Quantité', key: 'quantite' },
-  { title: 'Unité', key: 'unite' },
-  { title: 'Auteur', key: 'auteur' },
-  { title: 'Date demande', key: 'date_demande', type: Date },
+  { title: "Date", key: "date", type: Date },
+  { title: "Sapeur", key: "sapeur" },
+  { title: "Travail", key: "travail_type" },
+  { title: "Désignation", key: "designation" },
+  { title: "Quantité", key: "quantite" },
+  { title: "Unité", key: "unite" },
+  { title: "Auteur", key: "auteur" },
+  { title: "Date demande", key: "date_demande", type: Date },
   {
-    title: 'Statut',
-    key: 'statut',
+    title: "Statut",
+    key: "statut",
     formatter(statut) {
       return {
-        [-1]: 'Refusé',
-        0: 'En attente',
-        1: 'Accepté',
-        2: 'Imputé',
+        [-1]: "Refusé",
+        0: "En attente",
+        1: "Accepté",
+        2: "Imputé",
       }[statut];
     },
   },
-  { title: 'Justification', key: 'justification' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Justification", key: "justification" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -147,9 +139,7 @@ const fields = [
               <li class="breadcrumb-item">
                 <router-link :to="{ name: 'accueil' }">Accueil</router-link>
               </li>
-              <li class="breadcrumb-item active" aria-current="page">
-                Fiche de travail
-              </li>
+              <li class="breadcrumb-item active" aria-current="page">Fiche de travail</li>
             </ol>
           </nav>
         </div>
@@ -182,17 +172,13 @@ const fields = [
               <button
                 v-if="hasValidationPermission && !selectedItem?.statut < 1"
                 class="btn btn-outline-warning"
-                :disabled="
-                  selectedItem?.statut == 0 || selectedItem?.statut == 2
-                "
+                :disabled="selectedItem?.statut == 0 || selectedItem?.statut == 2"
                 @click="cancelReviewTravail(selectedItem)"
               >
                 Annuler l'examen
               </button>
               <button
-                v-if="
-                  hasEditPermission && selectedItem?.auteur_id == activeSapeurId
-                "
+                v-if="hasEditPermission && selectedItem?.auteur_id == activeSapeurId"
                 :disabled="selectedItem?.statut !== 0"
                 class="btn btn-outline-danger"
                 @click="supprimerTravail(selectedItem)"
@@ -222,9 +208,7 @@ const fields = [
                   base-option="<Type>"
                   :options="filteredTravailTypes"
                   :model-value="filters.travail_type_id"
-                  @update:model-value="
-                    (value) => setFilter('travail_type_id', value)
-                  "
+                  @update:model-value="(value) => setFilter('travail_type_id', value)"
                 />
                 <base-select
                   class="col-md-4"
@@ -238,9 +222,7 @@ const fields = [
                   @update:model-value="(value) => setFilter('statut', value)"
                 />
                 <div v-if="canReset" class="col-md-4">
-                  <button class="btn btn-sm btn-warning w-100" @click="reset">
-                    Réinitialiser
-                  </button>
+                  <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
                 </div>
               </div>
             </div>
@@ -274,10 +256,7 @@ const fields = [
                     <font-awesome-icon :icon="['far', 'edit']" />
                   </button>
                   <button
-                    v-if="
-                      hasValidationPermission &&
-                      (rowData.statut == -1 || rowData.statut == 1)
-                    "
+                    v-if="hasValidationPermission && (rowData.statut == -1 || rowData.statut == 1)"
                     title="Examen"
                     class="btn btn-outline-warning border-0"
                     @click="cancelReviewTravail(rowData)"

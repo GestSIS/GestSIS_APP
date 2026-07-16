@@ -1,9 +1,9 @@
 <script setup>
-import { computed, ref, useTemplateRef } from 'vue';
-import * as releases from '../../releases.json';
-import { DOC_URL } from '../http/Env.js';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/auth/Auth.js';
+import { computed, ref, useTemplateRef } from "vue";
+import * as releases from "../../releases.json";
+import { DOC_URL } from "../http/Env.js";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "../stores/auth/Auth.js";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -18,14 +18,14 @@ const { hideSidebar, noSidebar } = defineProps({
     default: false,
   },
 });
-defineEmits(['toggleSidebar']);
+defineEmits(["toggleSidebar"]);
 const showNotif = ref(
-  localStorage.getItem('latestReleaseDate') != releases.releases[0].date ||
-    localStorage.getItem('latestSeenVersion') != releases.releases[0].version,
+  localStorage.getItem("latestReleaseDate") != releases.releases[0].date ||
+    localStorage.getItem("latestSeenVersion") != releases.releases[0].version,
 );
 
 const isAdmin = computed(() => authStore.admin);
-const dropdownComponent = useTemplateRef('dropdown');
+const dropdownComponent = useTemplateRef("dropdown");
 
 const clickInfo = (navigate) => {
   showNotif.value = false;
@@ -33,12 +33,11 @@ const clickInfo = (navigate) => {
 };
 const parametres = () => {
   dropdownComponent.value.close();
-  router.push({ name: 'utilisateur' });
+  router.push({ name: "utilisateur" });
 };
 const logout = () => {
-  authStore.logout().then(() => {
-    router.push({ name: 'login' });
-  });
+  authStore.logout();
+  router.push({ name: "login" });
 };
 </script>
 
@@ -58,9 +57,7 @@ const logout = () => {
       </li>
       <li v-if="isAdmin" class="nav-item position-relative me-2">
         <router-link v-slot="{ navigate }" :to="{ name: 'admin-sis' }" custom>
-          <button class="btn btn-sm btn-link" @click="clickInfo(navigate)">
-            Admin
-          </button>
+          <button class="btn btn-sm btn-link" @click="clickInfo(navigate)">Admin</button>
         </router-link>
       </li>
     </ul>
@@ -75,20 +72,13 @@ const logout = () => {
         </a>
       </li>
       <li class="position-relative me-2">
-        <a
-          :href="DOC_URL"
-          target="_blank"
-          class="btn btn-sm btn-link nav-link pt-0 pb-0"
-        >
+        <a :href="DOC_URL" target="_blank" class="btn btn-sm btn-link nav-link pt-0 pb-0">
           <font-awesome-icon :icon="['far', 'question-circle']" />
         </a>
       </li>
       <router-link v-slot="{ navigate }" :to="{ name: 'about' }" custom>
         <li class="position-relative me-2">
-          <button
-            class="btn btn-sm btn-link nav-link pt-0 pb-0"
-            @click="clickInfo(navigate)"
-          >
+          <button class="btn btn-sm btn-link nav-link pt-0 pb-0" @click="clickInfo(navigate)">
             <font-awesome-icon :icon="['fas', 'bell']" />
             <span
               v-if="showNotif"

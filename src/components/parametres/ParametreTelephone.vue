@@ -1,31 +1,28 @@
 <script setup>
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useTelephoneStore } from '../../stores/sapeur/Telephone.js';
-import { computed } from 'vue';
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useTelephoneStore } from "../../stores/sapeur/Telephone.js";
+import { computed } from "vue";
 
 const telephoneStore = useTelephoneStore();
 await telephoneStore.fetchTelephones();
 
 const fields = [
-  { title: 'Tri', key: 'tri' },
-  { title: 'Nom', key: 'nom' },
-  { title: 'Numéro', key: 'numero' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Tri", key: "tri" },
+  { title: "Nom", key: "nom" },
+  { title: "Numéro", key: "numero" },
+  { title: "Actions", slot: "actions" },
 ];
-const listeTelephone = computed(() =>
-  telephoneStore.liste.sort((a, b) => a.tri - b.tri),
-);
+const listeTelephone = computed(() => telephoneStore.liste.slice().sort((a, b) => a.tri - b.tri));
 
 const { confirm, showModal } = useModalStore();
-const ajoutTelephone = () =>
-  showModal({ component: 'ModalTelephone', data: {} });
+const ajoutTelephone = () => showModal({ component: "ModalTelephone", data: {} });
 
 const updateTelephone = (telephone) =>
-  showModal({ component: 'ModalTelephone', data: { ...telephone } });
+  showModal({ component: "ModalTelephone", data: { ...telephone } });
 
 const deleteTelephone = (telephone) =>
   confirm(
-    'Voulez-vous vraiment supprimer ce contact ?',
+    "Voulez-vous vraiment supprimer ce contact ?",
     "Attention, la suppression d'un contact est irréversible ! Toutes les données de ce contact seront perdues !",
   ).then(() => telephoneStore.removeTelephone(telephone.id));
 </script>

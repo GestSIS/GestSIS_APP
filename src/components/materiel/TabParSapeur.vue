@@ -1,6 +1,6 @@
 <script setup>
-import NavigationParSapeur from './NavigationParSapeur.vue';
-import ListeArticlePourSapeur from './ListeArticlePourSapeur.vue';
+import NavigationParSapeur from "./NavigationParSapeur.vue";
+import ListeArticlePourSapeur from "./ListeArticlePourSapeur.vue";
 
 const { id } = defineProps({
   id: {
@@ -29,9 +29,7 @@ const { id } = defineProps({
         <div class="card-header">
           <h5 class="m-0">Aucun sapeur sélectionné</h5>
         </div>
-        <div class="card-body">
-          Sélectionnez un sapeur dans la liste de gauche
-        </div>
+        <div class="card-body">Sélectionnez un sapeur dans la liste de gauche</div>
       </div>
     </div>
   </div>

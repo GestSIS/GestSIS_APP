@@ -1,18 +1,18 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useLocaliteStore } from '../../stores/common/Localite.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useExerciceStore } from '../../stores/exercice/Exercice.js';
-import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
-import { useExcuseTypeStore } from '../../stores/exercice/ExcuseType.js';
-import { useHeureExerciceStore } from '../../stores/exercice/HeureExercice.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import ExerciceService from '../../services/ExerciceService';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useLocaliteStore } from "../../stores/common/Localite.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useExerciceStore } from "../../stores/exercice/Exercice.js";
+import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
+import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
+import { useHeureExerciceStore } from "../../stores/exercice/HeureExercice.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import ExerciceService from "../../services/ExerciceService";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -34,7 +34,7 @@ uniteStore.fetchUnites();
 const { id } = defineProps({
   id: {
     type: String,
-    default: 'new',
+    default: "new",
   },
 });
 
@@ -46,10 +46,7 @@ const loading = ref(false);
 const activeExerciceSapeurs = computed(() => exerciceStore.active.sapeurs);
 watchEffect(async () => {
   loading.value = true;
-  await Promise.all([
-    exerciceStore.fetchExercice(id),
-    exerciceStore.fetchExerciceSapeurs(id),
-  ]);
+  await Promise.all([exerciceStore.fetchExercice(id), exerciceStore.fetchExerciceSapeurs(id)]);
   loading.value = false;
 });
 
@@ -60,7 +57,7 @@ watchEffect(() => {
       const sapeur = sapeurs.value.find((sap) => sap.id == s.sapeur_id);
       return {
         ...s,
-        nom_prenom: sapeur?.nom_prenom ?? '...',
+        nom_prenom: sapeur?.nom_prenom ?? "...",
         actif: sapeur?.actif,
       };
     })
@@ -69,17 +66,13 @@ watchEffect(() => {
 
 watchEffect(() => {
   const status = presences.value?.map((p) => (p.convoque === 1 ? true : false));
-  allConvoque.value = status.length
-    ? status.reduce((c2, c1) => (c1 === c2 ? c1 : ''))
-    : false;
+  allConvoque.value = status.length ? status.reduce((c2, c1) => (c1 === c2 ? c1 : "")) : false;
 });
 
 const excusesTypes = computed(() => excuseTypeStore.liste);
 
 const hasPresencePermission = useHasPermission(permissions.EXERCICE.PRESENCE);
-const hasValidationPermission = useHasPermission(
-  permissions.EXERCICE.VALIDATION,
-);
+const hasValidationPermission = useHasPermission(permissions.EXERCICE.VALIDATION);
 const activeExerciceData = computed(() => exerciceStore.active.data);
 const heureTypes = computed(() => heureExerciceStore.liste);
 const unites = computed(() => uniteStore.liste);
@@ -112,7 +105,7 @@ const selectAllConvoque = (status) => {
     convoque: status ? 1 : 0,
   }));
   Promise.all(presences.value.map((p) => savePresence(p, true))).then(
-    awn.success('Modifications enregistrées'),
+    awn.success("Modifications enregistrées"),
   );
 };
 const getHeureValue = (sapeur) => {
@@ -135,36 +128,28 @@ const updateHeureSapeur = (sap, h, quantite) => {
 
     exerciceStore
       .addHeure(newHeure)
-      .then(() => awn.success('Heure ajoutée'))
-      .catch((err) =>
-        awn.alert(err?.message || "Erreur lors de l'enregistrement"),
-      );
+      .then(() => awn.success("Heure ajoutée"))
+      .catch((err) => awn.alert(err?.message || "Erreur lors de l'enregistrement"));
   } else if (!(parseFloat(quantite) || null)) {
     // Suppression de l'heure
     exerciceStore
       .removeHeure(heure)
-      .then(() => awn.success('Heure supprimée'))
-      .catch((err) =>
-        awn.alert(err?.message || "Erreur lors de l'enregistrement"),
-      );
+      .then(() => awn.success("Heure supprimée"))
+      .catch((err) => awn.alert(err?.message || "Erreur lors de l'enregistrement"));
   } else {
     heure.quantite = parseFloat(quantite) || null;
     // Modification de l'heure
     exerciceStore
       .editHeure(heure)
-      .then(() => awn.success('Modifications enregistrées'))
-      .catch((err) =>
-        awn.alert(err?.message || "Erreur lors de l'enregistrement"),
-      );
+      .then(() => awn.success("Modifications enregistrées"))
+      .catch((err) => awn.alert(err?.message || "Erreur lors de l'enregistrement"));
   }
 };
 const validate = () => {
   exerciceStore
     .validerExercice(id)
-    .then((res) => awn.success(res?.message || 'Exercice validé avec succès.'))
-    .catch((err) =>
-      awn.alert(err?.message || "Erreur lors de la validation de l'exercice."),
-    );
+    .then((res) => awn.success(res?.message || "Exercice validé avec succès."))
+    .catch((err) => awn.alert(err?.message || "Erreur lors de la validation de l'exercice."));
 };
 const formatUnite = (type_unite_id) => {
   return unites.value.find((u) => u.id == type_unite_id)?.abreviation;
@@ -214,12 +199,12 @@ const manageSapeurs = () => {
       }
 
       if (newSapeurs.length <= 0 && supprime.length <= 0) {
-        resolve('Solved');
+        resolve("Solved");
       }
     });
   };
   showModal({
-    component: 'ModalSapeurSelect',
+    component: "ModalSapeurSelect",
     size: 1,
     callback,
     data: { ids: presences.value.map((s) => s.sapeur_id) },
@@ -230,7 +215,7 @@ const savePresence = async (sapeur, hideNotification) => {
   if (!hideNotification) {
     try {
       const res = await promise;
-      return awn.success(res?.message || 'Modifications enregistrées');
+      return awn.success(res?.message || "Modifications enregistrées");
     } catch (err) {
       return awn.alert(err?.message || "Erreur lors de l'enregistrement");
     }
@@ -260,31 +245,27 @@ const selectRemplace = (sapeur) => {
 };
 const detailExcuse = (sapeur) => {
   if (!hasPresencePermission.value) {
-    awn.warning(
-      "Permissions insuffisantes pour accéder au détails de l'excuse",
-    );
+    awn.warning("Permissions insuffisantes pour accéder au détails de l'excuse");
     return;
   }
   showModal({
-    component: 'ModalExcuse',
+    component: "ModalExcuse",
     data: sapeur,
     callback: async (presence) => {
       if (presence !== null && presence !== undefined) {
         presence.present = 0;
         presence.remplace = 0;
         await savePresence(presence);
-        presences.value = [
-          ...presences.value.map((p) =>
-            parseInt(p.id) == parseInt(presence.id) ? presence : p,
-          ),
-        ];
+        presences.value = presences.value.map((p) =>
+          parseInt(p.id) == parseInt(presence.id) ? presence : p,
+        );
       }
     },
   });
 };
 const addExcuse = (sapeur) =>
   showModal({
-    component: 'ModalExcuse',
+    component: "ModalExcuse",
     data: sapeur,
     callback: async (presence) => {
       if (presence !== null && presence !== undefined) {
@@ -292,44 +273,36 @@ const addExcuse = (sapeur) =>
         presence.absent = 1;
         presence.remplace = 0;
         await savePresence(presence);
-        presences.value = [
-          ...presences.value.map((p) =>
-            parseInt(p.id) == parseInt(presence.id) ? presence : p,
-          ),
-        ];
+        presences.value = presences.value.map((p) =>
+          parseInt(p.id) == parseInt(presence.id) ? presence : p,
+        );
       }
     },
   });
 
 const removeExcuse = (presence) =>
   confirm(
-    'Voulez-vous vraiment supprimer cette excuse ?',
+    "Voulez-vous vraiment supprimer cette excuse ?",
     "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-  ).then(() =>
-    exerciceStore.removeExcuse(presence.exercice_id, presence.sapeur_id),
-  );
+  ).then(() => exerciceStore.removeExcuse(presence.exercice_id, presence.sapeur_id));
 
 const downloadJustificatif = (sapeur) => {
   if (!hasPresencePermission.value) {
-    awn.warning(
-      "Permissions insuffisantes pour accéder au détails de l'excuse",
-    );
+    awn.warning("Permissions insuffisantes pour accéder au détails de l'excuse");
     return;
   }
   ExerciceService.downloadExcuseJustificatif(
     sapeur.exercice_id,
     sapeur.sapeur_id,
-    'justificatif_' + sapeur.justificatif_filename,
-  ).catch((err) =>
-    awn.alert(err?.message ?? 'Erreur lors du chargement du justificatif'),
-  );
+    "justificatif_" + sapeur.justificatif_filename,
+  ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
 };
 
 const statuts = [
-  { id: -2, designation: 'Amendée' },
-  { id: -1, designation: 'Refusée' },
-  { id: 0, designation: 'A traiter' },
-  { id: 1, designation: 'Acceptée' },
+  { id: -2, designation: "Amendée" },
+  { id: -1, designation: "Refusée" },
+  { id: 0, designation: "A traiter" },
+  { id: 1, designation: "Acceptée" },
 ];
 </script>
 
@@ -344,8 +317,7 @@ const statuts = [
       data-bs-dismiss="alert"
       @click="dismissedWarning = true"
     ></button>
-    Exercice déjà imputé, uniquement possible de modifier le type d'absence et
-    la mise à l'amende.
+    Exercice déjà imputé, uniquement possible de modifier le type d'absence et la mise à l'amende.
   </div>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex">
@@ -391,11 +363,7 @@ const statuts = [
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="sap in presences"
-            :key="sap.id"
-            :class="{ 'table-danger': !sap.actif }"
-          >
+          <tr v-for="sap in presences" :key="sap.id" :class="{ 'table-danger': !sap.actif }">
             <td>{{ sap.nom_prenom }}</td>
             <td>
               <div class="text-center">
@@ -423,10 +391,7 @@ const statuts = [
                   :false-value="0"
                   @change="selectPresent(sap)"
                 />
-                <label
-                  class="form-check-label"
-                  :for="sap.id + 'present'"
-                ></label>
+                <label class="form-check-label" :for="sap.id + 'present'"></label>
               </div>
             </td>
             <td>
@@ -441,10 +406,7 @@ const statuts = [
                   :false-value="0"
                   @change="selectAbsent(sap)"
                 />
-                <label
-                  class="form-check-label"
-                  :for="sap.id + 'absent'"
-                ></label>
+                <label class="form-check-label" :for="sap.id + 'absent'"></label>
               </div>
             </td>
             <td>
@@ -453,18 +415,13 @@ const statuts = [
                   :id="sap.id + 'remplace'"
                   v-model="sap.remplace"
                   type="checkbox"
-                  :disabled="
-                    !canEditAbsence || (!canEditPresence && sap.present)
-                  "
+                  :disabled="!canEditAbsence || (!canEditPresence && sap.present)"
                   class="form-check-input"
                   :true-value="1"
                   :false-value="0"
                   @change="selectRemplace(sap)"
                 />
-                <label
-                  class="form-check-label"
-                  :for="sap.id + 'remplace'"
-                ></label>
+                <label class="form-check-label" :for="sap.id + 'remplace'"></label>
               </div>
             </td>
             <td>
@@ -479,16 +436,9 @@ const statuts = [
                     'text-bg-success': sap.excuse_statut == 1,
                   }"
                   @click="detailExcuse(sap)"
-                  >{{
-                    excusesTypes.find((e) => e.id == sap.excuse_type_id)
-                      ?.designation
-                  }}</span
+                  >{{ excusesTypes.find((e) => e.id == sap.excuse_type_id)?.designation }}</span
                 >
-                <button
-                  v-if="sap.justificatif_path"
-                  class="btn"
-                  @click="downloadJustificatif(sap)"
-                >
+                <button v-if="sap.justificatif_path" class="btn" @click="downloadJustificatif(sap)">
                   <font-awesome-icon :icon="['far', 'file-pdf']" />
                 </button>
                 <button
@@ -521,15 +471,9 @@ const statuts = [
                     'text-bg-success': sap.excuse_statut == 1,
                   }"
                   @click="detailExcuse(sap)"
-                  >{{
-                    statuts.find((s) => s.id == sap.excuse_statut)?.designation
-                  }}</span
+                  >{{ statuts.find((s) => s.id == sap.excuse_statut)?.designation }}</span
                 >
-                <button
-                  v-if="sap.justificatif_path"
-                  class="btn"
-                  @click="downloadJustificatif(sap)"
-                >
+                <button v-if="sap.justificatif_path" class="btn" @click="downloadJustificatif(sap)">
                   <font-awesome-icon :icon="['far', 'file-pdf']" />
                 </button>
               </div>
@@ -545,16 +489,13 @@ const statuts = [
                       sap.heures.find(
                         (e) =>
                           e.heure_exercice_type_id == h.id ||
-                          (!e.heure_exercice_type_id &&
-                            e.designation == h.designation),
+                          (!e.heure_exercice_type_id && e.designation == h.designation),
                       ),
                     )
                   "
                   @change="(e) => updateHeureSapeur(sap, h, e.target.value)"
                 />
-                <span class="input-group-text">{{
-                  formatUnite(h.type_unite_id)
-                }}</span>
+                <span class="input-group-text">{{ formatUnite(h.type_unite_id) }}</span>
               </div>
             </td>
           </tr>
@@ -586,10 +527,7 @@ const statuts = [
             {{
               presences
                 .map((s) =>
-                  parseFloat(
-                    s.heures.find((e) => e.heure_exercice_type_id == h.id)
-                      ?.quantite ?? 0,
-                  ),
+                  parseFloat(s.heures.find((e) => e.heure_exercice_type_id == h.id)?.quantite ?? 0),
                 )
                 .reduce((acc, a) => acc + a, 0)
             }}

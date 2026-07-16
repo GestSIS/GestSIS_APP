@@ -1,16 +1,16 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useDecompteStore } from '../../stores/comptabilite/Decompte.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import DecompteService from '/src/services/DecompteService.js';
+import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useDecompteStore } from "../../stores/comptabilite/Decompte.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import DecompteService from "/src/services/DecompteService.js";
 
-import GenericDetailsRow from '../table/GenericDetailsRow.vue';
-import permissions from '../../composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import GenericDetailsRow from "../table/GenericDetailsRow.vue";
+import permissions from "../../composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const sapeurStore = useSapeurStore();
 const uniteStore = useUniteStore();
@@ -22,9 +22,7 @@ await exerciceComptableStore.fetchExercicesComptables();
 sapeurStore.fetchListeSapeur();
 uniteStore.fetchUnites();
 
-const activeExerciceComptableId = computed(
-  () => exerciceComptableStore.activeId,
-);
+const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);
 
 const loading = ref(false);
 watchEffect(async () => {
@@ -40,9 +38,7 @@ const exercicesComptables = computed(() => exerciceComptableStore.liste);
 const sapeurs = computed(() => sapeurStore.liste);
 const decomptes = computed(() => decompteStore.liste);
 const unites = computed(() => uniteStore.liste);
-const hasEditPermission = useHasPermission(
-  permissions.COMPTABILITE.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.COMPTABILITE.MODIFICATION);
 const computedData = computed(() =>
   decomptes.value.map((d) => ({
     ...d,
@@ -55,35 +51,28 @@ const { closeModal, confirm, showModal } = useModalStore();
 
 const supprimer = (decompteId) => {
   confirm(
-    'Voulez-vous vraiment supprimer ce décompte ?',
+    "Voulez-vous vraiment supprimer ce décompte ?",
     "Attention, la suppression d'un décompte est irréversible ! Il vous sera cependant possible de générer un nouveau décompte incluant les écritures de ce décompte.",
   ).then(() =>
     decompteStore
       .removeDecompte(decompteId)
-      .catch((err) =>
-        awn.alert(err?.message ?? "Impossible d'effectuer cette action"),
-      ),
+      .catch((err) => awn.alert(err?.message ?? "Impossible d'effectuer cette action")),
   );
 };
 const impressionResumeParSapeur = () => {
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadResumeParSapeur(
-    activeExerciceComptableId.value,
-    `resume_par_sapeur.pdf`,
-  )
+  DecompteService.downloadResumeParSapeur(activeExerciceComptableId.value, `resume_par_sapeur.pdf`)
     .then(closeModal)
     .catch((err) => {
       closeModal();
-      awn.alert(
-        err?.message || 'Erreur lors de la génération du résumé par sapeur',
-      );
+      awn.alert(err?.message || "Erreur lors de la génération du résumé par sapeur");
     });
 };
 const impressionStandard = (decompteId) => {
   const decompte = decomptes.value.find((d) => d.id == decompteId);
 
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
 
   DecompteService.downloadDecompte(decompteId, `decompte_${decompte?.date}.pdf`)
     .then(closeModal)
@@ -98,12 +87,9 @@ const impressionStandard = (decompteId) => {
 const impressionParSapeur = (decompteId) => {
   const decompte = decomptes.value.find((d) => d.id == decompteId);
 
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadDecompteParSapeur(
-    decompteId,
-    `decompte_${decompte?.date}.pdf`,
-  )
+  DecompteService.downloadDecompteParSapeur(decompteId, `decompte_${decompte?.date}.pdf`)
     .then(closeModal)
     .catch((err) => {
       closeModal();
@@ -116,12 +102,9 @@ const impressionParSapeur = (decompteId) => {
 const impressionParCompte = (decompteId) => {
   const decompte = decomptes.value.find((d) => d.id == decompteId);
 
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadDecompteParCompte(
-    decompteId,
-    `decompte_${decompte?.date}.pdf`,
-  )
+  DecompteService.downloadDecompteParCompte(decompteId, `decompte_${decompte?.date}.pdf`)
     .then(closeModal)
     .catch((err) => {
       closeModal();
@@ -134,12 +117,9 @@ const impressionParCompte = (decompteId) => {
 const iso20022Decompte = (decompteId) => {
   const decompte = decomptes.value.find((d) => d.id == decompteId);
 
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadIso20022PourDecompte(
-    decompteId,
-    `decompte_${decompte?.date}.xml`,
-  )
+  DecompteService.downloadIso20022PourDecompte(decompteId, `decompte_${decompte?.date}.xml`)
     .then(closeModal)
     .catch((err) => {
       closeModal();
@@ -152,12 +132,9 @@ const iso20022Decompte = (decompteId) => {
 const excelAFacturer = (decompteId) => {
   const decompte = decomptes.value.find((d) => d.id == decompteId);
 
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadExcelAFacturer(
-    decompteId,
-    `decompte_${decompte?.date}_a_facturer.xlsx`,
-  )
+  DecompteService.downloadExcelAFacturer(decompteId, `decompte_${decompte?.date}_a_facturer.xlsx`)
     .then(closeModal)
     .catch((err) => {
       closeModal();
@@ -170,12 +147,9 @@ const excelAFacturer = (decompteId) => {
 const exportEcritures = (decompteId) => {
   const decompte = decomptes.value.find((d) => d.id == decompteId);
 
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadExcelEcritures(
-    decompteId,
-    `decompte_${decompte?.date}_ecritures.xlsx`,
-  )
+  DecompteService.downloadExcelEcritures(decompteId, `decompte_${decompte?.date}_ecritures.xlsx`)
     .then(closeModal)
     .catch((err) => {
       closeModal();
@@ -187,16 +161,14 @@ const exportEcritures = (decompteId) => {
 };
 const certificatsDeSalaire = () => {
   if (decomptes.value.length === 0) {
-    return awn.warning(
-      'Impossible de générer les certificats de salaire sans décompte !',
-    );
+    return awn.warning("Impossible de générer les certificats de salaire sans décompte !");
   }
 
   const annee = exercicesComptables.value.find(
     (e) => e.id == activeExerciceComptableId.value,
   )?.annee;
 
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
 
   DecompteService.downloadCertificatSalaires(
     activeExerciceComptableId.value,
@@ -211,55 +183,54 @@ const certificatsDeSalaire = () => {
       );
     });
 };
-const generer = () => showModal({ component: 'ModalDecompte', data: {} });
+const generer = () => showModal({ component: "ModalDecompte", data: {} });
 
 const detailRowOptions = {
   fields: [
-    { title: 'Designation', key: 'designation' },
-    { title: 'Date', key: 'date', type: Date },
+    { title: "Designation", key: "designation" },
+    { title: "Date", key: "date", type: Date },
     {
-      title: 'Sapeur',
-      key: 'sapeur_id',
-      formatter: (sapeurId) =>
-        sapeurs.value.find((e) => e.id == sapeurId)?.nom_prenom,
+      title: "Sapeur",
+      key: "sapeur_id",
+      formatter: (sapeurId) => sapeurs.value.find((e) => e.id == sapeurId)?.nom_prenom,
     },
-    { title: 'Quantité', key: 'quantite' },
+    { title: "Quantité", key: "quantite" },
     {
-      title: 'Unité',
-      key: 'type_unite_id',
+      title: "Unité",
+      key: "type_unite_id",
       formatter: (id) => unites.value.find((u) => u.id == id)?.abreviation,
     },
-    { title: 'Tarif', key: 'tarif' },
-    { title: 'Tarif min', key: 'tarif_min' },
-    { title: 'Pour', key: 'tarif_min_pour' },
+    { title: "Tarif", key: "tarif" },
+    { title: "Tarif min", key: "tarif_min" },
+    { title: "Pour", key: "tarif_min_pour" },
     {
-      title: 'Type',
-      key: 'type',
+      title: "Type",
+      key: "type",
       formatter: (type) => {
         const mapping = {
-          0: 'Autre',
-          1: 'Solde',
-          2: 'Indemnité',
-          3: 'Frais forfaitaire',
-          4: 'Frais effectif',
-          5: 'Charges AVS/AC',
+          0: "Autre",
+          1: "Solde",
+          2: "Indemnité",
+          3: "Frais forfaitaire",
+          4: "Frais effectif",
+          5: "Charges AVS/AC",
         };
-        return mapping[type] || '';
+        return mapping[type] || "";
       },
     },
-    { title: 'Total', key: 'total' },
+    { title: "Total", key: "total" },
   ],
 };
 const fields = [
-  { title: 'Designation', key: 'designation' },
-  { title: 'Date', key: 'date', type: Date },
-  { title: 'A payer', key: 'a_payer_total' },
-  { title: 'A facturer', key: 'a_facturer_total' },
-  { title: 'Déductions', key: 'deduction', type: Boolean },
-  { title: 'Charges AVS', key: 'avs_total' },
-  { title: 'Charges AC', key: 'ac_total' },
-  { title: 'Total', key: 'total' },
-  { title: 'Actions', key: 'id', slot: 'actions' },
+  { title: "Designation", key: "designation" },
+  { title: "Date", key: "date", type: Date },
+  { title: "A payer", key: "a_payer_total" },
+  { title: "A facturer", key: "a_facturer_total" },
+  { title: "Déductions", key: "deduction", type: Boolean },
+  { title: "Charges AVS", key: "avs_total" },
+  { title: "Charges AC", key: "ac_total" },
+  { title: "Total", key: "total" },
+  { title: "Actions", key: "id", slot: "actions" },
 ];
 </script>
 
@@ -271,9 +242,7 @@ const fields = [
           <h3 class="card-title">Actions</h3>
         </div>
         <div class="card-body d-grid gap-1">
-          <button class="btn btn-outline-primary" @click="generer">
-            Nouveau
-          </button>
+          <button class="btn btn-outline-primary" @click="generer">Nouveau</button>
           <button
             class="btn btn-outline-danger"
             :disabled="!selectedId"
@@ -327,18 +296,12 @@ const fields = [
             </button>
           </div>
           <div class="col-6">
-            <button
-              class="btn btn-outline-primary col-12"
-              @click="impressionResumeParSapeur"
-            >
+            <button class="btn btn-outline-primary col-12" @click="impressionResumeParSapeur">
               Résumé complet par sapeur
             </button>
           </div>
           <div class="col-6">
-            <button
-              class="btn btn-outline-primary col-12"
-              @click="certificatsDeSalaire()"
-            >
+            <button class="btn btn-outline-primary col-12" @click="certificatsDeSalaire()">
               Certificats de salaire
             </button>
           </div>
@@ -366,9 +329,7 @@ const fields = [
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Décomptes</h3>
-          <button class="btn btn-primary" @click.prevent="generer">
-            Nouveau
-          </button>
+          <button class="btn btn-primary" @click.prevent="generer">Nouveau</button>
         </div>
         <div class="card-body table-responsive p-0">
           <base-table
@@ -380,10 +341,7 @@ const fields = [
             @selected="selected"
           >
             <template #detail-row="{ rowData }">
-              <generic-details-row
-                :options="detailRowOptions"
-                :row-data="rowData"
-              />
+              <generic-details-row :options="detailRowOptions" :row-data="rowData" />
             </template>
             <template #actions="{ value }">
               <!-- <button type="button" class="btn btn-outline-primary border-0">

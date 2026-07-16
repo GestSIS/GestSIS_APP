@@ -1,15 +1,12 @@
 <script setup>
-import { computed } from 'vue';
-import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
+import { computed } from "vue";
+import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 
 const infosStore = useMesInfosStore();
 const fonctionStore = useFonctionStore();
 
-await Promise.all([
-  infosStore.fetchMesFonctions(),
-  fonctionStore.fetchFonctions(),
-]);
+await Promise.all([infosStore.fetchMesFonctions(), fonctionStore.fetchFonctions()]);
 
 const fonctions = computed(() =>
   infosStore.fonctions
@@ -21,10 +18,10 @@ const fonctions = computed(() =>
 );
 
 const fields = [
-  { title: 'Début', key: 'debut', type: Date },
-  { title: 'Fin', key: 'fin', type: Date },
-  { title: 'Fonction', key: 'fonction' },
-  { title: 'Remarques', key: 'remarques' },
+  { title: "Début", key: "debut", type: Date },
+  { title: "Fin", key: "fin", type: Date },
+  { title: "Fonction", key: "fonction" },
+  { title: "Remarques", key: "remarques" },
 ];
 </script>
 

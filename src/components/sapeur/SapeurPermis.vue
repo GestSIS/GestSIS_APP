@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref, watch, watchEffect } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useBaseDataStore } from '../../stores/common/BaseData.js';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
+import { computed, ref, watch, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useBaseDataStore } from "../../stores/common/BaseData.js";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 
 const sapeurStore = useSapeurStore();
 const baseDataStore = useBaseDataStore();
@@ -64,7 +64,7 @@ const supprimerPermis = (permis_type_id) => {
     ...permisData.value,
     [permis_type_id]: {
       ...permisData.value[permis_type_id],
-      date: '',
+      date: "",
     },
   };
 };
@@ -81,7 +81,7 @@ const savePermis = () => {
         .catch((err) => saveError(p.permis_type_id, err));
     }
     //Removed
-    else if (p.id !== null && (p.date === null || p.date === '')) {
+    else if (p.id !== null && (p.date === null || p.date === "")) {
       sapeurStore
         .removePermis(p.id)
         .then(() => saveSuccessfull(p.permis_type_id))
@@ -90,8 +90,7 @@ const savePermis = () => {
     //Edited
     else if (
       p.id !== null &&
-      p.date !==
-        activeSapeurPermis.value.find((permis) => permis.id == p.id)?.date
+      p.date !== activeSapeurPermis.value.find((permis) => permis.id == p.id)?.date
     ) {
       sapeurStore
         .editPermis({ id: p.id, date: p.date })
@@ -102,7 +101,7 @@ const savePermis = () => {
       saveSuccessfull(p.permis_type_id);
     }
   });
-  awn.success('Modifications enregistrées en avec succès');
+  awn.success("Modifications enregistrées en avec succès");
 };
 const isInvalid = (key) => {
   return errors.value[key] !== undefined;
@@ -137,9 +136,7 @@ const isInvalid = (key) => {
                 :icon="['fab', 'gripfire']"
               />
               <img
-                :src="`${publicPath}permis/${permis.type
-                  .toLowerCase()
-                  .replace(' ', '_')}.gif`"
+                :src="`${publicPath}permis/${permis.type.toLowerCase().replace(' ', '_')}.gif`"
               />
             </td>
             <td class="col-1">

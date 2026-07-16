@@ -1,7 +1,7 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useExerciceCategorieStore } from '../../stores/exercice/ExerciceCategorie.js';
+import { computed, reactive, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
 
 const { data } = defineProps({
   data: {
@@ -35,9 +35,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} une catégorie d'exercice
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} une catégorie d'exercice</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -82,9 +80,7 @@ const save = async () => {
             type="checkbox"
             class="form-check-input"
           />
-          <label class="form-check-label" for="amendable-modal"
-            >Amendable</label
-          >
+          <label class="form-check-label" for="amendable-modal">Amendable</label>
         </div>
       </div>
       <div class="mb-3">
@@ -101,11 +97,9 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia';
-import SisParamService from '../../services/SisParamService.js';
+import { defineStore } from "pinia";
+import SisParamService from "../../services/SisParamService.js";
 
-export const useSisParamStore = defineStore('sisParam', {
+export const useSisParamStore = defineStore("sisParam", {
   state: () => ({
     params: null,
     contacts: [],

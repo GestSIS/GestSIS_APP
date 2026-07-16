@@ -1,17 +1,17 @@
 <script setup>
-import { useModalStore } from '../stores/common/Modal';
-import permissions from '../composables/permissions.js';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
-import { computed, ref, watch, watchEffect } from 'vue';
-import useHasPermission from '../composables/usePermission.js';
-import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
-import { useLocaliteStore } from '../stores/common/Localite.js';
-import { useExerciceComptableStore } from '../stores/comptabilite/ExerciceComptable.js';
-import { useInterventionStore } from '../stores/intervention/Intervention.js';
-import { useInterventionTraitementStore } from '../stores/intervention/InterventionTraitement.js';
-import { useStatFederalStore } from '../stores/intervention/StatFederal.js';
-import { useTypeInterventionStore } from '../stores/intervention/TypeIntervention.js';
-import { useAlarmeStore } from '../stores/alarme/Alarme';
+import { useModalStore } from "../stores/common/Modal";
+import permissions from "../composables/permissions.js";
+import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
+import { computed, ref, watch, watchEffect } from "vue";
+import useHasPermission from "../composables/usePermission.js";
+import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
+import { useLocaliteStore } from "../stores/common/Localite.js";
+import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
+import { useInterventionStore } from "../stores/intervention/Intervention.js";
+import { useInterventionTraitementStore } from "../stores/intervention/InterventionTraitement.js";
+import { useStatFederalStore } from "../stores/intervention/StatFederal.js";
+import { useTypeInterventionStore } from "../stores/intervention/TypeIntervention.js";
+import { useAlarmeStore } from "../stores/alarme/Alarme";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -51,9 +51,7 @@ const types = computed(() => typeInterventionStore.liste);
 const stats = computed(() => statFederalStore.liste);
 const traitements = computed(() => traitementStore.liste);
 const localites = computed(() =>
-  localiteStore.liste.sort((a, b) =>
-    a.designation.localeCompare(b.designation),
-  ),
+  localiteStore.liste.slice().sort((a, b) => a.designation.localeCompare(b.designation)),
 );
 
 const computedData = computed(() => {
@@ -75,32 +73,28 @@ const computedData = computed(() => {
 });
 
 const fields = [
-  { title: 'id', key: 'id' },
-  { title: 'address', key: 'address' },
-  { title: 'complement', key: 'complement' },
-  { title: 'location_wgs84', key: 'location_wgs84' },
-  { title: 'location_lv95', key: 'location_lv95' },
-  { title: 'type', key: 'type' },
-  { title: 'sis', key: 'sis', slot: 'sis' },
-  { title: 'firefighters', key: 'firefighters', slot: 'firefighters' },
-  { title: 'groupes', key: 'groupes', slot: 'groupes' },
-  { title: 'description', key: 'description' },
-  { title: 'couleur', key: 'couleur' },
-  { title: 'code', key: 'code' },
-  { title: 'date_creation', key: 'date_creation', type: 'datetime' },
-  { title: 'debut_alarme', key: 'debut_alarme', type: 'datetime' },
-  { title: 'fin_alarme', key: 'fin_alarme', type: 'datetime' },
-  { title: 'has_been_read', key: 'has_been_read', type: Boolean },
-  { title: 'unresolved', key: 'unresolved' },
+  { title: "id", key: "id" },
+  { title: "address", key: "address" },
+  { title: "complement", key: "complement" },
+  { title: "location_wgs84", key: "location_wgs84" },
+  { title: "location_lv95", key: "location_lv95" },
+  { title: "type", key: "type" },
+  { title: "sis", key: "sis", slot: "sis" },
+  { title: "firefighters", key: "firefighters", slot: "firefighters" },
+  { title: "groupes", key: "groupes", slot: "groupes" },
+  { title: "description", key: "description" },
+  { title: "couleur", key: "couleur" },
+  { title: "code", key: "code" },
+  { title: "date_creation", key: "date_creation", type: "datetime" },
+  { title: "debut_alarme", key: "debut_alarme", type: "datetime" },
+  { title: "fin_alarme", key: "fin_alarme", type: "datetime" },
+  { title: "has_been_read", key: "has_been_read", type: Boolean },
+  { title: "unresolved", key: "unresolved" },
 ];
 </script>
 
 <template>
-  <stateful-filter
-    id="interventions"
-    v-slot="{ filteredData }"
-    :data="computedData"
-  >
+  <stateful-filter id="interventions" v-slot="{ filteredData }" :data="computedData">
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-6">
@@ -109,9 +103,7 @@ const fields = [
               <li class="breadcrumb-item">
                 <router-link :to="{ name: 'accueil' }">Accueil</router-link>
               </li>
-              <li class="breadcrumb-item active" aria-current="page">
-                Alarmes
-              </li>
+              <li class="breadcrumb-item active" aria-current="page">Alarmes</li>
             </ol>
           </nav>
         </div>

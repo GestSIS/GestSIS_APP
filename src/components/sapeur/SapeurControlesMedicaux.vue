@@ -1,9 +1,9 @@
 <script setup>
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useMedecinStore } from '../../stores/controleMedical/Medecin.js';
-import { useControleMedicalTypeStore } from '../../stores/controleMedical/ControleMedicalType.js';
-import ControlesMedicauxService from '/src/services/ControlesMedicauxService.js';
-import { computed, ref, watchEffect } from 'vue';
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useMedecinStore } from "../../stores/controleMedical/Medecin.js";
+import { useControleMedicalTypeStore } from "../../stores/controleMedical/ControleMedicalType.js";
+import ControlesMedicauxService from "/src/services/ControlesMedicauxService.js";
+import { computed, ref, watchEffect } from "vue";
 
 const sapeurStore = useSapeurStore();
 const medecinStore = useMedecinStore();
@@ -16,10 +16,7 @@ watchEffect(async () => {
   loading.value = false;
 });
 
-await Promise.all([
-  medecinStore.fetchMedecins(),
-  controleMedicalTypeStore.fetchTypes(),
-]);
+await Promise.all([medecinStore.fetchMedecins(), controleMedicalTypeStore.fetchTypes()]);
 
 const controles = computed(() =>
   sapeurStore.active.controles.map((c) => ({
@@ -36,15 +33,15 @@ const downloadJustificatif = ({ id, filename }) => {
 };
 
 const fields = [
-  { title: 'Type', key: 'controle_medical_type' },
-  { title: 'Médecin', key: 'medecin' },
-  { title: 'Consultation', key: 'consultation', type: Date },
-  { title: 'Validité', key: 'validite', type: Date },
-  { title: 'Désignation', key: 'designation' },
-  { title: 'Accepté', key: 'accepter', type: Boolean },
+  { title: "Type", key: "controle_medical_type" },
+  { title: "Médecin", key: "medecin" },
+  { title: "Consultation", key: "consultation", type: Date },
+  { title: "Validité", key: "validite", type: Date },
+  { title: "Désignation", key: "designation" },
+  { title: "Accepté", key: "accepter", type: Boolean },
   // { title: 'En cours', key: 'en_cours', type: Boolean },
   // TODO: mise en place du système en_cours pour les contrôles médicaux
-  { title: 'Doc', slot: 'doc' },
+  { title: "Doc", slot: "doc" },
 ];
 </script>
 
@@ -62,11 +59,7 @@ const fields = [
           no-data="Aucun contrôle médical"
         >
           <template #doc="{ rowData }">
-            <button
-              v-if="rowData.filename"
-              class="btn"
-              @click="downloadJustificatif(rowData)"
-            >
+            <button v-if="rowData.filename" class="btn" @click="downloadJustificatif(rowData)">
               <font-awesome-icon :icon="['far', 'file-pdf']" />
             </button>
           </template>

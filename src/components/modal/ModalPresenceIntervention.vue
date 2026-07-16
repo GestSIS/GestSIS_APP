@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref } from 'vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useInterventionStore } from '../../stores/intervention/Intervention.js';
+import { computed, ref } from "vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 
 const { callback, data } = defineProps({
   callback: {
@@ -29,32 +29,26 @@ const dateFinMin = null;
 // )
 const dateFinMax = data.max.slice(0, 10);
 
-const editMode = data.mode === 'edit';
+const editMode = data.mode === "edit";
 const date_debut = ref(data.presence?.debut?.slice(0, 10) ?? dateDebutMin);
 const date_fin = ref(data.presence?.fin?.slice(0, 10) ?? dateDebutMin);
 const heure_debut = ref(data.presence?.debut?.slice(11, 16));
 const heure_fin = ref(data.presence?.fin?.slice(11, 16));
 const errors = ref({});
-const selectedSapeurs = ref(
-  Object.fromEntries(data.sapeurs?.map((s) => [s, true]) ?? []),
-);
+const selectedSapeurs = ref(Object.fromEntries(data.sapeurs?.map((s) => [s, true]) ?? []));
 const piquet = ref(data.presence?.piquet ?? false);
 
 const sapeurStore = useSapeurStore();
-const sapeurs = computed(() =>
-  sapeurStore.liste.filter((s) => s.actif && s.type == 0),
-);
+const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif && s.type == 0));
 
 const nbSelectedSapeurs = computed(
-  () =>
-    Object.keys(selectedSapeurs.value).filter((s) => selectedSapeurs.value[s])
-      .length,
+  () => Object.keys(selectedSapeurs.value).filter((s) => selectedSapeurs.value[s]).length,
 );
 
 const { closeModal } = useModalStore();
 
 const roundTime = (time, minutesToRound) => {
-  let [hours, minutes] = time.split(':');
+  let [hours, minutes] = time.split(":");
   hours = parseInt(hours);
   minutes = parseInt(minutes);
 
@@ -62,10 +56,10 @@ const roundTime = (time, minutesToRound) => {
   time = hours * 60 + minutes;
 
   const rounded = Math.round(time / minutesToRound) * minutesToRound;
-  const rHr = '' + Math.floor(rounded / 60);
-  const rMin = '' + (rounded % 60);
+  const rHr = "" + Math.floor(rounded / 60);
+  const rMin = "" + (rounded % 60);
 
-  return rHr.padStart(2, '0') + ':' + rMin.padStart(2, '0');
+  return rHr.padStart(2, "0") + ":" + rMin.padStart(2, "0");
 };
 const roundFin = () => {
   if (heure_fin.value) {
@@ -78,8 +72,8 @@ const roundDebut = () => {
   }
 };
 const save = () => {
-  const debut = date_debut.value + ' ' + heure_debut.value;
-  const fin = date_fin.value + ' ' + heure_fin.value;
+  const debut = date_debut.value + " " + heure_debut.value;
+  const fin = date_fin.value + " " + heure_fin.value;
   if (editMode) {
     const presence = {
       ...data.presence,
@@ -99,10 +93,10 @@ const save = () => {
       .catch((err) => {
         errors.value = {
           ...err,
-          date_debut: err['sapeurs.0.debut'],
-          date_fin: err['sapeurs.0.fin'],
-          heure_debut: err['sapeurs.0.debut'],
-          heure_fin: err['sapeurs.0.fin'],
+          date_debut: err["sapeurs.0.debut"],
+          date_fin: err["sapeurs.0.fin"],
+          heure_debut: err["sapeurs.0.debut"],
+          heure_fin: err["sapeurs.0.fin"],
         };
       });
   } else {
@@ -110,10 +104,7 @@ const save = () => {
     Object.keys(selectedSapeurs.value)
       .filter((s) => selectedSapeurs.value[s])
       .forEach((s) => {
-        presences = [
-          ...presences,
-          { sapeur_id: s, debut, fin, piquet: piquet.value },
-        ];
+        presences = [...presences, { sapeur_id: s, debut, fin, piquet: piquet.value }];
       });
     interventionStore
       .addPresences(presences)
@@ -127,10 +118,10 @@ const save = () => {
       .catch((error) => {
         errors.value = {
           ...error,
-          date_debut: error['sapeurs.0.debut'],
-          date_fin: error['sapeurs.0.fin'],
-          heure_debut: error['sapeurs.0.debut'],
-          heure_fin: error['sapeurs.0.fin'],
+          date_debut: error["sapeurs.0.debut"],
+          date_fin: error["sapeurs.0.fin"],
+          heure_debut: error["sapeurs.0.debut"],
+          heure_fin: error["sapeurs.0.fin"],
         };
       });
   }
@@ -141,19 +132,14 @@ const save = () => {
   <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">
-        {{ editMode ? 'Ajouter des présences' : 'Modifier une présence' }}
+        {{ editMode ? "Ajouter des présences" : "Modifier une présence" }}
       </h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">
         <div class="form-check">
-          <input
-            id="piquet"
-            v-model="piquet"
-            type="checkbox"
-            class="form-check-input"
-          />
+          <input id="piquet" v-model="piquet" type="checkbox" class="form-check-input" />
           <label class="form-check-label" for="piquet">Piquet</label>
         </div>
       </div>
@@ -264,15 +250,9 @@ const save = () => {
       </ul>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
-      <button
-        type="submit"
-        class="btn btn-primary"
-        :disabled="!nbSelectedSapeurs"
-      >
-        {{ editMode ? 'Enregistrer' : 'Ajouter' }}
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
+      <button type="submit" class="btn btn-primary" :disabled="!nbSelectedSapeurs">
+        {{ editMode ? "Enregistrer" : "Ajouter" }}
       </button>
     </div>
   </form>

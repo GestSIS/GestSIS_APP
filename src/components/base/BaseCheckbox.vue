@@ -6,7 +6,7 @@ const model = defineModel({
 const { label, trueValue, falseValue } = defineProps({
   label: {
     type: String,
-    default: () => '',
+    default: () => "",
   },
   trueValue: {
     type: [Boolean, Number, Function],

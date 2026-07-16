@@ -1,7 +1,7 @@
 <script setup>
-import { reactive, ref } from 'vue';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useControleMedicalTypeStore } from '../../stores/controleMedical/ControleMedicalType.js';
+import { reactive, ref } from "vue";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useControleMedicalTypeStore } from "../../stores/controleMedical/ControleMedicalType.js";
 
 const { data } = defineProps({
   data: {
@@ -37,9 +37,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} un contrôle médical type
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un contrôle médical type</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -93,18 +91,14 @@ const save = async () => {
             type="checkbox"
             class="form-check-input"
           />
-          <label class="form-check-label" for="type-expirable-modal"
-            >Expirable</label
-          >
+          <label class="form-check-label" for="type-expirable-modal">Expirable</label>
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

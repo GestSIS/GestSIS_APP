@@ -1,12 +1,12 @@
 <script setup>
-import { ref } from 'vue';
-import { useAbsenceParamStore } from '../../stores/absence/AbsenceParam.js';
-import ParametreAbsence from './ParametreAbsence.vue';
+import { ref } from "vue";
+import { useAbsenceParamStore } from "../../stores/absence/AbsenceParam.js";
+import ParametreAbsence from "./ParametreAbsence.vue";
 
 const absenceParamStore = useAbsenceParamStore();
 await absenceParamStore.fetchParams();
 
-const tab = ref('absence');
+const tab = ref("absence");
 </script>
 
 <template>
@@ -16,11 +16,7 @@ const tab = ref('absence');
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres Absences</h3>
         </div>
-        <nav
-          class="nav flex-column nav-pills"
-          role="tablist"
-          aria-orientation="vertical"
-        >
+        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
           <a
             class="nav-link"
             :class="{ active: tab === 'absence' }"

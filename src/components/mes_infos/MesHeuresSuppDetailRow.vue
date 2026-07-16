@@ -1,6 +1,6 @@
 <script setup>
-import { computed } from 'vue';
-import { useUniteStore } from '../../stores/common/Unite.js';
+import { computed } from "vue";
+import { useUniteStore } from "../../stores/common/Unite.js";
 
 const uniteStore = useUniteStore();
 
@@ -18,7 +18,7 @@ const { rowData, options } = defineProps({
 const computedData = computed(() => [
   rowData.heures.reduce(
     (acc, h) => {
-      acc['k' + h.id] = `${h.quantite} ${
+      acc["k" + h.id] = `${h.quantite} ${
         uniteStore.liste.find((u) => u.id == h.type_unite_id)?.unite
       }`;
       return acc;
@@ -30,18 +30,14 @@ const computedData = computed(() => [
 const computedFields = computed(() =>
   rowData.heures.map((h) => ({
     title: h.designation,
-    key: 'k' + h.id,
-    columnClass: 'col-3',
+    key: "k" + h.id,
+    columnClass: "col-3",
   })),
 );
 </script>
 
 <template>
-  <base-table
-    :fields="computedFields"
-    :data="computedData"
-    :hide-download="true"
-  />
+  <base-table :fields="computedFields" :data="computedData" :hide-download="true" />
 </template>
 
 <style scoped>

@@ -1,7 +1,7 @@
 <script setup>
-import { computed, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useExcuseParamStore } from '../../stores/exercice/ExcuseParam.js';
+import { computed, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useExcuseParamStore } from "../../stores/exercice/ExcuseParam.js";
 
 const excuseParamStore = useExcuseParamStore();
 await excuseParamStore.fetchParams();
@@ -13,7 +13,7 @@ const params = ref({
   actif: false,
   delai_excuse: null,
   email_rappel: false,
-  texte_email_rappel: '',
+  texte_email_rappel: "",
   ...excuseParams.value,
 });
 
@@ -23,7 +23,7 @@ const save = async () => {
   try {
     const res = await excuseParamStore.updateExcuseParams(params.value);
     errors.value = {};
-    awn.success(res?.message || 'Modifications enregistrées');
+    awn.success(res?.message || "Modifications enregistrées");
   } catch (err) {
     errors.value = err;
     awn.alert(err?.message || "Erreur lors de l'enregistrement");
@@ -37,9 +37,7 @@ const save = async () => {
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres pour excuses</h3>
-          <button type="button" class="btn btn-primary" @click="save">
-            Enregistrer
-          </button>
+          <button type="button" class="btn btn-primary" @click="save">Enregistrer</button>
         </div>
         <div class="card-body">
           <div class="mb-3">
@@ -54,8 +52,7 @@ const save = async () => {
               <label class="form-check-label" for="module-excuse"
                 >Activer le module excuse<font-awesome-icon
                   v-tooltip.bottom="{
-                    content:
-                      'Les utilisateurs pourront saisir des excuses individuelles',
+                    content: 'Les utilisateurs pourront saisir des excuses individuelles',
                   }"
                   class="ms-1"
                   :icon="['far', 'question-circle']"
@@ -66,8 +63,7 @@ const save = async () => {
             <label for="delai_excuse"
               >Délai pour excuse [Jour]<font-awesome-icon
                 v-tooltip.bottom="{
-                  content:
-                    'Nb jour disponible pour s\'excuser à partir de l\'exercice',
+                  content: 'Nb jour disponible pour s\'excuser à partir de l\'exercice',
                 }"
                 class="ms-1"
                 :icon="['far', 'question-circle']"

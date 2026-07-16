@@ -1,8 +1,8 @@
 <script setup>
-import { ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import SapeurService from '../../services/SapeurService';
+import { ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import SapeurService from "../../services/SapeurService";
 
 const date = ref(new Date().toISOString().slice(0, 10));
 
@@ -10,12 +10,10 @@ const { showModal, closeModal } = useModalStore();
 const awn = useNotification();
 
 const confirmer = () => {
-  showModal({ component: 'ModalChargement' });
+  showModal({ component: "ModalChargement" });
   SapeurService.listeFssp(date.value)
     .catch((error) => {
-      awn.warning(
-        error?.message ?? 'Erreur lors de la génération de la liste FSSP',
-      );
+      awn.warning(error?.message ?? "Erreur lors de la génération de la liste FSSP");
     })
     .then(closeModal);
 };
@@ -30,26 +28,14 @@ const confirmer = () => {
     <div class="modal-body">
       <div class="mb-3">
         <label for="numero">Date</label>
-        <input
-          id="date"
-          v-model="date"
-          type="date"
-          class="form-control form-control-sm"
-        />
+        <input id="date" v-model="date" type="date" class="form-control form-control-sm" />
       </div>
     </div>
     <div class="modal-footer">
-      <button
-        ref="cancelButton"
-        type="button"
-        class="btn btn-secondary"
-        @click="closeModal"
-      >
+      <button ref="cancelButton" type="button" class="btn btn-secondary" @click="closeModal">
         Annuler
       </button>
-      <button type="button" class="btn btn-primary" @click="confirmer()">
-        Confirmer
-      </button>
+      <button type="button" class="btn btn-primary" @click="confirmer()">Confirmer</button>
     </div>
   </div>
 </template>

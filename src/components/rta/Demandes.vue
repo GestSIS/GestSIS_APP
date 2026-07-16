@@ -1,21 +1,21 @@
 <script setup>
-import { useRtaStore } from '../../stores/rta/Rta.js';
+import { useRtaStore } from "../../stores/rta/Rta.js";
 
 const rtaStore = useRtaStore();
 rtaStore.fetchDemandes();
 
 const fields = [
-  { key: 'soumise', title: 'Soumise le', type: 'datetime' },
-  { key: 'statut', title: 'Statut', slot: 'statut' },
-  { key: 'en_traitement', title: 'En traitement le', type: 'datetime' },
-  { key: 'traitee', title: 'Traitée le', type: 'datetime' },
+  { key: "soumise", title: "Soumise le", type: "datetime" },
+  { key: "statut", title: "Statut", slot: "statut" },
+  { key: "en_traitement", title: "En traitement le", type: "datetime" },
+  { key: "traitee", title: "Traitée le", type: "datetime" },
 ];
 
 const statusMapping = {
   0: "En cours d'édition",
-  1: 'Soumise',
-  2: 'En traitement',
-  3: 'Traitée',
+  1: "Soumise",
+  2: "En traitement",
+  3: "Traitée",
 };
 </script>
 

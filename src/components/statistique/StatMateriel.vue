@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useMaterielStore } from '../../stores/intervention/Materiel.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
+import { computed, ref, watchEffect } from "vue";
+import { useMaterielStore } from "../../stores/intervention/Materiel.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useStatistiqueStore } from "../../stores/statistique/Statistique.js";
 
 const materielStore = useMaterielStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -14,21 +14,19 @@ await exerciceComptableStore.fetchExercicesComptables();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await statistiqueStore.fetchStatistiqueMateriel(
-    exerciceComptableStore.activeId,
-  );
+  await statistiqueStore.fetchStatistiqueMateriel(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
 const allMateriels = ref(false);
 const fields = [
   {
-    title: 'Matériel',
-    key: 'designation',
+    title: "Matériel",
+    key: "designation",
   },
   {
-    title: 'Quantité utilisé',
-    key: 'quantite',
+    title: "Quantité utilisé",
+    key: "quantite",
   },
 ];
 
@@ -37,7 +35,8 @@ const materielsIntervention = computed(() => statistiqueStore.materiels);
 const occurences = computed(() => {
   return materielsIntervention.value.reduce(
     (prev, { materiel_id, nb }) => (
-      (prev[materiel_id] = (prev[materiel_id] ?? 0) + parseFloat(nb)), prev
+      (prev[materiel_id] = (prev[materiel_id] ?? 0) + parseFloat(nb)),
+      prev
     ),
     {},
   );
@@ -62,8 +61,8 @@ const filteredMateriel = computed(() => {
             class="form-check-input"
           />
           <label class="form-check-label" for="switch-materiel"
-            >Afficher le matériel disponible mais pas référencé durant au moins
-            une intervention</label
+            >Afficher le matériel disponible mais pas référencé durant au moins une
+            intervention</label
           >
         </div>
       </div>

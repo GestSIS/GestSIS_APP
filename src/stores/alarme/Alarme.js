@@ -1,13 +1,13 @@
-import { defineStore } from 'pinia';
-import AlarmeService from '../../services/AlarmeService.js';
+import { defineStore } from "pinia";
+import AlarmeService from "../../services/AlarmeService.js";
 
-export const useAlarmeStore = defineStore('alarme', {
-    state: () => ({
-        liste: [],
-    }),
-    actions: {
-        async fetchListeAlarme() {
-            this.liste = await AlarmeService.getAlarmes();
-        },
+export const useAlarmeStore = defineStore("alarme", {
+  state: () => ({
+    liste: [],
+  }),
+  actions: {
+    async fetchListeAlarme() {
+      this.liste = await AlarmeService.getAlarmes();
     },
+  },
 });

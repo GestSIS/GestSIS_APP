@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { useBaseDataStore } from '../../stores/common/BaseData.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useStatistiqueStore } from '../../stores/statistique/Statistique.js';
+import { computed, ref, watchEffect } from "vue";
+import { useBaseDataStore } from "../../stores/common/BaseData.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useStatistiqueStore } from "../../stores/statistique/Statistique.js";
 
 const baseDataStore = useBaseDataStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -14,16 +14,14 @@ await exerciceComptableStore.fetchExercicesComptables();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await statistiqueStore.fetchStatistiquePermis(
-    exerciceComptableStore.activeId,
-  );
+  await statistiqueStore.fetchStatistiquePermis(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
 const allPermis = ref(false);
 const fields = [
-  { title: 'Permis', key: 'type' },
-  { title: 'Nombre', key: 'quantite' },
+  { title: "Permis", key: "type" },
+  { title: "Nombre", key: "quantite" },
 ];
 
 const permis = computed(() => baseDataStore.permisTypes);

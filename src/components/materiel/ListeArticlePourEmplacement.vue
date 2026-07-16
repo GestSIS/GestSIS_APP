@@ -1,17 +1,17 @@
 <script setup>
-import { computed, ref, watchEffect } from 'vue';
-import { groupedByData, indexedData } from '../../tools/index.js';
-import ArticleService from '../../services/materiel/ArticleService.js';
-import { useCouleurStore } from '../../stores/materiel/Couleur';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
-import { useMaterielCategorieStore } from '../../stores/materiel/Categorie';
-import TagCouleur from './TagCouleur.vue';
-import permissions from '../../composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
-import TableArticlePourEmplacement from './TableArticlePourEmplacement.vue';
-import TableArticlePourType from './TableArticlePourType.vue';
-import { useModalStore } from '../../stores/common/Modal';
-import { useEmplacementStore } from '../../stores/materiel/Emplacement';
+import { computed, ref, watchEffect } from "vue";
+import { groupedByData, indexedData } from "../../tools/index.js";
+import ArticleService from "../../services/materiel/ArticleService.js";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
+import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
+import TagCouleur from "./TagCouleur.vue";
+import permissions from "../../composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
+import TableArticlePourEmplacement from "./TableArticlePourEmplacement.vue";
+import TableArticlePourType from "./TableArticlePourType.vue";
+import { useModalStore } from "../../stores/common/Modal";
+import { useEmplacementStore } from "../../stores/materiel/Emplacement";
 
 const { id } = defineProps({
   id: {
@@ -30,9 +30,7 @@ const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 const articles = ref([]);
 const loading = ref(true);
 const affichageIndividuel = ref(false);
-const emplacement = computed(() =>
-  emplacementStore.liste.find((e) => e.id === parseInt(id)),
-);
+const emplacement = computed(() => emplacementStore.liste.find((e) => e.id === parseInt(id)));
 
 const loadArticles = async () => {
   loading.value = true;
@@ -49,9 +47,7 @@ await Promise.all([
 
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
-const indexedCategories = computed(() =>
-  indexedData(materielCategorieStore.liste),
-);
+const indexedCategories = computed(() => indexedData(materielCategorieStore.liste));
 
 const computedData = computed(() =>
   Object.entries(
@@ -62,11 +58,10 @@ const computedData = computed(() =>
           type: indexedTypes.value[a.materiel_type_id],
           nbLavages: (a.lavages ?? []).length,
           typeDesignation: indexedTypes.value[a.materiel_type_id]?.designation,
-          categorie_id:
-            indexedTypes.value[a.materiel_type_id]?.materiel_categorie_id,
+          categorie_id: indexedTypes.value[a.materiel_type_id]?.materiel_categorie_id,
         }))
         .filter((a) => a.statut),
-      'categorie_id',
+      "categorie_id",
     ),
   )
     .map(([key, values]) => ({
@@ -79,7 +74,7 @@ const computedData = computed(() =>
         ? data
         : {
             ...data,
-            data: Object.entries(groupedByData(data.data, 'materiel_type_id'))
+            data: Object.entries(groupedByData(data.data, "materiel_type_id"))
               .map(([key, values]) => ({
                 key,
                 id: key,
@@ -112,17 +107,17 @@ const linearCategories = (categorieId) => {
 };
 
 const colonnes = computed(() => [
-  { title: 'Type', key: 'typeDesignation' },
+  { title: "Type", key: "typeDesignation" },
   ...(emplacement.value?.est_compartimentable
-    ? [{ title: 'Compartiment', key: 'compartiment' }]
+    ? [{ title: "Compartiment", key: "compartiment" }]
     : []),
-  { title: 'Quantité', key: 'quantite' },
+  { title: "Quantité", key: "quantite" },
 ]);
 
 const { showModal } = useModalStore();
 const ajouter = () =>
   showModal({
-    component: 'ModalAjoutArticleMultiple',
+    component: "ModalAjoutArticleMultiple",
     callback: loadArticles,
     data: { emplacementId: id },
     size: 2,
@@ -133,11 +128,7 @@ const ajouter = () =>
   <base-card>
     <template #title>Pièces ({{ articles.length }})</template>
     <template #header>
-      <div
-        class="btn-group"
-        role="group"
-        aria-label="Basic radio toggle button group"
-      >
+      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
         <input
           id="individuel"
           v-model="affichageIndividuel"
@@ -148,9 +139,7 @@ const ajouter = () =>
           :value="true"
           checked
         />
-        <label class="btn btn-sm btn-outline-primary" for="individuel"
-          >Individuel</label
-        >
+        <label class="btn btn-sm btn-outline-primary" for="individuel">Individuel</label>
         <input
           id="par-type"
           v-model="affichageIndividuel"
@@ -160,9 +149,7 @@ const ajouter = () =>
           :value="false"
           autocomplete="off"
         />
-        <label class="btn btn-sm btn-outline-primary" for="par-type"
-          >Par type</label
-        >
+        <label class="btn btn-sm btn-outline-primary" for="par-type">Par type</label>
       </div>
       <button
         v-if="hasEditPermission"

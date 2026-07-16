@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useAuthStore } from '../stores/auth/Auth';
+import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useAuthStore } from "../stores/auth/Auth";
 
 const email = ref(null);
 const password = ref(null);
@@ -12,11 +12,11 @@ const route = useRoute();
 
 const login = async () => {
   if (
-    email.value?.trim()?.toLowerCase()?.endsWith('@gestsis.ch') &&
-    !email.value?.trim()?.toLowerCase()?.endsWith('demo@gestsis.ch')
+    email.value?.trim()?.toLowerCase()?.endsWith("@gestsis.ch") &&
+    !email.value?.trim()?.toLowerCase()?.endsWith("demo@gestsis.ch")
   ) {
     error.value = {
-      email: 'Email invalid',
+      email: "Email invalid",
     };
     return;
   }
@@ -28,7 +28,7 @@ const login = async () => {
     })
     .then(() => {
       error.value = null;
-      router.push(route.query.redirect ? route.query.redirect : 'accueil');
+      router.push(route.query.redirect ? route.query.redirect : "accueil");
     })
     .catch((error) => {
       error.value = error;
@@ -65,19 +65,11 @@ const login = async () => {
         autocomplete="off"
         :class="{ 'is-invalid': error }"
       />
-      <div v-if="error" class="invalid-feedback">
-        Informations de connexion invalides
-      </div>
-      <button class="btn btn-lg btn-primary w-100" type="submit">
-        Se connecter
-      </button>
-      <p class="mt-5 mb-3 text-body-secondary">
-        © GestSIS {{ new Date().getFullYear() }}
-      </p>
+      <div v-if="error" class="invalid-feedback">Informations de connexion invalides</div>
+      <button class="btn btn-lg btn-primary w-100" type="submit">Se connecter</button>
+      <p class="mt-5 mb-3 text-body-secondary">© GestSIS {{ new Date().getFullYear() }}</p>
 
-      <router-link
-        :to="{ name: 'forgotten-password' }"
-        class="btn btn-link is-active"
+      <router-link :to="{ name: 'forgotten-password' }" class="btn btn-link is-active"
         >Mot de passe oublié</router-link
       >
       <router-link :to="{ name: 'register' }" class="btn btn-link is-active"
@@ -119,13 +111,13 @@ const login = async () => {
   z-index: 2;
 }
 
-.form-signin input[type='email'] {
+.form-signin input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.form-signin input[type='password'] {
+.form-signin input[type="password"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;

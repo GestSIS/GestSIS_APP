@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia';
-import AvsParamService from '../../services/AvsParamService.js';
+import { defineStore } from "pinia";
+import AvsParamService from "../../services/AvsParamService.js";
 
-export const useAvsParamStore = defineStore('avsParam', {
+export const useAvsParamStore = defineStore("avsParam", {
   state: () => ({
     params: null,
   }),

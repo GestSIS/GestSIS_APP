@@ -1,10 +1,10 @@
 <script setup>
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import permissions from '/src/composables/permissions.js';
-import useHasPermission from '../../composables/usePermission.js';
-import { computed, ref, watchEffect } from 'vue';
-import { useInterventionStore } from '../../stores/intervention/Intervention.js';
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import permissions from "/src/composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
+import { computed, ref, watchEffect } from "vue";
+import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 
 const sapeurStore = useSapeurStore();
 const interventionStore = useInterventionStore();
@@ -34,16 +34,12 @@ const sapeurs = computed(() => sapeurStore.liste);
 const missions = computed(() =>
   interventionStore.active.missions.map((m) => ({
     ...m,
-    sapeur:
-      m.sapeur ||
-      sapeurStore.liste.find((s) => s.id == m.sapeur_id)?.nom_prenom,
+    sapeur: m.sapeur || sapeurStore.liste.find((s) => s.id == m.sapeur_id)?.nom_prenom,
   })),
 );
 const appels = computed(() => interventionStore.active.appels);
 // TODO: Check si intervention pas déjà imputé
-const hasEditPermission = useHasPermission(
-  permissions.INTERVENTION.MODIFICATION,
-);
+const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
 const events = computed(() => {
   const events = [];
@@ -53,11 +49,11 @@ const events = computed(() => {
     events.push({
       id: m.id,
       date: m.debut,
-      title: 'Début ' + m.titre,
+      title: "Début " + m.titre,
       description: m.resume,
       responsable: m.sapeur,
-      type: 'mission',
-      colorClass: m.fin ? 'mission-ended' : 'mission-running',
+      type: "mission",
+      colorClass: m.fin ? "mission-ended" : "mission-running",
       action: missionAction,
     });
 
@@ -65,10 +61,10 @@ const events = computed(() => {
       events.push({
         id: m.id,
         date: m.fin,
-        title: 'Fin ' + m.titre,
+        title: "Fin " + m.titre,
         description: m.resume,
-        type: 'mission',
-        colorClass: 'mission-ended',
+        type: "mission",
+        colorClass: "mission-ended",
         action: missionAction,
       });
     }
@@ -81,54 +77,49 @@ const events = computed(() => {
     date: a.date,
     title: a.nom,
     description: a.commentaire,
-    type: 'appel',
-    colorClass: 'appel',
+    type: "appel",
+    colorClass: "appel",
     action: appelAction,
   }));
 
   const chefIntervention = dataInter.value.sapeur_id
     ? sapeurs.value.find((s) => s.id == dataInter.value.sapeur_id)
     : null;
-  const endDate = dataInter.value.date_fin + ' ' + dataInter.value.heure_fin;
-  const startDate =
-    dataInter.value.date_debut + ' ' + dataInter.value.heure_debut;
+  const endDate = dataInter.value.date_fin + " " + dataInter.value.heure_fin;
+  const startDate = dataInter.value.date_debut + " " + dataInter.value.heure_debut;
 
   const startEvent = {
     date: startDate,
     title: "Debut de l'intervention",
-    description: chefIntervention
-      ? "Chef d'intervention : " + chefIntervention?.nom_prenom
-      : '',
-    type: 'start',
-    colorClass: 'default',
+    description: chefIntervention ? "Chef d'intervention : " + chefIntervention?.nom_prenom : "",
+    type: "start",
+    colorClass: "default",
     action: () => {},
   };
 
   const duree = Math.abs(new Date(endDate) - new Date(startDate)) / 6e4;
   const heures = Math.floor(duree / 60);
   const minutes = Math.floor(duree % 60);
-  let dureeFormatee = '';
+  let dureeFormatee = "";
   if (heures && minutes) {
-    dureeFormatee = heures + 'h' + minutes;
+    dureeFormatee = heures + "h" + minutes;
   } else if (heures) {
-    dureeFormatee = heures + ' heure' + (heures > 1 ? 's' : '');
+    dureeFormatee = heures + " heure" + (heures > 1 ? "s" : "");
   } else {
-    dureeFormatee = minutes + ' minute' + (minutes > 1 ? 's' : '');
+    dureeFormatee = minutes + " minute" + (minutes > 1 ? "s" : "");
   }
   const endEvent = {
     date: endDate,
     title: "Fin de l'intervention",
-    description: 'Durée : ' + dureeFormatee,
-    type: 'end',
-    colorClass: 'default',
+    description: "Durée : " + dureeFormatee,
+    type: "end",
+    colorClass: "default",
     action: () => {},
   };
 
   return [
     startEvent,
-    ...[...events, ...eventsAppels].sort(
-      (e1, e2) => new Date(e1.date) - new Date(e2.date),
-    ),
+    ...[...events, ...eventsAppels].sort((e1, e2) => new Date(e1.date) - new Date(e2.date)),
     endEvent,
   ];
 });
@@ -137,24 +128,24 @@ const { confirm, showModal } = useModalStore();
 
 const supprimerAppel = (id) =>
   confirm(
-    'Voulez-vous vraiment supprimer cet appel ?',
+    "Voulez-vous vraiment supprimer cet appel ?",
     "Attention, la suppression d'un appel est irréversible ! Toutes les données de cet appel seront perdues !",
   ).then(() => interventionStore.removeInterventionAppel(id));
 
 const newAppel = () => {
   const newAppel = {
     id: null,
-    numero: '',
+    numero: "",
     date: null,
-    nom: '',
-    commentaire: '',
+    nom: "",
+    commentaire: "",
   };
 
-  const min = dataInter.value.date_debut + ' ' + dataInter.value.heure_debut;
-  const max = dataInter.value.date_fin + ' ' + dataInter.value.heure_fin;
+  const min = dataInter.value.date_debut + " " + dataInter.value.heure_debut;
+  const max = dataInter.value.date_fin + " " + dataInter.value.heure_fin;
 
   showModal({
-    component: 'ModalAppel',
+    component: "ModalAppel",
     data: { appel: newAppel, min, max },
   });
 };
@@ -165,35 +156,35 @@ const editAppel = (id) => {
     appels.value.find((a) => a.id == id),
   );
 
-  const min = dataInter.value.date_debut + ' ' + dataInter.value.heure_debut;
-  const max = dataInter.value.date_fin + ' ' + dataInter.value.heure_fin;
+  const min = dataInter.value.date_debut + " " + dataInter.value.heure_debut;
+  const max = dataInter.value.date_fin + " " + dataInter.value.heure_fin;
 
   showModal({
-    component: 'ModalAppel',
+    component: "ModalAppel",
     data: { appel: cloneAppel, min, max },
   });
 };
 
 const supprimerMission = (id) =>
   confirm(
-    'Voulez-vous vraiment supprimer cette mission ?',
+    "Voulez-vous vraiment supprimer cette mission ?",
     "Attention, la suppression d'un mission est irréversible ! Toutes les données de cette mission seront perdues !",
   ).then(() => interventionStore.removeInterventionMission(id));
 
 const newMission = () => {
   const newMission = {
     id: null,
-    titre: '',
+    titre: "",
     debut: null,
     fin: null,
     sapeur_id: null,
-    resume: '',
+    resume: "",
   };
-  const min = dataInter.value.date_debut + ' ' + dataInter.value.heure_debut;
-  const max = dataInter.value.date_fin + ' ' + dataInter.value.heure_fin;
+  const min = dataInter.value.date_debut + " " + dataInter.value.heure_debut;
+  const max = dataInter.value.date_fin + " " + dataInter.value.heure_fin;
 
   showModal({
-    component: 'ModalInterventionMission',
+    component: "ModalInterventionMission",
     data: { mission: newMission, min, max },
   });
 };
@@ -204,11 +195,11 @@ const editMission = (id) => {
     missions.value.find((m) => m.id == id),
   );
 
-  const min = dataInter.value.date_debut + ' ' + dataInter.value.heure_debut;
-  const max = dataInter.value.date_fin + ' ' + dataInter.value.heure_fin;
+  const min = dataInter.value.date_debut + " " + dataInter.value.heure_debut;
+  const max = dataInter.value.date_fin + " " + dataInter.value.heure_fin;
 
   showModal({
-    component: 'ModalInterventionMission',
+    component: "ModalInterventionMission",
     data: {
       mission: cloneMission,
       min,
@@ -218,32 +209,32 @@ const editMission = (id) => {
 };
 const icon = (type) => {
   const icons = {
-    appel: ['fas', 'phone'],
-    mission: ['fas', 'child'],
-    start: ['fas', 'play'],
-    end: ['fas', 'stop'],
+    appel: ["fas", "phone"],
+    mission: ["fas", "child"],
+    start: ["fas", "play"],
+    end: ["fas", "stop"],
   };
   return icons[type];
 };
 const formatTime = (time) => {
   const date = new Date(time);
-  return date.getHours() + ':' + ('0' + date.getMinutes()).slice(-2);
+  return date.getHours() + ":" + ("0" + date.getMinutes()).slice(-2);
 };
 
 const fieldsMissions = [
-  { title: 'Date', type: 'time', key: 'debut' },
-  { title: 'Titre', key: 'titre' },
-  { title: 'Sapeur', key: 'sapeur' },
-  { title: 'Quittance', type: 'time', key: 'fin' },
-  { title: 'Résumé', key: 'resume' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Date", type: "time", key: "debut" },
+  { title: "Titre", key: "titre" },
+  { title: "Sapeur", key: "sapeur" },
+  { title: "Quittance", type: "time", key: "fin" },
+  { title: "Résumé", key: "resume" },
+  { title: "Actions", slot: "actions" },
 ];
 const fieldsAppels = [
-  { title: 'Date', type: 'time', key: 'date' },
-  { title: 'Numéro', key: 'numero' },
-  { title: 'Nom', key: 'nom' },
-  { title: 'Commentaire', key: 'commentaire' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Date", type: "time", key: "date" },
+  { title: "Numéro", key: "numero" },
+  { title: "Nom", key: "nom" },
+  { title: "Commentaire", key: "commentaire" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -373,7 +364,7 @@ const fieldsAppels = [
   &:before {
     background-color: #eee;
     bottom: 0;
-    content: ' ';
+    content: " ";
     left: 50px;
     margin-left: -1.5px;
     position: absolute;
@@ -389,7 +380,7 @@ const fieldsAppels = [
 
     &:before,
     &:after {
-      content: ' ';
+      content: " ";
       display: table;
     }
 
@@ -462,7 +453,7 @@ const fieldsAppels = [
         border-left: 0 solid #ccc;
         border-right: 15px solid #ccc;
         border-top: 15px solid transparent;
-        content: ' ';
+        content: " ";
         display: inline-block;
         position: absolute;
         left: -15px;
@@ -475,7 +466,7 @@ const fieldsAppels = [
         border-left: 0 solid #fff;
         border-right: 14px solid #fff;
         border-top: 14px solid transparent;
-        content: ' ';
+        content: " ";
         display: inline-block;
         position: absolute;
         left: -14px;

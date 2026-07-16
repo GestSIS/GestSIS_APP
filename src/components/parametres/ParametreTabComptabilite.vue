@@ -1,24 +1,24 @@
 <script setup>
-import { ref } from 'vue';
-import { useUniteStore } from '../../stores/common/Unite.js';
-import { useFonctionStore } from '../../stores/sapeur/Fonction.js';
-import { useAvsParamStore } from '../../stores/comptabilite/AvsParam.js';
-import { useHeureExerciceStore } from '../../stores/exercice/HeureExercice.js';
-import { usePhaseTypeStore } from '../../stores/intervention/PhaseType.js';
-import { useAmendeStore } from '../../stores/comptabilite/Amende.js';
-import { useImputationStore } from '../../stores/comptabilite/Imputation.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
+import { ref } from "vue";
+import { useUniteStore } from "../../stores/common/Unite.js";
+import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
+import { useAvsParamStore } from "../../stores/comptabilite/AvsParam.js";
+import { useHeureExerciceStore } from "../../stores/exercice/HeureExercice.js";
+import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
+import { useAmendeStore } from "../../stores/comptabilite/Amende.js";
+import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
 
-import ParametreCompte from './ParametreCompte.vue';
-import ParametreEcritureCategorie from './ParametreEcritureCategorie.vue';
-import ParametreIndemniteFraisAnnuel from './ParametreIndemniteFraisAnnuel.vue';
-import ParametreIndemniteExercice from './ParametreIndemniteExercice.vue';
-import ParametreIndemniteCours from './ParametreIndemniteCours.vue';
-import ParametreHeureExercice from './ParametreHeureExercice.vue';
-import ParametreIndemniteIntervention from './ParametreIndemniteIntervention.vue';
-import ParametreAvs from './ParametreAvs.vue';
-import ParametreAmende from './ParametreAmende.vue';
+import ParametreCompte from "./ParametreCompte.vue";
+import ParametreEcritureCategorie from "./ParametreEcritureCategorie.vue";
+import ParametreIndemniteFraisAnnuel from "./ParametreIndemniteFraisAnnuel.vue";
+import ParametreIndemniteExercice from "./ParametreIndemniteExercice.vue";
+import ParametreIndemniteCours from "./ParametreIndemniteCours.vue";
+import ParametreHeureExercice from "./ParametreHeureExercice.vue";
+import ParametreIndemniteIntervention from "./ParametreIndemniteIntervention.vue";
+import ParametreAvs from "./ParametreAvs.vue";
+import ParametreAmende from "./ParametreAmende.vue";
 
 const uniteStore = useUniteStore();
 const fonctionStore = useFonctionStore();
@@ -51,7 +51,7 @@ await Promise.all([
   loadPhases,
   loadHeures,
 ]);
-const tab = ref('compte');
+const tab = ref("compte");
 </script>
 
 <template>
@@ -61,11 +61,7 @@ const tab = ref('compte');
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres comptabilité</h3>
         </div>
-        <nav
-          class="nav flex-column nav-pills"
-          role="tablist"
-          aria-orientation="vertical"
-        >
+        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
           <a
             class="nav-link"
             :class="{ active: tab === 'compte' }"
@@ -138,14 +134,10 @@ const tab = ref('compte');
     <div class="col-sm-12 col-xl-9">
       <parametre-compte v-if="tab === 'compte'" />
       <parametre-ecriture-categorie v-if="tab === 'categorie'" />
-      <parametre-indemnite-frais-annuel
-        v-if="tab === 'indemnite-frais-annuel'"
-      />
+      <parametre-indemnite-frais-annuel v-if="tab === 'indemnite-frais-annuel'" />
       <parametre-heure-exercice v-if="tab === 'heure-exercice'" />
       <parametre-indemnite-exercice v-if="tab === 'indemnite-exercice'" />
-      <parametre-indemnite-intervention
-        v-if="tab === 'indemnite-intervention'"
-      />
+      <parametre-indemnite-intervention v-if="tab === 'indemnite-intervention'" />
       <parametre-indemnite-cours v-if="tab === 'indemnite-cours'" />
       <parametre-avs v-if="tab === 'comptabilite'" />
       <parametre-amende v-if="tab === 'amende'" />

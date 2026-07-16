@@ -1,8 +1,8 @@
 <script setup>
-import { computed } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useTuyauDiametreStore } from '../../stores/materiel/TuyauDiametre';
+import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useTuyauDiametreStore } from "../../stores/materiel/TuyauDiametre";
 
 const diametreStore = useTuyauDiametreStore();
 
@@ -14,29 +14,27 @@ const awn = useNotification();
 const { confirm, showModal } = useModalStore();
 
 const ajout = () => {
-  showModal({ component: 'ModalTuyauDiametre', data: {} });
+  showModal({ component: "ModalTuyauDiametre", data: {} });
 };
 const update = (elem) => {
   showModal({
-    component: 'ModalTuyauDiametre',
+    component: "ModalTuyauDiametre",
     data: { ...elem },
   });
 };
 const remove = (elem) =>
   confirm(
-    'Voulez-vous vraiment supprimer ce diamètre ?',
+    "Voulez-vous vraiment supprimer ce diamètre ?",
     "Attention, la suppression d'un diamètre est irréversible !",
   ).then(() =>
     diametreStore
       .removeTuyauDiametre(elem.id)
-      .catch((error) =>
-        awn.alert(error.message ?? 'Impossible de supprimer ce diamètre'),
-      ),
+      .catch((error) => awn.alert(error.message ?? "Impossible de supprimer ce diamètre")),
   );
 
 const fields = [
-  { title: 'Diamètre', key: 'diametre' },
-  { title: 'Actions', slot: 'actions' },
+  { title: "Diamètre", key: "diametre" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
@@ -44,30 +42,15 @@ const fields = [
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title me-auto">Diamètres</h3>
-      <button type="button" class="btn btn-primary" @click="ajout">
-        Ajouter
-      </button>
+      <button type="button" class="btn btn-primary" @click="ajout">Ajouter</button>
     </div>
     <div class="card-body table-responsive p-0">
-      <base-table
-        :data="diametres"
-        :fields="fields"
-        :selectable="true"
-        no-data="Aucun diamètre"
-      >
+      <base-table :data="diametres" :fields="fields" :selectable="true" no-data="Aucun diamètre">
         <template #actions="{ rowData }">
-          <button
-            type="button"
-            class="btn btn-outline-primary border-0"
-            @click="update(rowData)"
-          >
+          <button type="button" class="btn btn-outline-primary border-0" @click="update(rowData)">
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
-          <button
-            type="button"
-            class="btn btn-outline-danger border-0"
-            @click="remove(rowData)"
-          >
+          <button type="button" class="btn btn-outline-danger border-0" @click="remove(rowData)">
             <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>
         </template>

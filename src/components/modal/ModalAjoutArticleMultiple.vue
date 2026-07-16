@@ -1,14 +1,14 @@
 <script setup>
-import { ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
+import { ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
 
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useEmplacementStore } from '../../stores/materiel/Emplacement';
-import { useMaterielTypeStore } from '../../stores/materiel/Type';
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useEmplacementStore } from "../../stores/materiel/Emplacement";
+import { useMaterielTypeStore } from "../../stores/materiel/Type";
 
-import ArticleService from '../../services/materiel/ArticleService';
-import ArticleCreation from '../materiel/ArticleCreation.vue';
-import { useSapeurStore } from '../../stores/sapeur/Sapeur.js';
+import ArticleService from "../../services/materiel/ArticleService";
+import ArticleCreation from "../materiel/ArticleCreation.vue";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -41,7 +41,7 @@ await Promise.all([
 const { closeModal } = useModalStore();
 const save = async () => {
   if (!activeAttribution.value.emplacement_id) {
-    awn.warning('Veuillez sélectionner un emplacement');
+    awn.warning("Veuillez sélectionner un emplacement");
     return;
   }
 
@@ -56,9 +56,7 @@ const save = async () => {
       callback();
       closeModal();
     })
-    .catch((error) =>
-      awn.alert(error.message ?? "Erreur lors de l'attribution du matériel"),
-    );
+    .catch((error) => awn.alert(error.message ?? "Erreur lors de l'attribution du matériel"));
 };
 </script>
 
@@ -79,12 +77,8 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save">
-        Ajouter
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
+      <button type="button" class="btn btn-primary" @click="save">Ajouter</button>
     </div>
   </div>
 </template>

@@ -1,7 +1,7 @@
-import MaterielCategorieService from '../../services/materiel/CategorieService.js';
-import { defineStore } from 'pinia';
+import MaterielCategorieService from "../../services/materiel/CategorieService.js";
+import { defineStore } from "pinia";
 
-export const useMaterielCategorieStore = defineStore('materielCategorie', {
+export const useMaterielCategorieStore = defineStore("materielCategorie", {
   state: () => ({
     liste: [],
   }),
@@ -20,7 +20,7 @@ export const useMaterielCategorieStore = defineStore('materielCategorie', {
     },
     async updateMaterielCategorie(categorie) {
       const data = await MaterielCategorieService.updateCategorie(categorie);
-      this.liste = [...this.liste.map((m) => (m.id === data.id ? data : m))];
+      this.liste = this.liste.map((m) => (m.id === data.id ? data : m));
       return data;
     },
     async removeMaterielCategorie(categorieId) {

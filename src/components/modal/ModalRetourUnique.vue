@@ -1,8 +1,8 @@
 <script setup>
-import { ref } from 'vue';
-import ArticleService from '../../services/materiel/ArticleService';
-import SelectEmplacement from '../materiel/SelectEmplacement.vue';
-import { useModalStore } from '../../stores/common/Modal.js';
+import { ref } from "vue";
+import ArticleService from "../../services/materiel/ArticleService";
+import SelectEmplacement from "../materiel/SelectEmplacement.vue";
+import { useModalStore } from "../../stores/common/Modal.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -22,7 +22,7 @@ const emplacement_id = ref(null);
 const { closeModal } = useModalStore();
 const save = async () => {
   if (!emplacement_id.value) {
-    errors.value = { emplacement: ['Veuillez sélectionner un emplacement'] };
+    errors.value = { emplacement: ["Veuillez sélectionner un emplacement"] };
     return;
   }
   return ArticleService.retourArticles(emplacement_id.value, {
@@ -61,16 +61,12 @@ const save = async () => {
         :class="{ 'is-invalid': errors['emplacement'] }"
       />
       <div v-if="errors['emplacement']" class="invalid-feedback d-block">
-        {{ errors['emplacement'][0] }}
+        {{ errors["emplacement"][0] }}
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal">
-        Fermer
-      </button>
-      <button type="button" class="btn btn-primary" @click="save">
-        Valider
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
+      <button type="button" class="btn btn-primary" @click="save">Valider</button>
     </div>
   </div>
 </template>

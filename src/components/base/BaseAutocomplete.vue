@@ -1,16 +1,9 @@
 <script setup>
-import {
-  nextTick,
-  onMounted,
-  onUnmounted,
-  ref,
-  useTemplateRef,
-  watchEffect,
-} from 'vue';
+import { nextTick, onMounted, onUnmounted, ref, useTemplateRef, watchEffect } from "vue";
 
 const search = defineModel({
   type: [Object, Number, String],
-  default: '',
+  default: "",
 });
 
 const { items, error, title } = defineProps({
@@ -27,7 +20,7 @@ const { items, error, title } = defineProps({
   title: {
     type: String,
     required: false,
-    default: '',
+    default: "",
   },
 });
 
@@ -35,10 +28,10 @@ const isOpen = ref(false);
 const results = ref([]);
 const arrowCounter = ref(0);
 const uid = ref(Math.random());
-const root = useTemplateRef('root');
+const root = useTemplateRef("root");
 
-onMounted(() => document.addEventListener('click', handleClickOutside));
-onUnmounted(() => document.removeEventListener('click', handleClickOutside));
+onMounted(() => document.addEventListener("click", handleClickOutside));
+onUnmounted(() => document.removeEventListener("click", handleClickOutside));
 
 watchEffect(() => {
   results.value = items.filter((item) => {

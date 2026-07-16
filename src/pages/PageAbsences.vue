@@ -1,10 +1,10 @@
 <script setup>
-import { useSapeurStore } from '../stores/sapeur/Sapeur.js';
-import { useLocaliteStore } from '../stores/common/Localite.js';
-import { useBaseDataStore } from '../stores/common/BaseData.js';
-import { useGroupeStore } from '../stores/groupe/Groupe.js';
-import { useFonctionStore } from '../stores/sapeur/Fonction.js';
-import ExerciceComptable from '/src/components/exercice_comptable/ExerciceComptable.vue';
+import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
+import { useLocaliteStore } from "../stores/common/Localite.js";
+import { useBaseDataStore } from "../stores/common/BaseData.js";
+import { useGroupeStore } from "../stores/groupe/Groupe.js";
+import { useFonctionStore } from "../stores/sapeur/Fonction.js";
+import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -18,13 +18,7 @@ const loadGroupes = groupeStore.fetchGroupes();
 const loadFonctions = fonctionStore.fetchFonctions();
 const loadPermisType = baseDataStore.fetchPermisType();
 
-await Promise.all([
-  loadSapeurs,
-  loadLocalities,
-  loadGroupes,
-  loadFonctions,
-  loadPermisType,
-]);
+await Promise.all([loadSapeurs, loadLocalities, loadGroupes, loadFonctions, loadPermisType]);
 </script>
 
 <template>

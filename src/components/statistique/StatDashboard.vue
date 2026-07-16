@@ -19,10 +19,7 @@
           </ul>
           <h4>Intervention</h4>
           <ul>
-            <li>
-              Stat général pour traitement, type d'intervention et statistique
-              fédérale
-            </li>
+            <li>Stat général pour traitement, type d'intervention et statistique fédérale</li>
             <li>Nb heures par type intervention</li>
             <li>Véhicules &amp; Matériel</li>
           </ul>

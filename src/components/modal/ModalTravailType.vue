@@ -1,11 +1,11 @@
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import useNotification from '../../composables/useNotification.js';
-import { useCompteStore } from '../../stores/comptabilite/Compte.js';
-import { useTravailTypeStore } from '../../stores/travail/TravailType.js';
-import { useEcritureCategorieStore } from '../../stores/comptabilite/EcritureCategorie.js';
-import { useModalStore } from '../../stores/common/Modal.js';
-import { useUniteStore } from '../../stores/common/Unite.js';
+import { computed, reactive, ref } from "vue";
+import useNotification from "../../composables/useNotification.js";
+import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
+import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import { useModalStore } from "../../stores/common/Modal.js";
+import { useUniteStore } from "../../stores/common/Unite.js";
 
 const uniteStore = useUniteStore();
 const compteStore = useCompteStore();
@@ -64,23 +64,19 @@ const save = async () => {
   errors.value = {};
 
   // Contrôle qu'aucune colonne n'est dupliquée
-  const baseSet = new Set(base.value.map((e) => e.type + ' ' + e.compte_id));
+  const baseSet = new Set(base.value.map((e) => e.type + " " + e.compte_id));
   if (baseSet.size != base.value.length) {
-    awn.alert(
-      "Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises.",
-    );
+    awn.alert("Erreur, la même combinaison 'type' & 'compte' est utilisé à plusieurs reprises.");
     return;
   }
 
   // Contrôle des données de base
   base.value.forEach((e, i) => {
-    if (!e.type) errors.value['base-type' + i] = true;
-    if (!e.compte_id) errors.value['base-compte' + i] = true;
-    if (!e.tarif || e.tarif < 0) errors.value['base-tarif' + i] = true;
-    if (e.tarif_min && e.tarif_min < 0)
-      errors.value['base-tarif-min' + i] = true;
-    if (e.tarif_min_pour && e.tarif_min_pour < 0)
-      errors.value['base-tarif-min-pour' + i] = true;
+    if (!e.type) errors.value["base-type" + i] = true;
+    if (!e.compte_id) errors.value["base-compte" + i] = true;
+    if (!e.tarif || e.tarif < 0) errors.value["base-tarif" + i] = true;
+    if (e.tarif_min && e.tarif_min < 0) errors.value["base-tarif-min" + i] = true;
+    if (e.tarif_min_pour && e.tarif_min_pour < 0) errors.value["base-tarif-min-pour" + i] = true;
   });
 
   // Return en cas d'erreurs
@@ -105,9 +101,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">
-        {{ form.id ? 'Modifier' : 'Ajouter' }} un travail type
-      </h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un travail type</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -168,9 +162,7 @@ const save = async () => {
                   />
                   <span class="input-group-text">
                     CHF /
-                    {{
-                      unites.find((u) => u.id == form.type_unite_id)?.unite
-                    }}</span
+                    {{ unites.find((u) => u.id == form.type_unite_id)?.unite }}</span
                   >
                 </div>
               </td>
@@ -195,11 +187,7 @@ const save = async () => {
             </tr>
             <tr>
               <td :colspan="base.length > 1 ? 5 : 4">
-                <button
-                  type="button"
-                  class="btn btn-outline-primary"
-                  @click="ajoutType()"
-                >
+                <button type="button" class="btn btn-outline-primary" @click="ajoutType()">
                   Ajouter
                   <font-awesome-icon size="1x" :icon="['far', 'plus-square']" />
                 </button>
@@ -219,11 +207,9 @@ const save = async () => {
       <base-checkbox v-model="form.actif" class="mb-3" label="Actif" />
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">
-        Fermer
-      </button>
+      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
       <button type="submit" class="btn btn-primary">
-        {{ form.id ? 'Modifier' : 'Ajouter' }}
+        {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
   </form>

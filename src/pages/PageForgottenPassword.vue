@@ -1,6 +1,6 @@
 <script setup>
-import { ref } from 'vue';
-import { useAuthStore } from '../stores/auth/Auth';
+import { ref } from "vue";
+import { useAuthStore } from "../stores/auth/Auth";
 
 const email = ref(null);
 const error = ref({});
@@ -9,9 +9,9 @@ const sent = ref(false);
 const authStore = useAuthStore();
 
 const request = async () => {
-  if (email.value?.trim()?.toLowerCase()?.endsWith('@gestsis.ch')) {
+  if (email.value?.trim()?.toLowerCase()?.endsWith("@gestsis.ch")) {
     error.value = {
-      email: 'Email invalid',
+      email: "Email invalid",
     };
     return;
   }
@@ -48,28 +48,19 @@ const request = async () => {
         :class="{ 'is-invalid': error['email'] }"
       />
       <div v-if="!sent && error['email']" class="invalid-feedback">
-        {{ error['email'] }}
+        {{ error["email"] }}
       </div>
-      <button
-        v-if="!sent"
-        class="btn btn-lg btn-primary btn-block mt-3"
-        type="submit"
-      >
+      <button v-if="!sent" class="btn btn-lg btn-primary btn-block mt-3" type="submit">
         M'envoyer un lien de récupération
       </button>
       <div v-if="sent">
         <p>
-          Un email a été envoyé à <strong>{{ email }}</strong> si cette email
-          est valide. Cliquez sur le lien reçu afin de réinitialiser votre de
-          mot de passe puis reconnectez-vous.
+          Un email a été envoyé à <strong>{{ email }}</strong> si cette email est valide. Cliquez
+          sur le lien reçu afin de réinitialiser votre de mot de passe puis reconnectez-vous.
         </p>
       </div>
-      <p class="mt-5 mb-3 text-muted">
-        © GestSIS {{ new Date().getFullYear() }}
-      </p>
-      <router-link :to="{ name: 'login' }" class="btn btn-link is-active"
-        >Se connecter</router-link
-      >
+      <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
+      <router-link :to="{ name: 'login' }" class="btn btn-link is-active">Se connecter</router-link>
       <router-link :to="{ name: 'register' }" class="btn btn-link is-active"
         >S'enregistrer</router-link
       >
@@ -109,13 +100,13 @@ const request = async () => {
   z-index: 2;
 }
 
-.form-signin input[type='email'] {
+.form-signin input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
-.form-signin input[type='password'] {
+.form-signin input[type="password"] {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;

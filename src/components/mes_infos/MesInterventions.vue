@@ -1,10 +1,10 @@
 <script setup>
-import { computed, watchEffect } from 'vue';
-import { useMesInfosStore } from '../../stores/mesinfos/MesInfos';
-import { ref } from 'vue';
-import { useTypeInterventionStore } from '../../stores/intervention/TypeIntervention.js';
-import { useExerciceComptableStore } from '../../stores/comptabilite/ExerciceComptable.js';
-import { useLocaliteStore } from '../../stores/common/Localite';
+import { computed, watchEffect } from "vue";
+import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
+import { ref } from "vue";
+import { useTypeInterventionStore } from "../../stores/intervention/TypeIntervention.js";
+import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { useLocaliteStore } from "../../stores/common/Localite";
 
 const infosStore = useMesInfosStore();
 const localiteStore = useLocaliteStore();
@@ -28,14 +28,11 @@ const interventions = computed(() =>
   infosStore.interventions
     .map((i) => ({
       ...i,
-      inter_debut: i.date_debut + ' ' + i.heure_debut,
-      inter_fin: i.date_fin + ' ' + i.heure_fin,
+      inter_debut: i.date_debut + " " + i.heure_debut,
+      inter_fin: i.date_fin + " " + i.heure_fin,
       duree: Math.abs(new Date(i.debut) - new Date(i.fin)) / 36e5,
-      localite: localiteStore.liste.find((l) => l.id == i.localite_id)
-        ?.designation,
-      type: typeInterventionStore.liste.find(
-        (c) => c.id == i.type_intervention_id,
-      )?.designation,
+      localite: localiteStore.liste.find((l) => l.id == i.localite_id)?.designation,
+      type: typeInterventionStore.liste.find((c) => c.id == i.type_intervention_id)?.designation,
     }))
     .sort((i1, i2) => i1.debut.localeCompare(i2.debut)),
 );
@@ -53,27 +50,27 @@ const computedInterventions = computed(() => {
 });
 
 const fields = [
-  { title: 'Date', key: 'inter_debut', type: 'datetime' },
-  { title: 'Type', key: 'type' },
-  { title: 'Localite', key: 'localite' },
-  { title: 'Lieu', key: 'lieu' },
-  { title: 'Objet', key: 'objet' },
+  { title: "Date", key: "inter_debut", type: "datetime" },
+  { title: "Type", key: "type" },
+  { title: "Localite", key: "localite" },
+  { title: "Lieu", key: "lieu" },
+  { title: "Objet", key: "objet" },
 ];
 const detailRowFields = [
   {
-    title: 'Début',
-    key: 'debut',
-    type: 'datetime',
-    columnClass: 'col-2',
+    title: "Début",
+    key: "debut",
+    type: "datetime",
+    columnClass: "col-2",
   },
-  { title: 'Fin', key: 'fin', type: 'datetime', columnClass: 'col-2' },
-  { title: 'Durée [heure]', key: 'duree', columnClass: 'col-2' },
+  { title: "Fin", key: "fin", type: "datetime", columnClass: "col-2" },
+  { title: "Durée [heure]", key: "duree", columnClass: "col-2" },
   {
-    title: 'Piquet',
-    key: 'piquet',
+    title: "Piquet",
+    key: "piquet",
     type: Boolean,
-    titleClass: 'text-center',
-    columnClass: 'text-center col-2',
+    titleClass: "text-center",
+    columnClass: "text-center col-2",
   },
   {}, // Pour que la table soit compressée, ne pas supprimer
 ];
