@@ -159,7 +159,8 @@ const request = {
           try {
             await useAuthStore().refreshToken();
 
-            error.config.headers.Authorization = `Bearer ${axios.defaults.headers.common["Authorization"]}`;
+            // axios.defaults already contains the full "Bearer <token>" value
+            error.config.headers.Authorization = axios.defaults.headers.common["Authorization"];
             // Retry the original request
             return axios({
               ...error.config,

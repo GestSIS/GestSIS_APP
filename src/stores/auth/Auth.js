@@ -214,31 +214,30 @@ export const useAuthStore = defineStore("auth", {
       return result.data;
     },
     async refreshToken() {
-      const callback = async () => {
-        const p = AuthService.refreshToken(TokenService.getRefreshToken());
-        this.refreshTokenPromise = p;
+      if (this.refreshTokenPromise) {
+        return this.refreshTokenPromise;
+      }
 
+      const callback = async () => {
         try {
-          const data = await p;
+          if (this.sis.liste.length === 0) {
+            const sis = await AuthService.sisListe();
+            this.sis.liste = sis.data;
+          }
+          const data = await AuthService.refreshToken(TokenService.getRefreshToken());
           await this.setAuthSuccessful(data);
-          this.refreshTokenPromise = null;
           return data;
         } catch (e) {
           this.logout();
-          this.refreshTokenPromise = null;
           router.push({ name: "login" });
           throw e;
+        } finally {
+          this.refreshTokenPromise = null;
         }
       };
 
-      if (!this.refreshTokenPromise) {
-        if (this.sis.liste.length === 0) {
-          const sis = await AuthService.sisListe();
-          this.sis.liste = sis.data;
-          return await callback();
-        }
-        return await callback();
-      }
+      // Assign synchronously so concurrent 401s share a single refresh request
+      this.refreshTokenPromise = callback();
       return this.refreshTokenPromise;
     },
     async resendValidationEmail() {
