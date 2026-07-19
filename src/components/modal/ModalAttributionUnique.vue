@@ -1,4 +1,5 @@
 <script setup>
+import { toLocalIsoDate } from "../../tools/index.js";
 import { computed, ref } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
@@ -23,7 +24,7 @@ const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
 
 const errors = ref({});
 const form = ref({
-  date: new Date().toISOString().slice(0, 10),
+  date: toLocalIsoDate(),
   sapeur_id: null,
   id: data?.id,
 });

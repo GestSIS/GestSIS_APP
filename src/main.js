@@ -38,7 +38,10 @@ const authStore = useAuthStore();
 
 router.beforeEach(async (to, from) => {
   if (authStore.sis.liste.length <= 0) {
-    await authStore.loadSisListe().then(async () => {
+    // Un échec ici (service auth indisponible, erreur réseau) ne doit pas bloquer
+    // toutes les navigations : sans le catch, l'app reste blanche, /login compris
+    try {
+      await authStore.loadSisListe();
       const user = TokenService.getUser();
       const accessToken = TokenService.getAccessToken();
       const refreshToken = TokenService.getRefreshToken();
@@ -49,7 +52,9 @@ router.beforeEach(async (to, from) => {
           refreshToken,
         });
       }
-    });
+    } catch (e) {
+      console.error("Échec de l'initialisation de l'authentification, navigation sans session", e);
+    }
   }
 });
 

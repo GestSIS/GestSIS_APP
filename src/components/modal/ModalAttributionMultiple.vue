@@ -1,4 +1,5 @@
 <script setup>
+import { toLocalIsoDate } from "../../tools/index.js";
 import { computed, onMounted, reactive, ref, useTemplateRef } from "vue";
 
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
@@ -31,7 +32,7 @@ onMounted(() => {
 const errors = ref({});
 const depuisInventaire = ref(true);
 const form = reactive({
-  date: new Date().toISOString().slice(0, 10),
+  date: toLocalIsoDate(),
   quantite: 1,
   sapeur_id: data?.sapeurId ?? null,
   articlesDepuisInventaire: [],

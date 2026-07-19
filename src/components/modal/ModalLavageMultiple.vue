@@ -1,4 +1,5 @@
 <script setup>
+import { toLocalIsoDate } from "../../tools/index.js";
 import { ref } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal.js";
@@ -21,7 +22,7 @@ const { data, callback } = defineProps({
 
 const errors = ref({});
 const activeAttribution = ref({
-  date: new Date().toISOString().slice(0, 10),
+  date: toLocalIsoDate(),
   articles: [],
 });
 

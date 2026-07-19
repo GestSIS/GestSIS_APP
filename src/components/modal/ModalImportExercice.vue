@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, ref, watchEffect } from "vue";
+import { computed, reactive, ref } from "vue";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
 import { useModalStore } from "../../stores/common/Modal.js";
@@ -33,16 +33,18 @@ const selectExerciceComptable = async () => {
   loading.value = false;
 };
 
-watchEffect(() => {
-  form.exercices = form.exercices.map((e) => ({
+// Computed (not a watchEffect writing back into form.exercices, which would
+// retrigger itself and blow up with "Maximum recursive updates exceeded")
+const exercicesDecales = computed(() =>
+  form.exercices.map((e) => ({
     ...e,
     date_2: e.date
       ? new Date(new Date(e.date).getTime() + form.decallage * 24 * 60 * 60 * 1000)
           .toISOString()
           .split("T")[0]
       : null,
-  }));
-});
+  })),
+);
 
 const { closeModal } = useModalStore();
 const importer = () => {};
@@ -110,7 +112,7 @@ const fieldsStep2 = [
             />
           </div>
           <div class="col-12">
-            <base-table :data="form.exercices" :fields="fieldsStep2" />
+            <base-table :data="exercicesDecales" :fields="fieldsStep2" />
           </div>
         </div>
       </template>

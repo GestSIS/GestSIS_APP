@@ -26,8 +26,12 @@ const request = {
   },
 
   setSisKey(sis_key) {
-    axios.defaults.headers.common["Sis-Key"] = sis_key;
-    this._sisKey = sis_key;
+    if (sis_key == null) {
+      delete axios.defaults.headers.common["Sis-Key"];
+    } else {
+      axios.defaults.headers.common["Sis-Key"] = sis_key;
+    }
+    this._sisKey = sis_key ?? null;
   },
 
   getSisKey() {
@@ -151,7 +155,9 @@ const request = {
         if (response.data.error !== undefined) {
           throw response.data.error;
         }
-        return response.data?.data || response.data;
+        // `|| response.data` would return the whole envelope for falsy payloads
+        // like {"data": 0} or {"data": false}
+        return response.data?.data !== undefined ? response.data.data : response.data;
       },
       async (error) => {
         if (error.config && error.response && error.response.status === 401) {

@@ -56,6 +56,7 @@ import { useGroupeStore } from "../groupe/Groupe";
 import { useStatistiqueStore } from "../statistique/Statistique";
 import { useLocaliteStore } from "../common/Localite";
 import { useBaseDataStore } from "../common/BaseData";
+import { useMesInfosStore } from "../mesinfos/MesInfos";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
@@ -120,18 +121,24 @@ export const useAuthStore = defineStore("auth", {
       TokenService.removeRefreshToken();
       TokenService.removeUser();
       Api.setAccessToken("");
+      Api.setSisKey(null);
 
       this.user = null;
       this.email = null;
       this.admin = false;
       this.validated = false;
+      this.sapeurId = null;
       this.sis.activeId = null;
       this.sis.activeKey = null;
       this.sis.permissions = [];
       this.sis.available = [];
       this.sis.allPermissions = {};
       this.sis.sapeurs = {};
-      this.apiTokens = [];
+
+      // Clear roles/users/apiTokens and every domain-store cache so the next
+      // user on this tab cannot see the previous user's data. The global
+      // `permissions` catalog is user- and SIS-independent, so it is kept.
+      this.clearCache();
     },
     async useToken(token) {
       const { message, accessToken } = await AuthService.useToken(token);
@@ -150,9 +157,11 @@ export const useAuthStore = defineStore("auth", {
 
       Api.setSisKey(sis?.api_key);
 
-      await this.fetchLocalitesSis();
-
+      // Clear before fetching: the other way around, the freshly fetched
+      // localités would be wiped immediately by the reset
       this.clearCache();
+
+      await this.fetchLocalitesSis();
     },
     async loadSisListe() {
       if (this.sis.liste.length <= 0) {
@@ -381,6 +390,7 @@ export const useAuthStore = defineStore("auth", {
       useStatistiqueStore().$reset();
       useLocaliteStore().$reset();
       useBaseDataStore().$reset();
+      useMesInfosStore().$reset();
     },
   },
 });

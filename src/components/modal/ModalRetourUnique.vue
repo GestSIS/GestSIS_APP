@@ -1,4 +1,5 @@
 <script setup>
+import { toLocalIsoDate } from "../../tools/index.js";
 import { ref } from "vue";
 import ArticleService from "../../services/materiel/ArticleService";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
@@ -16,7 +17,7 @@ const { data, callback } = defineProps({
 });
 
 const errors = ref({});
-const date = ref(new Date().toISOString().slice(0, 10));
+const date = ref(toLocalIsoDate());
 const emplacement_id = ref(null);
 
 const { closeModal } = useModalStore();

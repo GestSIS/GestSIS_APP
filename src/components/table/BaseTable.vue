@@ -121,12 +121,20 @@ watch(
   },
 );
 
+// Quote values containing the delimiter, quotes or newlines (RFC 4180),
+// otherwise a ";" inside a value shifts the columns of the export
+const csvEscape = (value) => {
+  const s = String(value ?? "");
+  return /[";\n\r]/.test(s) ? '"' + s.replaceAll('"', '""') + '"' : s;
+};
+
 const toCvs = () => {
-  const data =
-    "data:text/csv;charset=utf-8,﻿" +
+  // "\ufeff" = BOM UTF-8 : sans lui Excel ouvre le CSV en Latin-1 et casse les accents
+  const csv =
+    "\ufeff" +
     fields
       .filter((f) => !f.slot)
-      .map((f) => f.title)
+      .map((f) => csvEscape(f.title))
       .join(";") +
     "\n" +
     sortedData.value
@@ -142,22 +150,23 @@ const toCvs = () => {
               case Date:
                 return e[f.key] ? new Date(e[f.key]).toLocaleDateString("fr-CH") : "";
               default:
-                return (f.formatter || defaultFormatter)(e[f.key], e);
+                return csvEscape((f.formatter || defaultFormatter)(e[f.key], e));
             }
           })
           .join(";"),
       )
       .join("\n");
-  // V1
-  // const encodedUri = encodeURI(data);
-  // window.open(encodedUri);
-  // V2
-  var encodedUri = encodeURI(data);
+
+  // Blob instead of an encodeURI data: URI, which truncated the file at the
+  // first "#" (fragment separator) found in a value
+  const url = window.URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
   var link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
+  link.setAttribute("href", url);
   link.setAttribute("download", "export_gestsis.csv");
   document.body.appendChild(link); // Required for FF
   link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
 };
 
 const sort = (field) => {

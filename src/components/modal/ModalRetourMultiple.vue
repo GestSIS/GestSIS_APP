@@ -1,4 +1,5 @@
 <script setup>
+import { toLocalIsoDate } from "../../tools/index.js";
 import { computed, reactive, ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 
@@ -12,7 +13,7 @@ const { data } = defineProps({
 const errors = ref({});
 const all = ref(true);
 const form = reactive({
-  date: new Date().toISOString().slice(0, 10),
+  date: toLocalIsoDate(),
   ...data,
 });
 const selected = ref(Object.fromEntries(data.map((m) => [m.id, true])));
