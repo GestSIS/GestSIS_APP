@@ -110,7 +110,7 @@ const save = () => {
           { id: 2, designation: 'Indemnité' },
           // { id: 3, designation: 'Frais forfaitaire' },
           // { id: 4, designation: 'Frais effectif' },
-          // { id: 5, designation: 'Charges AVS/AC' },
+          // { id: 5, designation: 'Côtisations AVS/AC' },
         ]"
         :select-class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
       />

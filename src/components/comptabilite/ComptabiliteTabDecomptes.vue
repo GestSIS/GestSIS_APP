@@ -213,7 +213,7 @@ const detailRowOptions = {
           2: "Indemnité",
           3: "Frais forfaitaire",
           4: "Frais effectif",
-          5: "Charges AVS/AC",
+          5: "Côtisations AVS/AC",
         };
         return mapping[type] || "";
       },
@@ -227,8 +227,8 @@ const fields = [
   { title: "A payer", key: "a_payer_total" },
   { title: "A facturer", key: "a_facturer_total" },
   { title: "Déductions", key: "deduction", type: Boolean },
-  { title: "Charges AVS", key: "avs_total" },
-  { title: "Charges AC", key: "ac_total" },
+  { title: "Côtisations AVS", key: "avs_total" },
+  { title: "Côtisations AC", key: "ac_total" },
   { title: "Total", key: "total" },
   { title: "Actions", key: "id", slot: "actions" },
 ];

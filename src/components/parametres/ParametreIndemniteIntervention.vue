@@ -59,7 +59,7 @@ const indemnitesIntervention = computed(() =>
         2: "Indemnité",
         3: "Frais forfaitaire",
         4: "Frais effectif",
-        5: "Charges AVS/AC",
+        5: "Côtisations AVS/AC",
       }[e.type ?? 0],
     }))
     .sort((a, b) => a.tri - b.tri),

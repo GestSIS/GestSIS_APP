@@ -53,7 +53,7 @@ const computedData = computed(() => {
       2: "Indemnité",
       3: "Frais forfaitaire",
       4: "Frais effectif",
-      5: "Charges AVS/AC",
+      5: "Côtisations AVS/AC",
     };
     return mapping[type] || "";
   };
@@ -191,7 +191,7 @@ const fields = [
                   { id: 2, designation: 'Indemnité' },
                   { id: 3, designation: 'Frais forfaitaire' },
                   { id: 4, designation: 'Frais effectif' },
-                  { id: 5, designation: 'Charges AVS/AC' },
+                  { id: 5, designation: 'Côtisations AVS/AC' },
                 ]"
                 :model-value="filters.type"
                 @update:model-value="(value) => setFilter('type', value)"
