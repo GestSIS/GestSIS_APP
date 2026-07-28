@@ -102,6 +102,14 @@ const attribuer = () =>
     callback: loadArticles,
   });
 
+const retournerMateriel = () =>
+  showModal({
+    component: "ModalRetourMultiple",
+    data: articles.value,
+    size: 1,
+    callback: loadArticles,
+  });
+
 const linearCategories = (categorieId) => {
   if (categorieId === null) {
     return [];
@@ -118,9 +126,18 @@ const linearCategories = (categorieId) => {
   <base-card>
     <template #title>Matériel distribué ({{ articles.length }})</template>
     <template #header>
-      <button v-if="hasEditPermission" class="btn btn-primary" @click="attribuer">
-        Attribuer du matériel
-      </button>
+      <div>
+        <button v-if="hasEditPermission" class="btn btn-primary" @click="attribuer">
+          Attribuer du matériel
+        </button>
+        <button
+          v-if="hasEditPermission && articles.length"
+          class="ms-2 btn btn-outline-primary"
+          @click="retournerMateriel"
+        >
+          Retourner du matériel
+        </button>
+      </div>
     </template>
     <template #body-table>
       <base-table

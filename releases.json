@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "28.07.2027",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Retour de materiel multiple"]
+    },
+    {
       "date": "02.07.2027",
       "version": "1.0",
       "app": "GestSIS Mobile 2.6.8",
