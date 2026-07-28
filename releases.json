@@ -3,6 +3,17 @@
     {
       "date": "28.07.2027",
       "version": "1.0",
+      "app": "GestSIS Mobile 2.6.9",
+      "changes": [
+        "Correction d'un risque de double envoi des interventions vers le serveur lors de la connexion",
+        "Un sapeur déjà présent dans la liste de présence ne peut plus être ajouté une seconde fois par erreur via « Autres sapeurs »",
+        "Correction de l'affichage des groupes dans la fenêtre de quittances lorsque plusieurs groupes du même SIS étaient présents",
+        "La sélection des groupes d'une intervention ne reste plus affichée par erreur en passant à une autre intervention"
+      ]
+    },
+    {
+      "date": "28.07.2027",
+      "version": "1.0",
       "app": "GestSIS APP",
       "changes": ["Retour de materiel multiple"]
     },
