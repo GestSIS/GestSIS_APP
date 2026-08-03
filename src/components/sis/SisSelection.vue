@@ -12,7 +12,7 @@ const listeSis = computed(() => authStore.sis.liste);
 
 const selectSis = async (sisId) => {
   if (sisId != activeSisId.value) {
-    await router.push({ name: "dashboard" });
+    await router.push({ name: "accueil" });
     const sis = listeSis.value.find((s) => s.id == sisId);
     authStore.selectSis(sis);
   }

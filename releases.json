@@ -3,6 +3,12 @@
     {
       "date": "28.07.2027",
       "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Refonte de la page d'accueil"]
+    },
+    {
+      "date": "28.07.2027",
+      "version": "1.0",
       "app": "GestSIS Mobile 2.6.9",
       "changes": [
         "Correction d'un risque de double envoi des interventions vers le serveur lors de la connexion",

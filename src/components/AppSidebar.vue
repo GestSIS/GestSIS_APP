@@ -24,10 +24,13 @@ const filteredLinks = computed(() =>
 
 <template>
   <aside id="sidebar" class="bg-dark text-white p-3">
-    <div class="sidebar-header ps-3 pe-3">
+    <router-link
+      :to="{ name: 'accueil' }"
+      class="sidebar-header ps-3 pe-3 d-block text-white text-decoration-none"
+    >
       <img alt="logo" src="../assets/logo.svg" class="logo text-center" />
       <h2 class="brand-text m-0 text-center">GestSIS</h2>
-    </div>
+    </router-link>
     <sis-selection />
     <hr />
 

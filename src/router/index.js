@@ -98,7 +98,6 @@ const router = createRouter({
     {
       path: "/accueil",
       name: "accueil",
-      meta: { layout: "no-sidebar" },
       component: Home,
     },
     {
@@ -201,7 +200,7 @@ const router = createRouter({
     {
       path: "/dashboard",
       name: "dashboard",
-      component: () => import("/src/pages/PageDashboard.vue"),
+      redirect: { name: "accueil" },
     },
     {
       path: "/sapeurs/:id",

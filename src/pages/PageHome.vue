@@ -1,19 +1,15 @@
 <script setup>
 import { computed, onUnmounted, ref } from "vue";
 import useNotification from "../composables/useNotification.js";
-import Api from "/src/http/Request";
-import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth/Auth.js";
+import MesInfosService from "../services/MesInfosService.js";
 
 const authStore = useAuthStore();
 
-const loading = ref(false);
 const disableCounter = ref(0);
 const disableInterval = ref(null);
 const resendCounter = ref(0);
 const resendInterval = ref(null);
-
-const router = useRouter();
 
 const listeSis = computed(() => authStore.sis.liste);
 const validated = computed(() => authStore.validated);
@@ -22,11 +18,43 @@ const availableSisListe = computed(() => authStore.availableSisListe);
 const awn = useNotification();
 
 if (listeSis.value.length <= 0) {
-  loading.value = true;
-  await authStore.loadSisListe().then(() => {
-    loading.value = false;
-  });
+  await authStore.loadSisListe();
 }
+
+if (!authStore.sis.activeId && availableSisListe.value.length > 0) {
+  await authStore.selectSis(availableSisListe.value[0]);
+}
+
+const prochainsExercicesLoading = ref(true);
+const prochainsExercicesParSis = ref({});
+MesInfosService.getMesProchainsExercices()
+  .then((data) => {
+    prochainsExercicesParSis.value = data;
+  })
+  .catch(() => {
+    prochainsExercicesParSis.value = {};
+  })
+  .finally(() => {
+    prochainsExercicesLoading.value = false;
+  });
+
+const prochainsExercices = computed(() =>
+  Object.entries(prochainsExercicesParSis.value)
+    .flatMap(([sisKey, exercices]) =>
+      exercices.map((exercice) => ({
+        ...exercice,
+        sis_nom: listeSis.value.find((s) => s.api_key === sisKey)?.nom,
+      })),
+    )
+    .sort((e1, e2) => e1.date?.localeCompare(e2.date)),
+);
+
+const prochainsExercicesFields = [
+  { title: "Date", key: "date", type: Date },
+  { title: "SIS", key: "sis_nom" },
+  { title: "Désignation", key: "designation" },
+  { title: "Lieu", key: "lieu" },
+];
 
 onUnmounted(() => {
   if (disableInterval.value != null) {
@@ -39,13 +67,6 @@ onUnmounted(() => {
   }
 });
 
-const getImageUrl = (sis) => {
-  return Api.API_URL + `/sis-logo/${sis.api_key}`;
-};
-const connectToSis = async (sis) => {
-  await authStore.selectSis(sis);
-  router.push({ name: "dashboard" });
-};
 const refresh = () => {
   authStore.refreshToken().then(() => {
     if (!validated.value) {
@@ -90,10 +111,9 @@ const resend = () => {
     <div class="album text-muted">
       <div class="container mb-3">
         <div class="row mt-5">
-          <h2 id="C1">Vos SIS</h2>
-        </div>
-        <!-- <div>Loading {{ loading }}</div> -->
-        <div class="row">
+          <div class="col-12">
+            <p>Bienvenue {{ authStore.user?.name }}</p>
+          </div>
           <div v-if="!validated" class="col-12">
             <div class="alert alert-warning" role="alert">
               Attention, votre compte n'est pas encore validé, veuillez cliquer sur le lien reçu
@@ -126,16 +146,20 @@ const resend = () => {
               <p v-else>Vous n'avez actuellement aucun droit, demandez des droits à votre SIS.</p>
             </div>
           </div>
-          <div
-            v-for="sis in availableSisListe"
-            :key="sis.id"
-            class="card col-md-3 col-sm-6 col-xs-12"
-          >
-            <div class="align-vertical">
-              <button class="btn btn-link" @click="connectToSis(sis)">
-                <img class="img-fetch" :src="getImageUrl(sis)" :alt="sis.nom" />
-              </button>
-            </div>
+        </div>
+        <div class="row">
+          <h2>Vos prochains exercices</h2>
+        </div>
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-body table-responsive p-0">
+            <base-table
+              class="table-striped"
+              :loading="prochainsExercicesLoading"
+              :fields="prochainsExercicesFields"
+              :data="prochainsExercices"
+              :hide-download="true"
+              no-data="Aucun exercice à venir"
+            />
           </div>
         </div>
       </div>
@@ -146,13 +170,6 @@ const resend = () => {
 <style scoped>
 .columns {
   overflow: scroll;
-}
-
-.img-fetch {
-  height: auto;
-  max-height: 220px;
-  width: 100%;
-  display: block;
 }
 
 .align-vertical {
