@@ -25,18 +25,22 @@ if (!authStore.sis.activeId && availableSisListe.value.length > 0) {
   await authStore.selectSis(availableSisListe.value[0]);
 }
 
-const prochainsExercicesLoading = ref(true);
+const isSapeur = computed(() => Object.keys(authStore.sis.sapeurs ?? {}).length > 0);
+
+const prochainsExercicesLoading = ref(isSapeur.value);
 const prochainsExercicesParSis = ref({});
-MesInfosService.getMesProchainsExercices()
-  .then((data) => {
-    prochainsExercicesParSis.value = data;
-  })
-  .catch(() => {
-    prochainsExercicesParSis.value = {};
-  })
-  .finally(() => {
-    prochainsExercicesLoading.value = false;
-  });
+if (isSapeur.value) {
+  MesInfosService.getMesProchainsExercices()
+    .then((data) => {
+      prochainsExercicesParSis.value = data;
+    })
+    .catch(() => {
+      prochainsExercicesParSis.value = {};
+    })
+    .finally(() => {
+      prochainsExercicesLoading.value = false;
+    });
+}
 
 const prochainsExercices = computed(() =>
   Object.entries(prochainsExercicesParSis.value)
@@ -51,6 +55,7 @@ const prochainsExercices = computed(() =>
 
 const prochainsExercicesFields = [
   { title: "Date", key: "date", type: Date },
+  { title: "Heure", key: "heure", formatter: (h) => h?.slice(0, 5) },
   { title: "SIS", key: "sis_nom" },
   { title: "Désignation", key: "designation" },
   { title: "Lieu", key: "lieu" },
@@ -147,21 +152,23 @@ const resend = () => {
             </div>
           </div>
         </div>
-        <div class="row">
-          <h2>Vos prochains exercices</h2>
-        </div>
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-body table-responsive p-0">
-            <base-table
-              class="table-striped"
-              :loading="prochainsExercicesLoading"
-              :fields="prochainsExercicesFields"
-              :data="prochainsExercices"
-              :hide-download="true"
-              no-data="Aucun exercice à venir"
-            />
+        <template v-if="isSapeur">
+          <div class="row">
+            <h2>Vos prochains exercices</h2>
           </div>
-        </div>
+          <div class="card card-primary card-outline mb-3">
+            <div class="card-body table-responsive p-0">
+              <base-table
+                class="table-striped"
+                :loading="prochainsExercicesLoading"
+                :fields="prochainsExercicesFields"
+                :data="prochainsExercices"
+                :hide-download="true"
+                no-data="Aucun exercice à venir"
+              />
+            </div>
+          </div>
+        </template>
       </div>
     </div>
   </div>
