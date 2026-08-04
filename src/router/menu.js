@@ -2,6 +2,11 @@ import permissions from "../composables/permissions.js";
 
 const links = [
   {
+    to: { name: "accueil" },
+    icon: ["far", "house"],
+    nom: "Accueil",
+  },
+  {
     to: { name: "mes-infos" },
     icon: ["fas", "image-portrait"],
     nom: "Mes infos",
