@@ -61,7 +61,7 @@ const prochainsExercicesFields = [
   { title: "SIS", key: "sis_nom" },
   { title: "Désignation", key: "designation" },
   { title: "Lieu", key: "lieu" },
-  { title: "", key: "convoque", slot: "convoque" },
+  { title: "", slot: "convoque" },
 ];
 
 // Ajouté mais pas convoqué : simple information, mis en évidence pour ne pas le confondre avec une convocation.
@@ -176,8 +176,8 @@ const resend = () => {
               :hide-download="true"
               no-data="Aucun exercice à venir"
             >
-              <template #convoque="{ value }">
-                <span v-if="!value" class="badge text-bg-warning">Pour info</span>
+              <template #convoque="{ rowData }">
+                <span v-if="!rowData.convoque" class="badge text-bg-warning">Pour info</span>
               </template>
             </base-table>
           </div>
