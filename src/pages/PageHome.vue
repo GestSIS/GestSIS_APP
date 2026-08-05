@@ -61,7 +61,11 @@ const prochainsExercicesFields = [
   { title: "SIS", key: "sis_nom" },
   { title: "Désignation", key: "designation" },
   { title: "Lieu", key: "lieu" },
+  { title: "", key: "convoque", slot: "convoque" },
 ];
+
+// Ajouté mais pas convoqué : simple information, mis en évidence pour ne pas le confondre avec une convocation.
+const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
 
 onUnmounted(() => {
   if (disableInterval.value != null) {
@@ -152,7 +156,7 @@ const resend = () => {
       <div class="col-12">
         <div class="card card-primary">
           <div class="card-header d-flex justify-content-between align-items-center">
-            <h2>Vos prochains exercices</h2>
+            <h2>Vos prochaines convocations</h2>
             <button
               class="btn btn-outline-primary"
               type="button"
@@ -168,9 +172,14 @@ const resend = () => {
               :loading="prochainsExercicesLoading"
               :fields="prochainsExercicesFields"
               :data="prochainsExercices"
+              :row-class="onRowClass"
               :hide-download="true"
               no-data="Aucun exercice à venir"
-            />
+            >
+              <template #convoque="{ value }">
+                <span v-if="!value" class="badge text-bg-warning">Pour info</span>
+              </template>
+            </base-table>
           </div>
         </div>
       </div>
