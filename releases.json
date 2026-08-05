@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "05.08.2027",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout de l'abonnement à son agenda (exercices & séances) via un lien ICS, depuis la page d'accueil"
+      ]
+    },
+    {
       "date": "28.07.2027",
       "version": "1.0",
       "app": "GestSIS APP",

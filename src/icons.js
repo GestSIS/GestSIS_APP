@@ -61,6 +61,7 @@ import {
   faIndustry,
   faArrowUp,
   faArrowDown,
+  faRotate,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faGripfire, faGithub } from "@fortawesome/free-brands-svg-icons";
@@ -88,6 +89,7 @@ import {
 library.add(
   faArrowUp,
   faArrowDown,
+  faRotate,
   faMobileScreen,
   faIndustry,
   faHouse,

@@ -2,9 +2,11 @@
 import { computed, onUnmounted, ref } from "vue";
 import useNotification from "../composables/useNotification.js";
 import { useAuthStore } from "../stores/auth/Auth.js";
+import { useModalStore } from "../stores/common/Modal.js";
 import MesInfosService from "../services/MesInfosService.js";
 
 const authStore = useAuthStore();
+const { showModal } = useModalStore();
 
 const disableCounter = ref(0);
 const disableInterval = ref(null);
@@ -112,74 +114,66 @@ const resend = () => {
 </script>
 
 <template>
-  <div class="columns">
-    <div class="album text-muted">
-      <div class="container mb-3">
-        <div class="row mt-5">
-          <div class="col-12">
-            <p>Bienvenue {{ authStore.user?.name }}</p>
-          </div>
-          <div v-if="!validated" class="col-12">
-            <div class="alert alert-warning" role="alert">
-              Attention, votre compte n'est pas encore validé, veuillez cliquer sur le lien reçu
-              dans votre boîte mail pour activer votre compte.
-              <br />
-              <button
-                class="btn btn-secondary mt-2"
-                :disabled="disableCounter > 0"
-                @click="refresh"
-              >
-                Rafraichir
-                <em v-if="disableCounter > 0">[Réessayer dans {{ disableCounter }} s]</em>
-              </button>
-              <button
-                class="btn btn-secondary mt-2 ms-2"
-                :disabled="disableCounter > 0"
-                @click="resend"
-              >
-                Renvoyer l'email
-                <em v-if="resendCounter > 0">[Réessayer dans {{ resendCounter }} s]</em>
-              </button>
-            </div>
-          </div>
+  <div class="container">
+    <div class="row text-muted">
+      <div class="col-12 mt-3">
+        <p>Bienvenue {{ authStore.user?.name }}</p>
+      </div>
+      <div v-if="!validated" class="col-12">
+        <div class="alert alert-warning" role="alert">
+          Attention, votre compte n'est pas encore validé, veuillez cliquer sur le lien reçu dans
+          votre boîte mail pour activer votre compte.
+          <br />
+          <button class="btn btn-secondary mt-2" :disabled="disableCounter > 0" @click="refresh">
+            Rafraichir
+            <em v-if="disableCounter > 0">[Réessayer dans {{ disableCounter }} s]</em>
+          </button>
+          <button
+            class="btn btn-secondary mt-2 ms-2"
+            :disabled="disableCounter > 0"
+            @click="resend"
+          >
+            Renvoyer l'email
+            <em v-if="resendCounter > 0">[Réessayer dans {{ resendCounter }} s]</em>
+          </button>
+        </div>
+      </div>
 
-          <div v-if="availableSisListe.length <= 0" class="card col-md-3 col-sm-6 col-xs-12">
-            <div class="align-vertical">
-              <p v-if="!validated">
-                Vous devez valider votre compte afin de pouvoir obtenir des droits depuis votre SIS.
-              </p>
-              <p v-else>Vous n'avez actuellement aucun droit, demandez des droits à votre SIS.</p>
-            </div>
+      <div v-if="availableSisListe.length <= 0" class="card col-md-3 col-sm-6 col-xs-12">
+        <div class="align-vertical">
+          <p v-if="!validated">
+            Vous devez valider votre compte afin de pouvoir obtenir des droits depuis votre SIS.
+          </p>
+          <p v-else>Vous n'avez actuellement aucun droit, demandez des droits à votre SIS.</p>
+        </div>
+      </div>
+    </div>
+    <div v-if="isSapeur" class="row">
+      <div class="col-12">
+        <div class="card card-primary">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h2>Vos prochains exercices</h2>
+            <button
+              class="btn btn-outline-primary"
+              type="button"
+              @click="showModal('ModalCalendarLinks')"
+            >
+              <font-awesome-icon :icon="['far', 'calendar-alt']" />
+              S'abonner à mon agenda
+            </button>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <base-table
+              class="table-striped"
+              :loading="prochainsExercicesLoading"
+              :fields="prochainsExercicesFields"
+              :data="prochainsExercices"
+              :hide-download="true"
+              no-data="Aucun exercice à venir"
+            />
           </div>
         </div>
-        <template v-if="isSapeur">
-          <div class="row">
-            <h2>Vos prochains exercices</h2>
-          </div>
-          <div class="card card-primary card-outline mb-3">
-            <div class="card-body table-responsive p-0">
-              <base-table
-                class="table-striped"
-                :loading="prochainsExercicesLoading"
-                :fields="prochainsExercicesFields"
-                :data="prochainsExercices"
-                :hide-download="true"
-                no-data="Aucun exercice à venir"
-              />
-            </div>
-          </div>
-        </template>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-.columns {
-  overflow: scroll;
-}
-
-.align-vertical {
-  margin: auto;
-}
-</style>
