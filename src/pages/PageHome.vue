@@ -32,7 +32,7 @@ const isSapeur = computed(() => Object.keys(authStore.sis.sapeurs ?? {}).length 
 const prochainsExercicesLoading = ref(isSapeur.value);
 const prochainsExercicesParSis = ref({});
 if (isSapeur.value) {
-  MesInfosService.getMesProchainsExercices()
+  MesInfosService.getMesProchainesConvocations()
     .then((data) => {
       prochainsExercicesParSis.value = data;
     })

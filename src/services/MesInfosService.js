@@ -31,8 +31,8 @@ export default {
   getMesExercices(exerciceComptableId) {
     return Api.api().get("/mes-exercices/" + exerciceComptableId);
   },
-  getMesProchainsExercices() {
-    return Api.api().get("/mes-prochains-exercices");
+  getMesProchainesConvocations() {
+    return Api.api().get("/mes-prochaines-convocations");
   },
   getMesControlesMedicaux() {
     return Api.api().get("/mes-controles-medicaux");
