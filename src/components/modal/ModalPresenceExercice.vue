@@ -92,7 +92,6 @@ const selectRemplace = (sapeur) => {
   savePresence(sapeur);
 };
 const detailExcuse = (sapeur) => {
-  const savedPresences = presences.value.map((p) => ({ ...p }));
   showModal({
     component: "ModalExcuse",
     data: sapeur,

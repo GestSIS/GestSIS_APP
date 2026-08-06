@@ -61,21 +61,28 @@ export default {
   removeHeure(heureId) {
     return Api.api().delete("/exercices/heures/" + heureId);
   },
-  createMonExcuse(exerciceId, excuse) {
+  createMonExcuse(exerciceId, excuse, sisKey = null) {
     const form = new FormData();
     Object.entries(excuse).forEach(([k, v]) => form.append(k, v));
     return Api.api().post("/mes-excuses/" + exerciceId, form, {
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: {
+        "Content-Type": "multipart/form-data",
+        ...(sisKey === null ? {} : { "Sis-Key": sisKey }),
+      },
     });
   },
-  removeMonExcuse(exerciceId) {
-    return Api.api().delete("/mes-excuses/" + exerciceId);
+  removeMonExcuse(exerciceId, sisKey = null) {
+    return Api.api().delete("/mes-excuses/" + exerciceId, {
+      headers: sisKey === null ? {} : { "Sis-Key": sisKey },
+    });
   },
   removeExcuse(exerciceId, sapeurId) {
     return Api.api().delete("/exercices/" + exerciceId + "/excuses/" + sapeurId);
   },
-  downloadMonExcuseJustificatif(exerciceId, filename) {
-    return Api.apiFileDownload(filename).get(`/mes-excuses/${exerciceId}/justificatif`);
+  downloadMonExcuseJustificatif(exerciceId, filename, sisKey = null) {
+    return Api.apiFileDownload(filename).get(`/mes-excuses/${exerciceId}/justificatif`, {
+      headers: sisKey === null ? {} : { "Sis-Key": sisKey },
+    });
   },
   downloadExcuseJustificatif(exerciceId, sapeurId, filename) {
     return Api.apiFileDownload(filename).get(

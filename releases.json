@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "06.08.2027",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Possibilité de s'excuser depuis la page d'accueil, pour les exercices et les séances"
+      ]
+    },
+    {
       "date": "05.08.2027",
       "version": "1.0",
       "app": "GestSIS APP",

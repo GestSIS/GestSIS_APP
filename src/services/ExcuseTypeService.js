@@ -1,8 +1,10 @@
 import Api from "/src/http/Request";
 
 export default {
-  getExcuses() {
-    return Api.api().get("/excuses-types");
+  getExcuses(sisKey = null) {
+    return Api.api().get("/excuses-types", {
+      headers: sisKey === null ? {} : { "Sis-Key": sisKey },
+    });
   },
   addExcuse(excuse) {
     return Api.api().post("/excuses-types", excuse);

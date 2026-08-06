@@ -82,15 +82,15 @@ export const useMesInfosStore = defineStore("mes-infos", {
       this.absences = this.absences.filter((a) => a.id !== absence.id);
       return data;
     },
-    async addMonExcuse(excuse) {
-      const data = await ExerciceService.createMonExcuse(excuse.exercice_id, excuse);
+    async addMonExcuse(excuse, sisKey = null) {
+      const data = await ExerciceService.createMonExcuse(excuse.exercice_id, excuse, sisKey);
       this.exercices = this.exercices.map((p) =>
         p.presence?.id == data.id ? { ...p, presence: data } : p,
       );
       return data;
     },
-    async removeMonExcuse(exercice) {
-      const data = await ExerciceService.removeMonExcuse(exercice.id);
+    async removeMonExcuse(exercice, sisKey = null) {
+      const data = await ExerciceService.removeMonExcuse(exercice.id, sisKey);
       this.exercices = this.exercices.map((p) =>
         p.presence?.id == data.id ? { ...p, presence: data } : p,
       );

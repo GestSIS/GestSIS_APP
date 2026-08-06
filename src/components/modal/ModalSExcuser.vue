@@ -2,14 +2,14 @@
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
 import { useExcuseParamStore } from "../../stores/exercice/ExcuseParam.js";
 import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal";
 
 const { callback, data } = defineProps({
   callback: {
     type: Function,
-    default: () => {},
+    default: () => Promise.resolve(),
   },
   data: {
     type: Object,
@@ -22,23 +22,43 @@ const excuseParamStore = useExcuseParamStore();
 const excuseTypeStore = useExcuseTypeStore();
 const awn = useNotification();
 
+// Les exercices peuvent provenir de plusieurs SIS (ex. depuis Accueil) : exercice_id seul n'est pas
+// unique dans ce cas (chaque SIS a sa propre séquence), donc on identifie chaque option par un
+// couple (sis_key, exercice_id) plutôt que par exercice_id seul.
+const excuses = ref(
+  (data.exercices ?? []).map((e) => ({ ...e, uid: `${e.sis_key ?? ""}:${e.exercice_id}` })),
+);
+const initialExcuse = excuses.value.find(
+  (e) => e.exercice_id === data.exerciceId && (data.sisKey == null || e.sis_key === data.sisKey),
+);
+
 const errors = ref({});
-const excuses = ref(data.exercices);
-const excuse = data.exercices.find((e) => e.exercice_id === data.exerciceId);
+const selectedUid = ref(initialExcuse?.uid ?? "");
 const activeExcuse = ref({
   excuse_statut: 0,
   justificatif_file: null,
-  remarque: excuse?.remarque ?? "",
-  exercice_id: excuse?.exercice_id ?? 0,
-  justification: excuse?.justification ?? "",
-  excuse_type_id: excuse?.excuse_type_id ?? 0,
+  remarque: initialExcuse?.remarque ?? "",
+  exercice_id: initialExcuse?.exercice_id ?? 0,
+  justification: initialExcuse?.justification ?? "",
+  excuse_type_id: initialExcuse?.excuse_type_id ?? 0,
 });
 
-const excuseParams = computed(() => excuseParamStore.params);
-const excuseTypes = computed(() => excuseTypeStore.liste.filter((e) => e.statut == 1));
+const activeExercice = computed(() => excuses.value.find((e) => e.uid === selectedUid.value));
 
-const activeExercice = computed(() =>
-  excuses.value.find((e) => e.exercice_id === activeExcuse.value.exercice_id),
+// Sis de l'exercice actuellement sélectionné dans le select : sinon on suit le SIS actif comme avant.
+const sisKey = computed(() => activeExercice.value?.sis_key ?? data.sisKey ?? null);
+
+watch(selectedUid, () => {
+  activeExcuse.value.exercice_id = activeExercice.value?.exercice_id ?? 0;
+});
+
+const excuseParams = computed(
+  () => data.excuseParamsBySis?.[sisKey.value] ?? data.excuseParams ?? excuseParamStore.params,
+);
+const excuseTypes = computed(() =>
+  (data.excuseTypesBySis?.[sisKey.value] ?? data.excuseTypes ?? excuseTypeStore.liste).filter(
+    (e) => e.statut == 1,
+  ),
 );
 
 const { closeModal } = useModalStore();
@@ -64,6 +84,7 @@ const validate = () => {
   if (
     !activeExcuse.value.exercice_id ||
     !activeExercice.value ||
+    !excuseParams.value?.actif ||
     estAnnule(activeExercice.value) ||
     estDejaExcuse(activeExercice.value) ||
     !estDansLeDelai(activeExercice.value?.date)
@@ -74,9 +95,10 @@ const validate = () => {
   }
 
   infosStore
-    .addMonExcuse(activeExcuse.value)
+    .addMonExcuse(activeExcuse.value, sisKey.value)
     .then(() => {
       awn.success("Excuse enregistrée");
+      callback();
       closeModal();
     })
     .catch((err) => {
@@ -98,7 +120,7 @@ const close = () => {
     </div>
     <div class="modal-body">
       <base-select
-        v-model="activeExcuse.exercice_id"
+        v-model="selectedUid"
         class="mb-3"
         :class="{
           'is-invalid': errors['exercice_id'],
@@ -111,13 +133,17 @@ const close = () => {
             e.categorie +
             ' (' +
             e.designation +
-            ')'
+            ')' +
+            (e.sis_nom ? ' [' + e.sis_nom + ']' : '')
         "
-        value-key="exercice_id"
+        value-key="uid"
         label="Exercice"
       />
       <template v-if="!activeExcuse.exercice_id">
         <p class="text-warning">Sélectionnez un exercice</p>
+      </template>
+      <template v-else-if="!excuseParams?.actif">
+        <p class="text-danger">Les excuses via GestSIS ne sont pas activées pour ce SIS.</p>
       </template>
       <template v-else-if="estAnnule(activeExercice)">
         <p class="text-warning">Exercice annulé</p>
@@ -127,8 +153,7 @@ const close = () => {
       </template>
       <template v-else-if="!estDansLeDelai(activeExercice?.date)">
         <p class="text-warning">
-          Délai d'excuse ({{ excuseParams.delai_excuse }}
-          jours) dépassé pour cet exercice !
+          Délai d'excuse ({{ excuseParams.delai_excuse }} jours) dépassé pour cet exercice !
         </p>
       </template>
       <template v-else>
