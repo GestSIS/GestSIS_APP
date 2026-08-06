@@ -88,20 +88,6 @@ const prochainesConvocations = computed(() =>
     .sort((e1, e2) => e1.date?.localeCompare(e2.date)),
 );
 
-const prochainesConvocationsFields = [
-  { title: "Date", key: "date", type: Date },
-  { title: "Heure", key: "heure", formatter: (h) => h?.slice(0, 5) },
-  { title: "SIS", key: "sis_nom" },
-  { title: "Désignation", key: "designation" },
-  { title: "Communications", key: "communications" },
-  { title: "Lieu", key: "lieu" },
-  { title: "", slot: "convoque" },
-  { title: "Excuse", slot: "excuse" },
-];
-
-// Ajouté mais pas convoqué : simple information, mis en évidence pour ne pas le confondre avec une convocation.
-const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
-
 onUnmounted(() => {
   if (disableInterval.value != null) {
     clearInterval(disableInterval.value);
@@ -192,6 +178,21 @@ const downloadJustificatif = (rowData) => {
     rowData.sis_key,
   ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
 };
+
+const prochainesConvocationsFields = [
+  { title: "Date", key: "date", type: Date },
+  { title: "Categorie", key: "categorie" },
+  { title: "Heure", key: "heure", formatter: (h) => h?.slice(0, 5) },
+  { title: "SIS", key: "sis_nom" },
+  { title: "Désignation", key: "designation" },
+  { title: "Communications", key: "communications" },
+  { title: "Lieu", key: "lieu" },
+  { title: "", slot: "convoque" },
+  { title: "Excuse", slot: "excuse" },
+];
+
+// Ajouté mais pas convoqué : simple information, mis en évidence pour ne pas le confondre avec une convocation.
+const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
 </script>
 
 <template>
