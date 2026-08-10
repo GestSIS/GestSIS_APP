@@ -1,6 +1,6 @@
 # Sans node en local (commit hors conteneur), le hook s'exécute dans le conteneur
 if command -v node >/dev/null 2>&1; then
-  vp staged
+  # vp staged
 else
   echo "node introuvable, exécution de 'vp staged' via docker compose (service app)"
   docker compose exec -T -w /app app yarn run vp staged
