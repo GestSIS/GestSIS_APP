@@ -157,7 +157,12 @@ const fields = [
               <font-awesome-icon :icon="['far', 'file-pdf']" />
             </button>
             <button
-              v-if="excuseParams.actif && !rowData.excuse_type_id && rowData.statut != 0"
+              v-if="
+                excuseParams.actif &&
+                rowData.convoque &&
+                !rowData.excuse_type_id &&
+                rowData.statut != 0
+              "
               class="btn btn-outline-primary border-0"
               @click="addExcuse(rowData)"
             >

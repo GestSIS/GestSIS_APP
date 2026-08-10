@@ -75,6 +75,9 @@ const estDejaExcuse = (exercice) => {
 const estAnnule = (exercice) => {
   return exercice.statut === 0;
 };
+const estConvoque = (exercice) => {
+  return !!exercice.convoque;
+};
 const onFileChange = (event) => {
   const files = event.target.files || event.dataTransfer.files;
   if (!files.length) return;
@@ -86,6 +89,7 @@ const validate = () => {
     !activeExercice.value ||
     !excuseParams.value?.actif ||
     estAnnule(activeExercice.value) ||
+    !estConvoque(activeExercice.value) ||
     estDejaExcuse(activeExercice.value) ||
     !estDansLeDelai(activeExercice.value?.date)
   ) {
@@ -147,6 +151,11 @@ const close = () => {
       </template>
       <template v-else-if="estAnnule(activeExercice)">
         <p class="text-warning">Exercice annulé</p>
+      </template>
+      <template v-else-if="!estConvoque(activeExercice)">
+        <p class="text-warning">
+          Vous n'êtes pas convoqué à cet exercice, vous ne pouvez pas vous excuser.
+        </p>
       </template>
       <template v-else-if="estDejaExcuse(activeExercice)">
         <p class="text-success">Excuse déjà saisie</p>

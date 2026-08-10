@@ -287,6 +287,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                   v-if="
                     excuseParamsParSis[rowData.sis_key]?.actif &&
                     excuseTypesParSis[rowData.sis_key] &&
+                    rowData.convoque &&
                     !rowData.excuse_type_id &&
                     rowData.statut != 0
                   "
