@@ -32,6 +32,7 @@ const activeIndemniteIndex = ref(null);
 const activeIndemnite = ref(null);
 const ecritures = ref([]);
 const successMessageVisibility = ref(true);
+const submitting = ref(false);
 
 const sapeurs = computed(() => sapeurStore.liste);
 const indemnitesTypes = computed(() => imputationStore.fraisIndemnites.interventions);
@@ -52,10 +53,11 @@ const selectIndemnite = (index) => {
   activeIndemnite.value = indemnitesTypes.value[index];
 };
 const imputer = () => {
-  if (activeIndemnite.value === null) {
+  if (activeIndemnite.value === null || submitting.value) {
     return;
   }
 
+  submitting.value = true;
   imputationStore
     .imputerIntervention({
       intervention_id: data.id,
@@ -65,7 +67,10 @@ const imputer = () => {
       phase.value = 2;
       ecritures.value = data.ecritures;
     })
-    .catch((err) => awn.alert(err?.message ?? "Impossible d'effectuer cette action"));
+    .catch((err) => awn.alert(err?.message ?? "Impossible d'effectuer cette action"))
+    .finally(() => {
+      submitting.value = false;
+    });
 };
 const formatCompte = (compte) => {
   if (!compte) return "";
@@ -237,9 +242,15 @@ const formatCompte = (compte) => {
         v-if="phase === 1"
         type="button"
         class="btn btn-primary"
-        :disabled="activeIndemnite === null"
+        :disabled="activeIndemnite === null || submitting"
         @click="imputer()"
       >
+        <span
+          v-if="submitting"
+          class="spinner-border spinner-border-sm me-1"
+          role="status"
+          aria-hidden="true"
+        ></span>
         Imputer
       </button>
     </div>
