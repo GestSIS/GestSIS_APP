@@ -109,6 +109,7 @@ const detailExcuse = (sapeur) => {
       showModal({
         component: "ModalPresenceExercice",
         size: 2,
+        callback,
       });
       return Promise.resolve(false);
     },
@@ -131,6 +132,7 @@ const addExcuse = (sapeur) => {
       showModal({
         component: "ModalPresenceExercice",
         size: 2,
+        callback,
       });
       return Promise.resolve(false);
     },
@@ -148,6 +150,7 @@ const removeExcuse = async (sapeur) => {
   showModal({
     component: "ModalPresenceExercice",
     size: 2,
+    callback,
   });
 };
 const downloadJustificatif = (sapeur) => {
@@ -157,13 +160,17 @@ const downloadJustificatif = (sapeur) => {
     "justificatif.pdf",
   ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
 };
+const close = async () => {
+  await callback();
+  closeModal();
+};
 </script>
 
 <template>
   <div>
     <div class="modal-header">
       <h5 class="modal-title">Modifier présences de {{ sapeur?.nom_prenom }}</h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button type="button" class="btn-close" @click="close()"></button>
     </div>
     <div class="modal-body table-responsive p-0">
       <table id="sap-fonctions" class="table table-sm">
@@ -221,6 +228,7 @@ const downloadJustificatif = (sapeur) => {
                 :true-value="1"
                 :false-value="0"
                 :disabled="!canEditAbsence(e)"
+                @change="savePresence(e)"
               />
             </td>
             <td class="text-center">
@@ -338,7 +346,7 @@ const downloadJustificatif = (sapeur) => {
       </table>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
+      <button type="button" class="btn btn-secondary" @click="close()">Fermer</button>
     </div>
   </div>
 </template>

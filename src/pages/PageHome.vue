@@ -201,7 +201,7 @@ const prochainesConvocationsFields = [
   { title: "Désignation", key: "designation" },
   { title: "Communications", key: "communications" },
   { title: "Lieu", key: "lieu" },
-  { title: "", slot: "convoque" },
+  { title: "", slot: "pour-info" },
   { title: "Excuse", slot: "excuse" },
 ];
 
@@ -276,7 +276,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
               :hide-download="true"
               no-data="Aucun exercice à venir"
             >
-              <template #convoque="{ rowData }">
+              <template #pour-info="{ rowData }">
                 <span v-if="!rowData.convoque" class="badge text-bg-warning">Pour info</span>
               </template>
               <template #excuse="{ rowData }">

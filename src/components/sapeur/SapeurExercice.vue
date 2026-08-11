@@ -54,6 +54,11 @@ const edit = () =>
   showModal({
     component: "ModalPresenceExercice",
     size: 2,
+    callback: () =>
+      sapeurStore.fetchSapeurExercices({
+        sapeurId: sapeurStore.active.id,
+        exerciceComptableId: exerciceComptableStore.activeId,
+      }),
   });
 
 const awn = useNotification();
