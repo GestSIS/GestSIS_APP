@@ -71,19 +71,8 @@ if (isSapeur.value) {
   fetchProchainesConvocations();
 }
 
-// Un exercice reste affiché tant qu'il est à venir, ou tant que le délai d'excuse du SIS (s'il
-// autorise les excuses) n'est pas dépassé : ça permet de s'excuser sur un exercice passé récent.
-const estDansLaFenetreAffichage = (exercice, sisKey) => {
-  if (!exercice.date) {
-    return true;
-  }
-  const params = excuseParamsParSis.value[sisKey];
-  const delaiExcuse = params?.actif ? (params.delai_excuse ?? 0) : 0;
-  const limite = new Date(exercice.date);
-  limite.setDate(limite.getDate() + delaiExcuse);
-  return limite >= new Date();
-};
-
+// Liste complète (passé + futur), pour la modale "S'excuser" : on doit pouvoir s'excuser sur un
+// exercice déjà passé si les conditions du SIS (délai d'excuse) le permettent encore.
 const prochainesConvocations = computed(() =>
   Object.entries(prochainesConvocationsParSis.value)
     .flatMap(([sisKey, convocations]) =>
@@ -99,6 +88,18 @@ const prochainesConvocations = computed(() =>
       })),
     )
     .sort((e1, e2) => e1.date?.localeCompare(e2.date)),
+);
+
+// Le tableau ne montre que les exercices à venir ; le passé reste accessible via la modale "S'excuser".
+const debutAujourdhui = () => {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
+};
+const convocationsAVenir = computed(() =>
+  prochainesConvocations.value.filter(
+    (exercice) => !exercice.date || new Date(exercice.date) >= debutAujourdhui(),
+  ),
 );
 
 onUnmounted(() => {
@@ -270,11 +271,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
               class="table-striped"
               :loading="prochainesConvocationsLoading"
               :fields="prochainesConvocationsFields"
-              :data="
-                prochainesConvocations.filter((exercice) =>
-                  estDansLaFenetreAffichage(exercice, sisKey),
-                )
-              "
+              :data="convocationsAVenir"
               :row-class="onRowClass"
               :hide-download="true"
               no-data="Aucun exercice à venir"
