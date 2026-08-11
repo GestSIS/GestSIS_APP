@@ -71,6 +71,19 @@ if (isSapeur.value) {
   fetchProchainesConvocations();
 }
 
+// Un exercice reste affiché tant qu'il est à venir, ou tant que le délai d'excuse du SIS (s'il
+// autorise les excuses) n'est pas dépassé : ça permet de s'excuser sur un exercice passé récent.
+const estDansLaFenetreAffichage = (exercice, sisKey) => {
+  if (!exercice.date) {
+    return true;
+  }
+  const params = excuseParamsParSis.value[sisKey];
+  const delaiExcuse = params?.actif ? (params.delai_excuse ?? 0) : 0;
+  const limite = new Date(exercice.date);
+  limite.setDate(limite.getDate() + delaiExcuse);
+  return limite >= new Date();
+};
+
 const prochainesConvocations = computed(() =>
   Object.entries(prochainesConvocationsParSis.value)
     .flatMap(([sisKey, convocations]) =>
@@ -257,7 +270,11 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
               class="table-striped"
               :loading="prochainesConvocationsLoading"
               :fields="prochainesConvocationsFields"
-              :data="prochainesConvocations"
+              :data="
+                prochainesConvocations.filter((exercice) =>
+                  estDansLaFenetreAffichage(exercice, sisKey),
+                )
+              "
               :row-class="onRowClass"
               :hide-download="true"
               no-data="Aucun exercice à venir"
