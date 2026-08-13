@@ -1,8 +1,13 @@
+<script setup>
+import AppModal from "/src/components/AppModal.vue";
+</script>
+
 <template>
   <div class="wrapper">
     <div class="content">
       <slot></slot>
     </div>
+    <app-modal />
   </div>
 </template>
 

@@ -41,6 +41,8 @@ watchEffect(async () => {
 const activeSapeur = computed(() => sapeurStore.active.data);
 const activeSapeurId = computed(() => sapeurStore.active.id ?? 0);
 const estSapeur = computed(() => sapeurStore.active.data.type === 0);
+const estCivil = computed(() => sapeurStore.active.data.type === 1);
+const estRecrue = computed(() => sapeurStore.active.data.type === 2);
 const civilites = computed(() => baseDataStore.civilites);
 const localites = computed(() =>
   localiteStore.liste.map((l) => ({
@@ -269,7 +271,7 @@ const editPhoto = () =>
               />
             </div>
           </div>
-          <div v-if="activeSapeur.type === 0" class="row mb-3">
+          <div v-if="estSapeur || estRecrue" class="row mb-3">
             <div class="col-6">
               <label for="m-sap-date-naissance">Date de naissance</label>
               <div class="input-group input-group-sm">
@@ -321,7 +323,7 @@ const editPhoto = () =>
           </div>
         </div>
       </div>
-      <div v-if="estSapeur" class="card card-primary card-outline mb-3">
+      <div v-if="estSapeur || estRecrue" class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Références professionnelles</h3>
           <button
@@ -372,7 +374,7 @@ const editPhoto = () =>
       </div>
     </div>
     <div class="col-sm-12 col-xl-6">
-      <div v-if="!estSapeur" class="card card-primary card-outline mb-3">
+      <div v-if="estCivil" class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Civil</h3>
           <button

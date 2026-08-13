@@ -85,6 +85,13 @@ const router = createRouter({
       component: () => import("/src/pages/PageRegister.vue"),
     },
     {
+      path: "/inscription/:sisKey/:token",
+      name: "inscription-recrue",
+      meta: { layout: "empty", public: true },
+      props: true,
+      component: () => import("/src/pages/PageInscriptionRecrue.vue"),
+    },
+    {
       path: "/",
       name: "public",
       meta: { layout: "empty", public: true },
