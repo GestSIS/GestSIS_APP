@@ -18,6 +18,11 @@ Promise.all([loadSis, loadUsers])
 const users = computed(() => adminStore.users);
 const sis = computed(() => adminStore.sis);
 
+const showDisabled = ref(false);
+const filteredUsers = computed(() =>
+  users.value.filter((u) => showDisabled.value || u.disabled_at == null),
+);
+
 const { showModal, confirm } = useModalStore();
 const awn = useNotification();
 
@@ -56,13 +61,24 @@ const fields = [
   <div class="card card-primary card-outline mb-3 col-12">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Utilisateurs</h3>
+      <div class="form-check form-switch mb-2">
+        <input
+          id="switch-show-disabled"
+          v-model="showDisabled"
+          type="checkbox"
+          class="form-check-input"
+        />
+        <label class="form-check-label" for="switch-show-disabled"
+          >Afficher les comptes désactivés</label
+        >
+      </div>
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
         ref="table"
         :fields="fields"
         :loading="loading"
-        :data="users"
+        :data="filteredUsers"
         :selectable="true"
         :hide-download="true"
         no-data="Aucun utilisateur"
@@ -71,7 +87,7 @@ const fields = [
           <span
             v-for="(item, i) in value"
             :key="i"
-            class="badge"
+            class="badge me-1"
             :class="{
               'bg-primary': item.deactivated_at == null && item.pending_deactivation_at == null,
               'bg-warning': item.deactivated_at == null && item.pending_deactivation_at != null,
@@ -107,7 +123,7 @@ const fields = [
         </template>
         <template #foot>
           <tr>
-            <th :colspan="fields.length">Nb : {{ users.length }}</th>
+            <th :colspan="fields.length">Nb : {{ filteredUsers.length }}</th>
           </tr>
         </template>
       </base-table>
