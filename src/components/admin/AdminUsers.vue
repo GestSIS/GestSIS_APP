@@ -4,13 +4,11 @@ import { computed, ref } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal";
 import { useAdminStore } from "../../stores/admin/Admin";
-import { useAuthStore } from "../../stores/auth/Auth";
 
 const adminStore = useAdminStore();
-const authStore = useAuthStore();
 
 const loading = ref(true);
-const loadSis = authStore.loadSisListe();
+const loadSis = adminStore.loadAllSis();
 const loadUsers = adminStore.loadAllUsers();
 
 Promise.all([loadSis, loadUsers])
@@ -68,9 +66,17 @@ const fields = [
         no-data="Aucun utilisateur"
       >
         <template #liste="{ value }">
-          <span v-for="(item, i) in value" :key="i" class="badge bg-primary">{{
-            sis.find((s) => s.id == item.sis_id)?.api_key
-          }}</span>
+          <span
+            v-for="(item, i) in value"
+            :key="i"
+            class="badge"
+            :class="{
+              'bg-primary': item.deactivated_at == null && item.pending_deactivation_at == null,
+              'bg-warning': item.deactivated_at != null && item.pending_deactivation_at == null,
+              'bg-danger': item.deactivated_at == null,
+            }"
+            >{{ sis.find((s) => s.id == item.sis_id)?.api_key }}</span
+          >
         </template>
         <template #actions="{ rowData }">
           <router-link
