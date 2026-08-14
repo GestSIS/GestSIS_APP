@@ -35,11 +35,14 @@ const computedData = computed(() =>
     .map((u) => {
       const sapeurId = u.sapeur[0]?.sapeur_id;
       const sapeur = sapeurs.value.find((s) => s.id === sapeurId);
+      // Pas de sapeur attendu (compte spécial) => actif par défaut.
+      // Sapeur attendu mais introuvable (lien orphelin) => considéré inactif, comme un sapeur inactif.
+      const actifStatut = !sapeurId ? true : !!sapeur?.actif;
       return {
         ...u,
         special: !sapeurId,
-        inactif: !u.user_roles?.length && !sapeur?.actif,
-        actifStatut: sapeur?.actif ?? true,
+        inactif: !u.user_roles?.length && !actifStatut,
+        actifStatut,
         nom_prenom: !u?.sapeur?.length > 0 ? "-" : (sapeur?.nom_prenom ?? "-"),
         type: !u?.sapeur?.length > 0 ? "-" : sapeur?.type,
       };
