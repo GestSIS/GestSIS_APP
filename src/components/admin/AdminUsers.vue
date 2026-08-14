@@ -47,7 +47,7 @@ const fields = [
   { title: "created_at", key: "created_at", type: Date },
   { title: "email_verified_at", key: "email_verified_at", type: Date },
   { title: "pending_deactivation_at", key: "pending_deactivation_at", type: Date },
-  { title: "deactivated_at", key: "deactivated_at", type: Date },
+  { title: "disabled_at", key: "disabled_at", type: Date },
   { title: "Actions", key: "id", slot: "actions" },
 ];
 </script>
