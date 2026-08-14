@@ -2,9 +2,12 @@
   "releases": [
     {
       "date": "14.08.2027",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
-      "changes": ["Amélioration export des fichiers vcard"]
+      "changes": [
+        "Amélioration export des fichiers vcard",
+        "Système de désactivation des comptes utilisateurs ne possédant plus de rôles"
+      ]
     },
     {
       "date": "13.08.2027",
