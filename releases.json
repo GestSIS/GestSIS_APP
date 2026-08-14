@@ -1,7 +1,7 @@
 {
   "releases": [
     {
-      "date": "14.08.2027",
+      "date": "14.08.2026",
       "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
@@ -10,13 +10,13 @@
       ]
     },
     {
-      "date": "13.08.2027",
+      "date": "13.08.2026",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": ["Formulaire d'inscription pour les recrues potentiels"]
     },
     {
-      "date": "06.08.2027",
+      "date": "06.08.2026",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
@@ -24,7 +24,7 @@
       ]
     },
     {
-      "date": "05.08.2027",
+      "date": "05.08.2026",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
@@ -32,13 +32,13 @@
       ]
     },
     {
-      "date": "28.07.2027",
+      "date": "28.07.2026",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": ["Refonte de la page d'accueil"]
     },
     {
-      "date": "28.07.2027",
+      "date": "28.07.2026",
       "version": "1.0",
       "app": "GestSIS Mobile 2.6.9",
       "changes": [
@@ -49,19 +49,19 @@
       ]
     },
     {
-      "date": "28.07.2027",
+      "date": "28.07.2026",
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": ["Retour de materiel multiple"]
     },
     {
-      "date": "02.07.2027",
+      "date": "02.07.2026",
       "version": "1.0",
       "app": "GestSIS Mobile 2.6.8",
       "changes": ["Correction d'un bug dans les exercices contenant des sapeurs inactifs"]
     },
     {
-      "date": "02.07.2027",
+      "date": "02.07.2026",
       "version": "1.0",
       "app": "GestSIS Mobile 2.6.7",
       "changes": [
