@@ -88,6 +88,8 @@ const fieldsSapeurs = [
   { title: "id", key: "id" },
   { title: "organisation", key: "organisation" },
   { title: "sapeur_id", key: "sapeur_id" },
+  { title: "pending_deactivation_at", key: "pending_deactivation_at", type: Date },
+  { title: "deactivated_at", key: "deactivated_at", type: Date },
   // { title: 'Actions', key: 'id', slot: 'actions' },
 ];
 </script>
