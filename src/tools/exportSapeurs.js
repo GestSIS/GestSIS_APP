@@ -1,4 +1,4 @@
-export const downloadVcard = (sapeurs, localites, orgName) => {
+export const downloadVcard = (sapeurs, localites, orgName, sisKey) => {
   if (sapeurs.length <= 0) {
     throw "Aucun sapeur à exporter";
   }
@@ -45,6 +45,7 @@ export const downloadVcard = (sapeurs, localites, orgName) => {
       return [
         "BEGIN:VCARD",
         "VERSION:4.0",
+        ...(sisKey ? [`UID:urn:gestsis:${escapeText(sisKey)}:sapeur:${s.id}`] : []),
         `N:${escapeText(s.nom)};${escapeText(s.prenom)};;${civiliteMapping[s.civilite_id]};`,
         `FN:${escapeText(`${s.prenom} ${s.nom}`)}`,
         ...(orgName ? [`ORG:${escapeText(orgName)}`] : []),

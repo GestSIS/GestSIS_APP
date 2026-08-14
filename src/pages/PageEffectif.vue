@@ -9,6 +9,7 @@ import { useSisParamStore } from "../stores/params/SisParam.js";
 import permissions from "../composables/permissions.js";
 
 import SapeurService from "../services/SapeurService.js";
+import { useAuthStore } from "../stores/auth/Auth.js";
 import { DateTime } from "luxon";
 import { downloadOutlookCsv, downloadVcard } from "../tools/exportSapeurs";
 import { computed, ref } from "vue";
@@ -21,6 +22,7 @@ const groupeStore = useGroupeStore();
 const fonctionStore = useFonctionStore();
 const gradeStore = useGradeStore();
 const sisParamStore = useSisParamStore();
+const authStore = useAuthStore();
 
 const loadLocalites = localiteStore.fetchLocalites();
 const loadCivilites = baseDataStore.fetchCivilites();
@@ -177,7 +179,8 @@ const sms = (sapeurs) => {
     data: sapeurs,
   });
 };
-const vcard = (sapeurs) => downloadVcard(sapeurs, localites.value, sisParamStore.params?.nom);
+const vcard = (sapeurs) =>
+  downloadVcard(sapeurs, localites.value, sisParamStore.params?.nom, authStore.sis.activeKey);
 const outlookCsv = (sapeurs) =>
   downloadOutlookCsv(sapeurs, localites.value, sisParamStore.params?.nom);
 
