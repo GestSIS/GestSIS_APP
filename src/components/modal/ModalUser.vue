@@ -23,6 +23,9 @@ const form = reactive({
   ...data,
 });
 
+const formatDate = (value) =>
+  value ? new Date(value).toLocaleDateString("fr-CH").slice(0, 10) : "";
+
 const { closeModal } = useModalStore();
 const awn = useNotification();
 const adminStore = useAdminStore();
@@ -82,6 +85,30 @@ const save = () => {
           class="form-check-input"
         />
         <label for="user-admin" class="ms-1">Admin</label>
+      </div>
+      <div class="mb-3">
+        <label for="m-user-pending-deactivation">pending_deactivation_at</label>
+        <input
+          id="m-user-pending-deactivation"
+          :value="formatDate(form.pending_deactivation_at)"
+          type="text"
+          readonly
+          disabled
+          class="form-control form-control-sm"
+          name="pending_deactivation_at"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="m-user-disabled-at">disabled_at</label>
+        <input
+          id="m-user-disabled-at"
+          :value="formatDate(form.disabled_at)"
+          type="text"
+          readonly
+          disabled
+          class="form-control form-control-sm"
+          name="disabled_at"
+        />
       </div>
     </div>
     <div class="modal-footer">

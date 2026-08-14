@@ -27,6 +27,9 @@ const loadUser = () => {
 
 await Promise.all([loadSis, loadRoles, loadUser()]);
 
+const formatDate = (value) =>
+  value ? new Date(value).toLocaleDateString("fr-CH").slice(0, 10) : "";
+
 const sis = computed(() => adminStore.sis);
 const roles = computed(() => adminStore.roles);
 
@@ -149,6 +152,30 @@ const fieldsSapeurs = [
               class="form-check-input"
             />
             <label for="admin" class="ms-1">Admin</label>
+          </div>
+          <div class="mb-3">
+            <label for="pending_deactivation_at">pending_deactivation_at</label>
+            <input
+              id="pending_deactivation_at"
+              :value="formatDate(user.pending_deactivation_at)"
+              type="text"
+              readonly
+              disabled
+              class="form-control form-control-sm"
+              name="pending_deactivation_at"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="disabled_at">disabled_at</label>
+            <input
+              id="disabled_at"
+              :value="formatDate(user.disabled_at)"
+              type="text"
+              readonly
+              disabled
+              class="form-control form-control-sm"
+              name="disabled_at"
+            />
           </div>
         </div>
       </div>
