@@ -46,6 +46,8 @@ const fields = [
   { title: "sapeur", key: "sapeur", slot: "liste" },
   { title: "created_at", key: "created_at", type: Date },
   { title: "email_verified_at", key: "email_verified_at", type: Date },
+  { title: "pending_deactivation_at", key: "pending_deactivation_at", type: Date },
+  { title: "deactivated_at", key: "deactivated_at", type: Date },
   { title: "Actions", key: "id", slot: "actions" },
 ];
 </script>
@@ -72,8 +74,8 @@ const fields = [
             class="badge"
             :class="{
               'bg-primary': item.deactivated_at == null && item.pending_deactivation_at == null,
-              'bg-warning': item.deactivated_at != null && item.pending_deactivation_at == null,
-              'bg-danger': item.deactivated_at == null,
+              'bg-warning': item.deactivated_at == null && item.pending_deactivation_at != null,
+              'bg-danger': item.deactivated_at != null,
             }"
             >{{ sis.find((s) => s.id == item.sis_id)?.api_key }}</span
           >
