@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "14.08.2027",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Amélioration export des fichiers vcard"]
+    },
+    {
       "date": "13.08.2027",
       "version": "1.0",
       "app": "GestSIS APP",

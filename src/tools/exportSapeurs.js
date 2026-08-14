@@ -1,4 +1,4 @@
-export const downloadVcard = (sapeurs, localites) => {
+export const downloadVcard = (sapeurs, localites, orgName) => {
   if (sapeurs.length <= 0) {
     throw "Aucun sapeur à exporter";
   }
@@ -31,37 +31,41 @@ export const downloadVcard = (sapeurs, localites) => {
     return num;
   };
 
+  // RFC 6350 §3.4: backslash, comma, semicolon and newline must be escaped in text values.
+  const escapeText = (value) =>
+    String(value ?? "")
+      .replaceAll("\\", "\\\\")
+      .replaceAll("\n", "\\n")
+      .replaceAll(",", "\\,")
+      .replaceAll(";", "\\;");
+
   const contacts = sapeurs
-    .map(
-      (s) =>
-        `BEGIN:VCARD
-VERSION:4.0
-N:${s.nom};${s.prenom};;${civiliteMapping[s.civilite_id]};
-FN:${s.prenom} ${s.nom}
-LANG:fr-CH
-GENDER:${genderMapping[s.civilite_id]}
-${s.telephones
-  .map(
-    (t) =>
-      "TEL;TYPE=" +
-      telephoneTypeMapping[t.telephone_type_id] +
-      ";VALUE=uri:tel:" +
-      formatNumero(t.numero),
-  )
-  .join("\n")}
-ADR;TYPE=HOME:;;${s.rue} ${s.no_rue};${
-          indexedLocalite.get(s.localite_id)?.designation
-        };${indexedLocalite.get(s.localite_id)?.npa};Suisse` +
-        (s.email
-          ? `
-EMAIL:${s.email}`
-          : "") +
-        `
-BDAY:${s.date_naissance?.replaceAll("-", "")}
-CATEGORIES:SIS
-SOURCE:GestSIS2.0
-END:VCARD`,
-    )
+    .map((s) => {
+      const localite = indexedLocalite.get(s.localite_id);
+      return [
+        "BEGIN:VCARD",
+        "VERSION:4.0",
+        `N:${escapeText(s.nom)};${escapeText(s.prenom)};;${civiliteMapping[s.civilite_id]};`,
+        `FN:${escapeText(`${s.prenom} ${s.nom}`)}`,
+        ...(orgName ? [`ORG:${escapeText(orgName)}`] : []),
+        "LANG:fr-CH",
+        "KIND:individual",
+        `GENDER:${genderMapping[s.civilite_id]}`,
+        ...s.telephones.map(
+          (t) =>
+            "TEL;TYPE=" +
+            telephoneTypeMapping[t.telephone_type_id] +
+            ";VALUE=uri:tel:" +
+            formatNumero(t.numero),
+        ),
+        `ADR;TYPE=HOME:;;${escapeText(`${s.rue} ${s.no_rue}`)};${escapeText(localite?.designation)};;${escapeText(localite?.npa)};Suisse`,
+        ...(s.email ? [`EMAIL:${s.email}`] : []),
+        `BDAY:${s.date_naissance?.replaceAll("-", "") ?? ""}`,
+        "CATEGORIES:SIS",
+        "PRODID:-//GestSIS//GestSIS 2.0//FR",
+        "END:VCARD",
+      ].join("\n");
+    })
     .join("\n")
     .replaceAll("\n", "\r\n");
 
@@ -89,7 +93,7 @@ END:VCARD`,
   }, 0);
 };
 
-export const downloadOutlookCsv = (sapeurs, localites) => {
+export const downloadOutlookCsv = (sapeurs, localites, orgName) => {
   if (sapeurs.length <= 0) {
     throw "Aucun sapeur à exporter";
   }
@@ -106,7 +110,7 @@ export const downloadOutlookCsv = (sapeurs, localites) => {
     ["Deuxième prénom", null],
     ["Nom", "nom"],
     ["Suffixe", null],
-    ["Société", null],
+    ["Société", () => orgName],
     ["Service", null],
     ["Titre", null],
     ["Rue (bureau)", null],

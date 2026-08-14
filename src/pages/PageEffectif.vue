@@ -5,6 +5,7 @@ import { useBaseDataStore } from "../stores/common/BaseData.js";
 import { useGroupeStore } from "../stores/groupe/Groupe.js";
 import { useFonctionStore } from "../stores/sapeur/Fonction";
 import { useGradeStore } from "../stores/sapeur/Grade";
+import { useSisParamStore } from "../stores/params/SisParam.js";
 import permissions from "../composables/permissions.js";
 
 import SapeurService from "../services/SapeurService.js";
@@ -19,14 +20,23 @@ const baseDataStore = useBaseDataStore();
 const groupeStore = useGroupeStore();
 const fonctionStore = useFonctionStore();
 const gradeStore = useGradeStore();
+const sisParamStore = useSisParamStore();
 
 const loadLocalites = localiteStore.fetchLocalites();
 const loadCivilites = baseDataStore.fetchCivilites();
 const loadGrades = gradeStore.fetchGrades();
 const loadFonctions = fonctionStore.fetchFonctions();
 const loadGroupes = groupeStore.fetchGroupes();
+const loadSisParam = sisParamStore.fetchParams();
 
-await Promise.all([loadLocalites, loadCivilites, loadFonctions, loadGrades, loadGroupes]);
+await Promise.all([
+  loadLocalites,
+  loadCivilites,
+  loadFonctions,
+  loadGrades,
+  loadGroupes,
+  loadSisParam,
+]);
 
 const loading = ref(true);
 const selectedId = ref(null);
@@ -167,8 +177,9 @@ const sms = (sapeurs) => {
     data: sapeurs,
   });
 };
-const vcard = (sapeurs) => downloadVcard(sapeurs, localites.value);
-const outlookCsv = (sapeurs) => downloadOutlookCsv(sapeurs, localites.value);
+const vcard = (sapeurs) => downloadVcard(sapeurs, localites.value, sisParamStore.params?.nom);
+const outlookCsv = (sapeurs) =>
+  downloadOutlookCsv(sapeurs, localites.value, sisParamStore.params?.nom);
 
 const fieldsBase = [
   { title: "Nom Prénom", key: "nom_prenom" },
