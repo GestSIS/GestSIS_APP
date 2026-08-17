@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, computed } from "vue";
+import { reactive, ref, computed, watch } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAdminStore } from "../../stores/admin/Admin.js";
 
@@ -25,11 +25,25 @@ const form = reactive({
 
 const users = computed(() => adminStore.users);
 const sis = computed(() => adminStore.sis);
-const roles = computed(() =>
-  adminStore.roles.map((r) => ({
-    id: r.id,
-    designation: sis.value.find((s) => s.id === r.sis_id)?.api_key + " - " + r.nom,
-  })),
+const roles = computed(() => {
+  const selectedUser = users.value.find((u) => u.id === form.user_id);
+  const existingRoleIds = new Set((selectedUser?.user_roles || []).map((ur) => ur.role_id));
+
+  return adminStore.roles
+    .filter((r) => !existingRoleIds.has(r.id))
+    .map((r) => ({
+      id: r.id,
+      designation: sis.value.find((s) => s.id === r.sis_id)?.api_key + " - " + r.nom,
+    }));
+});
+
+// Le rôle sélectionné n'est plus forcément valide pour le nouvel utilisateur
+// (déjà attribué), donc on repart d'une sélection vierge.
+watch(
+  () => form.user_id,
+  () => {
+    form.role_id = null;
+  },
 );
 
 const { closeModal } = useModalStore();
