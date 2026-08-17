@@ -80,6 +80,17 @@ const supprimerRole = (userRole) =>
       .then(loadUser)
       .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression"));
   });
+const supprimerSapeur = (sapeurLink) =>
+  confirm(
+    "Voulez-vous vraiment supprimer ce lien sapeur ?",
+    "Attention, l'action est irréversible.",
+  ).then(() => {
+    adminStore
+      .removeSapeur(sapeurLink?.id)
+      .then((res) => awn.success(res?.message || "Lien sapeur supprimé"))
+      .then(loadUser)
+      .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression"));
+  });
 
 const fieldsRoles = [
   { title: "id", key: "id" },
@@ -93,7 +104,7 @@ const fieldsSapeurs = [
   { title: "sapeur_id", key: "sapeur_id" },
   { title: "pending_deactivation_at", key: "pending_deactivation_at", type: Date },
   { title: "deactivated_at", key: "deactivated_at", type: Date },
-  // { title: 'Actions', key: 'id', slot: 'actions' },
+  { title: "Actions", key: "id", slot: "actions" },
 ];
 </script>
 
@@ -227,6 +238,15 @@ const fieldsSapeurs = [
             :hide-download="true"
             no-data="Aucun sapeur lié"
           >
+            <template #actions="{ rowData }">
+              <button
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="supprimerSapeur(rowData)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
+            </template>
             <template #foot>
               <tr>
                 <th :colspan="fieldsSapeurs.length">Nb sapeur: {{ user.sapeur?.length }}</th>

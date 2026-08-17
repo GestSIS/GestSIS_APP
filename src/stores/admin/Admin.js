@@ -76,5 +76,8 @@ export const useAdminStore = defineStore("admin", {
         user.roles = user.roles.filter((r) => r.id !== roleId);
       }
     },
+    async removeSapeur(sapeurId) {
+      return AdminService.removeSapeur(sapeurId);
+    },
   },
 });

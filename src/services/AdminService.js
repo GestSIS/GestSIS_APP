@@ -18,6 +18,9 @@ export default {
   removeUserRole(userRoleId) {
     return Api.auth().delete(`/admin/user-roles/${userRoleId}`);
   },
+  removeSapeur(sapeurId) {
+    return Api.auth().delete(`/admin/sapeurs/${sapeurId}`);
+  },
   getAllUsers() {
     return Api.auth().get("/admin/users");
   },
