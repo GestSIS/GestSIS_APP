@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import AdminService from "../../services/AdminService";
 import { useModalStore } from "../../stores/common/Modal";
@@ -26,6 +26,14 @@ const loadUser = () => {
 };
 
 await Promise.all([loadSis, loadRoles, loadUser()]);
+
+// Vue Router réutilise ce composant quand on navigue entre deux URLs de la
+// même route (seul `id` change) : sans ce watcher, l'UI garderait les
+// données du précédent utilisateur affiché.
+watch(
+  () => id,
+  () => loadUser(),
+);
 
 const formatDate = (value) =>
   value ? new Date(value).toLocaleDateString("fr-CH").slice(0, 10) : "";
@@ -75,7 +83,7 @@ const supprimerRole = (userRole) =>
     "Attention, l'action est irréversible.",
   ).then(() => {
     adminStore
-      .removeUserRole(userRole?.id)
+      .removeUserRole(userRole)
       .then((res) => awn.success(res?.message || "Rôle supprimé"))
       .then(loadUser)
       .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression"));
@@ -86,7 +94,7 @@ const supprimerSapeur = (sapeurLink) =>
     "Attention, l'action est irréversible.",
   ).then(() => {
     adminStore
-      .removeSapeur(sapeurLink?.id)
+      .removeSapeur(sapeurLink)
       .then((res) => awn.success(res?.message || "Lien sapeur supprimé"))
       .then(loadUser)
       .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression"));

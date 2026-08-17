@@ -65,19 +65,23 @@ export const useAdminStore = defineStore("admin", {
       const { data } = await AdminService.addUserRole({ user_id: userId, role_id: roleId });
       const user = this.users.find((u) => u.id === userId);
       if (user) {
-        user.roles.push(data);
+        user.user_roles = [...(user.user_roles || []), data];
       }
       return data;
     },
-    async removeUserRole(userId, roleId) {
-      await AdminService.removeUserRole(userId, roleId);
-      const user = this.users.find((u) => u.id === userId);
+    async removeUserRole(userRole) {
+      await AdminService.removeUserRole(userRole.id);
+      const user = this.users.find((u) => u.id === userRole.user_id);
       if (user) {
-        user.roles = user.roles.filter((r) => r.id !== roleId);
+        user.user_roles = (user.user_roles || []).filter((r) => r.id !== userRole.id);
       }
     },
-    async removeSapeur(sapeurId) {
-      return AdminService.removeSapeur(sapeurId);
+    async removeSapeur(sapeurLink) {
+      await AdminService.removeSapeur(sapeurLink.id);
+      const user = this.users.find((u) => u.id === sapeurLink.user_id);
+      if (user) {
+        user.sapeur = (user.sapeur || []).filter((s) => s.id !== sapeurLink.id);
+      }
     },
   },
 });
