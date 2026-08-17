@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "17.08.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Système de désactivation des comptes de sapeurs inactifs",
+        "Système de synchronisation automatique des comptes existants avec les sapeurs"
+      ]
+    },
+    {
       "date": "14.08.2026",
       "version": "2.0",
       "app": "GestSIS APP",
