@@ -5,7 +5,6 @@ import { useBaseDataStore } from "../stores/common/BaseData.js";
 import { useGroupeStore } from "../stores/groupe/Groupe.js";
 import { useFonctionStore } from "../stores/sapeur/Fonction";
 import { useGradeStore } from "../stores/sapeur/Grade";
-import { useSisParamStore } from "../stores/params/SisParam.js";
 import permissions from "../composables/permissions.js";
 
 import SapeurService from "../services/SapeurService.js";
@@ -21,7 +20,6 @@ const baseDataStore = useBaseDataStore();
 const groupeStore = useGroupeStore();
 const fonctionStore = useFonctionStore();
 const gradeStore = useGradeStore();
-const sisParamStore = useSisParamStore();
 const authStore = useAuthStore();
 
 const loadLocalites = localiteStore.fetchLocalites();
@@ -29,16 +27,8 @@ const loadCivilites = baseDataStore.fetchCivilites();
 const loadGrades = gradeStore.fetchGrades();
 const loadFonctions = fonctionStore.fetchFonctions();
 const loadGroupes = groupeStore.fetchGroupes();
-const loadSisParam = sisParamStore.fetchParams();
 
-await Promise.all([
-  loadLocalites,
-  loadCivilites,
-  loadFonctions,
-  loadGrades,
-  loadGroupes,
-  loadSisParam,
-]);
+await Promise.all([loadLocalites, loadCivilites, loadFonctions, loadGrades, loadGroupes]);
 
 const loading = ref(true);
 const selectedId = ref(null);
@@ -51,6 +41,9 @@ const civilites = computed(() => baseDataStore.civilites);
 const groupes = computed(() => groupeStore.liste);
 const fonctions = computed(() => fonctionStore.liste.filter((f) => f.actif));
 const grades = computed(() => gradeStore.liste);
+const sisNom = computed(
+  () => authStore.sis.liste.find((sis) => sis.api_key === authStore.sis.activeKey)?.nom,
+);
 const hasSapeurModificationPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 const hasSmsEnvoiePermission = useHasPermission(permissions.SMS.ENVOIE);
 const hasExerciceModificationPermission = useHasPermission(permissions.EXERCICE.MODIFICATION);
@@ -180,9 +173,8 @@ const sms = (sapeurs) => {
   });
 };
 const vcard = (sapeurs) =>
-  downloadVcard(sapeurs, localites.value, sisParamStore.params?.nom, authStore.sis.activeKey);
-const outlookCsv = (sapeurs) =>
-  downloadOutlookCsv(sapeurs, localites.value, sisParamStore.params?.nom);
+  downloadVcard(sapeurs, localites.value, sisNom.value, authStore.sis.activeKey);
+const outlookCsv = (sapeurs) => downloadOutlookCsv(sapeurs, localites.value, sisNom.value);
 
 const fieldsBase = [
   { title: "Nom Prénom", key: "nom_prenom" },
