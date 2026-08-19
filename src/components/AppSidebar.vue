@@ -13,7 +13,7 @@ const perms = computed(() => authStore.sis.permissions);
 const filteredLinks = computed(() =>
   links.filter(
     (l) =>
-      (!l.permission && !l.permissions && !l.admin && !l.sapeur) ||
+      (!l.permission && !l.permissions && !l.sapeur) ||
       perms.value?.includes(l.permission) ||
       perms.value?.filter((p) => new Set(l.permissions).has(p)).length ||
       (isAdmin.value && !l.sapeur) ||

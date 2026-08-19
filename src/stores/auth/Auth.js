@@ -84,7 +84,7 @@ export const useAuthStore = defineStore("auth", {
     isLoggedIn: (state) => !!state.user,
     availableSisListe: (state) => {
       return state.sis.liste
-        .filter((sis) => state.sis.available.includes(sis.api_key) || state.admin)
+        .filter((sis) => state.sis.available.includes(sis.api_key))
         .sort((s1, s2) => s1.nom.localeCompare(s2.nom));
     },
   },

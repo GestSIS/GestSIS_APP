@@ -26,7 +26,7 @@ const token = ref("");
 const permissions = computed(() =>
   [...authStore.permissions]
     .sort((a, b) => a.tri - b.tri)
-    .filter((p) => authStore.admin || authStore.sis.permissions.includes(p.api_key)),
+    .filter((p) => authStore.sis.permissions.includes(p.api_key)),
 );
 
 // Uniquement les SIS de l'utilisateur (tous les SIS pour un admin)
