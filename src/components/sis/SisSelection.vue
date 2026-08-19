@@ -23,7 +23,11 @@ const selectSis = async (sisId) => {
   <div>
     <hr class="bg-secondary" />
     <div class="info">
+      <p v-if="availableSisListe.length == 1">
+        {{ availableSisListe.find((s) => s.id == activeSisId)?.nom }}
+      </p>
       <base-select
+        v-else
         :model-value="activeSisId"
         class="mb-3"
         display-key="nom"

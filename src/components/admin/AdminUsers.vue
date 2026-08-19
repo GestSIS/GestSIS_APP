@@ -1,11 +1,14 @@
 <script setup>
-import AdminService from "../../services/AdminService";
 import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
 import useNotification from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal";
 import { useAdminStore } from "../../stores/admin/Admin";
+import { useAuthStore } from "../../stores/auth/Auth";
 
+const router = useRouter();
 const adminStore = useAdminStore();
+const authStore = useAuthStore();
 
 const loading = ref(true);
 const loadSis = adminStore.loadAllSis();
@@ -26,11 +29,11 @@ const filteredUsers = computed(() =>
 const { showModal, confirm } = useModalStore();
 const awn = useNotification();
 
-const tokenForUser = (user) =>
-  AdminService.getUserToken(user.id).then((data) => {
-    navigator.clipboard.writeText(data.accessToken);
-    awn.success("Token copié dans le press papier");
-  });
+const impersonateUser = (user) =>
+  authStore
+    .impersonate(user.id)
+    .then(() => router.push({ name: "accueil" }))
+    .catch((e) => awn.alert(e?.message || "Erreur lors de l'usurpation"));
 const editUser = (user) => showModal({ component: "ModalUser", data: user });
 const deleteUser = (user) =>
   confirm(
@@ -109,9 +112,15 @@ const fields = [
           <button
             type="button"
             class="btn btn-outline-primary border-0"
-            @click="tokenForUser(rowData)"
+            :disabled="rowData.id === authStore.user?.id"
+            :title="
+              rowData.id === authStore.user?.id
+                ? 'Vous ne pouvez pas usurper votre propre identité'
+                : 'Usurper l\'identité'
+            "
+            @click="impersonateUser(rowData)"
           >
-            <font-awesome-icon :icon="['fas', 'key']" />
+            <font-awesome-icon :icon="['fas', 'user-secret']" />
           </button>
           <button
             type="button"

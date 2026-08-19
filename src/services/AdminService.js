@@ -7,6 +7,9 @@ export default {
   editSis(sis) {
     return Api.auth().patch("/admin/sis/" + sis.id, sis);
   },
+  getSis(sis) {
+    return Api.auth().get("/admin/sis/" + sis.id);
+  },
   getUserToken(userId) {
     return Api.auth().get("/admin/token", {
       params: { user_id: userId },

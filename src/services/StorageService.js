@@ -1,6 +1,8 @@
 const TOKEN_KEY = "access_token";
 const USER_KEY = "logged_user";
 const REFRESH_TOKEN_KEY = "refresh_token";
+const ADMIN_TOKEN_KEY = "admin_access_token";
+const ADMIN_USER_KEY = "admin_logged_user";
 
 /**
  * Manage the how Access Tokens are being stored and retreived from storage.
@@ -45,6 +47,28 @@ const TokenService = {
   },
   removeRefreshToken() {
     localStorage.removeItem(REFRESH_TOKEN_KEY);
+  },
+
+  // Session admin mise de côté pendant une usurpation d'identité, pour
+  // pouvoir la restaurer via stopImpersonation() même après un F5.
+  getAdminAccessToken() {
+    return localStorage.getItem(ADMIN_TOKEN_KEY);
+  },
+  saveAdminAccessToken(accessToken) {
+    localStorage.setItem(ADMIN_TOKEN_KEY, accessToken);
+  },
+  removeAdminAccessToken() {
+    localStorage.removeItem(ADMIN_TOKEN_KEY);
+  },
+
+  getAdminUser() {
+    return JSON.parse(localStorage.getItem(ADMIN_USER_KEY));
+  },
+  saveAdminUser(user) {
+    localStorage.setItem(ADMIN_USER_KEY, JSON.stringify(user));
+  },
+  removeAdminUser() {
+    localStorage.removeItem(ADMIN_USER_KEY);
   },
 };
 

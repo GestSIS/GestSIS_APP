@@ -820,6 +820,13 @@ const router = createRouter({
           component: () => import("/src/components/admin/AdminSis.vue"),
         },
         {
+          path: "sis/:id",
+          name: "admin-sis-detail",
+          props: true,
+          beforeEnter: adminGuard(),
+          component: () => import("/src/components/admin/AdminSisDetail.vue"),
+        },
+        {
           path: "users",
           name: "admin-users",
           beforeEnter: adminGuard(),

@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import AuthService from "../../services/AuthService";
+import AdminService from "../../services/AdminService";
 import { TokenService } from "../../services/StorageService";
 import { jwtDecode } from "jwt-decode";
 import router from "../../router";
@@ -70,6 +71,7 @@ export const useAuthStore = defineStore("auth", {
     roles: [],
     apiTokens: [],
     users: [],
+    impersonating: !!TokenService.getAdminAccessToken(),
     sis: {
       activeId: null,
       activeKey: null,
@@ -148,6 +150,49 @@ export const useAuthStore = defineStore("auth", {
         user: TokenService.getUser(),
       });
       return message;
+    },
+    async impersonate(userId) {
+      if (userId === this.user?.id) {
+        throw new Error("Vous ne pouvez pas usurper votre propre identité.");
+      }
+
+      const [{ accessToken }, targetUser] = await Promise.all([
+        AdminService.getUserToken(userId),
+        AdminService.getUser({ id: userId }).then(({ data }) => data),
+      ]);
+
+      // Le refresh token n'est pas touché : `admin/token` n'en fournit pas
+      // pour la cible, et garder celui de l'admin sert de filet de sécurité
+      // (si le token usurpé expire, le flux de refresh existant réémettra
+      // silencieusement un token admin, ce qui termine l'usurpation).
+      TokenService.saveAdminAccessToken(TokenService.getAccessToken());
+      TokenService.saveAdminUser(TokenService.getUser());
+      this.impersonating = true;
+
+      this.clearCache();
+      await this.setAuthSuccessful({
+        accessToken,
+        refreshToken: TokenService.getRefreshToken(),
+        user: targetUser,
+      });
+    },
+    async stopImpersonation() {
+      const adminAccessToken = TokenService.getAdminAccessToken();
+      if (!adminAccessToken) {
+        return;
+      }
+      const adminUser = TokenService.getAdminUser();
+
+      TokenService.removeAdminAccessToken();
+      TokenService.removeAdminUser();
+      this.impersonating = false;
+
+      this.clearCache();
+      await this.setAuthSuccessful({
+        accessToken: adminAccessToken,
+        refreshToken: TokenService.getRefreshToken(),
+        user: adminUser,
+      });
     },
     async selectSis(sis) {
       this.sis.activeId = sis?.id;
