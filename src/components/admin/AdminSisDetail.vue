@@ -44,23 +44,31 @@ const impersonateUser = (user) =>
     .then(() => router.push({ name: "accueil" }))
     .catch((e) => awn.alert(e?.message || "Erreur lors de l'usurpation"));
 
-const computedDataUsers = computed(() =>
-  (sis.value.roles || []).flatMap((role) =>
-    (role.user_roles || []).map((ur) => ({
+const computedDataUsers = computed(() => {
+  const userRoles = (sis.value.roles || []).flatMap((role) =>
+    (role.user_roles || []).map((ur) => ({ ur, roleNom: role.nom })),
+  );
+
+  const usersById = userRoles.reduce((acc, { ur, roleNom }) => {
+    acc[ur.user_id] ??= {
       id: ur.id,
       user_id: ur.user_id,
       name: ur.user?.name || "N/A",
       email: ur.user?.email || "N/A",
-      role: role.nom,
-    })),
-  ),
-);
+      roles: [],
+    };
+    acc[ur.user_id].roles.push({ id: ur.id, nom: roleNom });
+    return acc;
+  }, {});
+
+  return Object.values(usersById);
+});
 
 const fieldsUsers = [
   { title: "id", key: "id" },
   { title: "name", key: "name" },
   { title: "email", key: "email" },
-  { title: "role", key: "role" },
+  { title: "role", key: "roles", slot: "badges" },
   { title: "Actions", key: "id", slot: "actions" },
 ];
 </script>
@@ -150,6 +158,11 @@ const fieldsUsers = [
             :hide-download="true"
             no-data="Aucun utilisateur"
           >
+            <template #badges="{ rowData }">
+              <span v-for="r in rowData.roles" :key="r.id" class="badge bg-primary me-1">{{
+                r.nom
+              }}</span>
+            </template>
             <template #actions="{ rowData }">
               <router-link
                 class="btn btn-sm btn-outline-primary border-0"
