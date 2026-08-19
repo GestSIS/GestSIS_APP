@@ -283,7 +283,7 @@ export const useAuthStore = defineStore("auth", {
           return data;
         } catch (e) {
           this.logout();
-          router.push({ name: "login" });
+          await router.push({ name: "login" });
           throw e;
         } finally {
           this.refreshTokenPromise = null;
