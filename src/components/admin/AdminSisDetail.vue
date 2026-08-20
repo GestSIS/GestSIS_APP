@@ -45,21 +45,41 @@ const impersonateUser = (user) =>
     .catch((e) => awn.alert(e?.message || "Erreur lors de l'usurpation"));
 
 const computedDataUsers = computed(() => {
-  const userRoles = (sis.value.roles || []).flatMap((role) =>
-    (role.user_roles || []).map((ur) => ({ ur, roleNom: role.nom })),
-  );
+  const usersById = {};
 
-  const usersById = userRoles.reduce((acc, { ur, roleNom }) => {
-    acc[ur.user_id] ??= {
-      id: ur.id,
-      user_id: ur.user_id,
-      name: ur.user?.name || "N/A",
-      email: ur.user?.email || "N/A",
+  (sis.value.roles || []).forEach((role) => {
+    (role.user_roles || []).forEach((ur) => {
+      usersById[ur.user_id] ??= {
+        id: ur.user_id,
+        user_id: ur.user_id,
+        name: ur.user?.name || "N/A",
+        email: ur.user?.email || "N/A",
+        roles: [],
+        sapeurs: [],
+      };
+      usersById[ur.user_id].roles.push({ id: `role-${ur.id}`, nom: role.nom });
+    });
+  });
+
+  // Un utilisateur peut n'avoir aucun rôle et n'apparaître que via un lien
+  // sapeur actif (ex: sapeur simple sans rôle de gestion) — sans ce merge il
+  // resterait invisible sur la fiche du SIS. Le lien sapeur n'est pas un
+  // rôle : il a sa propre colonne (mapping sapeur_id), pas un badge "sapeur"
+  // mélangé dans la colonne rôle.
+  (sis.value.sapeurs || []).forEach((sapeurLink) => {
+    usersById[sapeurLink.user_id] ??= {
+      id: sapeurLink.user_id,
+      user_id: sapeurLink.user_id,
+      name: sapeurLink.user?.name || "N/A",
+      email: sapeurLink.user?.email || "N/A",
       roles: [],
+      sapeurs: [],
     };
-    acc[ur.user_id].roles.push({ id: ur.id, nom: roleNom });
-    return acc;
-  }, {});
+    usersById[sapeurLink.user_id].sapeurs.push({
+      id: sapeurLink.id,
+      sapeur_id: sapeurLink.sapeur_id,
+    });
+  });
 
   return Object.values(usersById);
 });
@@ -69,6 +89,7 @@ const fieldsUsers = [
   { title: "name", key: "name" },
   { title: "email", key: "email" },
   { title: "role", key: "roles", slot: "badges" },
+  { title: "sapeur", key: "sapeurs", slot: "sapeurBadges" },
   { title: "Actions", key: "id", slot: "actions" },
 ];
 </script>
@@ -162,6 +183,11 @@ const fieldsUsers = [
               <span v-for="r in rowData.roles" :key="r.id" class="badge bg-primary me-1">{{
                 r.nom
               }}</span>
+            </template>
+            <template #sapeurBadges="{ rowData }">
+              <span v-for="s in rowData.sapeurs" :key="s.id" class="badge bg-secondary me-1"
+                >sap:{{ s.sapeur_id }}</span
+              >
             </template>
             <template #actions="{ rowData }">
               <router-link
