@@ -126,6 +126,18 @@ const detailRowOptions = {
   ],
   noData: "Aucune indemnité",
 };
+const ecritureFields = [
+  { title: "Designation", key: "designation" },
+  {
+    title: "Sapeur",
+    key: "sapeur_id",
+    formatter: (id) => sapeurs.value.find((f) => f.id == id)?.nom_prenom,
+  },
+  { title: "Quantité", key: "quantite" },
+  { title: "Tarif", key: "tarif" },
+  { title: "Total", key: "total" },
+  { title: "Type", key: "type", formatter: (type) => formatType(type) },
+];
 </script>
 
 <template>
@@ -163,30 +175,7 @@ const detailRowOptions = {
           ></button>
           Imputations effectuées avec <strong>succès</strong>!
         </div>
-        <table class="table table-sm">
-          <thead>
-            <tr>
-              <th>Designation</th>
-              <th>Sapeur</th>
-              <th>Quantité</th>
-              <th>Tarif</th>
-              <th>Total</th>
-              <th>Type</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="ecriture in ecritures" :key="ecriture.id">
-              <td>{{ ecriture.designation }}</td>
-              <td>
-                {{ sapeurs.find((f) => f.id == ecriture.sapeur_id)?.nom_prenom }}
-              </td>
-              <td>{{ ecriture.quantite }}</td>
-              <td>{{ ecriture.tarif }}</td>
-              <td>{{ ecriture.total }}</td>
-              <td>{{ formatType(ecriture.type) }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <base-table :data="ecritures" :fields="ecritureFields" :hide-download="true" />
       </div>
     </div>
     <div class="modal-footer">
