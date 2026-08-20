@@ -248,12 +248,6 @@ const fieldsBase = [
               <button class="btn btn-outline-primary" @click="vcard(filteredData)">
                 VCard tous
               </button>
-              <!-- <button
-                class="btn btn-outline-primary"
-                @click="outlookCsv(filteredData)"
-              >
-                CSV Outlook, TODO: caldav server
-              </button> -->
               <a
                 :disabled="filteredData.length == 0"
                 :href="

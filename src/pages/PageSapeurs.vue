@@ -53,30 +53,31 @@ const route = useRoute();
 const router = useRouter();
 
 const activeSapeurId = computed(() => sapeurStore.active.id);
-if (route.params.id == 0 || !route.params.id) {
-  if (activeSapeurId.value > 0) {
-    // Sapeur précédemment sélectionné
-    router.push({
-      name: "sapeur-details",
-      params: { id: activeSapeurId.value },
-    });
-  } else if (sapeurStore.liste.filter((s) => s.actif).length > 0) {
-    // Sapeurs disponible
-    router.push({
-      name: "sapeur-details",
-      params: {
-        id: sapeurStore.liste.filter((s) => s.actif)[0]?.id,
-      },
-    });
-  }
-}
 
 // Select sapeur
 // TODO: Refactor ????
 watch(
   () => route.params.id,
   () => {
-    sapeurStore.selectSapeur(route.params.id);
+    if (route.params.id == 0 || !route.params.id) {
+      if (activeSapeurId.value > 0) {
+        // Sapeur précédemment sélectionné
+        router.push({
+          name: "sapeur-details",
+          params: { id: activeSapeurId.value },
+        });
+      } else if (sapeurStore.liste.filter((s) => s.actif).length > 0) {
+        // Sapeurs disponible
+        router.push({
+          name: "sapeur-details",
+          params: {
+            id: sapeurStore.liste.filter((s) => s.actif)[0]?.id,
+          },
+        });
+      }
+    } else {
+      sapeurStore.selectSapeur(route.params.id);
+    }
   },
   { immediate: true },
 );

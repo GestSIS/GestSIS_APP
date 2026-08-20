@@ -256,12 +256,13 @@ const fields = [
     </div>
   </div>
   <!--
-  TODO: Fonctionalitées pour le future
-  - Demander un renvoi de la confirmation de l'email si pas validé
-  - Supprimer ses accès pour un SIS
-  - Changer son email
-  - Supprimer son compte
-  - Contrôler ses données et signaler des changements -- Autre interface peut-être -->
+    TODO: Fonctionalitées pour le future
+    - Demander un renvoi de la confirmation de l'email si pas validé
+    - Supprimer ses accès pour un SIS
+    - Changer son email
+    - Supprimer son compte
+    - Contrôler ses données et signaler des changements -- Autre interface peut-être
+  -->
 </template>
 
 <style>

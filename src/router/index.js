@@ -210,6 +210,13 @@ const router = createRouter({
       redirect: { name: "accueil" },
     },
     {
+      path: "/sapeurs",
+      name: "sapeurs",
+      beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
+      redirect: [{ name: "sapeur-index", params: { id: 0 } }],
+      props: true,
+    },
+    {
       path: "/sapeurs/:id",
       name: "sapeur-index",
       beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
@@ -219,6 +226,7 @@ const router = createRouter({
         {
           path: "details",
           name: "sapeur-details",
+          alias: ["/sapeurs/:id"],
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
           component: () => import("../components/sapeur/SapeurTabGeneral.vue"),
         },
