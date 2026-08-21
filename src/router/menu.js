@@ -80,6 +80,12 @@ const links = [
     permission: permissions.SAPEUR.LECTURE,
   },
   {
+    to: { name: "sms" },
+    icon: ["fas", "comment-sms"],
+    nom: "SMS",
+    permission: permissions.SMS.LECTURE,
+  },
+  {
     to: { name: "stat-dashboard" },
     icon: ["far", "chart-bar"],
     nom: "Statistiques",

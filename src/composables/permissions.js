@@ -38,6 +38,7 @@ export default {
     CONFIG: "fiche_travail.config",
   },
   SMS: {
+    LECTURE: "sms.lecture",
     ENVOIE: "sms.envoie",
     CONFIG: "sms.config",
   },

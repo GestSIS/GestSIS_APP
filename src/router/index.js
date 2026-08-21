@@ -567,6 +567,12 @@ const router = createRouter({
       component: () => import("/src/pages/PageControleMedical.vue"),
     },
     {
+      path: "/sms",
+      name: "sms",
+      beforeEnter: permissionGuard(permissions.SMS.LECTURE),
+      component: () => import("/src/pages/PageSms.vue"),
+    },
+    {
       path: "/materiel",
       beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
       component: () => import("/src/pages/PageMateriel.vue"),

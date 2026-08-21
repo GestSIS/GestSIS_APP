@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "21.08.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Visualisation de l'ensemble des SMS envoyés"]
+    },
+    {
       "date": "17.08.2026",
       "version": "1.0",
       "app": "GestSIS APP",
