@@ -43,7 +43,8 @@ if (import.meta.env.VITE_SENTRY_DSN) {
     // les bloqueurs de pub/tracker bloquent souvent le motif /api/<id>/envelope/, quel que soit le domaine.
     tunnel: `${import.meta.env.VITE_API_ENDPOINT}/monitoring-tunnel`,
     // Pas de Release Health côté Bugsink : évite le trafic inutile des sessions.
-    autoSessionTracking: false,
+    integrations: (integrations) =>
+      integrations.filter((integration) => integration.name !== "BrowserSession"),
     // Les breadcrumbs fetch/XHR capturent l'URL complète des requêtes : le jeton de recrutement
     // (formulaire public /recrutement/{sisKey}/{token}) ne doit pas fuiter vers Bugsink.
     beforeBreadcrumb(breadcrumb) {
