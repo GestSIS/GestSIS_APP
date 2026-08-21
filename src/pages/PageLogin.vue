@@ -13,8 +13,8 @@ const route = useRoute();
 const login = async () => {
   if (
     email.value?.trim()?.toLowerCase()?.endsWith("@gestsis.ch") &&
-    !email.value?.trim()?.toLowerCase() === "admin@gestsis.ch" &&
-    !email.value?.trim()?.toLowerCase() === "demo@gestsis.ch"
+    email.value?.trim()?.toLowerCase() !== "admin@gestsis.ch" &&
+    email.value?.trim()?.toLowerCase() !== "demo@gestsis.ch"
   ) {
     error.value = {
       email: "Email invalid",
