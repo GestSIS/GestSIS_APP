@@ -58,7 +58,7 @@ const actuel = computed(() =>
       })),
       groupes: s.groupes
         .map((id) => groupeStore.liste.find((g) => g.id == id))
-        .filter((g) => g?.type == 1)
+        .filter((g) => g?.type == 1 && g.no != null)
         .map((g) => ({ no: g.no.toString(), designation: g.designation })),
     }))
     .map((s) => {
