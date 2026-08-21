@@ -19,7 +19,9 @@ const { sms, loading, showExercice } = defineProps({
 const smsListe = computed(() =>
   sms.map((s) => ({
     ...s,
-    numeros: s.sms_numeros.map((n) => n.numero).join("; "),
+    numeros: s.sms_numeros
+      .map((n) => (n.sapeur ? `${n.sapeur.nom} ${n.sapeur.prenom}` : n.numero))
+      .join("; "),
     exerciceLabel: s.exercice
       ? `${s.exercice.categorie?.designation ?? ""} : ${new Date(s.exercice.date).toLocaleDateString("fr-CH")}`
       : null,
