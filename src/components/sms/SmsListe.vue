@@ -16,12 +16,12 @@ const { sms, loading, showExercice } = defineProps({
   },
 });
 
+const destinataireLabel = (numero) =>
+  numero.sapeur ? `${numero.sapeur.nom} ${numero.sapeur.prenom}` : numero.numero;
+
 const smsListe = computed(() =>
   sms.map((s) => ({
     ...s,
-    numeros: s.sms_numeros
-      .map((n) => (n.sapeur ? `${n.sapeur.nom} ${n.sapeur.prenom}` : n.numero))
-      .join("; "),
     exerciceLabel: s.exercice
       ? `${s.exercice.categorie?.designation ?? ""} : ${new Date(s.exercice.date).toLocaleDateString("fr-CH")}`
       : null,
@@ -58,8 +58,8 @@ const fields = computed(() => [
   },
   {
     title: "Numéros",
-    key: "numeros",
-    type: "multiline",
+    key: "sms_numeros",
+    slot: "numeros",
   },
 ]);
 </script>
@@ -69,10 +69,26 @@ const fields = computed(() => [
     <template #exercice="{ rowData }">
       <router-link
         v-if="rowData.exercice_id"
+        class="badge bg-primary text-decoration-none"
         :to="{ name: 'exercice-details', params: { id: rowData.exercice_id } }"
       >
-        {{ rowData.exerciceLabel }}
+        <font-awesome-icon :icon="['fas', 'calendar-alt']" class="me-1" />{{
+          rowData.exerciceLabel
+        }}
       </router-link>
+    </template>
+    <template #numeros="{ rowData }">
+      <template v-for="n in rowData.sms_numeros" :key="n.id">
+        <router-link
+          v-if="n.sapeur"
+          class="badge bg-primary text-decoration-none me-1"
+          v-tooltip.bottom="n.numero"
+          :to="{ name: 'sapeur-details', params: { id: n.sapeur_id } }"
+        >
+          <font-awesome-icon :icon="['fas', 'user']" class="me-1" />{{ destinataireLabel(n) }}
+        </router-link>
+        <span v-else class="badge bg-secondary me-1">{{ n.numero }}</span>
+      </template>
     </template>
   </base-table>
 </template>
