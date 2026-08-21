@@ -19,15 +19,6 @@ const { sms, loading, showExercice } = defineProps({
 const destinataireLabel = (numero) =>
   numero.sapeur ? `${numero.sapeur.nom} ${numero.sapeur.prenom}` : numero.numero;
 
-const smsListe = computed(() =>
-  sms.map((s) => ({
-    ...s,
-    exerciceLabel: s.exercice
-      ? `${s.exercice.categorie?.designation ?? ""} : ${new Date(s.exercice.date).toLocaleDateString("fr-CH")}`
-      : null,
-  })),
-);
-
 const fields = computed(() => [
   {
     title: "Programmé le",
@@ -65,16 +56,18 @@ const fields = computed(() => [
 </script>
 
 <template>
-  <base-table :loading="loading" :fields="fields" no-data="Aucun sms" :data="smsListe">
+  <base-table :loading="loading" :fields="fields" no-data="Aucun sms" :data="sms">
     <template #exercice="{ rowData }">
       <router-link
         v-if="rowData.exercice_id"
         class="badge bg-primary text-decoration-none"
         :to="{ name: 'exercice-details', params: { id: rowData.exercice_id } }"
       >
-        <font-awesome-icon :icon="['fas', 'calendar-alt']" class="me-1" />{{
-          rowData.exerciceLabel
-        }}
+        <font-awesome-icon :icon="['fas', 'calendar-alt']" class="me-1" />
+        {{ new Date(rowData.exercice.date).toLocaleDateString("fr-CH") }}
+        {{ rowData.exercice.categorie?.designation ?? "" }}
+        <br />
+        {{ rowData.exercice.designation }}
       </router-link>
     </template>
     <template #numeros="{ rowData }">
