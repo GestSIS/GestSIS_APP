@@ -72,6 +72,8 @@ Variables dans `.env.local` (copier depuis `.env.example`) : `VITE_API_ENDPOINT`
 
 Upload des sourcemaps vers Bugsink au build (`vite.config.js`, `@sentry/vite-plugin`) : variables `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN`, `SENTRY_URL` — sans `SENTRY_AUTH_TOKEN` (cas local/dev), l'upload est simplement désactivé.
 
+Les erreurs sont envoyées à Bugsink via un tunnel côté API (`main.js` → `${VITE_API_ENDPOINT}/monitoring-tunnel` → `MonitoringTunnelController` dans GestSIS_API, variable `SENTRY_TUNNEL_DSN`), pas directement depuis le navigateur — évite le blocage par les bloqueurs de pub/tracker sur le motif `/api/<id>/envelope/`.
+
 ## Conventions
 
 - Composition API + `<script setup>` ; état partagé dans les stores Pinia, jamais d'appel API directement dans les composants → passer par `services/`.

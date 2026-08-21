@@ -39,6 +39,20 @@ if (import.meta.env.VITE_SENTRY_DSN) {
     app,
     dsn: import.meta.env.VITE_SENTRY_DSN,
     release: import.meta.env.VITE_SENTRY_RELEASE,
+    // Relaie les erreurs via l'API plutôt que d'appeler Bugsink directement depuis le navigateur :
+    // les bloqueurs de pub/tracker bloquent souvent le motif /api/<id>/envelope/, quel que soit le domaine.
+    tunnel: `${import.meta.env.VITE_API_ENDPOINT}/monitoring-tunnel`,
+    // Les breadcrumbs fetch/XHR capturent l'URL complète des requêtes : le jeton de recrutement
+    // (formulaire public /recrutement/{sisKey}/{token}) ne doit pas fuiter vers Bugsink.
+    beforeBreadcrumb(breadcrumb) {
+      if (breadcrumb.data?.url) {
+        breadcrumb.data.url = breadcrumb.data.url.replace(
+          /\/recrutement\/[^/]+\/[^/?#]+/,
+          "/recrutement/[redacted]",
+        );
+      }
+      return breadcrumb;
+    },
   });
 }
 
