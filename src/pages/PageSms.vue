@@ -3,6 +3,7 @@ import { computed, ref, watchEffect } from "vue";
 import { useSmsStore } from "../stores/sms/Sms.js";
 import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
+import SmsListe from "/src/components/sms/SmsListe.vue";
 
 const smsStore = useSmsStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -16,37 +17,7 @@ watchEffect(async () => {
   loading.value = false;
 });
 
-const smsListe = computed(() =>
-  smsStore.liste.map((sms) => ({
-    ...sms,
-    numeros: sms.sms_numeros.map((s) => s.numero).join("; "),
-  })),
-);
-
-const fields = [
-  {
-    title: "Programmé le",
-    key: "date_envoie",
-    titleClass: "align-middle",
-    type: "datetime",
-  },
-  {
-    title: "Envoyé le",
-    key: "date_programme",
-    titleClass: "align-middle",
-    type: "datetime",
-  },
-  {
-    title: "Message",
-    key: "message",
-    type: "multiline",
-  },
-  {
-    title: "Numéros",
-    key: "numeros",
-    type: "multiline",
-  },
-];
+const smsListe = computed(() => smsStore.liste);
 </script>
 
 <template>
@@ -73,12 +44,7 @@ const fields = [
             <h3>SMS envoyés</h3>
           </div>
           <div class="card-body table-responsive p-0">
-            <base-table
-              :loading="loading"
-              :fields="fields"
-              no-data="Aucun sms"
-              :data="smsListe"
-            ></base-table>
+            <sms-liste :loading="loading" :sms="smsListe" show-exercice />
           </div>
         </div>
       </div>

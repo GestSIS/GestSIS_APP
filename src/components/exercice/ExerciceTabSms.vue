@@ -5,6 +5,7 @@ import { useExerciceStore } from "../../stores/exercice/Exercice.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
+import SmsListe from "/src/components/sms/SmsListe.vue";
 
 const { id } = defineProps({
   id: {
@@ -23,14 +24,7 @@ watchEffect(async () => {
 });
 
 const activeExerciceData = computed(() => exerciceStore.active.data);
-const smsListe = computed(() =>
-  exerciceStore.active.sms.map((sms) => ({
-    ...sms,
-    date_programme: sms.date_programme.slice(0, 19),
-    date_envoie: sms.date_envoie.slice(0, 19),
-    numeros: sms.sms_numeros.map((s) => s.numero).join("; "),
-  })),
-);
+const smsListe = computed(() => exerciceStore.active.sms);
 const hasSmsEnvoiePermission = useHasPermission(permissions.SMS.ENVOIE);
 
 const { showModal } = useModalStore();
@@ -48,31 +42,6 @@ const sendSms = () => {
     data: activeExerciceData.value,
   });
 };
-
-const fields = [
-  {
-    title: "Date envoie",
-    key: "date_programme",
-    titleClass: "align-middle",
-    type: "datetime",
-  },
-  {
-    title: "Programmé le",
-    key: "date_envoie",
-    titleClass: "align-middle",
-    type: "datetime",
-  },
-  {
-    title: "Message",
-    key: "message",
-    type: "multiline",
-  },
-  {
-    title: "Numéros",
-    key: "numeros",
-    type: "multiline",
-  },
-];
 </script>
 
 <template>
@@ -86,20 +55,6 @@ const fields = [
         Nouveau SMS
       </button>
     </div>
-    <base-table
-      :selectable="true"
-      :fields="fields"
-      no-data="Aucun sms"
-      :data="smsListe"
-    ></base-table>
+    <sms-liste :loading="loading" :sms="smsListe" />
   </div>
 </template>
-
-<style scoped>
-thead {
-  position: sticky;
-  top: 0;
-  z-index: 12;
-  background-color: white;
-}
-</style>
