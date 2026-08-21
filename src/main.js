@@ -42,12 +42,6 @@ if (import.meta.env.VITE_SENTRY_DSN) {
   });
 }
 
-Sentry.init({
-  app,
-  dsn: "https://916da7b8185549f2b52f34cd30aa0ea4@bugsink.gestsis.ch/5",
-  dataCollection: {},
-});
-
 // Initialize auth store after pinia is set up
 const authStore = useAuthStore();
 
