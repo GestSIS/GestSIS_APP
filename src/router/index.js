@@ -858,6 +858,40 @@ const router = createRouter({
   ],
 });
 
+// Après un déploiement, les anciens chunks (JS/CSS) disparaissent du serveur : un onglet resté
+// ouvert (ou revenant du bfcache) peut, en pleine navigation, tenter de charger un chunk qui
+// n'existe plus. Vite déclenche `vite:preloadError` pour tout échec d'import dynamique, quel que
+// soit le message d'erreur du navigateur — plus robuste qu'un test sur error.message, et plus
+// fiable que `router.onError` (rapporté comme peu fiable dans certains contextes SPA).
+//
+// vue-router ne met à jour l'URL (le hash) qu'une fois les composants de la route résolus : tant
+// que l'import échoue, on reste sur l'ancienne URL. `beforeEach` fournit donc la destination visée
+// avant même la tentative de chargement, pour que le rechargement atterrisse là où l'utilisateur
+// voulait aller plutôt que de silencieusement recharger la page précédente.
+const CHUNK_RELOAD_GUARD_KEY = "chunk-preload-error-reload";
+let lastAttemptedPath = null;
+
+router.beforeEach((to) => {
+  lastAttemptedPath = to.fullPath;
+});
+
+window.addEventListener("vite:preloadError", () => {
+  try {
+    if (sessionStorage.getItem(CHUNK_RELOAD_GUARD_KEY)) {
+      return;
+    }
+    sessionStorage.setItem(CHUNK_RELOAD_GUARD_KEY, "1");
+  } catch {
+    // sessionStorage indisponible (navigation privée, quota) : on recharge quand même, au prix
+    // d'une éventuelle boucle si l'erreur persiste (préférable à rester bloqué sur l'erreur).
+  }
+
+  if (lastAttemptedPath) {
+    window.location.hash = lastAttemptedPath;
+  }
+  window.location.reload();
+});
+
 router.beforeEach(async (to, from) => {
   NProgress.start();
 
@@ -883,6 +917,11 @@ router.beforeEach(async (to, from) => {
 
 router.afterEach(async () => {
   NProgress.done();
+  try {
+    sessionStorage.removeItem(CHUNK_RELOAD_GUARD_KEY);
+  } catch {
+    // sessionStorage indisponible : rien à nettoyer.
+  }
 });
 
 export default router;
