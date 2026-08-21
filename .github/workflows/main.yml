@@ -29,14 +29,23 @@ jobs:
           VITE_API_ENDPOINT=$VITE_API_ENDPOINT
           VITE_AUTH_ENDPOINT=$VITE_AUTH_ENDPOINT
           VITE_DOC_ENDPOINT=$VITE_DOC_ENDPOINT
+          VITE_SENTRY_DSN=$VITE_SENTRY_DSN
+          VITE_SENTRY_RELEASE=$GITHUB_SHA
           END
         env:
           VITE_API_ENDPOINT: ${{ secrets.VITE_API_ENDPOINT }}
           VITE_AUTH_ENDPOINT: ${{ secrets.VITE_AUTH_ENDPOINT }}
           VITE_DOC_ENDPOINT: ${{ secrets.VITE_DOC_ENDPOINT }}
+          VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
 
       - name: build
         run: yarn build
+        env:
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_URL: ${{ secrets.SENTRY_URL }}
+          SENTRY_RELEASE: ${{ github.sha }}
 
       - name: Configure SSH
         run: |

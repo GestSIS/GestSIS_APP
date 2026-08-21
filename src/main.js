@@ -1,4 +1,5 @@
 import { createApp } from "vue";
+import * as Sentry from "@sentry/vue";
 import App from "./App.vue";
 import router from "./router/index.js";
 import { TokenService } from "./services/StorageService.js";
@@ -32,6 +33,20 @@ import BaseCard from "/src/components/base/BaseCard.vue";
 const pinia = createPinia();
 const app = createApp(App);
 app.use(pinia).use(router);
+
+if (import.meta.env.VITE_SENTRY_DSN) {
+  Sentry.init({
+    app,
+    dsn: import.meta.env.VITE_SENTRY_DSN,
+    release: import.meta.env.VITE_SENTRY_RELEASE,
+  });
+}
+
+Sentry.init({
+  app,
+  dsn: "https://916da7b8185549f2b52f34cd30aa0ea4@bugsink.gestsis.ch/5",
+  dataCollection: {},
+});
 
 // Initialize auth store after pinia is set up
 const authStore = useAuthStore();
