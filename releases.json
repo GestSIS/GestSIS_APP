@@ -6,7 +6,8 @@
       "app": "GestSIS APP",
       "changes": [
         "Visualisation de l'ensemble des SMS envoyés",
-        "Amélioration de l'affichage des sms"
+        "Amélioration de l'affichage des sms",
+        "Possibilité d'importer les exercices depuis une année précédente"
       ]
     },
     {
