@@ -267,7 +267,11 @@ export const useAuthStore = defineStore("auth", {
       this.apiTokens = this.apiTokens.filter((t) => t.id !== apiTokenId);
       return result.data;
     },
-    async refreshToken() {
+    // `redirectPath` surcharge la page vers laquelle revenir après connexion : au
+    // chargement de la page (voir verifySession), la navigation ciblée n'est pas
+    // encore reflétée par `router.currentRoute`, donc l'appelant doit la fournir
+    // explicitement plutôt que de laisser le catch déduire une destination obsolète.
+    async refreshToken(redirectPath = null) {
       if (this.refreshTokenPromise) {
         return this.refreshTokenPromise;
       }
@@ -282,8 +286,11 @@ export const useAuthStore = defineStore("auth", {
           await this.setAuthSuccessful(data);
           return data;
         } catch (e) {
+          const current = router.currentRoute.value;
+          const redirect =
+            redirectPath ?? (current.name !== "login" ? current.fullPath : undefined);
           this.logout();
-          await router.push({ name: "login" });
+          await router.push({ name: "login", query: { redirect } });
           throw e;
         } finally {
           this.refreshTokenPromise = null;
@@ -293,6 +300,48 @@ export const useAuthStore = defineStore("auth", {
       // Assign synchronously so concurrent 401s share a single refresh request
       this.refreshTokenPromise = callback();
       return this.refreshTokenPromise;
+    },
+    // `redirectPath` est le `to.fullPath` de la navigation en cours (fourni par le
+    // guard de main.js) : en cas d'échec, refreshToken() redirige vers cette page
+    // plutôt que vers l'accueil.
+    async verifySession(redirectPath) {
+      const refreshToken = TokenService.getRefreshToken();
+
+      if (refreshToken === null) {
+        // Pas de session à restaurer : un échec ici (service auth indisponible,
+        // erreur réseau) ne doit pas bloquer toutes les navigations, /login compris.
+        try {
+          await this.loadSisListe();
+        } catch (e) {
+          console.error(
+            "Échec de l'initialisation de l'authentification, navigation sans session",
+            e,
+          );
+        }
+        return;
+      }
+
+      const accessToken = TokenService.getAccessToken();
+      if (accessToken !== null) {
+        await this.setAuthSuccessful({
+          user: TokenService.getUser(),
+          accessToken,
+          refreshToken,
+        });
+        try {
+          await AuthService.me();
+          return; // Token encore valide côté serveur
+        } catch (e) {
+          // Access token périmé ou révoqué : on retente via le refresh token ci-dessous
+        }
+      }
+
+      // Un onglet resté ouvert puis rechargé peut porter un access token périmé (ou
+      // révoqué côté serveur) : on le renouvelle avant de laisser la page ciblée
+      // démarrer, plutôt que de la laisser échouer sur ses propres appels API.
+      // En cas d'échec, refreshToken() fait déjà logout() + redirection vers /login,
+      // et propage l'erreur pour que l'appelant coupe la navigation en cours.
+      await this.refreshToken(redirectPath);
     },
     async resendValidationEmail() {
       return AuthService.resendValidationEmail();

@@ -31,6 +31,9 @@ export default {
   refreshToken(payload) {
     return Api.auth().post("refresh-token", { token: payload });
   },
+  me() {
+    return Api.auth().get("me");
+  },
   updateUserRoles(user) {
     return Api.auth().post("users/" + user.id + "/roles", {
       roles: user.roles,

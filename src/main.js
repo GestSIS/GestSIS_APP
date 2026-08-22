@@ -2,7 +2,6 @@ import { createApp } from "vue";
 import * as Sentry from "@sentry/vue";
 import App from "./App.vue";
 import router from "./router/index.js";
-import { TokenService } from "./services/StorageService.js";
 import { createPinia } from "pinia";
 import { useAuthStore } from "./stores/auth/Auth.js";
 
@@ -64,22 +63,13 @@ const authStore = useAuthStore();
 
 router.beforeEach(async (to, from) => {
   if (authStore.sis.liste.length <= 0) {
-    // Un échec ici (service auth indisponible, erreur réseau) ne doit pas bloquer
-    // toutes les navigations : sans le catch, l'app reste blanche, /login compris
     try {
-      await authStore.loadSisListe();
-      const user = TokenService.getUser();
-      const accessToken = TokenService.getAccessToken();
-      const refreshToken = TokenService.getRefreshToken();
-      if (accessToken !== null && refreshToken !== null) {
-        await authStore.setAuthSuccessful({
-          user,
-          accessToken,
-          refreshToken,
-        });
-      }
+      await authStore.verifySession(to.fullPath);
     } catch (e) {
-      console.error("Échec de l'initialisation de l'authentification, navigation sans session", e);
+      // authStore.verifySession() a déjà fait logout() + router.push({ name: "login" })
+      // via refreshToken() (avec la même destination) ; on renvoie explicitement la
+      // redirection pour annuler la navigation en cours.
+      return { name: "login", query: { redirect: to.fullPath } };
     }
   }
 });
