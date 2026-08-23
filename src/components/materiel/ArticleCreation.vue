@@ -2,6 +2,8 @@
 import { computed, nextTick, useTemplateRef } from "vue";
 
 import { indexedData } from "../../tools/index.js";
+import SelectCouleur from "./SelectCouleur.vue";
+import SelectEmplacement from "./SelectEmplacement.vue";
 
 const articles = defineModel({ type: Array, default: () => [] });
 
@@ -15,6 +17,7 @@ if (articles.value.length === 0) {
     taille: null,
     remarque: null,
     quantite: 1,
+    emplacement: { couleur_id: null, parent_id: null },
   });
 }
 
@@ -35,6 +38,9 @@ const afficherColoneQuantite = computed(() =>
 const afficherColoneVehicule = computed(() =>
   articles.value.some((a) => indexedTypes.value[a.materiel_type_id]?.type === 3),
 );
+const afficherColoneEmplacement = computed(() =>
+  articles.value.some((a) => indexedTypes.value[a.materiel_type_id]?.est_emplacement),
+);
 
 const articleReference = useTemplateRef(`articles-reference`);
 const addEmptyLine = () => {
@@ -46,6 +52,7 @@ const addEmptyLine = () => {
     achat: null,
     remarque: null,
     quantite: 1,
+    emplacement: { couleur_id: null, parent_id: null },
   });
 
   nextTick(() => {
@@ -62,6 +69,8 @@ const addEmptyLine = () => {
         <th v-if="afficherColoneVehicule" class="col-1">Désignation</th>
         <th v-if="afficherColoneVehicule" class="col-1">Immatriculation</th>
         <th v-if="afficherColoneVehicule" class="col-1">Chassis</th>
+        <th v-if="afficherColoneEmplacement" class="col-1">Couleur</th>
+        <th v-if="afficherColoneEmplacement" class="col-1">Emplacement parent</th>
         <th v-if="afficherColoneNumero" class="col-2">Numéro</th>
         <th v-if="afficherColoneQuantite" class="col-1">Quantité</th>
         <th v-if="afficherColoneNumero" class="col-1">Est etiqueté</th>
@@ -126,6 +135,31 @@ const addEmptyLine = () => {
           <font-awesome-icon
             v-else
             v-tooltip.bottom="'Uniquement pour les véhicules'"
+            class="ms-4"
+            :icon="['far', 'circle-question']"
+          />
+        </td>
+        <td v-if="afficherColoneEmplacement">
+          <select-couleur
+            v-if="indexedTypes[item.materiel_type_id]?.est_emplacement"
+            v-model="item.emplacement.couleur_id"
+          />
+          <font-awesome-icon
+            v-else
+            v-tooltip.bottom="'Uniquement pour les emplacements'"
+            class="ms-4"
+            :icon="['far', 'circle-question']"
+          />
+        </td>
+        <td v-if="afficherColoneEmplacement">
+          <select-emplacement
+            v-if="indexedTypes[item.materiel_type_id]?.est_emplacement"
+            v-model="item.emplacement.parent_id"
+            :emplacement-racine="true"
+          />
+          <font-awesome-icon
+            v-else
+            v-tooltip.bottom="'Uniquement pour les emplacements'"
             class="ms-4"
             :icon="['far', 'circle-question']"
           />
@@ -203,7 +237,8 @@ const addEmptyLine = () => {
             (afficherColoneNumero ? 1 : 0) -
             (afficherColoneTaille ? 1 : 0) -
             (afficherColoneQuantite ? 1 : 0) -
-            (afficherColoneVehicule ? 3 : 0)
+            (afficherColoneVehicule ? 3 : 0) -
+            (afficherColoneEmplacement ? 2 : 0)
           "
         >
           <button class="btn btn-outline-primary" @click="addEmptyLine">

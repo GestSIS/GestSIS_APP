@@ -34,7 +34,7 @@ const awn = useNotification();
 const ajout = () => showModal({ component: "ModalEmplacement", data: {} });
 const update = (elem) =>
   showModal({
-    component: "ModalEmplacement",
+    component: elem.hangar ? "ModalHangar" : "ModalEmplacement",
     data: { ...elem },
   });
 const remove = (elem) =>
@@ -70,6 +70,18 @@ const fields = [
         <template #emplacement="{ rowData }">
           <div :style="{ 'padding-left': rowData.level * 25 + 'px' }">
             <tag-couleur :couleur="indexedCouleurs[rowData.couleur_id]">
+              <font-awesome-icon
+                v-if="rowData.hangar"
+                v-tooltip.bottom="'Hangar'"
+                :icon="['far', 'house']"
+                class="me-1"
+              />
+              <font-awesome-icon
+                v-if="rowData.article_id"
+                v-tooltip.bottom="'Véhicule'"
+                :icon="['fas', 'car']"
+                class="me-1"
+              />
               {{ rowData.designation }}
             </tag-couleur>
           </div>

@@ -4,6 +4,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import ArticleService from "../../services/materiel/ArticleService";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
+import SelectCouleur from "../materiel/SelectCouleur.vue";
 import useNotification from "../../composables/useNotification.js";
 
 const { data, callback } = defineProps({
@@ -20,28 +21,51 @@ const { data, callback } = defineProps({
 const awn = useNotification();
 
 const errors = ref({});
-const form = reactive({ quantite: 1, ...data });
+const form = reactive({
+  quantite: 1,
+  ...data,
+  emplacementRepresentee: { ...data?.emplacement_representee },
+});
 
 const typeStore = useMaterielTypeStore();
 await typeStore.fetchMaterielTypes();
 
 const type = computed(() => typeStore.liste.find((t) => t.id == form.materiel_type_id));
 
+// Un article est_emplacement (ex: véhicule) déjà existant peut changer de type,
+// mais uniquement vers un autre sous-type partageant le même discriminant. Ne
+// s'applique pas à la création : un nouvel article doit pouvoir choisir
+// n'importe quel type, y compris changer d'avis après un premier choix.
+const typeOptions = computed(() =>
+  form.id && type.value?.est_emplacement
+    ? typeStore.liste.filter((t) => t.type === type.value.type)
+    : typeStore.liste,
+);
+
 const { closeModal } = useModalStore();
 
 const save = async () => {
   const isCreation = (form.id || 0) === 0;
 
-  // Un article doit être rattaché soit à un sapeur, soit à un emplacement.
-  // Ici seul l'emplacement est saisissable (les articles attribués à un sapeur
-  // masquent ce champ), donc le seul cas invalide possible est « ni l'un ni
-  // l'autre » : on l'empêche pour ne pas envoyer un payload rejeté par l'API.
-  if (!form.sapeur_id && !form.emplacement_id) {
+  if (type.value?.est_emplacement) {
+    if (!form.emplacementRepresentee.couleur_id) {
+      awn.warning("Veuillez sélectionner une couleur");
+      return;
+    }
+  } else if (!form.sapeur_id && !form.emplacement_id) {
+    // Un article doit être rattaché soit à un sapeur, soit à un emplacement.
+    // Ici seul l'emplacement est saisissable (les articles attribués à un sapeur
+    // masquent ce champ), donc le seul cas invalide possible est « ni l'un ni
+    // l'autre » : on l'empêche pour ne pas envoyer un payload rejeté par l'API.
     awn.warning("Veuillez sélectionner un emplacement");
     return;
   }
 
-  (isCreation ? ArticleService.creerArticles : ArticleService.updateArticles)([form])
+  const payload = type.value?.est_emplacement
+    ? { ...form, emplacement_id: null, sapeur_id: null, emplacement: form.emplacementRepresentee }
+    : form;
+
+  (isCreation ? ArticleService.creerArticles : ArticleService.updateArticles)([payload])
     .then(() => {
       closeModal();
       callback();
@@ -61,12 +85,12 @@ const save = async () => {
         v-model="form.materiel_type_id"
         :required="true"
         placeholder="<Sélectionnez un type de matériel>"
-        :disabled="form.id"
+        :disabled="form.id && !type?.est_emplacement"
         class="mb-3"
         :class="{ 'is-invalid': errors['materiel_type_id'] }"
         label="Matériel type"
         display-key="designation"
-        :options="typeStore.liste"
+        :options="typeOptions"
       />
       <div v-if="!form.id && type && !type.est_numerote" class="mb-3">
         <label for="quantite">Quantité</label>
@@ -81,7 +105,7 @@ const save = async () => {
         />
       </div>
       <select-emplacement
-        v-if="!form.id || form.emplacement_id"
+        v-if="!type?.est_emplacement && (!form.id || form.emplacement_id)"
         v-model="form.emplacement_id"
         :required="!form.sapeur_id"
         label="Emplacement"
@@ -122,6 +146,30 @@ const save = async () => {
           :class="{ 'is-invalid': errors['chassis'] }"
         />
       </div>
+      <template v-if="type && type.est_emplacement">
+        <select-emplacement
+          v-model="form.emplacementRepresentee.parent_id"
+          :emplacement-id-to-ignore="form.emplacementRepresentee.id ?? -1"
+          :emplacement-racine="true"
+          label="Où sera garé ce véhicule"
+          class="mb-3"
+        />
+        <select-couleur
+          v-model="form.emplacementRepresentee.couleur_id"
+          label="Couleur de l'emplacement"
+          class="mb-3"
+        />
+        <base-checkbox
+          v-model="form.emplacementRepresentee.est_etiquete"
+          class="mb-3"
+          label="Emplacement étiqueté"
+        />
+        <base-checkbox
+          v-model="form.emplacementRepresentee.est_compartimentable"
+          class="mb-3"
+          label="Emplacement compartimenté"
+        />
+      </template>
       <div v-if="type && form.emplacement_id && type.type !== 3" class="mb-3">
         <label for="compartiment">Compartiment</label>
         <input

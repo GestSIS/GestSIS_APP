@@ -758,6 +758,14 @@ const router = createRouter({
           component: () => import("/src/components/parametres/ParametreTabMateriel.vue"),
         },
         {
+          // TEMPORAIRE : page de migration article-emplacement (véhicules/hangars),
+          // à retirer une fois la migration des données existantes terminée.
+          path: "materiel-migration",
+          name: "param-materiel-migration",
+          beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
+          component: () => import("/src/components/admin/PageMigrationMateriel.vue"),
+        },
+        {
           path: "roles",
           name: "param-roles",
           beforeEnter: permissionGuard(permissions.UTILISATEUR.CONFIG),

@@ -4,6 +4,7 @@ import { computed, nextTick, useTemplateRef } from "vue";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import { indexedData } from "../../tools/index.js";
+import { emplacementIdPourArticle } from "../../tools/materiel.js";
 import { Select } from "vue3-select-component";
 import {
   SelectRoot,
@@ -205,8 +206,8 @@ const selectMaterielTypeNumerote = (item, value) => {
                         {{ indexedSapeurs[article.sapeur_id]?.nom_prenom }}
                       </span>
                       <tag-couleur
-                        v-for="id in article?.emplacement_id
-                          ? emplacementAncestors(article.emplacement_id)
+                        v-for="id in emplacementIdPourArticle(article)
+                          ? emplacementAncestors(emplacementIdPourArticle(article))
                           : []"
                         :key="id"
                         :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"
@@ -232,8 +233,8 @@ const selectMaterielTypeNumerote = (item, value) => {
                     {{ indexedSapeurs[article.sapeur_id]?.nom_prenom }}
                   </span>
                   <tag-couleur
-                    v-for="id in article.emplacement_id
-                      ? emplacementAncestors(article.emplacement_id)
+                    v-for="id in emplacementIdPourArticle(article)
+                      ? emplacementAncestors(emplacementIdPourArticle(article))
                       : []"
                     :key="id"
                     :couleur="indexedCouleurs[indexedEmplacements[id].couleur_id]"

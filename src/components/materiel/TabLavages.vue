@@ -5,6 +5,7 @@ import { useEmplacementStore } from "../../stores/materiel/Emplacement";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import TagCouleur from "./TagCouleur.vue";
 import { indexedData } from "../../tools/index.js";
+import { emplacementIdPourArticle } from "../../tools/materiel.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import LavageService from "../../services/materiel/LavageService";
 import useHasPermission from "../../composables/usePermission.js";
@@ -70,7 +71,7 @@ const computedData = computed(() =>
       id: a.id,
       nbLavages: a.article.lavages.length,
       designation: indexedTypes.value[a.article.materiel_type_id]?.designation,
-      emplacements: linearEmplacements(a.article.emplacement_id),
+      emplacements: linearEmplacements(emplacementIdPourArticle(a.article)),
       emplacement: indexedEmplacements.value[a.emplacement_id]?.designation ?? "",
       sapeur: indexedSapeurs.value[a.article.sapeur_id]?.nom_prenom ?? "",
     }))

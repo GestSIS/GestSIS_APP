@@ -5,6 +5,7 @@ import { useCouleurStore } from "../../stores/materiel/Couleur";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import { groupedByData, indexedData } from "../../tools/index.js";
+import { emplacementIdPourArticle } from "../../tools/materiel.js";
 import useHasPermission from "../../composables/usePermission.js";
 import permissions from "../../composables/permissions.js";
 import ArticleService from "../../services/materiel/ArticleService";
@@ -63,14 +64,17 @@ const linearEmplacements = (emplacement_id) => {
 
 const computedData = computed(() => {
   const items = articles.value
-    .map((a) => ({
-      ...a,
-      emplacements: linearEmplacements(a.emplacement_id),
-      nbLavages: (a.lavages ?? []).length,
-      sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? "",
-      emplacement: indexedEmplacements.value[a.emplacement_id]?.designation ?? "",
-      generic_emplacement_id: (a.sapeur_id ?? "") + "_" + (a.emplacement_id ?? ""),
-    }))
+    .map((a) => {
+      const emplacementId = emplacementIdPourArticle(a);
+      return {
+        ...a,
+        emplacements: linearEmplacements(emplacementId),
+        nbLavages: (a.lavages ?? []).length,
+        sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? "",
+        emplacement: indexedEmplacements.value[emplacementId]?.designation ?? "",
+        generic_emplacement_id: (a.sapeur_id ?? "") + "_" + (emplacementId ?? ""),
+      };
+    })
     .filter((a) => a.statut)
     .map((a) => ({
       ...a,

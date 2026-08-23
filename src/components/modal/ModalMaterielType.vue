@@ -73,9 +73,24 @@ const save = async () => {
         label="Catégorie"
         class="mb-3"
       />
-      <base-checkbox v-model="activeItem.est_attribuable" class="mb-3" label="Est attribuable" />
-      <base-checkbox v-model="activeItem.est_taillee" class="mb-3" label="Possède une taille" />
-      <base-checkbox v-model="activeItem.est_lavable" class="mb-3" label="Suivi des lavages" />
+      <base-checkbox
+        v-if="activeItem.type !== 3"
+        v-model="activeItem.est_attribuable"
+        class="mb-3"
+        label="Est attribuable"
+      />
+      <base-checkbox
+        v-if="activeItem.type !== 3"
+        v-model="activeItem.est_taillee"
+        class="mb-3"
+        label="Possède une taille"
+      />
+      <base-checkbox
+        v-if="activeItem.type !== 3"
+        v-model="activeItem.est_lavable"
+        class="mb-3"
+        label="Suivi des lavages"
+      />
       <base-checkbox v-model="activeItem.est_numerote" class="mb-3" label="Est numéroté" />
       <div v-if="activeItem.est_numerote" class="mb-3">
         <label for="designation">Préfix (numérotation)</label>

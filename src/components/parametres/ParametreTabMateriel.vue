@@ -2,6 +2,7 @@
 import ParametreMaterielTypeCategorie from "./ParametreMaterielTypeCategorie.vue";
 import ParametreMaterielCouleur from "./ParametreMaterielCouleur.vue";
 import ParametreMaterielEmplacement from "./ParametreMaterielEmplacement.vue";
+import ParametreMaterielHangar from "./ParametreMaterielHangar.vue";
 import ParametreBatterieType from "./ParametreBatterieType.vue";
 import ParametreTuyauDiametre from "./ParametreTuyauDiametre.vue";
 import { ref } from "vue";
@@ -46,6 +47,15 @@ const tab = ref("categorie");
           </a>
           <a
             class="nav-link"
+            :class="{ active: tab === 'hangar' }"
+            href="#"
+            role="tab"
+            @click.prevent="tab = 'hangar'"
+          >
+            Hangars
+          </a>
+          <a
+            class="nav-link"
             :class="{ active: tab === 'batterie-type' }"
             href="#"
             role="tab"
@@ -70,6 +80,7 @@ const tab = ref("categorie");
         <parametre-materiel-type-categorie v-if="tab === 'categorie'" />
         <parametre-materiel-couleur v-else-if="tab === 'couleur'" />
         <parametre-materiel-emplacement v-else-if="tab === 'emplacement'" />
+        <parametre-materiel-hangar v-else-if="tab === 'hangar'" />
         <parametre-batterie-type v-else-if="tab === 'batterie-type'" />
         <parametre-tuyau-diametre v-else-if="tab === 'tuyau-diametre'" />
         <template #fallback>Chargement...</template>

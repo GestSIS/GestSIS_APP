@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "23.08.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout des hangars, type d'emplacement spécial",
+        "Les vehicules sont désormais des emplacements, ce qui permet d'avoir une interface plus simple"
+      ]
+    },
+    {
       "date": "21.08.2026",
       "version": "1.0",
       "app": "GestSIS APP",

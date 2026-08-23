@@ -55,13 +55,23 @@ const fields = [
             :options="typeStore.liste"
           />
           <select-emplacement
-            v-if="!activeItem.id || activeItem.emplacement_id"
+            v-if="type && !type.est_emplacement && (!activeItem.id || activeItem.emplacement_id)"
             v-model="activeItem.emplacement_id"
             :disabled="true"
             label="Emplacement"
             class="mb-3"
           />
-          <div v-if="!activeItem.id || activeItem.emplacement_id" class="mb-3">
+          <select-emplacement
+            v-if="type && type.est_emplacement"
+            :model-value="activeItem.emplacement_representee?.parent_id"
+            :disabled="true"
+            label="Où est garé ce véhicule"
+            class="mb-3"
+          />
+          <div
+            v-if="type && !type.est_emplacement && (!activeItem.id || activeItem.emplacement_id)"
+            class="mb-3"
+          >
             <label for="compartiment">Compartiment</label>
             <input
               id="compartiment"

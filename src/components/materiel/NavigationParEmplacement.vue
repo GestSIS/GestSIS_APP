@@ -11,8 +11,7 @@ import { useModalStore } from "../../stores/common/Modal";
 const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
 
-couleurStore.fetchCouleurs();
-emplacementStore.fetchEmplacements();
+await Promise.all([couleurStore.fetchCouleurs(), emplacementStore.fetchEmplacements()]);
 
 const hasConfigPermission = useHasPermission(permissions.MATERIEL.CONFIG);
 
@@ -105,6 +104,18 @@ const ajoutEmplacement = () =>
           @click="navigate"
         >
           <tag-couleur :couleur="indexedCouleurs[item.couleur_id]">
+            <font-awesome-icon
+              v-if="item.hangar"
+              v-tooltip.bottom="'Hangar'"
+              :icon="['far', 'house']"
+              class="me-1"
+            />
+            <font-awesome-icon
+              v-if="item.article_id"
+              v-tooltip.bottom="'Véhicule'"
+              :icon="['fas', 'car']"
+              class="me-1"
+            />
             {{ item.designation }}
           </tag-couleur>
         </a>

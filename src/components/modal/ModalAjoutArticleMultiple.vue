@@ -1,10 +1,11 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import useNotification from "../../composables/useNotification.js";
 
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import { indexedData } from "../../tools/index.js";
 
 import ArticleService from "../../services/materiel/ArticleService";
 import ArticleCreation from "../materiel/ArticleCreation.vue";
@@ -38,6 +39,8 @@ await Promise.all([
   sapeurStore.fetchListeSapeur(),
 ]);
 
+const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
+
 const { closeModal } = useModalStore();
 const save = async () => {
   if (!activeAttribution.value.emplacement_id) {
@@ -45,12 +48,15 @@ const save = async () => {
     return;
   }
 
-  // Création du matériel
-  const articles = activeAttribution.value.articles.map((a) => ({
-    ...a,
-    emplacement_id: activeAttribution.value.emplacement_id,
-    sapeur_id: null,
-  }));
+  // Création du matériel : un article qui est lui-même un emplacement (ex: véhicule)
+  // n'est pas rangé dans l'emplacement ciblé par ce formulaire, il garde son propre
+  // emplacement (saisi ligne par ligne dans article-creation). Pour les autres, la
+  // clé `emplacement` de la ligne n'a pas de sens ici et n'est pas transmise.
+  const articles = activeAttribution.value.articles.map(({ emplacement, ...a }) =>
+    indexedTypes.value[a.materiel_type_id]?.est_emplacement
+      ? { ...a, emplacement, emplacement_id: null, sapeur_id: null }
+      : { ...a, emplacement_id: activeAttribution.value.emplacement_id, sapeur_id: null },
+  );
   ArticleService.creerArticles(articles)
     .then(() => {
       callback();
