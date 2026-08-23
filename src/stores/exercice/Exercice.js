@@ -21,7 +21,7 @@ export const useExerciceStore = defineStore("exercice", {
   actions: {
     async fetchListeExercice(exerciceComptableId) {
       const data = await ExerciceService.getExercices(exerciceComptableId);
-      this.liste = data.slice(0).sort((e1, e2) => new Date(e2.date) - new Date(e1.date));
+      this.liste = (data ?? []).slice(0).sort((e1, e2) => new Date(e2.date) - new Date(e1.date));
     },
     async fetchExerciceAbsences(exerciceComptableId) {
       this.absences = await ExerciceService.getAbsences(exerciceComptableId);
