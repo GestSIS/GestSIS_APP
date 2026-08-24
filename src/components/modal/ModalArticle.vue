@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, watchEffect } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import ArticleService from "../../services/materiel/ArticleService";
@@ -20,10 +20,12 @@ const { data, callback } = defineProps({
 
 const awn = useNotification();
 
+const { vehiculeUniquement, ...articleData } = data ?? {};
+
 const errors = ref({});
 const form = reactive({
   quantite: 1,
-  ...data,
+  ...articleData,
   emplacementRepresentee: { ...data?.emplacement_representee },
 });
 
@@ -36,13 +38,20 @@ const type = computed(() => typeStore.liste.find((t) => t.id == form.materiel_ty
 // mais uniquement vers un autre sous-type partageant le même discriminant. Ne
 // s'applique pas à la création : un nouvel article doit pouvoir choisir
 // n'importe quel type, y compris changer d'avis après un premier choix.
-const typeOptions = computed(() =>
-  form.id && type.value?.est_emplacement
-    ? typeStore.liste.filter((t) => t.type === type.value.type)
-    : typeStore.liste,
-);
+// Depuis le flux "Ajouter un emplacement > Véhicule", seuls les types véhicule
+// (est_emplacement) sont pertinents à la création.
+const typeOptions = computed(() => {
+  if (form.id && type.value?.est_emplacement) {
+    return typeStore.liste.filter((t) => t.type === type.value.type);
+  }
+  if (!form.id && vehiculeUniquement) {
+    return typeStore.liste.filter((t) => t.est_emplacement);
+  }
+  return typeStore.liste;
+});
 
-const { closeModal } = useModalStore();
+const { closeModal, resize } = useModalStore();
+watchEffect(() => resize(type.value?.est_emplacement ? 1 : 0));
 
 const save = async () => {
   const isCreation = (form.id || 0) === 0;

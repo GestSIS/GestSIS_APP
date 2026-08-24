@@ -1,10 +1,20 @@
 <script setup>
 import { useModalStore } from "../../stores/common/Modal.js";
+import { useEmplacementStore } from "../../stores/materiel/Emplacement.js";
 
 const { showModal, closeModal } = useModalStore();
+const emplacementStore = useEmplacementStore();
 
 const choisirHangar = () => showModal({ component: "ModalHangar", data: {} });
 const choisirEmplacement = () => showModal({ component: "ModalEmplacement", data: {} });
+const choisirVehicule = () =>
+  showModal({
+    component: "ModalArticle",
+    data: { vehiculeUniquement: true },
+    // La création d'un véhicule crée son emplacement représenté côté serveur sans
+    // passer par emplacementStore.addEmplacement, d'où le rafraîchissement manuel.
+    callback: () => emplacementStore.fetchEmplacements(),
+  });
 </script>
 
 <template>
@@ -15,7 +25,7 @@ const choisirEmplacement = () => showModal({ component: "ModalEmplacement", data
     </div>
     <div class="modal-body">
       <div class="row g-3">
-        <div class="col-6">
+        <div class="col-4">
           <button
             type="button"
             class="btn btn-outline-primary w-100 py-4 d-flex flex-column align-items-center"
@@ -25,7 +35,7 @@ const choisirEmplacement = () => showModal({ component: "ModalEmplacement", data
             Hangar
           </button>
         </div>
-        <div class="col-6">
+        <div class="col-4">
           <button
             type="button"
             class="btn btn-outline-primary w-100 py-4 d-flex flex-column align-items-center"
@@ -33,6 +43,16 @@ const choisirEmplacement = () => showModal({ component: "ModalEmplacement", data
           >
             <font-awesome-icon :icon="['fas', 'box']" size="2x" class="mb-2" />
             Emplacement simple
+          </button>
+        </div>
+        <div class="col-4">
+          <button
+            type="button"
+            class="btn btn-outline-primary w-100 py-4 d-flex flex-column align-items-center"
+            @click="choisirVehicule"
+          >
+            <font-awesome-icon :icon="['fas', 'car']" size="2x" class="mb-2" />
+            Véhicule
           </button>
         </div>
       </div>
