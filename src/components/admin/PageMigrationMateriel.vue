@@ -24,19 +24,23 @@ await Promise.all([
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
 
 const emplacementsDisponibles = computed(() =>
-  emplacementStore.liste.filter((e) => e.article_id === null),
+  emplacementStore.liste.filter((e) => e.article_id === null && !e.hangar),
 );
+const typesVehicule = computed(() => materielTypeStore.liste.filter((t) => t.est_emplacement));
 
 // --- Emplacements sans hangar ---
 const emplacementsSansHangar = ref([]);
 const loadingHangars = ref(true);
 const hangarForms = reactive({});
 
+const vehiculeForms = reactive({});
+
 const loadEmplacementsSansHangar = async () => {
   loadingHangars.value = true;
   emplacementsSansHangar.value = await MigrationMaterielService.getEmplacementsSansHangar();
   emplacementsSansHangar.value.forEach((e) => {
     hangarForms[e.id] ??= { rue: "", no_rue: "", localite_id: null };
+    vehiculeForms[e.id] ??= { materiel_type_id: null, immatriculation: "", chassis: "" };
   });
   loadingHangars.value = false;
 };
@@ -51,6 +55,20 @@ const transformerEnHangar = (emplacement) => {
   MigrationMaterielService.transformerEnHangar(emplacement.id, form)
     .then(loadEmplacementsSansHangar)
     .catch((err) => awn.alert(err.message || "Erreur lors de la transformation"));
+};
+
+const convertirEnVehicule = (emplacement) => {
+  const form = vehiculeForms[emplacement.id];
+  if (!form.materiel_type_id) {
+    awn.warning("Veuillez sélectionner un type de véhicule");
+    return;
+  }
+  MigrationMaterielService.convertirEnVehicule(emplacement.id, form)
+    .then(() => {
+      loadEmplacementsSansHangar();
+      emplacementStore.fetchEmplacements();
+    })
+    .catch((err) => awn.alert(err.message || "Erreur lors de la conversion"));
 };
 
 // --- Véhicules sans emplacement ---
@@ -137,6 +155,65 @@ const lierEmplacement = (article) => {
                     @click="transformerEnHangar(emplacement)"
                   >
                     Transformer
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 mb-4">
+      <div class="card card-primary card-outline">
+        <div class="card-header">
+          <h3 class="card-title">Convertir un emplacement en véhicule (sans article existant)</h3>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Emplacement</th>
+                <th>Type de véhicule</th>
+                <th>Immatriculation</th>
+                <th>Chassis</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody v-if="!loadingHangars">
+              <tr v-if="emplacementsSansHangar.length === 0">
+                <td colspan="5">Aucun emplacement candidat.</td>
+              </tr>
+              <tr v-for="emplacement in emplacementsSansHangar" :key="emplacement.id">
+                <td>{{ emplacement.designation }}</td>
+                <td>
+                  <base-select
+                    v-model="vehiculeForms[emplacement.id].materiel_type_id"
+                    placeholder="<Sélectionnez un type>"
+                    display-key="designation"
+                    :options="typesVehicule"
+                  />
+                </td>
+                <td>
+                  <input
+                    v-model="vehiculeForms[emplacement.id].immatriculation"
+                    type="text"
+                    class="form-control form-control-sm"
+                  />
+                </td>
+                <td>
+                  <input
+                    v-model="vehiculeForms[emplacement.id].chassis"
+                    type="text"
+                    class="form-control form-control-sm"
+                  />
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-primary"
+                    @click="convertirEnVehicule(emplacement)"
+                  >
+                    Convertir
                   </button>
                 </td>
               </tr>

@@ -17,4 +17,7 @@ export default {
       emplacement_id: emplacementId,
     });
   },
+  convertirEnVehicule(emplacementId, data) {
+    return Api.api().post(`admin/migration/emplacements/${emplacementId}/vehicule`, data);
+  },
 };
