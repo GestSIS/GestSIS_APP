@@ -16,6 +16,10 @@ const { label, trueValue, falseValue } = defineProps({
     type: [Boolean, Number, Function],
     default: false,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 </script>
 
@@ -24,6 +28,7 @@ const { label, trueValue, falseValue } = defineProps({
     <input
       :id="label"
       v-model="model"
+      :disabled="disabled"
       class="form-check-input"
       type="checkbox"
       v-bind="$attrs"

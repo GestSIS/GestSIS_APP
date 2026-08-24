@@ -136,10 +136,7 @@ const save = async () => {
                 :class="{ 'is-invalid': errors['designation'] }"
               />
             </div>
-            <div class="mb-3">
-              <input id="actif" v-model="form.statut" type="checkbox" class="form-check-input" />
-              <label class="form-check-label" for="actif">Actif</label>
-            </div>
+            <base-checkbox v-model="form.statut" class="mb-3" label="Actif" />
             <div class="mb-3">
               <label for="immatriculation">Immatriculation</label>
               <input

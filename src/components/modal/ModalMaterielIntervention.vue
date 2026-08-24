@@ -100,19 +100,13 @@ const save = async () => {
         display-key="unite"
         :options="unites"
       />
-      <div class="mb-3">
-        <div class="form-check">
-          <input
-            id="materiel-status-modal"
-            v-model="form.statut"
-            type="checkbox"
-            class="form-check-input"
-            :true-value="1"
-            :false-value="0"
-          />
-          <label class="form-check-label" for="materiel-status-modal">Actif</label>
-        </div>
-      </div>
+      <base-checkbox
+        v-model="form.statut"
+        class="mb-3"
+        label="Actif"
+        :true-value="1"
+        :false-value="0"
+      />
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
