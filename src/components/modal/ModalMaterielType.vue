@@ -89,13 +89,23 @@ const save = async () => {
             class="mb-3"
           />
           <div class="mb-3">
-            <label for="designation">Fournisseur</label>
+            <label for="fournisseur">Fournisseur</label>
             <input
               id="fournisseur"
               v-model="activeItem.fournisseur"
               type="text"
               class="form-control form-control-sm"
               :class="{ 'is-invalid': errors['fournisseur'] }"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="numero_fournisseur">Numéro d'article fournisseur</label>
+            <input
+              id="numero_fournisseur"
+              v-model="activeItem.numero_fournisseur"
+              type="text"
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['numero_fournisseur'] }"
             />
           </div>
           <div class="mb-3">

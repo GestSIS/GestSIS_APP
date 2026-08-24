@@ -55,6 +55,10 @@ const editMateriel = () =>
               <td>{{ formatEmptyString(materielType.fournisseur) }}</td>
             </tr>
             <tr>
+              <th>Numéro d'article fournisseur</th>
+              <td>{{ formatEmptyString(materielType.numero_fournisseur) }}</td>
+            </tr>
+            <tr>
               <th>Réparateur</th>
               <td>{{ formatEmptyString(materielType.reparateur) }}</td>
             </tr>
