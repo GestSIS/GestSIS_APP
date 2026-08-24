@@ -117,7 +117,7 @@ const editMateriel = () =>
         </template>
       </base-card>
     </div>
-    <div v-if="materielType.type === 2" class="col">
+    <div v-if="materielType.a_batterie" class="col">
       <base-card>
         <template #title>Informations sur les batteries</template>
         <template #body>

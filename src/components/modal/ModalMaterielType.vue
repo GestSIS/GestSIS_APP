@@ -21,6 +21,7 @@ const activeItem = ref({
   est_numerote: false,
   est_taillee: false,
   est_lavable: false,
+  a_batterie: false,
   ...data,
   tuyau: data?.tuyau ?? {
     separement: true,
@@ -78,7 +79,6 @@ const save = async () => {
             :options="[
               { id: 0, designation: 'Standard' },
               { id: 1, designation: 'Tuyau' },
-              { id: 2, designation: 'Batterie' },
               { id: 3, designation: 'Vehicule' },
             ]"
           />
@@ -135,27 +135,25 @@ const save = async () => {
             <base-checkbox
               v-if="activeItem.type !== 3"
               v-model="activeItem.est_attribuable"
-              class="mb-3"
               label="Est attribuable"
             />
             <base-checkbox
               v-if="activeItem.type !== 3"
               v-model="activeItem.est_taillee"
-              class="mb-3"
               label="Possède une taille"
             />
             <base-checkbox
               v-if="activeItem.type !== 3"
               v-model="activeItem.est_lavable"
-              class="mb-3"
               label="Suivi des lavages"
             />
+            <base-checkbox v-model="activeItem.a_batterie" class="mb-0" label="A une batterie" />
             <base-checkbox
               v-model="activeItem.est_numerote"
               :class="activeItem.est_numerote ? 'mb-3' : 'mb-0'"
               label="Est numéroté"
             />
-            <div v-if="activeItem.est_numerote" class="mb-0">
+            <div v-if="activeItem.est_numerote" class="mb-3">
               <label for="designation">Préfix (numérotation)</label>
               <input
                 id="prefix"
@@ -201,7 +199,7 @@ const save = async () => {
               />
             </fieldset>
           </template>
-          <template v-if="activeItem.type === 2">
+          <template v-if="activeItem.a_batterie">
             <legend class="w-auto px-2 fs-6 mb-2">Batterie</legend>
             <fieldset class="border rounded p-3">
               <div class="mb-3">
