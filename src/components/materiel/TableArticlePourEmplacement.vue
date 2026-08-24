@@ -51,7 +51,8 @@ const linearCategories = (categorieId) => {
 };
 
 const piecesColonnes = computed(() => [
-  { title: "Type", key: "typeDesignation" },
+  { title: "Matériel", key: "typeDesignation" },
+  { title: "Emplacement", key: "emplacement_sort", slot: "emplacement" },
   ...(emplacement?.est_compartimentable ? [{ title: "Compartiment", key: "compartiment" }] : []),
   { title: "Numéro", key: "numero" },
   { title: "Taille", key: "taille" },
@@ -108,6 +109,15 @@ const supprimer = (article) =>
       >
         {{ categorie.designation }}
       </tag-couleur>
+    </template>
+
+    <template #emplacement="{ rowData }">
+      <tag-couleur
+        v-for="e in rowData.emplacements"
+        :key="e.id"
+        :couleur="indexedCouleurs[e.couleur_id]"
+        >{{ e.designation }}</tag-couleur
+      >
     </template>
 
     <template #actions="{ rowData }">

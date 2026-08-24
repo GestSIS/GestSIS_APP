@@ -48,6 +48,18 @@ await Promise.all([
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedCategories = computed(() => indexedData(materielCategorieStore.liste));
+const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
+
+const linearEmplacements = (emplacementId) => {
+  if (emplacementId === null) {
+    return [];
+  }
+  const emp = indexedEmplacements.value[emplacementId] ?? null;
+  if (emp === null) {
+    return [];
+  }
+  return [...linearEmplacements(emp.parent_id), emp];
+};
 
 const computedData = computed(() =>
   Object.entries(
@@ -59,6 +71,7 @@ const computedData = computed(() =>
           nbLavages: (a.lavages ?? []).length,
           typeDesignation: indexedTypes.value[a.materiel_type_id]?.designation,
           categorie_id: indexedTypes.value[a.materiel_type_id]?.materiel_categorie_id,
+          emplacements: linearEmplacements(a.emplacement_id),
         }))
         .filter((a) => a.statut),
       "categorie_id",
@@ -182,10 +195,11 @@ const ajouter = () =>
           <table-article-pour-type
             :loading="loading"
             :articles="rowData.data"
-            :avec-emplacement="false"
+            :avec-emplacement="true"
             :materiel-type="rowData.type"
             :refresh="loadArticles"
             :emplacement="emplacement"
+            :hide-download="true"
           />
         </template>
 
