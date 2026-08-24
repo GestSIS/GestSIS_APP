@@ -31,7 +31,7 @@ const computedData = computed(() => {
 const { confirm, showModal } = useModalStore();
 const awn = useNotification();
 
-const ajout = () => showModal({ component: "ModalEmplacement", data: {} });
+const ajout = () => showModal({ component: "ModalChoixTypeEmplacement", data: {} });
 const update = (elem) =>
   showModal({
     component: elem.hangar ? "ModalHangar" : "ModalEmplacement",

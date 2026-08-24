@@ -52,7 +52,7 @@ const computedData = computed(() => {
 const { showModal } = useModalStore();
 const ajoutEmplacement = () =>
   showModal({
-    component: "ModalEmplacement",
+    component: "ModalChoixTypeEmplacement",
     data: {},
   });
 </script>

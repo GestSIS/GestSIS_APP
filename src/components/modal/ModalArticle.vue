@@ -111,117 +111,171 @@ const save = async () => {
         label="Emplacement"
         class="mb-3"
       />
-      <div v-if="type && type.type === 3" class="mb-3">
-        <label for="designation">Désignation</label>
-        <input
-          id="designation"
-          v-model="form.designation"
-          required
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['designation'] }"
-        />
+
+      <div v-if="type && type.est_emplacement" class="row">
+        <div class="col-6">
+          <legend class="w-auto px-2 fs-6 mb-2">Véhicule</legend>
+          <fieldset class="border rounded p-3 h-100">
+            <div class="mb-3">
+              <label for="designation">Désignation</label>
+              <input
+                id="designation"
+                v-model="form.designation"
+                required
+                type="text"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['designation'] }"
+              />
+            </div>
+            <div class="mb-3">
+              <input id="actif" v-model="form.statut" type="checkbox" class="form-check-input" />
+              <label class="form-check-label" for="actif">Actif</label>
+            </div>
+            <div class="mb-3">
+              <label for="immatriculation">Immatriculation</label>
+              <input
+                id="immatriculation"
+                v-model="form.immatriculation"
+                type="text"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['immatriculation'] }"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="chassis">Chassis</label>
+              <input
+                id="chassis"
+                v-model="form.chassis"
+                type="text"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['chassis'] }"
+              />
+            </div>
+            <base-checkbox
+              v-model="form.est_etiquete"
+              class="mb-3"
+              label="Est étiquetté correctement"
+            />
+            <div v-if="type.est_numerote" class="mb-3">
+              <label for="numero">Numéro</label>
+              <input
+                id="numero"
+                v-model="form.numero"
+                required
+                type="text"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['numero'] }"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="achat">Achat</label>
+              <input
+                id="achat"
+                v-model="form.achat"
+                type="text"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['achat'] }"
+              />
+            </div>
+            <div class="mb-0">
+              <label for="remarque">Remarque</label>
+              <input
+                id="remarque"
+                v-model="form.remarque"
+                type="text"
+                class="form-control form-control-sm"
+                :class="{ 'is-invalid': errors['remarque'] }"
+              />
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-6">
+          <legend class="w-auto px-2 fs-6 mb-2">Emplacement</legend>
+          <fieldset class="border rounded p-3 h-100">
+            <select-emplacement
+              v-model="form.emplacementRepresentee.parent_id"
+              :emplacement-id-to-ignore="form.emplacementRepresentee.id ?? -1"
+              :emplacement-racine="true"
+              label="Où sera garé ce véhicule"
+              class="mb-3"
+            />
+            <select-couleur
+              v-model="form.emplacementRepresentee.couleur_id"
+              label="Couleur de l'emplacement"
+              class="mb-3"
+            />
+            <base-checkbox
+              v-model="form.emplacementRepresentee.est_etiquete"
+              class="mb-3"
+              label="Emplacement étiqueté"
+            />
+            <base-checkbox
+              v-model="form.emplacementRepresentee.est_compartimentable"
+              class="mb-0"
+              label="Emplacement compartimenté"
+            />
+          </fieldset>
+        </div>
       </div>
-      <div v-if="type && type.type === 3" class="mb-3">
-        <input id="actif" v-model="form.statut" type="checkbox" class="form-check-input" />
-        <label class="form-check-label" for="actif">Actif</label>
-      </div>
-      <div v-if="type && type.type === 3" class="mb-3">
-        <label for="immatriculation">Immatriculation</label>
-        <input
-          id="immatriculation"
-          v-model="form.immatriculation"
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['immatriculation'] }"
-        />
-      </div>
-      <div v-if="type && type.type === 3" class="mb-3">
-        <label for="chassis">Chassis</label>
-        <input
-          id="chassis"
-          v-model="form.chassis"
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['chassis'] }"
-        />
-      </div>
-      <template v-if="type && type.est_emplacement">
-        <select-emplacement
-          v-model="form.emplacementRepresentee.parent_id"
-          :emplacement-id-to-ignore="form.emplacementRepresentee.id ?? -1"
-          :emplacement-racine="true"
-          label="Où sera garé ce véhicule"
-          class="mb-3"
-        />
-        <select-couleur
-          v-model="form.emplacementRepresentee.couleur_id"
-          label="Couleur de l'emplacement"
-          class="mb-3"
-        />
+
+      <template v-else>
+        <div v-if="type && form.emplacement_id" class="mb-3">
+          <label for="compartiment">Compartiment</label>
+          <input
+            id="compartiment"
+            v-model="form.compartiment"
+            type="text"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['compartiment'] }"
+          />
+        </div>
         <base-checkbox
-          v-model="form.emplacementRepresentee.est_etiquete"
+          v-model="form.est_etiquete"
           class="mb-3"
-          label="Emplacement étiqueté"
+          label="Est étiquetté correctement"
         />
-        <base-checkbox
-          v-model="form.emplacementRepresentee.est_compartimentable"
-          class="mb-3"
-          label="Emplacement compartimenté"
-        />
+        <div v-if="type && type.est_numerote" class="mb-3">
+          <label for="numero">Numéro</label>
+          <input
+            id="numero"
+            v-model="form.numero"
+            required
+            type="text"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['numero'] }"
+          />
+        </div>
+        <div v-if="type && type.est_taillee" class="mb-3">
+          <label for="taille">Taille</label>
+          <input
+            id="taille"
+            v-model="form.taille"
+            type="text"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['taille'] }"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="achat">Achat</label>
+          <input
+            id="achat"
+            v-model="form.achat"
+            type="text"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['achat'] }"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="remarque">Remarque</label>
+          <input
+            id="remarque"
+            v-model="form.remarque"
+            type="text"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['remarque'] }"
+          />
+        </div>
       </template>
-      <div v-if="type && form.emplacement_id && type.type !== 3" class="mb-3">
-        <label for="compartiment">Compartiment</label>
-        <input
-          id="compartiment"
-          v-model="form.compartiment"
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['compartiment'] }"
-        />
-      </div>
-      <base-checkbox v-model="form.est_etiquete" class="mb-3" label="Est étiquetté correctement" />
-      <div v-if="type && type.est_numerote" class="mb-3">
-        <label for="numero">Numéro</label>
-        <input
-          id="numero"
-          v-model="form.numero"
-          required
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['numero'] }"
-        />
-      </div>
-      <div v-if="type && type.est_taillee" class="mb-3">
-        <label for="taille">Taille</label>
-        <input
-          id="taille"
-          v-model="form.taille"
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['taille'] }"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="achat">Achat</label>
-        <input
-          id="achat"
-          v-model="form.achat"
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['achat'] }"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="remarque">Remarque</label>
-        <input
-          id="remarque"
-          v-model="form.remarque"
-          type="text"
-          class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['remarque'] }"
-        />
-      </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>

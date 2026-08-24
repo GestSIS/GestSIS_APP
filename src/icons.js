@@ -1,6 +1,7 @@
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faUser,
+  faBox,
   faFireExtinguisher,
   faSitemap,
   faCalculator,
@@ -88,6 +89,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 
 library.add(
+  faBox,
   faArrowUp,
   faArrowDown,
   faRotate,
