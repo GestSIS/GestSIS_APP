@@ -45,7 +45,7 @@ const editVehicule = async (vehiculeId) => {
     ? "addInterventionVehicules"
     : "removeInterventionVehicules";
 
-  interventionStore[event]([vehiculeId])
+  interventionStore[event](id, [vehiculeId])
     .then(() => awn.success("Modifications enregistrées"))
     .catch((err) => awn.alert(err.message ?? "Erreur lors de l'enregistrement"));
 };

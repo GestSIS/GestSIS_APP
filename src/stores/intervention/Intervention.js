@@ -83,8 +83,8 @@ export const useInterventionStore = defineStore("intervention", {
       this.active.materiels = data;
       return data;
     },
-    async removeInterventionMateriel(materielId) {
-      const data = await InterventionService.removeMateriel(this.active.data.id, materielId);
+    async removeInterventionMateriel(interventionId, materielId) {
+      const data = await InterventionService.removeMateriel(interventionId, materielId);
       this.active.materiels = this.active.materiels.filter((p) => p.id !== materielId);
       return data;
     },
@@ -100,13 +100,13 @@ export const useInterventionStore = defineStore("intervention", {
       return data;
     },
     // Vehicules
-    async addInterventionVehicules(vehicules) {
-      const data = await InterventionService.addVehicules(this.active.data.id, vehicules);
+    async addInterventionVehicules(interventionId, vehicules) {
+      const data = await InterventionService.addVehicules(interventionId, vehicules);
       this.active.vehicules = data;
       return data;
     },
-    async removeInterventionVehicules(vehiculeIds) {
-      const data = await InterventionService.removeVehicules(this.active.data.id, vehiculeIds);
+    async removeInterventionVehicules(interventionId, vehiculeIds) {
+      const data = await InterventionService.removeVehicules(interventionId, vehiculeIds);
       this.active.vehicules = this.active.vehicules.filter((p) => !vehiculeIds.includes(p.id));
       return data;
     },
