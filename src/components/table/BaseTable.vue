@@ -128,6 +128,10 @@ const csvEscape = (value) => {
   return /[";\n\r]/.test(s) ? '"' + s.replaceAll('"', '""') + '"' : s;
 };
 
+const exportRows = computed(() =>
+  groupedData.length > 0 ? groupedData.flatMap((g) => g.data) : sortedData.value,
+);
+
 const toCvs = () => {
   // "\ufeff" = BOM UTF-8 : sans lui Excel ouvre le CSV en Latin-1 et casse les accents
   const csv =
@@ -137,7 +141,7 @@ const toCvs = () => {
       .map((f) => csvEscape(f.title))
       .join(";") +
     "\n" +
-    sortedData.value
+    exportRows.value
       .map((e) =>
         fields
           .filter((f) => !f.slot)
