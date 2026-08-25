@@ -39,7 +39,12 @@ const missions = computed(() =>
   })),
 );
 const appels = computed(() => interventionStore.active.appels);
-const jalons = computed(() => interventionStore.active.jalons);
+const jalons = computed(() =>
+  interventionStore.active.jalons.map((j) => ({
+    ...j,
+    sapeur: j.sapeur || sapeurStore.liste.find((s) => s.id == j.sapeur_id)?.nom_prenom,
+  })),
+);
 // TODO: Check si intervention pas déjà imputé
 const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
@@ -90,6 +95,7 @@ const events = computed(() => {
     date: j.date_time,
     title: j.titre,
     description: j.description,
+    responsable: j.sapeur,
     type: "jalon",
     colorClass: "jalon",
     action: jalonAction,
@@ -192,6 +198,8 @@ const newJalon = () => {
     titre: "",
     date_time: null,
     description: "",
+    sapeur_id: null,
+    sapeur: null,
   };
 
   const min = dataInter.value.date_debut + " " + dataInter.value.heure_debut;
@@ -294,6 +302,7 @@ const fieldsJalons = [
   { title: "Date", type: "time", key: "date_time" },
   { title: "Titre", key: "titre" },
   { title: "Description", key: "description" },
+  { title: "Responsable", key: "sapeur" },
   { title: "Actions", slot: "actions" },
 ];
 </script>

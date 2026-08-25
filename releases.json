@@ -3,6 +3,15 @@
     {
       "date": "25.08.2026",
       "version": "1.0",
+      "app": "GestSIS Mobile 2.6.10",
+      "changes": [
+        "Ajout des jalons pour les rapports d'intervention",
+        "Simplification de la saisie de sapeur externes"
+      ]
+    },
+    {
+      "date": "25.08.2026",
+      "version": "1.0",
       "app": "GestSIS APP",
       "changes": ["Ajout jalons libre pour intervention"]
     },
