@@ -25,8 +25,8 @@ onUnmounted(() => {
 });
 
 const reset = async () => {
-  if (password.value.length < 8) {
-    error.value["password"] = "Mot de passe trop court (min 8 charactères)";
+  if (password.value.length < 12) {
+    error.value["password"] = "Mot de passe trop court (min 12 charactères)";
     return;
   }
   error.value = {};
@@ -74,7 +74,7 @@ const reset = async () => {
           autocomplete="off"
           :class="{ 'is-invalid': error.password }"
         />
-        <div v-if="error.password" class="invalid-feedback">Taille minimum: 8</div>
+        <div v-if="error.password" class="invalid-feedback">Taille minimum: 12</div>
         <label for="inputPasswordConfirmation" class="visually-hidden">Confirmation</label>
         <input
           id="inputPasswordConfirmation"
