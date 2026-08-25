@@ -15,6 +15,7 @@ export const useInterventionStore = defineStore("intervention", {
       vehicules: [],
       materiels: [],
       phases: [],
+      jalons: [],
     },
   }),
   actions: {
@@ -44,6 +45,9 @@ export const useInterventionStore = defineStore("intervention", {
     },
     async fetchInterventionPhases(interventionId) {
       this.active.phases = await InterventionService.getPhases(interventionId);
+    },
+    async fetchInterventionJalons(interventionId) {
+      this.active.jalons = await InterventionService.getJalons(interventionId);
     },
     async fetchInterventionGroupes(interventionId) {
       this.active.groupes = await InterventionService.getGroupes(interventionId);
@@ -191,6 +195,22 @@ export const useInterventionStore = defineStore("intervention", {
     async removePhase(phaseId) {
       const data = await InterventionService.removePhase(this.active.data.id, phaseId);
       this.active.phases = this.active.phases.filter((p) => p.id !== phaseId);
+      return data;
+    },
+    // Jalons
+    async addInterventionJalon(jalon) {
+      const data = await InterventionService.addJalon(this.active.data.id, jalon);
+      this.active.jalons = data;
+      return data;
+    },
+    async editInterventionJalon(jalon) {
+      const data = await InterventionService.editJalon(this.active.data.id, jalon);
+      this.active.jalons = data;
+      return data;
+    },
+    async removeInterventionJalon(jalonId) {
+      const data = await InterventionService.removeJalon(this.active.data.id, jalonId);
+      this.active.jalons = this.active.jalons.filter((p) => p.id !== jalonId);
       return data;
     },
   },

@@ -25,6 +25,7 @@ const form = reactive({
   statut: true,
   missions: true,
   appels: true,
+  jalons: true,
   montants: false,
 });
 
@@ -108,6 +109,10 @@ const generer = () => {
       <div class="form-check">
         <input id="appels" v-model="form.appels" type="checkbox" class="form-check-input" />
         <label class="form-check-label" for="appels">Appels durant l'intervention</label>
+      </div>
+      <div class="form-check">
+        <input id="jalons" v-model="form.jalons" type="checkbox" class="form-check-input" />
+        <label class="form-check-label" for="jalons">Jalons de l'intervention</label>
       </div>
       <div v-if="hasComptabilitePermission && data.statut >= 3" class="form-check">
         <input id="montants" v-model="form.montants" type="checkbox" class="form-check-input" />

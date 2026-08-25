@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "25.08.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Ajout jalons libre pour intervention"]
+    },
+    {
       "date": "23.08.2026",
       "version": "1.0",
       "app": "GestSIS APP",

@@ -25,6 +25,7 @@ watchEffect(async () => {
     interventionStore.fetchIntervention(id),
     interventionStore.fetchInterventionMissions(id),
     interventionStore.fetchInterventionAppels(id),
+    interventionStore.fetchInterventionJalons(id),
   ]);
   loading.value = false;
 });
@@ -38,13 +39,15 @@ const missions = computed(() =>
   })),
 );
 const appels = computed(() => interventionStore.active.appels);
+const jalons = computed(() => interventionStore.active.jalons);
 // TODO: Check si intervention pas déjà imputé
 const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
 const events = computed(() => {
   const events = [];
-  const missionAction = hasEditPermission.value ? editMission.value : () => {};
-  const appelAction = hasEditPermission.value ? editAppel.value : () => {};
+  const missionAction = hasEditPermission.value ? editMission : () => {};
+  const appelAction = hasEditPermission.value ? editAppel : () => {};
+  const jalonAction = hasEditPermission.value ? editJalon : () => {};
   missions.value.forEach((m) => {
     events.push({
       id: m.id,
@@ -80,6 +83,16 @@ const events = computed(() => {
     type: "appel",
     colorClass: "appel",
     action: appelAction,
+  }));
+
+  const eventsJalons = jalons.value.map((j) => ({
+    id: j.id,
+    date: j.date_time,
+    title: j.titre,
+    description: j.description,
+    type: "jalon",
+    colorClass: "jalon",
+    action: jalonAction,
   }));
 
   const chefIntervention = dataInter.value.sapeur_id
@@ -119,7 +132,9 @@ const events = computed(() => {
 
   return [
     startEvent,
-    ...[...events, ...eventsAppels].sort((e1, e2) => new Date(e1.date) - new Date(e2.date)),
+    ...[...events, ...eventsAppels, ...eventsJalons].sort(
+      (e1, e2) => new Date(e1.date) - new Date(e2.date),
+    ),
     endEvent,
   ];
 });
@@ -162,6 +177,44 @@ const editAppel = (id) => {
   showModal({
     component: "ModalAppel",
     data: { appel: cloneAppel, min, max },
+  });
+};
+
+const supprimerJalon = (id) =>
+  confirm(
+    "Voulez-vous vraiment supprimer ce jalon ?",
+    "Attention, la suppression d'un jalon est irréversible ! Toutes les données de ce jalon seront perdues !",
+  ).then(() => interventionStore.removeInterventionJalon(id));
+
+const newJalon = () => {
+  const newJalon = {
+    id: null,
+    titre: "",
+    date_time: null,
+    description: "",
+  };
+
+  const min = dataInter.value.date_debut + " " + dataInter.value.heure_debut;
+  const max = dataInter.value.date_fin + " " + dataInter.value.heure_fin;
+
+  showModal({
+    component: "ModalJalon",
+    data: { jalon: newJalon, min, max },
+  });
+};
+const editJalon = (id) => {
+  const cloneJalon = {};
+  Object.assign(
+    cloneJalon,
+    jalons.value.find((j) => j.id == id),
+  );
+
+  const min = dataInter.value.date_debut + " " + dataInter.value.heure_debut;
+  const max = dataInter.value.date_fin + " " + dataInter.value.heure_fin;
+
+  showModal({
+    component: "ModalJalon",
+    data: { jalon: cloneJalon, min, max },
   });
 };
 
@@ -211,6 +264,7 @@ const icon = (type) => {
   const icons = {
     appel: ["fas", "phone"],
     mission: ["fas", "child"],
+    jalon: ["fas", "flag"],
     start: ["fas", "play"],
     end: ["fas", "stop"],
   };
@@ -234,6 +288,12 @@ const fieldsAppels = [
   { title: "Numéro", key: "numero" },
   { title: "Nom", key: "nom" },
   { title: "Commentaire", key: "commentaire" },
+  { title: "Actions", slot: "actions" },
+];
+const fieldsJalons = [
+  { title: "Date", type: "time", key: "date_time" },
+  { title: "Titre", key: "titre" },
+  { title: "Description", key: "description" },
   { title: "Actions", slot: "actions" },
 ];
 </script>
@@ -340,6 +400,47 @@ const fieldsAppels = [
                     type="button"
                     class="btn btn-outline-danger border-0"
                     @click="supprimerMission(rowData.id)"
+                  >
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
+                </div>
+              </template>
+            </base-table>
+          </div>
+        </div>
+
+        <div class="card card-primary card-outline mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h3 class="card-title">Jalons</h3>
+            <button
+              v-if="hasEditPermission"
+              type="button"
+              class="btn btn-primary"
+              @click="newJalon"
+            >
+              Ajouter un jalon
+            </button>
+          </div>
+          <div class="card-body table-responsive p-0">
+            <base-table
+              :data="jalons"
+              :fields="fieldsJalons"
+              :selectable="true"
+              no-data="Aucun jalon"
+            >
+              <template #actions="{ rowData }">
+                <div class="d-flex justify-content-center">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary border-0"
+                    @click="editJalon(rowData.id)"
+                  >
+                    <font-awesome-icon :icon="['far', 'edit']" />
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger border-0"
+                    @click="supprimerJalon(rowData.id)"
                   >
                     <font-awesome-icon :icon="['far', 'trash-alt']" />
                   </button>
@@ -490,6 +591,11 @@ const fieldsAppels = [
 
   &.appel {
     background-color: var(--bs-primary) !important;
+    opacity: 0.8;
+  }
+
+  &.jalon {
+    background-color: var(--bs-info) !important;
     opacity: 0.8;
   }
 }

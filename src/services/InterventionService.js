@@ -33,6 +33,9 @@ export default {
   getPhases(interventionId) {
     return Api.api().get("/interventions/" + interventionId + "/phases");
   },
+  getJalons(interventionId) {
+    return Api.api().get("/interventions/" + interventionId + "/jalons");
+  },
   createIntervention(interventionData) {
     return Api.api().post("/interventions", interventionData);
   },
@@ -160,6 +163,23 @@ export default {
   removePhase(interventionId, phaseId) {
     return Api.api().delete("/interventions/" + interventionId + "/phases", {
       data: { phases: [phaseId] },
+    });
+  },
+
+  //Jalon
+  addJalon(interventionId, jalonData) {
+    return Api.api().post("/interventions/" + interventionId + "/jalons", {
+      jalons: [jalonData],
+    });
+  },
+  editJalon(interventionId, jalonData) {
+    return Api.api().put("/interventions/" + interventionId + "/jalons", {
+      jalons: [jalonData],
+    });
+  },
+  removeJalon(interventionId, jalonId) {
+    return Api.api().delete("/interventions/" + interventionId + "/jalons", {
+      data: { jalons: [jalonId] },
     });
   },
 
