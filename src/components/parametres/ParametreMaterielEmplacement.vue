@@ -34,8 +34,9 @@ const awn = useNotification();
 const ajout = () => showModal({ component: "ModalChoixTypeEmplacement", data: {} });
 const update = (elem) =>
   showModal({
-    component: elem.hangar ? "ModalHangar" : "ModalEmplacement",
-    data: { ...elem },
+    component: elem.hangar ? "ModalHangar" : elem.article ? "ModalArticle" : "ModalEmplacement",
+    data: elem.article ? { ...elem.article, emplacement_representee: elem } : { ...elem },
+    callback: elem.article ? () => emplacementStore.fetchEmplacements() : undefined,
   });
 const remove = (elem) =>
   confirm(
