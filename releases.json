@@ -2,9 +2,12 @@
   "releases": [
     {
       "date": "26.08.2026",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
-      "changes": ["Affichage nb sapeurs et nb heures dans les rapports d'intervention"]
+      "changes": [
+        "Affichage nb sapeurs et nb heures dans les rapports d'intervention",
+        "RTA: ajout prévisualisation des fichiers PDF"
+      ]
     },
     {
       "date": "25.08.2026",

@@ -10,11 +10,16 @@ import permissions from "../../composables/permissions.js";
 
 const loading = ref(true);
 const communes = ref([]);
+const loadError = ref(null);
 
 const agriculteurs = ref([]);
 const loadData = async () => {
   loading.value = true;
-  await RtaService.getAgriculteurs().then((data) => (agriculteurs.value = data));
+  await RtaService.getAgriculteurs()
+    .then((data) => (agriculteurs.value = data))
+    .catch(
+      (err) => (loadError.value = err?.message ?? "Erreur lors de la récupération des données RTA"),
+    );
   loading.value = false;
 };
 loadData();
@@ -116,6 +121,9 @@ const fields = [
 <template>
   <div class="row">
     <div class="col-12">
+      <div v-if="loadError" class="alert alert-danger" role="alert">
+        {{ loadError }}
+      </div>
       <base-card v-if="Object.keys(computedAgriculteurs).length === 0">
         <template #header>
           <h2>Aucune liste</h2>

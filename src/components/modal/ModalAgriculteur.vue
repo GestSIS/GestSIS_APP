@@ -2,6 +2,7 @@
 import { computed, reactive, ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import RtaService from "../../services/RtaService.js";
+import useNotification from "../../composables/useNotification.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -35,6 +36,7 @@ const supprimerCapacite = (capacite) => {
 };
 
 const { closeModal } = useModalStore();
+const awn = useNotification();
 const save = async () => {
   const action = form.id ? RtaService.updateAgriculteur : RtaService.createAgriculteur;
   form.moyens_contact = form.moyens_contact
@@ -46,9 +48,13 @@ const save = async () => {
       ...g,
       tri: i + 1,
     }));
-  const { data } = await action(form);
-  callback(data);
-  closeModal();
+  try {
+    const { data } = await action(form);
+    callback(data);
+    closeModal();
+  } catch (err) {
+    awn.alert(err?.message ?? "Erreur lors de l'enregistrement de l'agriculteur");
+  }
 };
 
 const types = [

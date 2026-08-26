@@ -12,12 +12,22 @@ const rtaStore = useRtaStore();
 const localiteStore = useLocaliteStore();
 const groupeStore = useGroupeStore();
 const fonctionStore = useFonctionStore();
+const awn = useNotification();
 
+const loadError = ref(null);
 localiteStore.fetchLocalites();
 fonctionStore.fetchFonctions();
 groupeStore.fetchGroupes();
-rtaStore.fetchReferenceGestSis();
-rtaStore.fetchReferenceRta();
+rtaStore
+  .fetchReferenceGestSis()
+  .catch(
+    (err) => (loadError.value = err?.message ?? "Erreur lors de la récupération des données RTA"),
+  );
+rtaStore
+  .fetchReferenceRta()
+  .catch(
+    (err) => (loadError.value = err?.message ?? "Erreur lors de la récupération des données RTA"),
+  );
 
 const maxNbNumero = 3;
 const unselected = ref({});
@@ -200,8 +210,6 @@ watchEffect(() => {
   };
 });
 
-const awn = useNotification();
-
 const switchAll = (valeur) => {
   mutations.value.forEach((m) => (unselected.value[m.sapeur_id] = !valeur.target.checked));
 };
@@ -243,6 +251,9 @@ const mutate = () => {
 </script>
 
 <template>
+  <div v-if="loadError" class="alert alert-danger" role="alert">
+    {{ loadError }}
+  </div>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Mutations</h3>

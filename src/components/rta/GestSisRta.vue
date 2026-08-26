@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useGroupeStore } from "../../stores/groupe/Groupe.js";
 import { useRtaStore } from "../../stores/rta/Rta.js";
@@ -9,11 +9,21 @@ const rtaStore = useRtaStore();
 const localiteStore = useLocaliteStore();
 const groupeStore = useGroupeStore();
 const fonctionStore = useFonctionStore();
+
+const loadError = ref(null);
 localiteStore.fetchLocalites();
 fonctionStore.fetchFonctions();
 groupeStore.fetchGroupes();
-rtaStore.fetchReferenceGestSis();
-rtaStore.fetchReferenceRta();
+rtaStore
+  .fetchReferenceGestSis()
+  .catch(
+    (err) => (loadError.value = err?.message ?? "Erreur lors de la récupération des données RTA"),
+  );
+rtaStore
+  .fetchReferenceRta()
+  .catch(
+    (err) => (loadError.value = err?.message ?? "Erreur lors de la récupération des données RTA"),
+  );
 
 const maxNbNumero = 3;
 
@@ -133,6 +143,9 @@ const nbGroupes = computed(() => {
 </script>
 
 <template>
+  <div v-if="loadError" class="card-body pb-0 mb-3">
+    <div class="alert alert-danger mb-0" role="alert">{{ loadError }}</div>
+  </div>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">GestSIS</h3>

@@ -1,8 +1,14 @@
 <script setup>
+import { ref } from "vue";
 import { useRtaStore } from "../../stores/rta/Rta.js";
 
 const rtaStore = useRtaStore();
-rtaStore.fetchDemandes();
+const loadError = ref(null);
+rtaStore
+  .fetchDemandes()
+  .catch(
+    (err) => (loadError.value = err?.message ?? "Erreur lors de la récupération des données RTA"),
+  );
 
 const fields = [
   { key: "soumise", title: "Soumise le", type: "datetime" },
@@ -20,6 +26,9 @@ const statusMapping = {
 </script>
 
 <template>
+  <div v-if="loadError" class="card-body mb-3">
+    <div class="alert alert-danger mb-0" role="alert">{{ loadError }}</div>
+  </div>
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">GestSIS</h3>
