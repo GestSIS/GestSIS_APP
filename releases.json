@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "26.08.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Affichage nb sapeurs et nb heures dans les rapports d'intervention"]
+    },
+    {
       "date": "25.08.2026",
       "version": "1.0",
       "app": "GestSIS Mobile 2.6.10",
