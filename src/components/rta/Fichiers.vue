@@ -1,20 +1,19 @@
 <script setup>
-import { reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 import RtaService from "../../services/RtaService.js";
 import { useRtaStore } from "../../stores/rta/Rta.js";
 import PdfViewer from "../pdf/PdfViewer.vue";
+import EditableTree from "../editable_tree/EditableTree.vue";
 import useNotification from "../../composables/useNotification.js";
 
 const rtaStore = useRtaStore();
 const awn = useNotification();
-const loading = ref(true);
 const loadError = ref(null);
 rtaStore
   .fetchFichiers()
   .catch(
     (err) => (loadError.value = err?.message ?? "Erreur lors de la récupération des données RTA"),
-  )
-  .finally(() => (loading.value = false));
+  );
 
 const download = (fichier) => {
   RtaService.downloadFichier(fichier.id, fichier.nom).catch((err) =>
@@ -24,11 +23,36 @@ const download = (fichier) => {
 
 const isPdf = (fichier) => fichier?.nom?.endsWith(".pdf") ?? false;
 
+const fileType = (fichier) => {
+  if (fichier.nom.endsWith(".pdf")) return "pdf";
+  if (fichier.nom.endsWith(".docx") || fichier.nom.endsWith(".odt")) return "word";
+  if (fichier.nom.endsWith(".xlsx") || fichier.nom.endsWith(".ods")) return "excel";
+  return "file";
+};
+
+const types = {
+  pdf: { icon: ["far", "file-pdf"], color: "#e74c3c" },
+  word: { icon: ["far", "file-word"], color: "#2980b9" },
+  excel: { icon: ["far", "file-excel"], color: "#27ae60" },
+  file: { icon: ["far", "file"], color: "#7f8c8d" },
+};
+
+const computedFichiers = computed(() =>
+  rtaStore.fichiers.map((f) => ({
+    ...f,
+    key: "f-" + f.id,
+    type: fileType(f),
+    label: f.nom,
+    description: new Date(f.updated_at ?? f.created_at).toLocaleString().slice(0, 16),
+  })),
+);
+
 const selectedFichier = reactive({ metadata: null, content: null });
 const previewLoading = ref(false);
 const previewError = ref(null);
 
-const selectFichier = (fichier) => {
+const selectFichier = (node) => {
+  const fichier = node?.data;
   if (!fichier) {
     return;
   }
@@ -47,13 +71,6 @@ const selectFichier = (fichier) => {
       .finally(() => (previewLoading.value = false));
   }
 };
-
-const fields = [
-  { key: "nom", title: "Fichier" },
-  { key: "created_at", title: "Créé le", type: "datetime" },
-  { key: "updated_at", title: "Mise à jour le", type: "datetime" },
-  { key: "id", title: "Actions", slot: "actions" },
-];
 </script>
 
 <template>
@@ -67,31 +84,23 @@ const fields = [
           <h3 class="card-title m-0">GestSIS</h3>
         </template>
         <template #body-table>
-          <base-table
-            :fields="fields"
-            :data="rtaStore.fichiers"
-            :loading="loading"
+          <editable-tree
+            :tree="computedFichiers"
+            :types="types"
             selectable
             @selected="selectFichier"
           >
-            <template #actions="{ rowData }">
-              <button class="btn" @click.stop="download(rowData)">
-                <font-awesome-icon
-                  v-if="rowData.nom.endsWith('.pdf')"
-                  :icon="['far', 'file-pdf']"
-                />
-                <font-awesome-icon
-                  v-else-if="rowData.nom.endsWith('.docx') || rowData.nom.endsWith('.odt')"
-                  :icon="['far', 'file-word']"
-                />
-                <font-awesome-icon
-                  v-else-if="rowData.nom.endsWith('.xlsx') || rowData.nom.endsWith('.ods')"
-                  :icon="['far', 'file-excel']"
-                />
-                <font-awesome-icon v-else :icon="['far', 'file']" />
+            <template #default="{ node }">
+              <button
+                class="btn btn-sm btn-outline-primary border-0 ms-auto ps-1 pe-1"
+                type="button"
+                aria-label="Télécharger le fichier"
+                @click.stop="download(node.data)"
+              >
+                <font-awesome-icon :icon="['fas', 'file-arrow-down']" />
               </button>
             </template>
-          </base-table>
+          </editable-tree>
         </template>
       </base-card>
     </div>

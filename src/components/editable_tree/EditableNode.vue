@@ -106,7 +106,12 @@ defineExpose({ expand });
           class="tree-node-icon"
           :color="data.color"
         />
-        <div class="user-select-none">{{ data.label }}</div>
+        <div class="tree-node-label">
+          <div class="user-select-none">
+            {{ data.label }}<br v-if="data.description" />
+            <em v-if="data.description" class="tree-node-description">{{ data.description }}</em>
+          </div>
+        </div>
         <slot
           name:default
           :node="{
