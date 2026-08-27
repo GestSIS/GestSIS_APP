@@ -20,4 +20,10 @@ export default {
   convertirEnVehicule(emplacementId, data) {
     return Api.api().post(`admin/migration/emplacements/${emplacementId}/vehicule`, data);
   },
+  fusionnerVehicules(vehiculeConserveId, vehiculeSupprimeId) {
+    return Api.api().post("admin/migration/vehicules/fusionner", {
+      vehicule_conserve_id: vehiculeConserveId,
+      vehicule_supprime_id: vehiculeSupprimeId,
+    });
+  },
 };

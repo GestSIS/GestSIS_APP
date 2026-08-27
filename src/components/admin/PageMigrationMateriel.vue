@@ -4,6 +4,7 @@ import useNotification from "../../composables/useNotification.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement.js";
 import { useMaterielTypeStore } from "../../stores/materiel/Type.js";
+import { useVehiculeStore } from "../../stores/intervention/Vehicule.js";
 import { indexedData } from "../../tools/index.js";
 import MigrationMaterielService from "../../services/materiel/MigrationMaterielService.js";
 
@@ -14,11 +15,13 @@ const awn = useNotification();
 const localiteStore = useLocaliteStore();
 const emplacementStore = useEmplacementStore();
 const materielTypeStore = useMaterielTypeStore();
+const vehiculeStore = useVehiculeStore();
 
 await Promise.all([
   localiteStore.fetchLocalites(),
   emplacementStore.fetchEmplacements(),
   materielTypeStore.fetchMaterielTypes(),
+  vehiculeStore.fetchVehicules(),
 ]);
 
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
@@ -92,6 +95,29 @@ const lierEmplacement = (article) => {
   MigrationMaterielService.lierEmplacement(article.id, emplacementId)
     .then(() => {
       loadVehiculesSansEmplacement();
+      emplacementStore.fetchEmplacements();
+    })
+    .catch((err) => awn.alert(err.message || "Erreur lors de la fusion"));
+};
+
+// --- Fusion de 2 véhicules dupliqués ---
+const vehiculeConserveId = ref(null);
+const vehiculeSupprimeId = ref(null);
+
+const fusionnerVehicules = () => {
+  if (!vehiculeConserveId.value || !vehiculeSupprimeId.value) {
+    awn.warning("Veuillez sélectionner les 2 véhicules");
+    return;
+  }
+  if (vehiculeConserveId.value === vehiculeSupprimeId.value) {
+    awn.warning("Veuillez sélectionner 2 véhicules différents");
+    return;
+  }
+  MigrationMaterielService.fusionnerVehicules(vehiculeConserveId.value, vehiculeSupprimeId.value)
+    .then(() => {
+      vehiculeConserveId.value = null;
+      vehiculeSupprimeId.value = null;
+      vehiculeStore.fetchVehicules();
       emplacementStore.fetchEmplacements();
     })
     .catch((err) => awn.alert(err.message || "Erreur lors de la fusion"));
@@ -263,6 +289,45 @@ const lierEmplacement = (article) => {
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 mt-4">
+      <div class="card card-primary card-outline">
+        <div class="card-header">
+          <h3 class="card-title">Fusionner 2 véhicules dupliqués</h3>
+        </div>
+        <div class="card-body">
+          <p class="text-muted">
+            Le véhicule "à supprimer" est retiré : ses sous-emplacements/articles rangés sont
+            déplacés sous le véhicule "à conserver", et ses éventuels rattachements à des
+            interventions sont reportés sur celui-ci.
+          </p>
+          <div class="row">
+            <div class="col-5">
+              <label>Véhicule à conserver</label>
+              <base-select
+                v-model="vehiculeConserveId"
+                placeholder="<Sélectionnez un véhicule>"
+                display-key="designation"
+                :options="vehiculeStore.liste"
+              />
+            </div>
+            <div class="col-5">
+              <label>Véhicule à supprimer</label>
+              <base-select
+                v-model="vehiculeSupprimeId"
+                placeholder="<Sélectionnez un véhicule>"
+                display-key="designation"
+                :options="vehiculeStore.liste"
+              />
+            </div>
+            <div class="col-2 d-flex align-items-end">
+              <button type="button" class="btn btn-sm btn-primary" @click="fusionnerVehicules">
+                Fusionner
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
