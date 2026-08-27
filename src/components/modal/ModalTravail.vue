@@ -43,7 +43,9 @@ const form = reactive({
 });
 
 const unites = computed(() => uniteStore.liste);
-const travailTypes = computed(() => travailTypeStore.liste);
+const travailTypes = computed(() =>
+  travailTypeStore.liste.filter((t) => t.actif || t.id === form.travail_type_id),
+);
 const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
 const hasSaisieCommunePermission = useHasPermission(permissions.FICHE_TRAVAIL.SAISIE_COMMUNE);
 
