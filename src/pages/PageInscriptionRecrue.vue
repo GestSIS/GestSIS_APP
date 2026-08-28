@@ -91,6 +91,15 @@ const ajouterPermis = () => {
 const retirerPermis = (index) => {
   form.permis.splice(index, 1);
 };
+// Empêche de choisir un permis déjà sélectionné sur une autre ligne.
+const permisTypesDisponibles = (index) => {
+  const dejaChoisis = new Set(
+    form.permis
+      .filter((p, i) => i !== index && p.permis_type_id !== null)
+      .map((p) => p.permis_type_id),
+  );
+  return permisTypes.value.filter((type) => !dejaChoisis.has(type.id));
+};
 
 const soumettre = async () => {
   if (submitting.value) {
@@ -388,7 +397,11 @@ const soumettre = async () => {
                         class="form-select form-select-sm"
                       >
                         <option :value="null" disabled>Choisir…</option>
-                        <option v-for="type in permisTypes" :key="type.id" :value="type.id">
+                        <option
+                          v-for="type in permisTypesDisponibles(index)"
+                          :key="type.id"
+                          :value="type.id"
+                        >
                           {{ type.type }}
                         </option>
                       </select>
@@ -413,7 +426,12 @@ const soumettre = async () => {
                   </tr>
                 </tbody>
               </table>
-              <button type="button" class="btn btn-outline-primary btn-sm" @click="ajouterPermis">
+              <button
+                v-if="form.permis.length < permisTypes.length"
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                @click="ajouterPermis"
+              >
                 <font-awesome-icon icon="plus" /> Ajouter un permis
               </button>
             </div>
