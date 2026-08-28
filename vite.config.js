@@ -80,6 +80,7 @@ export default defineConfig({
       url: process.env.SENTRY_URL,
       release: {
         name: process.env.SENTRY_RELEASE || process.env.npm_package_version,
+        create: false,
       },
       // No token outside CI (local/dev builds) -> skip upload instead of failing the build.
       disable: !process.env.SENTRY_AUTH_TOKEN,
