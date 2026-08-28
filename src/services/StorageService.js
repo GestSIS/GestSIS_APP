@@ -10,65 +10,104 @@ const ADMIN_USER_KEY = "admin_logged_user";
  * Current implementation stores to localStorage. Local Storage should always be
  * accessed through this instace.
  **/
+
+// Certains navigateurs (stockage bloqué par les préférences de vie privée,
+// contexte partitionné, ...) font lever une SecurityError sur tout accès à
+// localStorage. On isole ces accès pour ne pas planter l'app au chargement,
+// mais on laisse remonter toute autre erreur (ex. QuotaExceededError).
+function isSecurityError(err) {
+  return err instanceof DOMException && err.name === "SecurityError";
+}
+function safeGetItem(key) {
+  try {
+    return localStorage.getItem(key);
+  } catch (err) {
+    if (!isSecurityError(err)) {
+      throw err;
+    }
+    return null;
+  }
+}
+function safeSetItem(key, value) {
+  try {
+    localStorage.setItem(key, value);
+  } catch (err) {
+    if (!isSecurityError(err)) {
+      throw err;
+    }
+    // Stockage indisponible : on ignore, l'utilisateur devra se reconnecter.
+  }
+}
+function safeRemoveItem(key) {
+  try {
+    localStorage.removeItem(key);
+  } catch (err) {
+    if (!isSecurityError(err)) {
+      throw err;
+    }
+    // Stockage indisponible : rien à supprimer.
+  }
+}
+
 const TokenService = {
   getUser() {
-    return JSON.parse(localStorage.getItem(USER_KEY));
+    return JSON.parse(safeGetItem(USER_KEY));
   },
   saveUser(accessToken) {
-    localStorage.setItem(USER_KEY, JSON.stringify(accessToken));
+    safeSetItem(USER_KEY, JSON.stringify(accessToken));
   },
   removeUser() {
-    localStorage.removeItem(USER_KEY);
+    safeRemoveItem(USER_KEY);
   },
 
   getAccessToken() {
-    return localStorage.getItem(TOKEN_KEY);
+    return safeGetItem(TOKEN_KEY);
   },
   saveAccessToken(accessToken) {
     if (accessToken === null || accessToken === "null") {
       this.removeAccessToken();
     } else {
-      localStorage.setItem(TOKEN_KEY, accessToken);
+      safeSetItem(TOKEN_KEY, accessToken);
     }
   },
   removeAccessToken() {
-    localStorage.removeItem(TOKEN_KEY);
+    safeRemoveItem(TOKEN_KEY);
   },
 
   getRefreshToken() {
-    return localStorage.getItem(REFRESH_TOKEN_KEY);
+    return safeGetItem(REFRESH_TOKEN_KEY);
   },
   saveRefreshToken(refreshToken) {
     if (refreshToken === null || refreshToken === "null") {
       this.removeRefreshToken();
     } else {
-      localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+      safeSetItem(REFRESH_TOKEN_KEY, refreshToken);
     }
   },
   removeRefreshToken() {
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    safeRemoveItem(REFRESH_TOKEN_KEY);
   },
 
   // Session admin mise de côté pendant une usurpation d'identité, pour
   // pouvoir la restaurer via stopImpersonation() même après un F5.
   getAdminAccessToken() {
-    return localStorage.getItem(ADMIN_TOKEN_KEY);
+    return safeGetItem(ADMIN_TOKEN_KEY);
   },
   saveAdminAccessToken(accessToken) {
-    localStorage.setItem(ADMIN_TOKEN_KEY, accessToken);
+    safeSetItem(ADMIN_TOKEN_KEY, accessToken);
   },
   removeAdminAccessToken() {
-    localStorage.removeItem(ADMIN_TOKEN_KEY);
+    safeRemoveItem(ADMIN_TOKEN_KEY);
   },
 
   getAdminUser() {
-    return JSON.parse(localStorage.getItem(ADMIN_USER_KEY));
+    return JSON.parse(safeGetItem(ADMIN_USER_KEY));
   },
   saveAdminUser(user) {
-    localStorage.setItem(ADMIN_USER_KEY, JSON.stringify(user));
+    safeSetItem(ADMIN_USER_KEY, JSON.stringify(user));
   },
   removeAdminUser() {
-    localStorage.removeItem(ADMIN_USER_KEY);
+    safeRemoveItem(ADMIN_USER_KEY);
   },
 };
 
