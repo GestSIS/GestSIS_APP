@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import * as Sentry from "@sentry/vue";
 import AuthService from "../../services/AuthService";
 import AdminService from "../../services/AdminService";
 import { TokenService } from "../../services/StorageService";
@@ -141,6 +142,9 @@ export const useAuthStore = defineStore("auth", {
       // user on this tab cannot see the previous user's data. The global
       // `permissions` catalog is user- and SIS-independent, so it is kept.
       this.clearCache();
+
+      Sentry.setUser(null);
+      Sentry.setTag("sis_key", null);
     },
     async useToken(token) {
       const { message, accessToken } = await AuthService.useToken(token);
@@ -199,6 +203,8 @@ export const useAuthStore = defineStore("auth", {
       this.sis.activeKey = sis?.api_key;
       this.sis.permissions = this.sis.allPermissions[sis?.api_key] ?? [];
       this.sapeurId = this.sis.sapeurs[sis?.api_key] ?? null;
+
+      Sentry.setTag("sis_key", this.sis.activeKey ?? null);
 
       Api.setSisKey(sis?.api_key);
 
@@ -374,6 +380,7 @@ export const useAuthStore = defineStore("auth", {
     // Internal methods
     async setAuthSuccessful(data) {
       this.user = data.user;
+      Sentry.setUser(this.user ? { id: this.user.id } : null);
 
       TokenService.saveAccessToken(data.accessToken);
       TokenService.saveRefreshToken(data.refreshToken);
@@ -411,6 +418,7 @@ export const useAuthStore = defineStore("auth", {
         this.sis.permissions = permissionsParSis[sis.api_key] ?? [];
         this.sis.allPermissions = permissionsParSis;
         this.sapeurId = sapeurParSis[sis.api_key] ?? null;
+        Sentry.setTag("sis_key", this.sis.activeKey);
         Api.setSisKey(sis.api_key);
       }
     },
