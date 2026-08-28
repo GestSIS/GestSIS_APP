@@ -329,7 +329,7 @@ const saveLogo = async () => {
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Logo</h3>
         </div>
-        <div class="card-body">
+        <div v-if="hasConfigGeneralPermission" class="card-body">
           <div class="input-group">
             <input type="file" class="form-control" @change="onFileChange" />
             <button class="btn btn-primary" @click="saveLogo">save</button>
