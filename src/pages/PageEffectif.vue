@@ -10,7 +10,7 @@ import permissions from "../composables/permissions.js";
 import SapeurService from "../services/SapeurService.js";
 import { useAuthStore } from "../stores/auth/Auth.js";
 import { DateTime } from "luxon";
-import { downloadOutlookCsv, downloadVcard } from "../tools/exportSapeurs";
+import { downloadVcard } from "../tools/exportSapeurs";
 import { computed, ref } from "vue";
 import useNotification from "../composables/useNotification.js";
 import useHasPermission from "../composables/usePermission.js";
@@ -172,9 +172,13 @@ const sms = (sapeurs) => {
     data: sapeurs,
   });
 };
-const vcard = (sapeurs) =>
-  downloadVcard(sapeurs, localites.value, sisNom.value, authStore.sis.activeKey);
-const outlookCsv = (sapeurs) => downloadOutlookCsv(sapeurs, localites.value, sisNom.value);
+const vcard = (sapeurs) => {
+  try {
+    downloadVcard(sapeurs, localites.value, sisNom.value, authStore.sis.activeKey);
+  } catch (err) {
+    awn.alert(err?.message || "Une erreur a eu lieu durant la génération du fichier VCard");
+  }
+};
 
 const fieldsBase = [
   { title: "Nom Prénom", key: "nom_prenom" },
