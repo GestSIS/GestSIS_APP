@@ -158,7 +158,7 @@ const fields = [
             </button>
             <button
               v-if="
-                excuseParams.actif &&
+                excuseParams?.actif &&
                 rowData.convoque &&
                 !rowData.excuse_type_id &&
                 rowData.statut != 0
@@ -169,7 +169,7 @@ const fields = [
               <font-awesome-icon :icon="['fas', 'plus']" />
             </button>
             <button
-              v-else-if="excuseParams.actif && rowData.statut != 0"
+              v-else-if="excuseParams?.actif && rowData.statut != 0"
               class="btn btn-outline-danger border-0"
               @click="removeExcuse(rowData)"
             >
