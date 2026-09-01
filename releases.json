@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "01.09.2026",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.6.11",
+      "changes": [
+        "Notification sur l'écran d'accueil lorsqu'une nouvelle version est disponible",
+        "Date pré-remplie lors de l'ajout de jalon pour un rapport d'intervention"
+      ]
+    },
+    {
       "date": "26.08.2026",
       "version": "2.0",
       "app": "GestSIS APP",
