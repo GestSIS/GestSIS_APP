@@ -24,6 +24,7 @@ const { vehiculeUniquement, ...articleData } = data ?? {};
 
 const errors = ref({});
 const form = reactive({
+  statut: true,
   quantite: 1,
   ...articleData,
   emplacementRepresentee: { ...data?.emplacement_representee },
