@@ -20,6 +20,8 @@ const filteredLinks = computed(() =>
       (l.sapeur && isSapeur.value),
   ),
 );
+
+defineEmits(["close"]);
 </script>
 
 <template>
@@ -49,6 +51,7 @@ const filteredLinks = computed(() =>
             :class="{
               active: (link?.active ?? (() => false))($route),
             }"
+            @click="$emit('close')"
           >
             <font-awesome-icon :icon="link.icon" class="sidebar-icon" />
             <span class="ms-3">{{ link.nom }}</span>
@@ -81,5 +84,32 @@ ul li a:hover {
 
 ul li a.active:hover {
   color: white !important;
+}
+
+/* Mobile/tablette : sidebar en offcanvas par-dessus le contenu */
+@media (max-width: 991.98px) {
+  aside#sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 260px;
+    max-width: 85vw;
+    z-index: 1045;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  }
+
+  aside#sidebar.show {
+    transform: translateX(0);
+  }
+}
+
+/* Desktop : le bouton "hamburger" replie/déplie la sidebar dans le flux */
+@media (min-width: 992px) {
+  aside#sidebar:not(.show) {
+    display: none;
+  }
 }
 </style>
