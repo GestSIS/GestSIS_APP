@@ -456,16 +456,16 @@ const deleteSapeur = () =>
             </li> -->
         </div>
         <div class="card card-primary card-outline mb-3">
-          <div class="card-body d-flex flex-row-reverse">
-            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>
+          <div class="card-body d-md-flex flex-row-reverse">
+            <button type="button" class="btn btn-outline-primary ms-2 mb-2 d-none" disabled>
               Exporter
             </button>
-            <button type="button" class="btn btn-outline-primary ms-2 d-none" disabled>
+            <button type="button" class="btn btn-outline-primary ms-2 mb-2 d-none" disabled>
               Importer
             </button>
             <button
               v-if="activeSapeur?.id && hasEditPermission"
-              class="btn btn-outline-danger ms-2"
+              class="btn btn-outline-danger ms-2 mb-2"
               @click="deleteSapeur"
             >
               {{ isRecrue ? "Rejeter la recrue" : "Supprimer le sapeur" }}
@@ -473,7 +473,7 @@ const deleteSapeur = () =>
             <button
               v-if="isRecrue && hasEditPermission"
               type="button"
-              class="btn btn-outline-success ms-2"
+              class="btn btn-outline-success ms-2 mb-2"
               @click="validerRecrue"
             >
               <font-awesome-icon icon="check" />
@@ -482,7 +482,7 @@ const deleteSapeur = () =>
             <button
               v-if="hasEditPermission"
               type="button"
-              class="btn btn-outline-primary ms-2"
+              class="btn btn-outline-primary ms-2 mb-2"
               @click="addSapeur"
             >
               Ajouter un sapeur/civil
@@ -490,7 +490,7 @@ const deleteSapeur = () =>
             <button
               v-if="hasEditPermission"
               type="button"
-              class="btn btn-outline-primary ms-2"
+              class="btn btn-outline-primary ms-2 mb-2"
               @click="lienInscription"
             >
               Lien d'inscription recrues

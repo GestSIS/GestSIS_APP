@@ -15,6 +15,14 @@ const syncSidebarToViewport = (e) => {
 onMounted(() => desktopQuery.addEventListener("change", syncSidebarToViewport));
 onUnmounted(() => desktopQuery.removeEventListener("change", syncSidebarToViewport));
 
+// Un clic sur un lien du menu ne referme la sidebar qu'en offcanvas (< lg) ;
+// sur desktop elle doit rester ouverte.
+const closeSidebarIfMobile = () => {
+  if (!desktopQuery.matches) {
+    sidebarOpen.value = false;
+  }
+};
+
 const isMobile = computed(() => {
   const isAndroid = () => navigator.userAgent.match(/Android/i);
   const isIOS = () => navigator.userAgent.match(/iPhone|iPad|iPod/i);
@@ -29,7 +37,7 @@ const isMobile = computed(() => {
       <app-sidebar
         class="custom-sidebar"
         :class="{ show: sidebarOpen }"
-        @close="sidebarOpen = false"
+        @close="closeSidebarIfMobile"
       />
       <div v-if="sidebarOpen" class="sidebar-backdrop d-lg-none" @click="sidebarOpen = false" />
       <div class="content" :class="isMobile ? 'pb-6' : ''">
