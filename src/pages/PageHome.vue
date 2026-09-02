@@ -4,6 +4,7 @@ import useNotification from "../composables/useNotification.js";
 import { useAuthStore } from "../stores/auth/Auth.js";
 import { useModalStore } from "../stores/common/Modal.js";
 import { useMesInfosStore } from "../stores/mesinfos/MesInfos.js";
+import { useLocaliteStore } from "../stores/common/Localite.js";
 import MesInfosService from "../services/MesInfosService.js";
 import ExcuseTypeService from "../services/ExcuseTypeService.js";
 import ExcuseParamService from "../services/ExcuseParamService.js";
@@ -11,6 +12,7 @@ import ExerciceService from "../services/ExerciceService.js";
 
 const authStore = useAuthStore();
 const infosStore = useMesInfosStore();
+const localiteStore = useLocaliteStore();
 const { showModal, confirm } = useModalStore();
 
 const disableCounter = ref(0);
@@ -31,6 +33,8 @@ if (listeSis.value.length <= 0) {
 if (!authStore.sis.activeId && availableSisListe.value.length > 0) {
   await authStore.selectSis(availableSisListe.value[0]);
 }
+
+await localiteStore.fetchLocalites();
 
 const isSapeur = computed(() => Object.keys(authStore.sis.sapeurs ?? {}).length > 0);
 
@@ -80,6 +84,7 @@ const prochainesConvocations = computed(() =>
         ...exercice.presence,
         ...exercice,
         categorie: exercice.categorie?.designation,
+        localite: localiteStore.liste.find((l) => l.id == exercice.localite_id)?.designation,
         sis_key: sisKey,
         sis_nom: listeSis.value.find((s) => s.api_key === sisKey)?.nom,
         excuse: excuseTypesParSis.value[sisKey]?.find(
@@ -101,6 +106,9 @@ const convocationsAVenir = computed(() =>
     (exercice) => !exercice.date || new Date(exercice.date) >= debutAujourdhui(),
   ),
 );
+
+// N'affiche le nom du SIS que si le sapeur a un profil sapeur dans plusieurs SIS.
+const sapeurDansPlusieursSis = computed(() => Object.keys(authStore.sis.sapeurs ?? {}).length > 1);
 
 onUnmounted(() => {
   if (disableInterval.value != null) {
@@ -193,17 +201,30 @@ const downloadJustificatif = (rowData) => {
   ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
 };
 
-const prochainesConvocationsFields = [
-  { title: "Date", key: "date", type: Date },
-  { title: "Categorie", key: "categorie" },
-  { title: "Heure", key: "heure", formatter: (h) => h?.slice(0, 5) },
-  { title: "SIS", key: "sis_nom" },
-  { title: "Désignation", key: "designation" },
-  { title: "Communications", key: "communications" },
-  { title: "Lieu", key: "lieu" },
-  { title: "", slot: "pour-info" },
-  { title: "Excuse", slot: "excuse" },
-];
+const prochainesConvocationsFields = computed(() =>
+  [
+    { title: "Date", key: "date", type: Date },
+    { title: "Categorie", key: "categorie" },
+    { title: "Heure", key: "heure", formatter: (h) => h?.slice(0, 5) },
+    sapeurDansPlusieursSis.value ? { title: "SIS", key: "sis_nom" } : null,
+    { title: "Désignation", key: "designation" },
+    { title: "Communications", key: "communications" },
+    { title: "Localité", key: "localite" },
+    { title: "Lieu", key: "lieu" },
+    { title: "", slot: "pour-info" },
+    { title: "Excuse", slot: "excuse" },
+  ].filter(Boolean),
+);
+
+// Format court utilisé dans les cartes mobiles, ex. "mardi 18 sept."
+const formatDateCourte = (date) =>
+  date
+    ? new Date(date).toLocaleDateString("fr-CH", {
+        weekday: "long",
+        day: "numeric",
+        month: "short",
+      })
+    : "";
 
 // Ajouté mais pas convoqué : simple information, mis en évidence pour ne pas le confondre avec une convocation.
 const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
@@ -340,22 +361,32 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                 class="border rounded-3 p-3"
                 :class="exercice.convoque ? 'bg-body' : 'border-warning-subtle bg-warning-subtle'"
               >
-                <div class="d-flex justify-content-between align-items-center gap-2">
-                  <div class="fw-bold">
-                    {{ exercice.date ? new Date(exercice.date).toLocaleDateString("fr-CH") : "" }}
-                    <span v-if="exercice.heure" class="text-muted fw-normal">
-                      · {{ exercice.heure.slice(0, 5) }}
-                    </span>
-                  </div>
+                <div
+                  v-if="exercice.sis_nom && sapeurDansPlusieursSis"
+                  class="small text-uppercase text-muted fw-semibold"
+                >
+                  {{ exercice.sis_nom }}
+                </div>
+                <div class="fw-bold mt-1">
+                  {{ formatDateCourte(exercice.date) }}
+                  <span v-if="exercice.heure" class="text-muted fw-normal">
+                    · {{ exercice.heure.slice(0, 5) }}
+                  </span>
+                  <span v-if="exercice.localite || exercice.lieu" class="text-muted fw-normal">
+                    · {{ [exercice.localite, exercice.lieu].filter(Boolean).join(" · ") }}
+                  </span>
+                </div>
+                <div
+                  v-if="exercice.designation || exercice.categorie"
+                  class="d-flex align-items-center gap-2 mt-1"
+                >
                   <span v-if="exercice.categorie" class="badge text-bg-secondary">{{
                     exercice.categorie
                   }}</span>
+                  <span v-if="exercice.designation">{{ exercice.designation }}</span>
                 </div>
-                <div class="small text-muted mt-1">
-                  {{ [exercice.sis_nom, exercice.designation].filter(Boolean).join(" · ") }}
-                </div>
-                <div v-if="exercice.communications || exercice.lieu" class="small text-muted">
-                  {{ [exercice.communications, exercice.lieu].filter(Boolean).join(" · ") }}
+                <div v-if="exercice.communications" class="small text-muted mt-1">
+                  {{ exercice.communications }}
                 </div>
                 <div v-if="!exercice.convoque" class="mb-2">
                   <span class="badge text-bg-warning">Pour info</span>
