@@ -2,9 +2,12 @@
   "releases": [
     {
       "date": "02.09.2026",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
-      "changes": ["Amélioration des l'interface en mode mobile"]
+      "changes": [
+        "Amélioration des l'interface en mode mobile",
+        "Amélioration interface accueil pour mobile"
+      ]
     },
     {
       "date": "01.09.2026",
