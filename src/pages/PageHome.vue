@@ -361,6 +361,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                 class="border rounded-3 p-3"
                 :class="exercice.convoque ? 'bg-body' : 'border-warning-subtle bg-warning-subtle'"
               >
+                <span v-if="!exercice.convoque" class="badge text-bg-warning mb-2">Pour info</span>
                 <div
                   v-if="exercice.sis_nom && sapeurDansPlusieursSis"
                   class="small text-uppercase text-muted fw-semibold"
@@ -368,12 +369,14 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                   {{ exercice.sis_nom }}
                 </div>
                 <div class="fw-bold mt-1">
+                  <font-awesome-icon :icon="['far', 'calendar-alt']" />
                   {{ formatDateCourte(exercice.date) }}
                   <span v-if="exercice.heure" class="text-muted fw-normal">
-                    · {{ exercice.heure.slice(0, 5) }}
+                    {{ exercice.heure.slice(0, 5) }}
                   </span>
+                  <font-awesome-icon :icon="['fas', 'location-dot']" class="ms-2" />
                   <span v-if="exercice.localite || exercice.lieu" class="text-muted fw-normal">
-                    · {{ [exercice.localite, exercice.lieu].filter(Boolean).join(" · ") }}
+                    {{ [exercice.localite, exercice.lieu].filter(Boolean).join(" · ") }}
                   </span>
                 </div>
                 <div
@@ -388,16 +391,13 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                 <div v-if="exercice.communications" class="small text-muted mt-1">
                   {{ exercice.communications }}
                 </div>
-                <div v-if="!exercice.convoque" class="mb-2">
-                  <span class="badge text-bg-warning">Pour info</span>
-                </div>
                 <div class="mt-2 pt-2 border-top">
                   <div
                     v-if="exercice.excuse_type_id || exercice.justificatif_filename"
                     class="mb-2"
                   >
-                    <div class="small text-muted mb-1">Excusé :</div>
                     <div class="d-flex align-items-center flex-wrap gap-2">
+                      <span class="small text-muted mb-1">Excusé :</span>
                       <span
                         v-if="exercice.excuse_type_id"
                         class="badge rounded-pill text-bg-primary"

@@ -9,6 +9,7 @@
     "build": "vp build",
     "preview": "vp preview",
     "lint": "vp lint --fix src",
+    "fmt": "vp fmt",
     "prepare": "vp config"
   },
   "dependencies": {
