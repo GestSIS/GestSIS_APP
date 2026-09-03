@@ -163,6 +163,22 @@ const resend = () => {
 // affiché autorise les excuses, même si ce n'est pas le cas de tous.
 const peutSExcuser = computed(() => Object.values(excuseParamsParSis.value).some((p) => p?.actif));
 
+// Utilisés par la carte mobile pour savoir si la section excuse a quelque chose à afficher.
+const peutAjouterExcuse = (exercice) =>
+  !!(
+    excuseParamsParSis.value[exercice.sis_key]?.actif &&
+    excuseTypesParSis.value[exercice.sis_key] &&
+    exercice.convoque &&
+    !exercice.excuse_type_id &&
+    exercice.statut != 0
+  );
+const peutRetirerExcuse = (exercice) =>
+  !!(
+    excuseParamsParSis.value[exercice.sis_key]?.actif &&
+    exercice.excuse_type_id &&
+    exercice.statut != 0
+  );
+
 const addExcuse = (rowData = {}) => {
   showModal({
     component: "ModalSExcuser",
@@ -334,7 +350,11 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                   <font-awesome-icon :icon="['fas', 'plus']" />
                 </button>
                 <button
-                  v-else-if="excuseParamsParSis[rowData.sis_key]?.actif && rowData.statut != 0"
+                  v-else-if="
+                    excuseParamsParSis[rowData.sis_key]?.actif &&
+                    rowData.excuse_type_id &&
+                    rowData.statut != 0
+                  "
                   class="btn btn-outline-danger border-0"
                   @click="removeExcuse(rowData)"
                 >
@@ -391,7 +411,15 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                 <div v-if="exercice.communications" class="small text-muted mt-1">
                   {{ exercice.communications }}
                 </div>
-                <div class="mt-2 pt-2 border-top">
+                <div
+                  v-if="
+                    exercice.excuse_type_id ||
+                    exercice.justificatif_filename ||
+                    peutAjouterExcuse(exercice) ||
+                    peutRetirerExcuse(exercice)
+                  "
+                  class="mt-2 pt-2 border-top"
+                >
                   <div
                     v-if="exercice.excuse_type_id || exercice.justificatif_filename"
                     class="mb-2"
@@ -419,20 +447,14 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                   </div>
 
                   <button
-                    v-if="
-                      excuseParamsParSis[exercice.sis_key]?.actif &&
-                      excuseTypesParSis[exercice.sis_key] &&
-                      exercice.convoque &&
-                      !exercice.excuse_type_id &&
-                      exercice.statut != 0
-                    "
+                    v-if="peutAjouterExcuse(exercice)"
                     class="btn btn-sm btn-outline-primary"
                     @click="addExcuse(exercice)"
                   >
                     <font-awesome-icon :icon="['fas', 'plus']" /> S'excuser
                   </button>
                   <button
-                    v-else-if="excuseParamsParSis[exercice.sis_key]?.actif && exercice.statut != 0"
+                    v-else-if="peutRetirerExcuse(exercice)"
                     class="btn btn-sm btn-outline-danger"
                     @click="removeExcuse(exercice)"
                   >

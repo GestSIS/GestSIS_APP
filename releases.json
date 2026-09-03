@@ -5,8 +5,8 @@
       "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
-        "Amélioration des l'interface en mode mobile",
-        "Amélioration interface accueil pour mobile"
+        "Amélioration de la barre de menu sur mobile",
+        "Amélioration interface accueil sur mobile"
       ]
     },
     {
