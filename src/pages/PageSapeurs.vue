@@ -456,7 +456,7 @@ const deleteSapeur = () =>
             </li> -->
         </div>
         <div class="card card-primary card-outline mb-3">
-          <div class="card-body d-md-flex flex-row-reverse">
+          <div class="card-body d-flex flex-column flex-md-row-reverse">
             <button type="button" class="btn btn-outline-primary ms-2 mb-2 d-none" disabled>
               Exporter
             </button>
@@ -498,7 +498,7 @@ const deleteSapeur = () =>
             <button
               v-if="activeSapeur?.id && !isRecrue"
               type="button"
-              class="btn btn-outline-primary ms-2 me-auto"
+              class="btn btn-outline-primary ms-2 me-md-auto"
               @click="ficheSapeur"
             >
               <font-awesome-icon :icon="['fas', 'id-card-clip']" />
