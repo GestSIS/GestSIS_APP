@@ -164,7 +164,7 @@ const supprimer = (article) =>
       <button
         v-if="hasEditPermission && materielType.est_attribuable && rowData.sapeur_id !== null"
         title="Retour"
-        class="btn btn-outline-primary border-0"
+        class="btn btn-outline-warning border-0"
         @click="retourMateriel(rowData)"
       >
         <font-awesome-icon :icon="['fas', 'person-circle-minus']" />

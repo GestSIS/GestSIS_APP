@@ -127,15 +127,21 @@ const linearCategories = (categorieId) => {
     <template #title>Matériel distribué ({{ articles.length }})</template>
     <template #header>
       <div>
-        <button v-if="hasEditPermission" class="btn btn-primary" @click="attribuer">
-          Attribuer du matériel
+        <button
+          v-if="hasEditPermission"
+          class="btn btn-outline-primary"
+          @click="attribuer"
+          title="Attribuer du materiel"
+        >
+          <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
         </button>
         <button
           v-if="hasEditPermission && articles.length"
-          class="ms-2 btn btn-outline-primary"
+          class="ms-2 btn btn-outline-warning"
           @click="retournerMateriel"
+          title="Retouner du materiel"
         >
-          Retourner du matériel
+          <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
         </button>
       </div>
     </template>
@@ -185,7 +191,7 @@ const linearCategories = (categorieId) => {
           <button
             v-if="hasEditPermission"
             title="Retour"
-            class="btn btn-outline-primary border-0"
+            class="btn btn-outline-warning border-0"
             @click="retourMateriel(rowData)"
           >
             <font-awesome-icon :icon="['fas', 'person-circle-minus']" />

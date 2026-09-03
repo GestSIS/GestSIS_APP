@@ -105,7 +105,7 @@ const selectedSapeurId = computed({
     <div class="input-group mb-2">
       <router-link
         v-if="hasSapeurEditPermission"
-        :to="{ name: 'sapeur-index', params: { id: 0 } }"
+        :to="{ name: 'sapeur-details', params: { id: id ?? 0 } }"
         class="btn btn-sm btn-outline-primary"
       >
         <font-awesome-icon :icon="['far', 'edit']" />
