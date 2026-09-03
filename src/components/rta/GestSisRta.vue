@@ -60,7 +60,7 @@ const actuel = computed(() =>
       telephones: null,
       groupes: s.groupes
         .map((id) => groupeStore.liste.find((g) => g.id == id))
-        .filter((g) => g?.type == 1)
+        .filter((g) => g?.type == 1 && g.no != null)
         .map((g) => ({ no: g.no, designation: g.designation })),
     }))
     .map((s) => {
