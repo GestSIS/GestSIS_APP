@@ -68,8 +68,8 @@ const handleClick = () => {
 const nodeRef = useTemplateRef("node");
 const expand = (exp) => {
   expanded.value = exp;
-  if (nodeRef) {
-    nodeRef.forEach((node) => node.expand(exp));
+  if (nodeRef.value) {
+    nodeRef.value.forEach((node) => node.expand(exp));
   }
 };
 

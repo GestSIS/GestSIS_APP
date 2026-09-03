@@ -218,7 +218,7 @@ const addSapeurs = (node) => {
               Ajouter un groupe
             </button>
             <button
-              class="btn btn-primary d-block mb-2"
+              class="btn btn-danger d-block mb-2"
               :disabled="!activeIsGroupe"
               @click="deleteGroupe"
             >

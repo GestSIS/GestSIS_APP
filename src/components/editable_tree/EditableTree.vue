@@ -37,8 +37,8 @@ watch(
 localActive.value = active?.data;
 
 const nodeRef = useTemplateRef("node");
-const contract = () => nodeRef.forEach((node) => node.expand(false));
-const expand = () => nodeRef.forEach((node) => node.expand(true));
+const contract = () => nodeRef.value.forEach((node) => node.expand(false));
+const expand = () => nodeRef.value.forEach((node) => node.expand(true));
 const select = (elem) => {
   if (selectable) {
     localActive.value = elem.data;

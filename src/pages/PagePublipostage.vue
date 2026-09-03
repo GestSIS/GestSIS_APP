@@ -46,7 +46,7 @@ const select = () => {
         <exercice-comptable />
       </div>
     </div>
-    <div class="card card-primary card-outline">
+    <div class="card card-primary card-outline col-sm-6">
       <div class="card-header d-flex justify-content-between">
         <h3>Publipostage</h3>
       </div>

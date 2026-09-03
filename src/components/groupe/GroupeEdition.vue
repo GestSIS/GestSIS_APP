@@ -209,8 +209,8 @@ const down = (node) => {
 };
 
 const treeRef = useTemplateRef("tree");
-const contract = () => treeRef.contract();
-const expand = () => treeRef.expand();
+const contract = () => treeRef.value.contract();
+const expand = () => treeRef.value.expand();
 
 defineExpose({
   expand,
