@@ -381,7 +381,12 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                 class="border rounded-3 p-3"
                 :class="exercice.convoque ? 'bg-body' : 'border-warning-subtle bg-warning-subtle'"
               >
-                <span v-if="!exercice.convoque" class="badge text-bg-warning mb-2">Pour info</span>
+                <span v-if="exercice.categorie" class="badge text-bg-secondary">{{
+                  exercice.categorie
+                }}</span>
+                <span v-if="!exercice.convoque" class="badge text-bg-warning ms-2 mb-2"
+                  >Pour info</span
+                >
                 <div
                   v-if="exercice.sis_nom && sapeurDansPlusieursSis"
                   class="small text-uppercase text-muted fw-semibold"
@@ -403,9 +408,6 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                   v-if="exercice.designation || exercice.categorie"
                   class="d-flex align-items-center gap-2 mt-1"
                 >
-                  <span v-if="exercice.categorie" class="badge text-bg-secondary">{{
-                    exercice.categorie
-                  }}</span>
                   <span v-if="exercice.designation">{{ exercice.designation }}</span>
                 </div>
                 <div v-if="exercice.communications" class="small text-muted mt-1">
