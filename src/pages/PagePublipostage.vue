@@ -46,42 +46,36 @@ const select = () => {
         <exercice-comptable />
       </div>
     </div>
-    <div class="row">
-      <div class="col-8">
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Publipostage</h3>
-          </div>
-          <div class="card-body">
-            <h4 class="h5">Télécharger fichier Excel pour publipostage.</h4>
-            <button class="btn btn-primary mb-2" @click="publipostage">Fichier Excel</button>
-            <!-- <p>TODO: Aide pour réaliser le publipostage</p> -->
-          </div>
-        </div>
+    <div class="card card-primary card-outline">
+      <div class="card-header d-flex justify-content-between">
+        <h3>Publipostage</h3>
       </div>
-      <div class="col-4">
-        <div class="card card-primary card-outline">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Options</h3>
-          </div>
-          <div class="card-body">
-            <h5>Sélection des sapeurs</h5>
-            <div class="input-group mb-3">
-              <button class="btn btn-outline-primary" @click="select">Sélection</button>
-              <input
-                type="text"
-                disabled
-                class="form-control"
-                :value="
-                  sapeurIds.length <= 0
-                    ? 'Tous les sapeurs'
-                    : sapeurIds.length + ' sapeurs sélectionnés'
-                "
-              />
-              <button class="btn btn-outline-danger" @click="resetSelection">Reset</button>
-            </div>
-          </div>
+      <div class="card-body">
+        <h5>Sélection des sapeurs</h5>
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            disabled
+            class="form-control"
+            :value="
+              sapeurIds.length <= 0
+                ? 'Tous les sapeurs'
+                : sapeurIds.length + ' sapeurs sélectionnés'
+            "
+            @click="select"
+          />
+          <button class="btn btn-outline-primary" @click="select">Sélection</button>
+          <button
+            v-if="sapeurIds.length > 0"
+            class="btn btn-outline-danger"
+            @click="resetSelection"
+          >
+            Réinitialiser
+          </button>
         </div>
+        <button class="btn btn-primary mb-2" @click="publipostage">
+          <font-awesome-icon :icon="['fas', 'download']" /> Fichier Excel
+        </button>
       </div>
     </div>
   </div>
