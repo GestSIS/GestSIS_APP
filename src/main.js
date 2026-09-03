@@ -17,6 +17,7 @@ import FloatingVue from "floating-vue";
 // Css assets
 import "./icons";
 import "vue3-select-component/styles";
+import "./composables/useTheme.js";
 
 // Base components
 import BaseDropdown from "/src/components/base/BaseDropdown.vue";

@@ -31,7 +31,7 @@ onMounted(() => displayPdf(pdfData));
 
 <template>
   <iframe id="pdf-viewer" src="" type="application/pdf" width="100%" height="800px">
-    <html>
+    <html data-bs-theme="dark">
       <body>
         <object :data="pdfData" type="application/pdf">
           <div>No online PDF viewer installed</div>

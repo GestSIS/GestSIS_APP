@@ -4,9 +4,11 @@ import * as releases from "../../releases.json";
 import { DOC_URL } from "../http/Env.js";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth/Auth.js";
+import { useTheme } from "../composables/useTheme.js";
 
 const router = useRouter();
 const authStore = useAuthStore();
+const { theme, toggleTheme } = useTheme();
 
 const { hideSidebar, noSidebar } = defineProps({
   hideSidebar: {
@@ -52,7 +54,8 @@ const quitterImpersonation = () => {
     </button>
   </div>
   <nav
-    class="navbar navbar-expand bg-light navbar-light border-bottom border-left justify-content-between d-print-none"
+    class="navbar navbar-expand border-bottom border-left justify-content-between d-print-none"
+    :class="theme === 'dark' ? 'bg-dark' : 'bg-body-tertiary'"
   >
     <ul class="navbar-nav">
       <li class="nav-item position-relative me-2 ms-4">
@@ -71,6 +74,16 @@ const quitterImpersonation = () => {
       </li>
     </ul>
     <ul class="navbar-nav me-2">
+      <li class="position-relative me-2">
+        <button
+          type="button"
+          class="btn btn-sm btn-link nav-link pt-0 pb-0"
+          :title="theme === 'dark' ? 'Passer en mode clair' : 'Passer en mode sombre'"
+          @click="toggleTheme"
+        >
+          <font-awesome-icon :icon="['fas', theme === 'dark' ? 'sun' : 'moon']" />
+        </button>
+      </li>
       <li class="position-relative me-2">
         <a
           href="https://github.com/GestSIS"

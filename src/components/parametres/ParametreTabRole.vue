@@ -166,7 +166,7 @@ tr:last-child td {
   position: sticky;
   left: 0px;
   width: 100px;
-  background-color: white;
+  background-color: var(--bs-table-bg);
   z-index: 1;
 }
 

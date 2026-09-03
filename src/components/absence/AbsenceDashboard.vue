@@ -193,7 +193,7 @@ const showAbsences = (absences) =>
 <template>
   <div class="row">
     <div class="col-md-3">
-      <div class="card card-primary card-outline mb-2">
+      <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h5>Actions</h5>
         </div>
@@ -205,7 +205,7 @@ const showAbsences = (absences) =>
       </div>
     </div>
     <div class="col-md-6">
-      <div class="card card-primary card-outline mb-2">
+      <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h5>Affichage</h5>
         </div>
@@ -257,7 +257,7 @@ const showAbsences = (absences) =>
                 <td
                   v-for="({ jourSemaine }, i) in computedAbsences"
                   :key="i"
-                  :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                  :class="{ 'bg-body-secondary': [0, 6].includes(jourSemaine) }"
                 >
                   {{
                     ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"][
@@ -270,7 +270,7 @@ const showAbsences = (absences) =>
                 <th
                   v-for="({ date, jourSemaine }, i) in computedAbsences"
                   :key="i"
-                  :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                  :class="{ 'bg-body-secondary': [0, 6].includes(jourSemaine) }"
                 >
                   {{ date }}
                 </th>
@@ -283,7 +283,7 @@ const showAbsences = (absences) =>
                 <td
                   v-for="({ jourSemaine, fonctions: foncs }, i) in computedAbsences"
                   :key="i"
-                  :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                  :class="{ 'bg-body-secondary': [0, 6].includes(jourSemaine) }"
                   :style="
                     'background-color:hsl(' +
                     (
@@ -311,7 +311,7 @@ const showAbsences = (absences) =>
                 <td
                   v-for="({ jourSemaine, permis }, i) in computedAbsences"
                   :key="i"
-                  :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                  :class="{ 'bg-body-secondary': [0, 6].includes(jourSemaine) }"
                   :style="
                     'background-color:hsl(' +
                     (
@@ -339,7 +339,7 @@ const showAbsences = (absences) =>
                 <td
                   v-for="({ jourSemaine, localites }, i) in computedAbsences"
                   :key="i"
-                  :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                  :class="{ 'bg-body-secondary': [0, 6].includes(jourSemaine) }"
                   :style="
                     'background-color:hsl(' +
                     (
@@ -368,7 +368,7 @@ const showAbsences = (absences) =>
                 <td
                   v-for="({ jourSemaine, groupes: groups }, i) in computedAbsences"
                   :key="i"
-                  :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                  :class="{ 'bg-body-secondary': [0, 6].includes(jourSemaine) }"
                   :style="
                     'background-color:hsl(' +
                     (
@@ -396,7 +396,7 @@ const showAbsences = (absences) =>
                 <th
                   v-for="({ jourSemaine, total }, i) in computedAbsences"
                   :key="i"
-                  :class="{ 'table-secondary': [0, 6].includes(jourSemaine) }"
+                  :class="{ 'bg-body-secondary': [0, 6].includes(jourSemaine) }"
                 >
                   {{ referenceData.total - total }}/{{ referenceData.total }}
                 </th>
@@ -413,7 +413,7 @@ const showAbsences = (absences) =>
 .sticky {
   position: sticky;
   left: 0px;
-  background-color: white;
+  background-color: var(--bs-table-bg);
 }
 
 .clickable {

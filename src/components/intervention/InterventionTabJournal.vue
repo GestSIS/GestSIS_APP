@@ -480,8 +480,8 @@ const fieldsJalons = [
     position: absolute;
     top: 0;
     width: 3px;
-    margin-bottom: 25px;
-    margin-top: 25px;
+    margin-bottom: 50px;
+    margin-top: 50px;
   }
 
   > li {
@@ -590,22 +590,18 @@ const fieldsJalons = [
 .timeline-badge {
   &.mission-ended {
     background-color: var(--bs-success) !important;
-    opacity: 0.8;
   }
 
   &.mission-running {
     background-color: var(--bs-warning) !important;
-    opacity: 0.8;
   }
 
   &.appel {
     background-color: var(--bs-primary) !important;
-    opacity: 0.8;
   }
 
   &.jalon {
     background-color: var(--bs-info) !important;
-    opacity: 0.8;
   }
 }
 

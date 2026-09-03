@@ -544,6 +544,6 @@ thead {
   position: sticky;
   top: 0;
   z-index: 12;
-  background-color: white;
+  background-color: var(--bs-table-bg);
 }
 </style>

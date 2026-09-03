@@ -19,7 +19,6 @@ const active = ref(null);
 const types = {
   groupe: {
     icon: ["fas", "sitemap"],
-    color: "#2c3e50",
   },
   groupeInter: {
     icon: ["fas", "fire"],

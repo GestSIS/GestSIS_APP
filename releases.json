@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "03.09.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Thème sombre"]
+    },
+    {
       "date": "02.09.2026",
       "version": "2.0",
       "app": "GestSIS APP",

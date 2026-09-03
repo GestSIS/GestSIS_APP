@@ -226,6 +226,7 @@ defineExpose({ expand });
   width: 1em;
   height: 1em;
   margin-left: 5px;
+  fill: currentColor;
   transition: transform 0.3s;
 }
 

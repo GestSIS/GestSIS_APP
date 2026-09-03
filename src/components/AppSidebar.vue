@@ -75,6 +75,7 @@ defineEmits(["close"]);
 
 aside {
   overflow: scroll;
+  border-right: 1px solid var(--bs-border-color-translucent);
 }
 
 ul li a:hover {

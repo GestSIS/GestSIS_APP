@@ -38,6 +38,63 @@ table button.btn {
   padding: 0 0.5rem;
 }
 
+// Dark mode : palette inspirée de github.com. Le fond de page est nettement
+// plus sombre que les surfaces "élevées" (cartes, tables, menus, popovers,
+// modales, listes) pour qu'elles se détachent clairement, au lieu du gris
+// unique de Bootstrap où tout se fond (--bs-card-bg vaut --bs-body-bg par
+// défaut, pareil pour les tables/menus/modales/popovers/listes).
+[data-bs-theme="dark"] {
+  color-scheme: dark;
+
+  --bs-body-bg: #0d1117;
+  --bs-body-bg-rgb: 13, 17, 23;
+  --bs-body-color: #c9d1d9;
+  --bs-body-color-rgb: 201, 209, 217;
+  --bs-emphasis-color: #f0f6fc;
+  --bs-emphasis-color-rgb: 240, 246, 252;
+
+  --bs-secondary-color: #8b949e;
+  --bs-secondary-bg: #21262d;
+  --bs-tertiary-color: #6e7681;
+  --bs-tertiary-bg: #161b22;
+
+  // Chrome (navbar, sidebar) : plus sombre que le fond de page pour former
+  // un cadre net autour du contenu, comme la nav de github.com.
+  --bs-dark: #010409;
+  --bs-dark-rgb: 1, 4, 9;
+
+  --bs-border-color: #30363d;
+  --bs-border-color-translucent: #30363d;
+
+  --bs-link-color: #58a6ff;
+  --bs-link-color-rgb: 88, 166, 255;
+  --bs-link-hover-color: #79c0ff;
+  --bs-link-hover-color-rgb: 121, 192, 255;
+
+  // Ces composants redéfinissent chacun leur propre variable de fond
+  // (--bs-card-bg, --bs-table-bg, ...) directement sur leur sélecteur en la
+  // pointant vers --bs-body-bg : un override posé plus haut (ex. sur
+  // [data-bs-theme="dark"] seul) serait donc masqué par cette redéclaration
+  // locale. Il faut cibler chaque sélecteur pour gagner la cascade.
+  .card,
+  .modal-content,
+  .list-group {
+    background-color: var(--bs-tertiary-bg);
+  }
+
+  .table {
+    --bs-table-bg: var(--bs-tertiary-bg);
+  }
+
+  .dropdown-menu {
+    --bs-dropdown-bg: var(--bs-tertiary-bg);
+  }
+
+  .popover {
+    --bs-popover-bg: var(--bs-tertiary-bg);
+  }
+}
+
 // --- vue3-select-component v1 (reka-ui) ---
 // Aligne les sélecteurs sur les `form-control-sm` Bootstrap et corrige le
 // z-index du popover (téléporté dans <body>) qui passait sous la modale.
