@@ -120,3 +120,11 @@ table button.btn {
   --vs-font-size: 0.875rem;
   --vs-option-padding: 4px 6px;
 }
+
+// En-tête de groupe (`SelectGroupLabel`) : non cliquable, on le distingue
+// visuellement des options avec un fond discret (même traitement que les
+// lignes de catégorie dans les listes de navigation matériel).
+:root [data-select-group-label] {
+  padding: 4px 6px;
+  background-color: var(--bs-secondary-bg);
+}

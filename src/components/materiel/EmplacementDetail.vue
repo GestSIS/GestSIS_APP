@@ -70,7 +70,7 @@ const editEmplacement = () => {
 
 <template>
   <div class="row mb-2">
-    <div :class="estVehicule || estHangar ? 'col-6' : 'col-12'">
+    <div :class="estVehicule || estHangar ? 'col-md-6 mb-3' : 'col-12'">
       <div class="card mb-2 h-100">
         <div class="card-header d-flex justify-content-between align-items-center">
           <h5 class="m-0">Emplacement</h5>
@@ -111,7 +111,7 @@ const editEmplacement = () => {
         </div>
       </div>
     </div>
-    <div v-if="estVehicule" class="col-6">
+    <div v-if="estVehicule" class="col-md-6 mb-3">
       <div class="card mb-2 h-100">
         <div class="card-header">
           <h5 class="m-0">
@@ -135,7 +135,7 @@ const editEmplacement = () => {
         </div>
       </div>
     </div>
-    <div v-if="estHangar" class="col-6">
+    <div v-if="estHangar" class="col-md-6 mb-3">
       <div class="card mb-2 h-100">
         <div class="card-header">
           <h5 class="m-0">

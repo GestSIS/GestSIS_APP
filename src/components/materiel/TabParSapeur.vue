@@ -14,13 +14,13 @@ const { id } = defineProps({
 
 <template>
   <div class="row">
-    <div class="col-3">
+    <div class="col-12 col-md-3">
       <suspense>
-        <navigation-par-sapeur />
+        <navigation-par-sapeur :id="id" />
         <template #fallback>Chargement...</template>
       </suspense>
     </div>
-    <div class="col-9">
+    <div class="col-12 col-md-9">
       <suspense v-if="parseInt(id) > 0">
         <liste-article-pour-sapeur :id="id" />
         <template #fallback>Chargement...</template>
