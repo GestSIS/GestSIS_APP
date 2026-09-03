@@ -69,16 +69,9 @@ const flatFichiers = computed(() => {
       const dossier = Array.isArray(n.children) && n.children.length > 0;
       return dossier
         ? walk(n.children, nomChemin)
-        : [
-            {
-              ...n,
-              value: n.id,
-              type: fileType(n),
-              label: nomChemin.join(" / "),
-            },
-          ];
+        : [{ ...n, value: n.id, label: nomChemin.join(" / ") }];
     });
-  return walk(rtaStore.fichiers, []);
+  return walk(computedFichiers.value, []);
 });
 
 const selectedFichier = reactive({ metadata: null, content: null });
@@ -177,6 +170,7 @@ const selectedFichierId = computed({
             <editable-tree
               :tree="computedFichiers"
               :types="types"
+              :active="{ data: selectedFichier.metadata }"
               selectable
               @selected="selectFichier"
             >
