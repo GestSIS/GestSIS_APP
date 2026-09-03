@@ -2,6 +2,7 @@
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
 import { useExcuseParamStore } from "../../stores/exercice/ExcuseParam.js";
 import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
+import { useAuthStore } from "../../stores/auth/Auth.js";
 import { computed, ref, watch } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal";
@@ -20,7 +21,11 @@ const { callback, data } = defineProps({
 const infosStore = useMesInfosStore();
 const excuseParamStore = useExcuseParamStore();
 const excuseTypeStore = useExcuseTypeStore();
+const authStore = useAuthStore();
 const awn = useNotification();
+
+// N'affiche le nom du SIS dans le select que si le sapeur a un profil dans plusieurs SIS.
+const sapeurDansPlusieursSis = computed(() => Object.keys(authStore.sis.sapeurs ?? {}).length > 1);
 
 // Les exercices peuvent provenir de plusieurs SIS (ex. depuis Accueil) : exercice_id seul n'est pas
 // unique dans ce cas (chaque SIS a sa propre séquence), donc on identifie chaque option par un
@@ -138,7 +143,7 @@ const close = () => {
             ' (' +
             e.designation +
             ')' +
-            (e.sis_nom ? ' [' + e.sis_nom + ']' : '')
+            (e.sis_nom && sapeurDansPlusieursSis ? ' [' + e.sis_nom + ']' : '')
         "
         value-key="uid"
         label="Exercice"
