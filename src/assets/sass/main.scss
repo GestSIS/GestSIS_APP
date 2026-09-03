@@ -111,6 +111,13 @@ table button.btn {
   --vs-font-size: 0.875rem;
   --vs-text-color: var(--bs-body-color);
   --vs-placeholder-color: var(--bs-secondary-color);
+  // La librairie fige `--vs-background-color` à #fff : en dark mode le
+  // trigger restait blanc, avec un texte clair rendu illisible.
+  --vs-background-color: var(--bs-body-bg);
+  --vs-disabled-background-color: var(--bs-secondary-bg);
+  --vs-icon-color: var(--bs-body-color);
+  --vs-trailing-icon-color: var(--bs-secondary-color);
+  --vs-spinner-color: var(--bs-body-color);
 }
 
 :root [data-select-popover] {
@@ -119,6 +126,24 @@ table button.btn {
   --vs-menu-offset-top: 2px;
   --vs-font-size: 0.875rem;
   --vs-option-padding: 4px 6px;
+  // Même bug que le trigger : `--vs-menu-background-color` (et les couleurs
+  // d'état des options) sont figées en clair par la librairie. Le popover
+  // est téléporté hors du trigger, donc il ne récupère pas le
+  // `--vs-text-color` posé sur [data-select-trigger] : sans le reposer ici,
+  // le texte des options (état par défaut) restait figé au noir de la
+  // librairie, illisible sur les fonds sombres ci-dessous.
+  --vs-text-color: var(--bs-body-color);
+  --vs-menu-background-color: var(--bs-tertiary-bg);
+  --vs-menu-border: 1px solid var(--bs-border-color);
+  --vs-option-hover-background-color: var(--bs-secondary-bg);
+  --vs-option-focused-background-color: var(--bs-secondary-bg);
+  --vs-option-selected-background-color: var(--bs-primary);
+  --vs-option-selected-text-color: #fff;
+  --vs-option-disabled-background-color: var(--bs-secondary-bg);
+  --vs-option-disabled-text-color: var(--bs-secondary-color);
+  --vs-separator-border-color: var(--bs-border-color);
+  --vs-multi-value-background-color: var(--bs-secondary-bg);
+  --vs-multi-value-text-color: var(--bs-body-color);
 }
 
 // En-tête de groupe (`SelectGroupLabel`) : non cliquable, on le distingue
@@ -127,4 +152,5 @@ table button.btn {
 :root [data-select-group-label] {
   padding: 4px 6px;
   background-color: var(--bs-secondary-bg);
+  --vs-group-label-text-color: var(--bs-secondary-color);
 }
