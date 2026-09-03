@@ -237,20 +237,22 @@ const fields = [
             <h3>Jetons d'APIs</h3>
             <button class="btn btn-outline-primary" @click="ajouter">Ajouter</button>
           </div>
-          <base-table
-            :fields="fields"
-            :data="apiTokens"
-            :loading="loading"
-            no-data="Aucun jeton d'API"
-            :selectable="true"
-            :row-class="rowClass"
-          >
-            <template #actions="{ rowData }">
-              <button class="btn btn-sm btn-outline-danger" @click="deleteApiToken(rowData.id)">
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </template>
-          </base-table>
+          <div class="card-body table-responsive p-0">
+            <base-table
+              :fields="fields"
+              :data="apiTokens"
+              :loading="loading"
+              no-data="Aucun jeton d'API"
+              :selectable="true"
+              :row-class="rowClass"
+            >
+              <template #actions="{ rowData }">
+                <button class="btn btn-sm btn-outline-danger" @click="deleteApiToken(rowData.id)">
+                  <font-awesome-icon :icon="['far', 'trash-alt']" />
+                </button>
+              </template>
+            </base-table>
+          </div>
         </div>
       </div>
     </div>
