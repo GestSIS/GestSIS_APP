@@ -47,7 +47,7 @@ const quitterImpersonation = () => {
 </script>
 
 <template>
-  <div v-if="authStore.impersonating" class="bg-warning text-center py-1 d-print-none">
+  <div v-if="authStore.impersonating" class="bg-warning text-black text-center py-1 d-print-none">
     Vous êtes connecté en tant que <strong>{{ authStore.user?.name }}</strong> (usurpation)
     <button type="button" class="btn btn-sm btn-dark ms-2" @click="quitterImpersonation">
       Quitter
