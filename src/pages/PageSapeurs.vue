@@ -40,6 +40,7 @@ const routes = [
   { texte: "Permis", to: { name: "sapeur-permis" }, recrue: true },
   { texte: "Banque", to: { name: "sapeur-banque" }, civil: true, recrue: true },
   { texte: "Exercice", to: { name: "sapeur-exercices" }, civil: true },
+  { texte: "Intervention", to: { name: "sapeur-interventions" } },
 ];
 
 baseDataStore.fetchCivilites();

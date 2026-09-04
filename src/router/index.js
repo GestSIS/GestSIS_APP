@@ -290,6 +290,12 @@ const router = createRouter({
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
           component: () => import("../components/sapeur/SapeurExercice.vue"),
         },
+        {
+          path: "interventions",
+          name: "sapeur-interventions",
+          beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
+          component: () => import("../components/sapeur/SapeurIntervention.vue"),
+        },
       ],
     },
     {

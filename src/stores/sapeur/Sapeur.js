@@ -14,6 +14,7 @@ export const useSapeurStore = defineStore("sapeur", {
       fonctions: [],
       mutations: [],
       exercices: [],
+      interventions: [],
       controles: [],
       telephones: [],
       materiels: [],
@@ -89,6 +90,11 @@ export const useSapeurStore = defineStore("sapeur", {
     async fetchSapeurExercices({ sapeurId, exerciceComptableId }) {
       const data = await SapeurService.getExercices(sapeurId, exerciceComptableId);
       this.active.exercices = data;
+      return data;
+    },
+    async fetchSapeurInterventions({ sapeurId, exerciceComptableId }) {
+      const data = await SapeurService.getInterventions(sapeurId, exerciceComptableId);
+      this.active.interventions = data;
       return data;
     },
     async createSapeur(payload) {

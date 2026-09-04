@@ -62,6 +62,9 @@ export default {
   getExercices(sapeurId, exerciceComptableId) {
     return Api.api().get("/sapeurs/" + sapeurId + "/exercices/" + exerciceComptableId);
   },
+  getInterventions(sapeurId, exerciceComptableId) {
+    return Api.api().get("/sapeurs/" + sapeurId + "/interventions/" + exerciceComptableId);
+  },
   createSapeur(sapeurData) {
     return Api.api().post("/sapeurs", sapeurData);
   },
