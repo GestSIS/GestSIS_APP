@@ -72,7 +72,7 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { faGripfire, faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faGripfire, faGithub, faGooglePlay } from "@fortawesome/free-brands-svg-icons";
 import {
   faEdit,
   faCalendarAlt,
@@ -107,6 +107,7 @@ library.add(
   faIndustry,
   faHouse,
   faGithub,
+  faGooglePlay,
   faFileExcel,
   faFileWord,
   faFile,

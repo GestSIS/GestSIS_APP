@@ -117,7 +117,7 @@ const reset = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f5f5f5 !important;
+  background-color: var(--bs-tertiary-bg);
 }
 
 .form-signin {

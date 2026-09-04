@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "04.09.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Refonte de la page public"]
+    },
+    {
       "date": "03.09.2026",
       "version": "1.0",
       "app": "GestSIS APP",

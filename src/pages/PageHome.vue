@@ -283,7 +283,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
     </div>
     <div v-if="peutSExcuser" class="row">
       <div class="col-12 mb-3">
-        <button class="btn btn-primary p-3" @click="addExcuse()">
+        <button title="S'excuser pour un exercice" class="btn btn-primary p-3" @click="addExcuse()">
           S'excuser<br /><em>pour 1 événement</em>
         </button>
         <!-- <button class="btn btn-primary p-3 ms-2">Signaler une absence<br /><em>plusieurs jours</em></button> -->
@@ -297,6 +297,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
           >
             <h2 class="fs-4 mb-0">Vos prochaines convocations</h2>
             <button
+              title="S'abonner à mon agenda"
               class="btn btn-outline-primary"
               type="button"
               @click="showModal('ModalCalendarLinks')"
@@ -331,7 +332,8 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                 >
                 <button
                   v-if="rowData.justificatif_filename"
-                  class="btn"
+                  title="Télécharger le justificatif"
+                  class="btn btn-link"
                   @click="downloadJustificatif(rowData)"
                 >
                   <font-awesome-icon :icon="['far', 'file-pdf']" />
@@ -344,6 +346,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                     !rowData.excuse_type_id &&
                     rowData.statut != 0
                   "
+                  title="Saisir une excuse pour cet exercice"
                   class="btn btn-outline-primary border-0"
                   @click="addExcuse(rowData)"
                 >
@@ -355,6 +358,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                     rowData.excuse_type_id &&
                     rowData.statut != 0
                   "
+                  title="Supprimer l'excuse pour cet exercice"
                   class="btn btn-outline-danger border-0"
                   @click="removeExcuse(rowData)"
                 >
@@ -440,6 +444,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                       >
                       <button
                         v-if="exercice.justificatif_filename"
+                        title="Télécharger le justificatif"
                         class="btn btn-sm btn-link p-0 text-decoration-none"
                         @click="downloadJustificatif(exercice)"
                       >
@@ -450,6 +455,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
 
                   <button
                     v-if="peutAjouterExcuse(exercice)"
+                    title="Saisir une excuse pour cet exercice"
                     class="btn btn-sm btn-outline-primary"
                     @click="addExcuse(exercice)"
                   >
@@ -457,6 +463,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                   </button>
                   <button
                     v-else-if="peutRetirerExcuse(exercice)"
+                    title="Supprimer l'excuse pour cet exercice"
                     class="btn btn-sm btn-outline-danger"
                     @click="removeExcuse(exercice)"
                   >
