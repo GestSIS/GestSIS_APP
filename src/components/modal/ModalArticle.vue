@@ -27,7 +27,7 @@ const form = reactive({
   statut: true,
   quantite: 1,
   ...articleData,
-  emplacementRepresentee: { ...data?.emplacement_representee },
+  emplacementRepresentee: { statut: true, ...data?.emplacement_representee },
 });
 
 const typeStore = useMaterielTypeStore();
@@ -218,8 +218,13 @@ const save = async () => {
             />
             <base-checkbox
               v-model="form.emplacementRepresentee.est_compartimentable"
-              class="mb-0"
+              class="mb-3"
               label="Emplacement compartimenté"
+            />
+            <base-checkbox
+              v-model="form.emplacementRepresentee.statut"
+              class="mb-0"
+              label="Emplacement actif"
             />
           </fieldset>
         </div>
