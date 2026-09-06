@@ -11,7 +11,10 @@ const password_confirmation = ref(null);
 const token = ref(route.query.token);
 const error = ref({});
 const reseted = ref(false);
-const time = ref(10);
+// Jetons d'API révoqués par la réinitialisation (cf. GestSIS_Auth reset()) : l'utilisateur
+// doit savoir quelles intégrations ont perdu l'accès et devront être reconfigurées.
+const revokedApiTokens = ref([]);
+const time = ref(30);
 const timeInterval = ref(null);
 
 if (!token.value) {
@@ -36,9 +39,10 @@ const reset = async () => {
       password_confirmation: password_confirmation.value,
       token: token.value || null,
     })
-    .then(() => {
+    .then((data) => {
       error.value = {};
       reseted.value = true;
+      revokedApiTokens.value = data?.revoked_api_tokens ?? [];
       if (!timeInterval.value) {
         timeInterval.value = setInterval(() => {
           if (time.value <= 0) {
@@ -102,6 +106,16 @@ const reset = async () => {
             Votre mot de passe a été réinitalisé, vous allez être redirigé vers la page de
             connection dans {{ time }} secondes.
           </p>
+          <div v-if="revokedApiTokens.length" class="alert alert-warning text-start">
+            <p class="fw-bold mb-1">Par sécurité, vos jetons d'API ont été révoqués :</p>
+            <ul class="mb-1">
+              <li v-for="name in revokedApiTokens" :key="name">{{ name }}</li>
+            </ul>
+            <p class="mb-0">
+              Les applications qui les utilisaient ont perdu leur accès. Recréez un jeton depuis vos
+              paramètres utilisateur et reconfigurez-les.
+            </p>
+          </div>
         </div>
       </template>
       <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>

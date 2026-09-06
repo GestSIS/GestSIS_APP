@@ -77,7 +77,19 @@ const deleteApiToken = async (id) =>
       .catch(() => awn.alert("Erreur lors de la suppression du jeton d'API")),
   );
 
+const revocationReasons = {
+  password_reset: "réinitialisation du mot de passe",
+};
+const revocationLabel = (jeton) =>
+  `Révoqué le ${new Date(jeton.revoked_at).toLocaleDateString("fr-CH")}` +
+  (revocationReasons[jeton.revoked_reason]
+    ? ` suite à une ${revocationReasons[jeton.revoked_reason]}`
+    : "");
+
 const rowClass = (jeton) => {
+  if (jeton.revoked_at) {
+    return "table-secondary";
+  }
   if (new Date(jeton.expires_at) < new Date()) {
     return "table-danger";
   }
@@ -93,6 +105,7 @@ const fields = [
   { title: "Créé le", key: "created_at", type: Date },
   { title: "Dernière utilisation", key: "last_used_at", type: "datetime" },
   { title: "Expire le", key: "expires_at", type: Date },
+  { title: "Statut", key: "revoked_at", slot: "statut" },
   { title: "Actions", key: "id", slot: "actions" },
 ];
 </script>
@@ -246,6 +259,22 @@ const fields = [
               :selectable="true"
               :row-class="rowClass"
             >
+              <template #statut="{ rowData }">
+                <span
+                  v-if="rowData.revoked_at"
+                  class="badge bg-danger"
+                  :title="revocationLabel(rowData)"
+                >
+                  {{ revocationLabel(rowData) }}
+                </span>
+                <span
+                  v-else-if="new Date(rowData.expires_at) < new Date()"
+                  class="badge bg-secondary"
+                >
+                  Expiré
+                </span>
+                <span v-else class="badge bg-success">Actif</span>
+              </template>
               <template #actions="{ rowData }">
                 <button class="btn btn-sm btn-outline-danger" @click="deleteApiToken(rowData.id)">
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
