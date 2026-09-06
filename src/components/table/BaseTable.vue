@@ -121,10 +121,16 @@ watch(
   },
 );
 
+// Neutralise l'injection de formule : une valeur saisie (y compris via le formulaire public
+// de recrutement) qui commence par = + - @ ou un caractère de contrôle serait interprétée
+// comme formule par Excel/LibreOffice. Les nombres (négatifs inclus) restent intacts.
+const isPlainNumber = (s) => /^[-+]?\d+([.,]\d+)?$/.test(s);
+const neutralizeFormula = (s) => (/^[=+\-@\t\r]/.test(s) && !isPlainNumber(s) ? "'" + s : s);
+
 // Quote values containing the delimiter, quotes or newlines (RFC 4180),
 // otherwise a ";" inside a value shifts the columns of the export
 const csvEscape = (value) => {
-  const s = String(value ?? "");
+  const s = neutralizeFormula(String(value ?? ""));
   return /[";\n\r]/.test(s) ? '"' + s.replaceAll('"', '""') + '"' : s;
 };
 

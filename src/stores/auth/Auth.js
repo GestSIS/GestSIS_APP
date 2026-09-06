@@ -123,6 +123,11 @@ export const useAuthStore = defineStore("auth", {
       TokenService.removeAccessToken();
       TokenService.removeRefreshToken();
       TokenService.removeUser();
+      // Session admin mise de côté pendant une usurpation : sans cette purge, le
+      // prochain utilisateur du poste pourrait la restaurer via stopImpersonation().
+      TokenService.removeAdminAccessToken();
+      TokenService.removeAdminUser();
+      this.impersonating = false;
       Api.setAccessToken("");
       Api.setSisKey(null);
 

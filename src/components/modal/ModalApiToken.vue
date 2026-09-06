@@ -52,7 +52,6 @@ const save = async () => {
   }
   authStore[form.id ? "updateApiToken" : "createApiToken"](form)
     .then((res) => {
-      console.log(res);
       token.value = res.token;
     })
     .catch((err) => {

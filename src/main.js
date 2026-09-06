@@ -34,6 +34,18 @@ const pinia = createPinia();
 const app = createApp(App);
 app.use(pinia).use(router);
 
+// Les URLs capturées par Sentry (page courante, navigation, fetch/XHR) peuvent porter
+// des jetons : reset/confirmation de mot de passe (?token=), inscription d'une recrue
+// (#/inscription/{sisKey}/{token}) et formulaire public API (/recrutement/{sisKey}/{token}).
+// Aucun ne doit fuiter vers Bugsink.
+const redactUrl = (url) =>
+  typeof url === "string"
+    ? url
+        .replace(/\/recrutement\/[^/]+\/[^/?#]+/, "/recrutement/[redacted]")
+        .replace(/\/inscription\/[^/]+\/[^/?#]+/, "/inscription/[redacted]")
+        .replace(/([?&#]token=)[^&#]*/gi, "$1[redacted]")
+    : url;
+
 if (import.meta.env.VITE_SENTRY_DSN) {
   Sentry.init({
     app,
@@ -45,14 +57,20 @@ if (import.meta.env.VITE_SENTRY_DSN) {
     // Pas de Release Health côté Bugsink : évite le trafic inutile des sessions.
     integrations: (integrations) =>
       integrations.filter((integration) => integration.name !== "BrowserSession"),
-    // Les breadcrumbs fetch/XHR capturent l'URL complète des requêtes : le jeton de recrutement
-    // (formulaire public /recrutement/{sisKey}/{token}) ne doit pas fuiter vers Bugsink.
+    beforeSend(event) {
+      if (event.request?.url) {
+        event.request.url = redactUrl(event.request.url);
+      }
+      return event;
+    },
+    // Breadcrumbs fetch/XHR (data.url) et navigation (data.from / data.to).
     beforeBreadcrumb(breadcrumb) {
-      if (breadcrumb.data?.url) {
-        breadcrumb.data.url = breadcrumb.data.url.replace(
-          /\/recrutement\/[^/]+\/[^/?#]+/,
-          "/recrutement/[redacted]",
-        );
+      if (breadcrumb.data) {
+        for (const key of ["url", "from", "to"]) {
+          if (breadcrumb.data[key]) {
+            breadcrumb.data[key] = redactUrl(breadcrumb.data[key]);
+          }
+        }
       }
       return breadcrumb;
     },
