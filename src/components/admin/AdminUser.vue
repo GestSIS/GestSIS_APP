@@ -1,9 +1,11 @@
 <script setup>
 import { computed, ref, watch } from "vue";
+import { useRouter } from "vue-router";
 import useNotification from "../../composables/useNotification.js";
 import AdminService from "../../services/AdminService";
 import { useModalStore } from "../../stores/common/Modal";
 import { useAdminStore } from "../../stores/admin/Admin";
+import { useAuthStore } from "../../stores/auth/Auth";
 
 const { id } = defineProps({
   id: {
@@ -12,7 +14,9 @@ const { id } = defineProps({
   },
 });
 
+const router = useRouter();
 const adminStore = useAdminStore();
+const authStore = useAuthStore();
 
 const user = ref({});
 const loadSis = adminStore.loadAllSis();
@@ -50,6 +54,11 @@ const tokenForUser = (user) =>
     awn.success("Token copié dans le press papier");
   });
 const editUser = (user) => showModal({ component: "ModalUser", data: user });
+const impersonateUser = (user) =>
+  authStore
+    .impersonate(user.id)
+    .then(() => router.push({ name: "accueil" }))
+    .catch((e) => awn.alert(e?.message || "Erreur lors de l'usurpation"));
 
 const computedDataRoles = computed(() =>
   (user.value.user_roles || []).map((ur) => {
@@ -122,7 +131,22 @@ const fieldsSapeurs = [
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Données</h3>
-          <button class="btn btn-primary" @click="editUser(user)">Modifier</button>
+          <div>
+            <button
+              type="button"
+              class="btn btn-outline-primary me-1"
+              :disabled="user.id === authStore.user?.id"
+              :title="
+                user.id === authStore.user?.id
+                  ? 'Vous ne pouvez pas usurper votre propre identité'
+                  : 'Usurper l\'identité'
+              "
+              @click="impersonateUser(user)"
+            >
+              <font-awesome-icon :icon="['fas', 'user-secret']" />
+            </button>
+            <button class="btn btn-primary" @click="editUser(user)">Modifier</button>
+          </div>
         </div>
         <div class="card-body">
           <div class="mb-3">
