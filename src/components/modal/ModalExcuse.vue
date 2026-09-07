@@ -60,6 +60,9 @@ const save = () => {
       <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
+      <p v-if="form.date_excuse" class="text-muted small">
+        Excuse saisie le {{ new Date(form.date_excuse).toLocaleString("fr-CH").slice(0, -3) }}
+      </p>
       <base-select
         v-model="form.excuse_type_id"
         :required="true"

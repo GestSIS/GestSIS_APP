@@ -87,8 +87,6 @@ if (data?.id) {
 activeSapeurId.value = form.value.sapeur_id;
 
 watchEffect(async () => {
-  // Load sapeurs exercices
-  // FIXME: Check permissions pour cette route
   loading.value = true;
   try {
     const res = await SapeurService.getExercices(
@@ -236,7 +234,7 @@ const fields = [
             />
           </div>
           <div class="mb-3">
-            <label>Justificatif</label>
+            <label>Justificatif:</label>
             <button
               v-if="form.justificatif_filename"
               type="button"
@@ -246,42 +244,21 @@ const fields = [
               Justificatif
               <font-awesome-icon :icon="['far', 'file-pdf']" />
             </button>
-            <!-- {{ form.justificatif_filename }} -->
-            <span v-else>Aucun justificatif</span>
+            <span v-else> -</span>
           </div>
-          <!-- <div class="row">
-            <div class="col-6">
-              <base-select
-                v-model="form.auteur_id"
-                class="mb-3"
-                label="Saisie par"
-                display-key="nom_prenom"
-                :options="sapeurs"
-                disabled
-              />
-            </div>
-            <div class="col-6">
-              <div class="mb-3">
-                <label for="date">Le</label>
-                <input
-                  id="date"
-                  v-model="form.date_demande"
-                  type="date"
-                  class="form-control form-control-sm"
-                  disabled
-                />
-              </div>
-            </div>
-          </div> -->
+          <p v-if="form.date_excuse" class="text-muted small">
+            Excuse saisie le {{ new Date(form.date_excuse).toLocaleString("fr-CH").slice(0, -3) }}
+          </p>
 
           <div class="mb-3">
             <label for="justification">Justification <em>(optionnel)</em></label>
             <textarea
               id="justification"
               ref="justification"
+              rows="3"
               v-model="form.justification"
               class="form-control form-control-sm"
-              placeholder="(optionnel)"
+              placeholder="Raison de l'acceptation ou du refus de l'excuse"
             ></textarea>
           </div>
           <div class="btn-group btn-group-sm mb-3" role="group" aria-label="Small button group">
