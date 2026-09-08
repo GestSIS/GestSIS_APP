@@ -1,6 +1,6 @@
 <script setup>
-import InterventionTabMateriel from "/src/components/intervention/InterventionTabMateriel.vue";
-import InterventionTabVehicule from "/src/components/intervention/InterventionTabVehicule.vue";
+import InterventionMateriel from "/src/components/intervention/InterventionMateriel.vue";
+import InterventionVehicule from "/src/components/intervention/InterventionVehicule.vue";
 
 const { id } = defineProps({
   id: {
@@ -12,7 +12,7 @@ const { id } = defineProps({
 
 <template>
   <div class="row">
-    <InterventionTabMateriel :id="id">Materiels</InterventionTabMateriel>
-    <InterventionTabVehicule :id="id">Véhicules</InterventionTabVehicule>
+    <InterventionMateriel :id="id">Materiels</InterventionMateriel>
+    <InterventionVehicule :id="id">Véhicules</InterventionVehicule>
   </div>
 </template>
