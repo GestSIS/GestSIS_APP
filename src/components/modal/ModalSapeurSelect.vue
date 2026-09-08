@@ -378,6 +378,7 @@ const selectOptions = {
     collection: () => [
       { id: 0, designation: "Sapeur" },
       { id: 1, designation: "Civil" },
+      { id: 2, designation: "Recrue" },
     ],
     displayKey: "designation",
   },
@@ -468,7 +469,7 @@ const selectOptions = {
             </thead>
             <tbody>
               <tr v-if="computedChosenSapeurs.length <= 0">
-                <td colspan="3">Aucun sapeur sélectioné</td>
+                <td colspan="3">Aucun sapeur sélectionné</td>
               </tr>
               <tr
                 v-for="item in computedChosenSapeurs"

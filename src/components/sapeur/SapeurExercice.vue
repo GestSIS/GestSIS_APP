@@ -148,13 +148,6 @@ const fields = [
                 }[rowData.excuse_statut]
               }}</span
             >
-            <button
-              v-if="rowData.justificatif_filename"
-              class="btn"
-              @click="downloadJustificatif(rowData)"
-            >
-              <font-awesome-icon :icon="['far', 'file-pdf']" />
-            </button>
           </div>
         </template>
       </base-table>

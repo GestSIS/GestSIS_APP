@@ -53,6 +53,12 @@ const localites = computed(() =>
 const fonctions = computed(() => fonctionStore.liste);
 const grades = computed(() => gradeStore.liste);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
+const fonctionPrincipale = computed(
+  () => fonctions.value.find((f) => f.id === activeSapeur.value.fonction_id)?.nom,
+);
+const gradeActuel = computed(
+  () => grades.value.find((g) => g.id === activeSapeur.value.grade_id)?.designation,
+);
 
 const { showModal, confirm } = useModalStore();
 const awn = useNotification();
@@ -431,43 +437,57 @@ const editPhoto = () =>
         <div class="card-header">
           <h3 class="card-title">Informations</h3>
         </div>
-        <form role="form">
-          <div class="card-body">
-            <base-select
-              v-model="activeSapeur.fonction_id"
-              class="mb-3"
-              label="Fonction principale"
-              display-key="nom"
-              :options="fonctions"
-              disabled
-            />
-            <base-select
-              v-model="activeSapeur.grade_id"
-              class="mb-3"
-              label="Grade actuel"
-              :options="grades"
-              disabled
-            />
-            <div class="mb-3 form-check">
-              <input
-                id="actif"
-                v-model="activeSapeur.actif"
-                type="checkbox"
-                name="actif"
-                class="form-check-input"
-                disabled
-                :true-value="1"
-                :false-value="0"
-              />
-              <label for="actif">Actif</label>
-              <font-awesome-icon
-                v-tooltip.bottom="'Pour désactiver un sapeur, utiliser l\'onglet Mutations !'"
-                class="ms-1"
-                :icon="['far', 'question-circle']"
-              />
-            </div>
+        <div class="card-body">
+          <div class="mb-3 d-flex align-items-center justify-content-between">
+            <span>
+              <strong>Fonction principale: </strong>
+              <span v-if="fonctionPrincipale" class="badge rounded-pill text-bg-primary">{{
+                fonctionPrincipale
+              }}</span>
+              <span v-else>-</span>
+            </span>
+            <router-link
+              :to="{ name: 'sapeur-fonctions', params: { id: activeSapeurId } }"
+              class="btn btn-sm btn-outline-primary"
+            >
+              Historique
+              <font-awesome-icon :icon="['fas', 'angle-right']" class="ms-1" />
+            </router-link>
           </div>
-        </form>
+          <div class="mb-3 d-flex align-items-center justify-content-between">
+            <span>
+              <strong>Grade actuel: </strong>
+              <span v-if="gradeActuel" class="badge rounded-pill text-bg-primary">{{
+                gradeActuel
+              }}</span>
+              <span v-else>-</span>
+            </span>
+            <router-link
+              :to="{ name: 'sapeur-promotions', params: { id: activeSapeurId } }"
+              class="btn btn-sm btn-outline-primary"
+            >
+              Historique
+              <font-awesome-icon :icon="['fas', 'angle-right']" class="ms-1" />
+            </router-link>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <span>
+              <strong>Statut: </strong>
+              <span
+                class="badge rounded-pill"
+                :class="activeSapeur.actif ? 'text-bg-success' : 'text-bg-secondary'"
+                >{{ activeSapeur.actif ? "Actif" : "Inactif" }}</span
+              >
+            </span>
+            <router-link
+              :to="{ name: 'sapeur-mutations', params: { id: activeSapeurId } }"
+              class="btn btn-sm btn-outline-primary"
+            >
+              Mutations
+              <font-awesome-icon :icon="['fas', 'angle-right']" class="ms-1" />
+            </router-link>
+          </div>
+        </div>
       </div>
     </div>
   </div>

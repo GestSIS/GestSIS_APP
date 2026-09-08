@@ -2,6 +2,7 @@
 import { computed, ref, watchEffect } from "vue";
 import { useBaseDataStore } from "../../stores/common/BaseData.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
 import useNotification from "../../composables/useNotification.js";
@@ -42,6 +43,7 @@ const sapeurType = computed(() => sapeurStore.active.data.type);
 const telephoneTypes = computed(() => baseDataStore.telephoneTypes);
 
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
+const { confirm } = useModalStore();
 
 const saveTelephones = async () => {
   const savedTelephones = [...telephones.value];
@@ -78,15 +80,24 @@ const addTelephone = () => {
       ...telephones.value,
       {
         id: null,
-        telephone_type_id: 0,
+        telephone_type_id: telephoneTypes.value[0]?.id ?? null,
         rta: 0,
         priorite: telephones.value.length + 1,
       },
     ];
   }
 };
-const removeTelephone = (priorite) => {
-  telephones.value = telephones.value.filter((t) => t.priorite !== priorite);
+const removeTelephone = (tel) => {
+  if (tel.id === null) {
+    telephones.value = telephones.value.filter((t) => t.priorite !== tel.priorite);
+    return;
+  }
+  confirm(
+    "Voulez-vous vraiment supprimer ce numéro de téléphone ?",
+    "Attention, la suppression d'un numéro de téléphone est irréversible une fois enregistrée !",
+  ).then(() => {
+    telephones.value = telephones.value.filter((t) => t.priorite !== tel.priorite);
+  });
 };
 
 const fields = computed(() => [
@@ -181,7 +192,7 @@ const fields = computed(() => [
             type="button"
             class="btn btn-outline-danger border-0"
             required
-            @click="removeTelephone(rowData.priorite)"
+            @click="removeTelephone(rowData)"
           >
             <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>

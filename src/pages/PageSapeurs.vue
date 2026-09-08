@@ -361,53 +361,51 @@ const deleteSapeur = () =>
             </li> -->
         </div>
         <div class="card card-primary card-outline mb-3">
-          <div class="card-body d-flex flex-column flex-md-row-reverse">
-            <button type="button" class="btn btn-outline-primary ms-2 mb-2 d-none" disabled>
-              Exporter
-            </button>
-            <button type="button" class="btn btn-outline-primary ms-2 mb-2 d-none" disabled>
-              Importer
-            </button>
+          <div class="card-body d-flex flex-column flex-md-row align-items-md-center">
             <button
-              v-if="activeSapeur?.id && hasEditPermission"
-              class="btn btn-outline-danger ms-2 mb-2"
-              @click="deleteSapeur"
-            >
-              {{ isRecrue ? "Rejeter la recrue" : "Supprimer le sapeur" }}
-            </button>
-            <button
-              v-if="isRecrue && hasEditPermission"
+              v-if="activeSapeur?.id && !isRecrue"
               type="button"
-              class="btn btn-outline-success ms-2 mb-2"
-              @click="validerRecrue"
+              class="btn btn-outline-primary mb-2 me-md-auto"
+              @click="ficheSapeur"
             >
-              <font-awesome-icon icon="check" />
-              Valider la recrue
+              <font-awesome-icon :icon="['fas', 'id-card-clip']" />
+              Fiche sapeur
             </button>
             <button
               v-if="hasEditPermission"
               type="button"
-              class="btn btn-outline-primary ms-2 mb-2"
-              @click="addSapeur"
-            >
-              Ajouter un sapeur/civil
-            </button>
-            <button
-              v-if="hasEditPermission"
-              type="button"
-              class="btn btn-outline-primary ms-2 mb-2"
+              class="btn btn-outline-primary ms-md-2 mb-2"
               @click="lienInscription"
             >
               Lien d'inscription recrues
             </button>
             <button
-              v-if="activeSapeur?.id && !isRecrue"
+              v-if="hasEditPermission"
               type="button"
-              class="btn btn-outline-primary ms-2 me-md-auto"
-              @click="ficheSapeur"
+              class="btn btn-outline-primary ms-md-2 mb-2"
+              @click="addSapeur"
             >
-              <font-awesome-icon :icon="['fas', 'id-card-clip']" />
-              Fiche sapeur
+              Ajouter un sapeur/civil
+            </button>
+            <button
+              v-if="isRecrue && hasEditPermission"
+              type="button"
+              class="btn btn-outline-success ms-md-2 mb-2"
+              @click="validerRecrue"
+            >
+              <font-awesome-icon icon="check" />
+              Valider la recrue
+            </button>
+            <div
+              v-if="activeSapeur?.id && hasEditPermission"
+              class="vr d-none d-md-block mx-2"
+            ></div>
+            <button
+              v-if="activeSapeur?.id && hasEditPermission"
+              class="btn btn-outline-danger mb-2"
+              @click="deleteSapeur"
+            >
+              {{ isRecrue ? "Rejeter la recrue" : "Supprimer le sapeur" }}
             </button>
           </div>
         </div>

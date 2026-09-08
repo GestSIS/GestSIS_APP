@@ -3,6 +3,7 @@ import { computed, ref, watch, watchEffect } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useBaseDataStore } from "../../stores/common/BaseData.js";
+import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
 
@@ -46,6 +47,7 @@ watch(
 );
 
 const awn = useNotification();
+const { confirm } = useModalStore();
 
 const saveSuccessfull = (permis_type_id) => {
   errors.value = {
@@ -59,7 +61,7 @@ const saveError = (permis_type_id, error) => {
     [permis_type_id]: error,
   };
 };
-const supprimerPermis = (permis_type_id) => {
+const clearPermisDate = (permis_type_id) => {
   permisData.value = {
     ...permisData.value,
     [permis_type_id]: {
@@ -67,6 +69,16 @@ const supprimerPermis = (permis_type_id) => {
       date: "",
     },
   };
+};
+const supprimerPermis = (permis) => {
+  if (permis.id === null) {
+    clearPermisDate(permis.permis_type_id);
+    return;
+  }
+  confirm(
+    "Voulez-vous vraiment supprimer ce permis ?",
+    "Attention, la suppression d'un permis est irréversible une fois enregistrée !",
+  ).then(() => clearPermisDate(permis.permis_type_id));
 };
 const savePermis = () => {
   Object.values(permisData.value).forEach((p) => {
@@ -160,7 +172,7 @@ const isInvalid = (key) => {
                   v-if="(permis.date || '') !== '' && hasEditPermission"
                   type="button"
                   class="btn btn-outline-danger border-0"
-                  @click="supprimerPermis(permis.permis_type_id)"
+                  @click="supprimerPermis(permis)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
