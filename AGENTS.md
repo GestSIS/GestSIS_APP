@@ -46,7 +46,7 @@ Tableau de données avec tri par colonne (clic sur l'en-tête), états de charge
 
 - **`<base-multi-select>`** — sélection multiple (basé sur `vue3-select-component`) ; `v-model` (Array), mêmes `options`/`value-key`/`display-key`/`formatter`/`label`/`base-option`.
 - **`<base-checkbox>`** — `v-model` (Boolean/Number), `label`, `true-value`/`false-value`.
-- **`<base-radio>`** — `v-model`, `:options` (requis), `label`, `advanced-label`.
+- **`<base-radio>`** — `v-model`, `:options` (requis, `{ value, label, disabled?, color? }`), `label`, `advanced-label`. `button-style` (+ `size`, ex. `"sm"`) rend un groupe de boutons Bootstrap (segment visuel) au lieu de radios empilées ; `option.color` (suffixe Bootstrap : `success`, `danger`, …) teinte le bouton, `option.disabled` le désactive individuellement.
 - **`<base-dropdown>`** — menu déroulant Bootstrap ; props `tag`, `button-class`, `menu-class`, `title` ; slots `#title` et défaut.
 - **`<base-card>`** — carte Bootstrap ; slots `#title`, `#header`, `#body`, `#body-table`, `#footer`.
 - **`<base-navigation-tab>`** — onglets de navigation à partir de `:routes` (Array).

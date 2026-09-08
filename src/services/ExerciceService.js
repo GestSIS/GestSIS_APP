@@ -33,6 +33,9 @@ export default {
   validerExercice(exerciceId) {
     return Api.api().post("/exercices/" + exerciceId + "/valider");
   },
+  devaliderExercice(exerciceId) {
+    return Api.api().post("/exercices/" + exerciceId + "/devalider");
+  },
   saveExercice(exerciceId, exerciceData) {
     return Api.api().put("/exercices/" + exerciceId, exerciceData);
   },

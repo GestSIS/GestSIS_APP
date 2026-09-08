@@ -70,6 +70,14 @@ export const useExerciceStore = defineStore("exercice", {
       }
       return data;
     },
+    async devaliderExercice(exerciceId) {
+      const data = await ExerciceService.devaliderExercice(exerciceId);
+      this.liste = this.liste.map((e) => (e.id == exerciceId ? { ...e, statut: data?.statut } : e));
+      if (this.active.id == exerciceId) {
+        this.active.data.statut = data?.statut;
+      }
+      return data;
+    },
     async annulerExercice(exerciceId) {
       const data = await ExerciceService.cancelExercice(exerciceId);
       this.liste = this.liste.map((e) => (e.id == exerciceId ? { ...e, statut: data?.statut } : e));

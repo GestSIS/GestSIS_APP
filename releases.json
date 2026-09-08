@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "08.09.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Amélioration de l'affichage des présences aux exercices"]
+    },
+    {
       "date": "04.09.2026",
       "version": "1.0",
       "app": "GestSIS APP",
