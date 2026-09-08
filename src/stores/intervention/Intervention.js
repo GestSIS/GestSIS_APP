@@ -161,6 +161,7 @@ export const useInterventionStore = defineStore("intervention", {
     async addPresences(sapeurs) {
       const data = await InterventionService.addSapeurs(this.active.data.id, { sapeurs });
       this.active.sapeurs = data.sapeurs;
+      this.active.data.statut = data.statut;
       this.liste = this.liste.map((i) =>
         i.id == this.active.id ? { ...i, statut: data.statut } : i,
       );
@@ -174,12 +175,13 @@ export const useInterventionStore = defineStore("intervention", {
       return data;
     },
     async removePresence(sapeurId) {
-      const data = await InterventionService.removeSapeurs(this.active.data.id, {
+      const statut = await InterventionService.removeSapeurs(this.active.data.id, {
         sapeurs: [sapeurId],
       });
       this.active.sapeurs = this.active.sapeurs.filter((p) => p.id !== sapeurId);
-      this.liste = this.liste.map((i) => (i.id == this.active.id ? { ...i, statut: data } : i));
-      return data;
+      this.active.data.statut = statut;
+      this.liste = this.liste.map((i) => (i.id == this.active.id ? { ...i, statut } : i));
+      return statut;
     },
     // Phases
     async addPhase(phase) {

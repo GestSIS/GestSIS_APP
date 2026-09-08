@@ -217,12 +217,7 @@ const totalHeures = computed(() => {
         v-if="!dismissedWarning && dataInter.statut > 2 && hasEditPermission"
         class="alert alert-dismissible alert-warning"
       >
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="alert"
-          @click="dismissedWarning = true"
-        ></button>
+        <button type="button" class="btn-close" @click="dismissedWarning = true"></button>
         Intervention déjà imputée, impossible de modifier les présences.
       </div>
     </div>
