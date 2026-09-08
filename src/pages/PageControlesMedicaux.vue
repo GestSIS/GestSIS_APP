@@ -274,15 +274,7 @@ const fields = [
             <div class="card-body">
               <div class="row">
                 <div class="col-md-12 mb-2">
-                  <input
-                    id="only_latest"
-                    v-model="latest"
-                    type="checkbox"
-                    class="form-check-input"
-                  />
-                  <label class="form-check-label ms-2" for="only_latest"
-                    >Derniers contrôles de chaque sapeurs</label
-                  >
+                  <base-checkbox v-model="latest" label="Derniers contrôles de chaque sapeurs" />
                 </div>
                 <base-select
                   class="col-md-6"

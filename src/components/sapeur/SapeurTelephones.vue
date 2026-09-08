@@ -88,6 +88,23 @@ const addTelephone = () => {
 const removeTelephone = (priorite) => {
   telephones.value = telephones.value.filter((t) => t.priorite !== priorite);
 };
+
+const fields = computed(() => [
+  {
+    title: "Priorité",
+    key: "priorite",
+    titleClass: telephones.value.length <= 1 ? "d-none" : "",
+    columnClass: telephones.value.length <= 1 ? "d-none" : "text-center",
+  },
+  { title: "Numéro", key: "numero", slot: "numero" },
+  { title: "Type", key: "telephone_type_id", slot: "type" },
+  ...(sapeurType.value === 0
+    ? [{ title: "RTA", key: "rta", slot: "rta", columnClass: "align-middle text-center" }]
+    : []),
+  ...(hasEditPermission.value
+    ? [{ title: "Actions", slot: "actions", columnClass: "align-middle text-center" }]
+    : []),
+]);
 </script>
 
 <template>
@@ -105,70 +122,71 @@ const removeTelephone = (priorite) => {
           <span class="visually-hidden">Chargement...</span>
         </div>
       </div>
-      <table v-else class="table table-sm">
-        <thead>
-          <tr>
-            <th class="col-1" :class="{ 'd-none': telephones.length <= 1 }">Priorité</th>
-            <th>Numéro</th>
-            <th>Type</th>
-            <th v-if="sapeurType === 0">
-              RTA
-              <font-awesome-icon
-                v-tooltip.bottom="'Cocher pour transmettre à la centrale d\'alarme RTA'"
-                class="ms-1"
-                :icon="['far', 'question-circle']"
-              />
-            </th>
-            <th v-if="hasEditPermission" class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tr v-if="telephones.length <= 0">
-          <td :colspan="hasEditPermission ? 5 : 4">Aucun numéro enregistré</td>
-        </tr>
-        <tr v-for="t in telephones.sort((t1, t2) => t1?.priorite > t2?.priorite)" :key="t.id">
-          <td class="text-center" :class="{ 'd-none': telephones.length <= 1 }">
-            {{ t.priorite }}
-          </td>
-          <td>
-            <input
-              v-model="t.numero"
-              class="form-control form-control-sm"
-              type="text"
-              :readonly="!hasEditPermission"
-              placeholder="..."
-            />
-          </td>
-          <td>
-            <select
-              v-model="t.telephone_type_id"
-              class="form-select form-select-sm"
-              :disabled="!hasEditPermission"
-            >
-              <option v-for="telType in telephoneTypes" :key="telType.id" :value="telType.id">
-                {{ telType.type }}
-              </option>
-            </select>
-          </td>
-          <td v-if="sapeurType === 0" class="align-middle text-center">
-            <input
-              v-model="t.rta"
-              type="checkbox"
-              class="form-check-input"
-              :disabled="!hasEditPermission"
-            />
-          </td>
-          <td v-if="hasEditPermission" class="align-middle text-center">
-            <button
-              type="button"
-              class="btn btn-outline-danger border-0"
-              required
-              @click="removeTelephone(t.priorite)"
-            >
-              <font-awesome-icon :icon="['far', 'trash-alt']" />
-            </button>
-          </td>
-        </tr>
-      </table>
+      <base-table
+        v-else
+        class="table-sm"
+        :fields="fields"
+        :data="telephones"
+        no-data="Aucun numéro enregistré"
+        :hide-download="true"
+      >
+        <template v-if="sapeurType === 0" #head>
+          <thead>
+            <tr>
+              <th class="col-1" :class="{ 'd-none': telephones.length <= 1 }">Priorité</th>
+              <th>Numéro</th>
+              <th>Type</th>
+              <th>
+                RTA
+                <font-awesome-icon
+                  v-tooltip.bottom="'Cocher pour transmettre à la centrale d\'alarme RTA'"
+                  class="ms-1"
+                  :icon="['far', 'question-circle']"
+                />
+              </th>
+              <th v-if="hasEditPermission" class="text-center">Actions</th>
+            </tr>
+          </thead>
+        </template>
+        <template #numero="{ rowData }">
+          <input
+            v-model="rowData.numero"
+            class="form-control form-control-sm"
+            type="text"
+            :readonly="!hasEditPermission"
+            placeholder="..."
+          />
+        </template>
+        <template #type="{ rowData }">
+          <select
+            v-model="rowData.telephone_type_id"
+            class="form-select form-select-sm"
+            :disabled="!hasEditPermission"
+          >
+            <option v-for="telType in telephoneTypes" :key="telType.id" :value="telType.id">
+              {{ telType.type }}
+            </option>
+          </select>
+        </template>
+        <template #rta="{ rowData }">
+          <input
+            v-model="rowData.rta"
+            type="checkbox"
+            class="form-check-input"
+            :disabled="!hasEditPermission"
+          />
+        </template>
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            required
+            @click="removeTelephone(rowData.priorite)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
       <button
         v-if="hasEditPermission"
         type="button"

@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import useNotification from "../../composables/useNotification.js";
+import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
@@ -87,18 +88,6 @@ const imputer = () => {
       ecritures.value = res;
     });
 };
-const formatType = (type) => {
-  const mapping = {
-    0: "Autre",
-    1: "Solde",
-    2: "Indemnité",
-    3: "Frais forfaitaire",
-    4: "Frais effectif",
-    5: "Côtisations AVS/AC",
-  };
-  return mapping[type] || "";
-};
-
 const fields = [
   { title: "Désignation", key: "designation" },
   { title: "Catégorie comptable", key: "categorie" },
@@ -108,17 +97,7 @@ const detailRowOptions = {
     {
       title: "Type",
       key: "type",
-      formatter: (type) => {
-        const mapping = {
-          0: "Autre",
-          1: "Solde",
-          2: "Indemnité",
-          3: "Frais forfaitaire",
-          4: "Frais effectif",
-          5: "Côtisations AVS/AC",
-        };
-        return mapping[type] || "";
-      },
+      formatter: ecritureTypeLabel,
     },
     { title: "Tarif", key: "tarif" },
     { title: "Unité", key: "unite" },
@@ -136,7 +115,7 @@ const ecritureFields = [
   { title: "Quantité", key: "quantite" },
   { title: "Tarif", key: "tarif" },
   { title: "Total", key: "total" },
-  { title: "Type", key: "type", formatter: (type) => formatType(type) },
+  { title: "Type", key: "type", formatter: ecritureTypeLabel },
 ];
 </script>
 

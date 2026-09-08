@@ -8,6 +8,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import useHasPermission from "../../composables/usePermission.js";
+import { travailStatut } from "../../composables/travailStatuts.js";
 
 const uniteStore = useUniteStore();
 const travailTypeStore = useTravailTypeStore();
@@ -57,14 +58,9 @@ const fields = [
   {
     title: "Statut",
     key: "statut",
-    formatter(statut) {
-      return {
-        [-1]: "Refusé",
-        0: "En attente",
-        1: "Accepté",
-        2: "Imputé",
-      }[statut];
-    },
+    slot: "statut",
+    titleClass: "text-center",
+    columnClass: "text-center",
   },
   { title: "Justification", key: "justification" },
 ];
@@ -87,7 +83,13 @@ const fields = [
         :selectable="true"
         :hide-download="true"
         no-data="Aucun travail pour le moment"
-      />
+      >
+        <template #statut="{ value }">
+          <span class="badge rounded-pill" :class="travailStatut(value).badgeClass">
+            {{ travailStatut(value).label }}
+          </span>
+        </template>
+      </base-table>
     </div>
   </div>
 </template>

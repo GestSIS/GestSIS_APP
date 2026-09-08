@@ -1,4 +1,5 @@
 <script setup>
+import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 import permissions from "../../composables/permissions.js";
@@ -113,17 +114,7 @@ const detailRowOptions = {
     {
       title: "Type",
       key: "type",
-      formatter: (t) => {
-        const mapping = {
-          0: "Autre",
-          1: "Solde",
-          2: "Indemnité",
-          3: "Frais forfaitaire",
-          4: "Frais effectif",
-          5: "Cotisation AVS/AC",
-        };
-        return mapping[t] ?? "Autre";
-      },
+      formatter: ecritureTypeLabel,
     },
     {
       title: "Compte",

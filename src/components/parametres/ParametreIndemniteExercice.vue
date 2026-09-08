@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from "vue";
+import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
@@ -34,17 +35,7 @@ const detailRowOptions = {
     {
       title: "Type",
       key: "type",
-      formatter: (type) => {
-        const mapping = {
-          0: "Autre",
-          1: "Solde",
-          2: "Indemnité",
-          3: "Frais forfaitaire",
-          4: "Frais effectif",
-          5: "Côtisations AVS/AC",
-        };
-        return mapping[type] || "";
-      },
+      formatter: ecritureTypeLabel,
     },
     { title: "Tarif", key: "tarif" },
     { title: "Compte", key: "compte" },

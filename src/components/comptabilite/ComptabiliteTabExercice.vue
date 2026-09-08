@@ -1,5 +1,7 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
+import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
+import { exerciceStatut } from "../../composables/exerciceStatuts.js";
 import useNotification from "../../composables/useNotification.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
@@ -138,17 +140,7 @@ const detailRowOptions = {
     {
       title: "Type",
       key: "type",
-      formatter: (type) => {
-        const mapping = {
-          0: "Autre",
-          1: "Solde",
-          2: "Indemnité",
-          3: "Frais forfaitaire",
-          4: "Frais effectif",
-          5: "Côtisations AVS/AC",
-        };
-        return mapping[type] || "";
-      },
+      formatter: ecritureTypeLabel,
     },
     {
       title: "Tarif",
@@ -213,18 +205,12 @@ const fields = [
     key: "designation",
   },
   {
-    title: "statut",
+    title: "Statut",
     key: "statut",
-    formatter(value) {
-      const statuts = {
-        0: "Annulé",
-        1: "A saisir",
-        2: "En attente de validation",
-        3: "Validé",
-        4: "Imputé",
-      };
-      return statuts[value];
-    },
+    slot: "statut",
+    formatter: (value) => exerciceStatut(value).label,
+    titleClass: "text-center",
+    columnClass: "text-center",
   },
   {
     title: "Actions",
@@ -330,6 +316,11 @@ const fields = [
             >
               <template #detail-row="{ rowData }">
                 <generic-details-row :options="detailRowOptions" :row-data="rowData" />
+              </template>
+              <template #statut="{ value }">
+                <span class="badge rounded-pill" :class="exerciceStatut(value).badgeClass">
+                  {{ exerciceStatut(value).label }}
+                </span>
               </template>
               <template #actions="{ rowData }">
                 <button

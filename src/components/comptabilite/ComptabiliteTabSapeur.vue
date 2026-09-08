@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
+import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import useNotification from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
@@ -153,17 +154,7 @@ const detailRowOptions = {
     {
       title: "Type",
       key: "type",
-      formatter: (t) => {
-        const mapping = {
-          0: "Autre",
-          1: "Solde",
-          2: "Indemnité",
-          3: "Frais forfaitaire",
-          4: "Frais effectif",
-          5: "Cotisation AVS/AC",
-        };
-        return mapping[t] ?? "Autre";
-      },
+      formatter: ecritureTypeLabel,
     },
     {
       title: "Tarif",

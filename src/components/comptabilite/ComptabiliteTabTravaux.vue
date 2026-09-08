@@ -1,5 +1,7 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
+import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
+import { travailStatut } from "../../composables/travailStatuts.js";
 import useNotification from "../../composables/useNotification.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useTravailStore } from "../../stores/travail/Travail.js";
@@ -123,17 +125,7 @@ const detailRowOptions = {
     {
       title: "Type",
       key: "type",
-      formatter: (type) => {
-        const mapping = {
-          0: "Autre",
-          1: "Solde",
-          2: "Indemnité",
-          3: "Frais forfaitaire",
-          4: "Frais effectif",
-          5: "Côtisations AVS/AC",
-        };
-        return mapping[type] || "";
-      },
+      formatter: ecritureTypeLabel,
     },
     {
       title: "Tarif",
@@ -169,14 +161,10 @@ const fields = [
   {
     title: "Statut",
     key: "statut",
-    formatter(statut) {
-      return {
-        [-1]: "Refusé",
-        0: "En attente",
-        1: "Accepté",
-        2: "Imputé",
-      }[statut];
-    },
+    slot: "statut",
+    formatter: (value) => travailStatut(value).label,
+    titleClass: "text-center",
+    columnClass: "text-center",
   },
   { title: "Justification", key: "justification" },
   { title: "Actions", slot: "actions" },
@@ -248,7 +236,7 @@ const fields = [
                 class="col-md-4"
                 base-option="<Statut>"
                 :options="[
-                  { id: [-1], designation: 'Refusé' },
+                  { id: -1, designation: 'Refusé' },
                   { id: 0, designation: 'En attente' },
                   { id: 1, designation: 'Accepté' },
                 ]"
@@ -281,6 +269,11 @@ const fields = [
             >
               <template #detail-row="{ rowData }">
                 <generic-details-row :options="detailRowOptions" :row-data="rowData" />
+              </template>
+              <template #statut="{ value }">
+                <span class="badge rounded-pill" :class="travailStatut(value).badgeClass">
+                  {{ travailStatut(value).label }}
+                </span>
               </template>
               <template #actions="{ rowData }">
                 <button

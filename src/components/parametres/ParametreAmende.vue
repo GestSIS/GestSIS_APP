@@ -31,6 +31,20 @@ const listeAmende = computed(() => amendeStore.liste.slice().sort((a, b) => a.or
 const listeCompte = computed(() => compteStore.liste);
 const listeCategorie = computed(() => ecritureCategorieStore.liste);
 
+// idx sert de clé stable pour l'édition/suppression par position (les
+// amendes n'ont pas d'identifiant propre côté formulaire).
+const amendesData = computed(() => params.value.amendes.map((a, idx) => ({ ...a, idx })));
+const fields = [
+  { title: "#", key: "idx", formatter: (idx) => idx + 1 },
+  { title: "Montant", key: "montant", slot: "montant" },
+  {
+    title: "Actions",
+    slot: "actions",
+    titleClass: "text-center",
+    columnClass: "align-middle text-center",
+  },
+];
+
 if (listeAmende.value.length > 0) {
   params.value.compte_id = listeAmende.value[0]?.compte_id;
   params.value.ecriture_categorie_id = listeAmende.value[0]?.ecriture_categorie_id;
@@ -87,41 +101,34 @@ const save = async () => {
           :options="listeCategorie"
         />
       </div>
-      <table id="indemnites-anuelles" class="table table-sm">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Montant</th>
-            <th class="text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="!params.amendes.length">
-            <td colspan="3">Aucune amende</td>
-          </tr>
-          <tr v-for="(a, index) in params.amendes" :key="a.id">
-            <td>{{ index + 1 }}</td>
-            <td>
-              <input
-                class="form-control form-control-sm"
-                type="text"
-                :value="params.amendes[index].montant"
-                @change="(e) => updateAmende(index, e)"
-              />
-            </td>
-            <td class="align-middle text-center">
-              <button
-                type="button"
-                class="btn btn-outline-danger border-0"
-                @click="removeAmende(index)"
-              >
-                <font-awesome-icon :icon="['far', 'trash-alt']" />
-              </button>
-            </td>
-          </tr>
-        </tbody>
-        <button class="btn btn-primary" @click="addAmende">+</button>
-      </table>
+      <base-table
+        id="indemnites-anuelles"
+        class="table-sm"
+        select-key="idx"
+        :fields="fields"
+        :data="amendesData"
+        no-data="Aucune amende"
+        :hide-download="true"
+      >
+        <template #montant="{ rowData }">
+          <input
+            class="form-control form-control-sm"
+            type="text"
+            :value="rowData.montant"
+            @change="(e) => updateAmende(rowData.idx, e)"
+          />
+        </template>
+        <template #actions="{ rowData }">
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="removeAmende(rowData.idx)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+      </base-table>
+      <button class="btn btn-primary mt-2" @click="addAmende">+</button>
     </div>
   </div>
 </template>

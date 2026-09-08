@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
+import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
@@ -36,17 +37,7 @@ const comptes = computed(() => compteStore.liste);
 const unites = computed(() => uniteStore.liste);
 const categories = computed(() => ecritureCategorieStore.liste);
 
-const formatType = (type) => {
-  const mapping = {
-    0: "Autre",
-    1: "Solde",
-    2: "Indemnité",
-    3: "Frais forfaitaire",
-    4: "Frais effectif",
-    5: "Côtisations AVS/AC",
-  };
-  return mapping[type] || "";
-};
+const formatType = ecritureTypeLabel;
 
 const typesAnnuel = computed(() =>
   imputationStore.fraisIndemnites.annuels.map((f) => {

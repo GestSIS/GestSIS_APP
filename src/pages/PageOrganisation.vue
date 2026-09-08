@@ -311,17 +311,12 @@ const addSapeurs = (node) => {
               :options="filteredGroupes"
             />
             <div class="mb-3">
-              <div class="form-check">
-                <input
-                  id="type"
-                  v-model="groupeEdit.type"
-                  type="checkbox"
-                  class="form-check-input"
-                  :true-value="1"
-                  :false-value="0"
-                />
-                <label class="form-check-label" for="type">Groupe d'alarme</label>
-              </div>
+              <base-checkbox
+                v-model="groupeEdit.type"
+                label="Groupe d'alarme"
+                :true-value="1"
+                :false-value="0"
+              />
             </div>
             <button class="btn btn-primary" @click="save">Modifier</button>
           </div>

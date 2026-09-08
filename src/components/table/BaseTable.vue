@@ -143,14 +143,14 @@ const toCvs = () => {
   const csv =
     "\ufeff" +
     fields
-      .filter((f) => !f.slot)
+      .filter((f) => !f.slot || f.formatter)
       .map((f) => csvEscape(f.title))
       .join(";") +
     "\n" +
     exportRows.value
       .map((e) =>
         fields
-          .filter((f) => !f.slot)
+          .filter((f) => !f.slot || f.formatter)
           .map((f) => {
             switch (f.type) {
               case "boolean":

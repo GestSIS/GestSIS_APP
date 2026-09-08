@@ -30,6 +30,10 @@ const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 const articles = ref([]);
 const loading = ref(true);
 const affichageIndividuel = ref(false);
+const affichageOptions = [
+  { value: true, label: "Individuel" },
+  { value: false, label: "Par type" },
+];
 const emplacement = computed(() => emplacementStore.liste.find((e) => e.id === parseInt(id)));
 
 const loadArticles = async () => {
@@ -141,29 +145,13 @@ const ajouter = () =>
   <base-card>
     <template #title>Pièces ({{ articles.length }})</template>
     <template #header>
-      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-        <input
-          id="individuel"
-          v-model="affichageIndividuel"
-          type="radio"
-          class="btn-sm btn-check"
-          name="groupingBy"
-          autocomplete="off"
-          :value="true"
-          checked
-        />
-        <label class="btn btn-sm btn-outline-primary" for="individuel">Individuel</label>
-        <input
-          id="par-type"
-          v-model="affichageIndividuel"
-          type="radio"
-          class="btn-sm btn-check"
-          name="groupingBy"
-          :value="false"
-          autocomplete="off"
-        />
-        <label class="btn btn-sm btn-outline-primary" for="par-type">Par type</label>
-      </div>
+      <base-radio
+        v-model="affichageIndividuel"
+        button-style
+        size="sm"
+        label="Mode d'affichage"
+        :options="affichageOptions"
+      />
       <button
         v-if="hasEditPermission"
         title="Ajouter"

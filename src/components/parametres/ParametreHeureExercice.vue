@@ -1,4 +1,5 @@
 <script setup>
+import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useHeureExerciceStore } from "../../stores/exercice/HeureExercice.js";
 import { useModalStore } from "../../stores/common/Modal.js";
@@ -34,14 +35,7 @@ const heureTypes = computed(() =>
       compte: compteStore.liste.find((e) => e.id == h.compte_id)?.label,
       categorie: ecritureCategorieStore.liste.find((e) => e.id == h.ecriture_categorie_id)
         ?.designation,
-      typeLabel: {
-        0: "Autre",
-        1: "Solde",
-        2: "Indemnité",
-        3: "Frais forfaitaire",
-        4: "Frais effectif",
-        5: "Côtisations AVS/AC",
-      }[h.type ?? 0],
+      typeLabel: ecritureTypeLabel(h.type),
     }))
     .sort((a, b) => a.tri - b.tri),
 );

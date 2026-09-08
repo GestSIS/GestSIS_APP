@@ -10,6 +10,7 @@ import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceCompta
 import { useAuthStore } from "../stores/auth/Auth.js";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 import useHasPermission from "../composables/usePermission.js";
+import { travailStatut } from "../composables/travailStatuts.js";
 
 const authStore = useAuthStore();
 const sapeurStore = useSapeurStore();
@@ -111,14 +112,10 @@ const fields = [
   {
     title: "Statut",
     key: "statut",
-    formatter(statut) {
-      return {
-        [-1]: "Refusé",
-        0: "En attente",
-        1: "Accepté",
-        2: "Imputé",
-      }[statut];
-    },
+    slot: "statut",
+    formatter: (value) => travailStatut(value).label,
+    titleClass: "text-center",
+    columnClass: "text-center",
   },
   { title: "Justification", key: "justification" },
   { title: "Actions", slot: "actions" },
@@ -242,6 +239,11 @@ const fields = [
                 :selectable="true"
                 @selected="select"
               >
+                <template #statut="{ value }">
+                  <span class="badge rounded-pill" :class="travailStatut(value).badgeClass">
+                    {{ travailStatut(value).label }}
+                  </span>
+                </template>
                 <template #actions="{ rowData }">
                   <button
                     v-if="

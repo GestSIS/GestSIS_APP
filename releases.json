@@ -2,9 +2,12 @@
   "releases": [
     {
       "date": "08.09.2026",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
-      "changes": ["Amélioration de l'affichage des présences aux exercices"]
+      "changes": [
+        "Amélioration de l'affichage des présences aux exercices",
+        "Amélioration diverses de l'interface"
+      ]
     },
     {
       "date": "04.09.2026",

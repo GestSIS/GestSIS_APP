@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
+import { ecritureTypeLabel, ecritureTypeOptions } from "../../composables/ecritureTypes.js";
 import useNotification from "../../composables/useNotification.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
@@ -46,17 +47,7 @@ const hasEditPermission = useHasPermission(permissions.COMPTABILITE.MODIFICATION
 
 const computedData = computed(() => {
   const formatCompte = (compte) => compte?.numero + " " + compte?.designation;
-  const formatType = (type) => {
-    const mapping = {
-      0: "Autre",
-      1: "Solde",
-      2: "Indemnité",
-      3: "Frais forfaitaire",
-      4: "Frais effectif",
-      5: "Côtisations AVS/AC",
-    };
-    return mapping[type] || "";
-  };
+  const formatType = ecritureTypeLabel;
 
   return ecritures.value?.map((e) => ({
     ...e,
@@ -185,14 +176,7 @@ const fields = [
               <base-select
                 class="col-md-4 mb-1"
                 base-option="&lt;Type&gt;"
-                :options="[
-                  { id: 0, designation: 'Autre' },
-                  { id: 1, designation: 'Solde' },
-                  { id: 2, designation: 'Indemnité' },
-                  { id: 3, designation: 'Frais forfaitaire' },
-                  { id: 4, designation: 'Frais effectif' },
-                  { id: 5, designation: 'Côtisations AVS/AC' },
-                ]"
+                :options="ecritureTypeOptions"
                 :model-value="filters.type"
                 @update:model-value="(value) => setFilter('type', value)"
               />

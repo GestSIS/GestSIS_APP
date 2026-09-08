@@ -130,6 +130,16 @@ const activeSapeur = computed(() => sapeurStore.active.data);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 const isRecrue = computed(() => activeSapeur.value?.type === TYPE_RECRUE);
 const nbRecrues = computed(() => sapeurs.value.filter(typeFilters.value.recrue).length);
+const typeFilterOptions = computed(() => [
+  { value: "sapeur", label: "Sapeurs" },
+  { value: "civil", label: "Civils" },
+  { value: "recrue", label: `Recrues (${nbRecrues.value})` },
+]);
+const actifFilterOptions = [
+  { value: "actif", label: "Actif" },
+  { value: "inactif", label: "Inactif" },
+  { value: "all", label: "Tous" },
+];
 
 const filteredSapeurs = computed(() => {
   const statutPredicate =
@@ -261,76 +271,22 @@ const deleteSapeur = () =>
           <div class="card-header">
             <h3 class="card-title">Filtres</h3>
             <div class="card-body px-0">
-              <div class="form-check form-check-inline">
-                <input
-                  id="typeSapeur"
-                  v-model="typeFilter"
-                  type="radio"
-                  name="type-md"
-                  class="form-check-input"
-                  value="sapeur"
-                />
-                <label class="form-check-label" for="typeSapeur">Sapeurs</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input
-                  id="typeCivil"
-                  v-model="typeFilter"
-                  type="radio"
-                  name="type-md"
-                  class="form-check-input"
-                  value="civil"
-                />
-                <label class="form-check-label" for="typeCivil">Civils</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input
-                  id="typeRecrue"
-                  v-model="typeFilter"
-                  type="radio"
-                  name="type-md"
-                  class="form-check-input"
-                  value="recrue"
-                />
-                <label class="form-check-label" for="typeRecrue"
-                  >Recrues <span class="badge text-bg-warning">{{ nbRecrues }}</span></label
-                >
-              </div>
+              <base-radio
+                v-model="typeFilter"
+                button-style
+                size="sm"
+                label="Type"
+                :options="typeFilterOptions"
+              />
               <template v-if="typeFilter !== 'recrue'">
                 <hr class="my-2" />
-                <div class="form-check form-check-inline">
-                  <input
-                    id="statutActif"
-                    v-model="filter"
-                    type="radio"
-                    name="actif-md"
-                    class="form-check-input"
-                    value="actif"
-                  />
-                  <label class="form-check-label" for="statutActif">Actif</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input
-                    id="statutInactif"
-                    v-model="filter"
-                    type="radio"
-                    name="actif-md"
-                    class="form-check-input"
-                    value="inactif"
-                  />
-                  <label class="form-check-label" for="statutInactif">Inactif</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input
-                    id="statutTous"
-                    v-model="filter"
-                    type="radio"
-                    name="actif-md"
-                    class="form-check-input"
-                    value="all"
-                  />
-                  <label class="form-check-label" for="statutTous">Tous</label>
-                </div>
+                <base-radio
+                  v-model="filter"
+                  button-style
+                  size="sm"
+                  label="Statut"
+                  :options="actifFilterOptions"
+                />
               </template>
             </div>
           </div>
@@ -374,74 +330,22 @@ const deleteSapeur = () =>
           <div class="card-header">
             <h3 class="card-title">Filtres</h3>
             <div class="card-body p-0">
-              <div class="form-check form-check-inline">
-                <input
-                  id="typeSapeurSm"
-                  v-model="typeFilter"
-                  type="radio"
-                  name="type-sm"
-                  class="form-check-input"
-                  value="sapeur"
-                />
-                <label class="form-check-label" for="typeSapeurSm">Sapeurs</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input
-                  id="typeCivilSm"
-                  v-model="typeFilter"
-                  type="radio"
-                  name="type-sm"
-                  class="form-check-input"
-                  value="civil"
-                />
-                <label class="form-check-label" for="typeCivilSm">Civils</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input
-                  id="typeRecrueSm"
-                  v-model="typeFilter"
-                  type="radio"
-                  name="type-sm"
-                  class="form-check-input"
-                  value="recrue"
-                />
-                <label class="form-check-label" for="typeRecrueSm">Recrues ({{ nbRecrues }})</label>
-              </div>
+              <base-radio
+                v-model="typeFilter"
+                button-style
+                size="sm"
+                label="Type"
+                :options="typeFilterOptions"
+              />
               <template v-if="typeFilter !== 'recrue'">
                 <hr class="my-2" />
-                <div class="form-check form-check-inline">
-                  <input
-                    id="statutActif"
-                    v-model="filter"
-                    type="radio"
-                    name="actif-sm"
-                    class="form-check-input"
-                    value="actif"
-                  />
-                  <label class="form-check-label" for="statutActif">Actif</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input
-                    id="statutInactif"
-                    v-model="filter"
-                    type="radio"
-                    name="actif-sm"
-                    class="form-check-input"
-                    value="inactif"
-                  />
-                  <label class="form-check-label" for="statutInactif">Inactif</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input
-                    id="statutTous"
-                    v-model="filter"
-                    type="radio"
-                    name="actif-sm"
-                    class="form-check-input"
-                    value="all"
-                  />
-                  <label class="form-check-label" for="statutTous">Tous</label>
-                </div>
+                <base-radio
+                  v-model="filter"
+                  button-style
+                  size="sm"
+                  label="Statut"
+                  :options="actifFilterOptions"
+                />
               </template>
             </div>
           </div>

@@ -13,6 +13,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import ExerciceService from "../../services/ExerciceService";
 import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
+import { exerciceStatut } from "../../composables/exerciceStatuts.js";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -95,22 +96,7 @@ const canValidate = computed(() => {
   return activeExerciceData.value.statut == 2;
 });
 
-// Libellés/couleurs alignés sur ceux déjà utilisés dans ExerciceListe.vue,
-// pour un statut cohérent dans toute l'app.
-const exerciceStatuts = {
-  0: { label: "Annulé", badgeClass: "text-bg-danger" },
-  1: { label: "A saisir", badgeClass: "text-bg-secondary" },
-  2: { label: "En attente de validation", badgeClass: "text-bg-warning" },
-  3: { label: "Validé", badgeClass: "text-bg-primary" },
-  4: { label: "Imputé", badgeClass: "text-bg-success" },
-};
-const statutActuel = computed(
-  () =>
-    exerciceStatuts[activeExerciceData.value.statut] ?? {
-      label: "Inconnu",
-      badgeClass: "text-bg-secondary",
-    },
-);
+const statutActuel = computed(() => exerciceStatut(activeExerciceData.value.statut));
 
 // Le bouton Valider n'est utile que pour un exercice en cours de saisie
 // (1 = A saisir) ou déjà complet (2 = En attente de validation) : une fois
@@ -246,7 +232,7 @@ const validate = () => {
 const devalider = () => {
   confirm(
     "Annuler la validation ?",
-    "L'exercice repassera au statut « En attente de validation » et redeviendra modifiable. Voulez-vous continuer ?",
+    `L'exercice repassera au statut « ${exerciceStatut(2).label} » et redeviendra modifiable. Voulez-vous continuer ?`,
   ).then(() =>
     exerciceStore
       .devaliderExercice(id)

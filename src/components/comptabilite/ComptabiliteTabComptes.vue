@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, useTemplateRef, watchEffect } from "vue";
+import { ecritureTypeLabel, ecritureTypeOptions } from "../../composables/ecritureTypes.js";
 import useNotification from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
@@ -98,17 +99,7 @@ const fields = [
   {
     title: "Type",
     key: "type",
-    formatter: (type) => {
-      const mapping = {
-        0: "Autre",
-        1: "Solde",
-        2: "Indemnité",
-        3: "Frais forfaitaire",
-        4: "Frais effectif",
-        5: "Côtisations AVS/AC",
-      };
-      return mapping[type] || "";
-    },
+    formatter: ecritureTypeLabel,
   },
   { title: "Designation", key: "designation" },
   { title: "Sapeur", key: "sapeur" },
@@ -157,14 +148,7 @@ const fields = [
               <base-select
                 class="col-md-6"
                 base-option="&lt;Type&gt;"
-                :options="[
-                  { id: 0, designation: 'Autre' },
-                  { id: 1, designation: 'Solde' },
-                  { id: 2, designation: 'Indemnité' },
-                  { id: 3, designation: 'Frais forfaitaire' },
-                  { id: 4, designation: 'Frais effectif' },
-                  { id: 5, designation: 'Côtisations AVS/AC' },
-                ]"
+                :options="ecritureTypeOptions"
                 :model-value="filters.type"
                 @update:model-value="(value) => setFilter('type', value)"
               />

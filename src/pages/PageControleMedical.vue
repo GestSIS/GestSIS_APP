@@ -224,15 +224,7 @@ const validite = (duree) => {
               :options="controleTypes"
             />
             <div class="mb-3">
-              <div class="form-check">
-                <input
-                  id="m-ctr-accepter"
-                  v-model="controleMedical.accepter"
-                  type="checkbox"
-                  class="form-check-input"
-                />
-                <label class="form-check-label" for="m-ctr-accepter">Accepté</label>
-              </div>
+              <base-checkbox v-model="controleMedical.accepter" label="Accepté" />
             </div>
             <div class="row">
               <div class="col-12" :class="{ 'col-xl-6': expirable }">

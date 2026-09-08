@@ -1,4 +1,5 @@
 <script setup>
+import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useHeureExerciceStore } from "../../stores/exercice/HeureExercice.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
@@ -32,17 +33,7 @@ const detailRowOptions = {
     {
       title: "Type",
       key: "type",
-      formatter: (type) => {
-        const mapping = {
-          0: "Autre",
-          1: "Solde",
-          2: "Indemnité",
-          3: "Frais forfaitaire",
-          4: "Frais effectif",
-          5: "Côtisations AVS/AC",
-        };
-        return mapping[type] || "";
-      },
+      formatter: ecritureTypeLabel,
     },
     { title: "Tarif", key: "tarif" },
     { title: "Unité", key: "unite" },

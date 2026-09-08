@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
+import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
@@ -137,17 +138,7 @@ const formatCompte = (compteId) => {
   const compte = comptes.value.find((f) => parseInt(f.id) == parseInt(compteId));
   return compte ? compte?.numero + " - " + compte?.designation : "";
 };
-const formatType = (type) => {
-  const mapping = {
-    0: "Autre",
-    1: "Solde",
-    2: "Indemnité",
-    3: "Frais forfaitaire",
-    4: "Frais effectif",
-    5: "Côtisations AVS/AC",
-  };
-  return mapping[type] || "";
-};
+const formatType = ecritureTypeLabel;
 </script>
 
 <template>

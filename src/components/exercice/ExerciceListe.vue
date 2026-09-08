@@ -10,6 +10,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { useConvocationParamStore } from "../../stores/exercice/ConvocationParam.js";
 import permissions from "../../composables/permissions.js";
+import { exerciceStatut, exerciceStatutOptions } from "../../composables/exerciceStatuts.js";
 
 import ExerciceDetails from "/src/components/exercice/ExerciceDetails.vue";
 import ExerciceService from "/src/services/ExerciceService.js";
@@ -179,16 +180,10 @@ const fieldsBase = [
   {
     title: "Statut",
     key: "statut",
-    formatter: (value) => {
-      const statuts = {
-        0: "Annulé",
-        1: "A saisir",
-        2: "En attente de validation",
-        3: "Validé",
-        4: "Imputé",
-      };
-      return statuts[value];
-    },
+    slot: "statut",
+    formatter: (value) => exerciceStatut(value).label,
+    titleClass: "text-center",
+    columnClass: "text-center",
   },
   {
     title: "Actions",
@@ -313,13 +308,7 @@ const fieldsBase = [
               <base-select
                 class="col-md-4"
                 base-option="<Statut>"
-                :options="[
-                  { id: 0, designation: 'Annulé' },
-                  { id: 1, designation: 'A saisir' },
-                  { id: 2, designation: 'En attente de validation' },
-                  { id: 3, designation: 'Validé' },
-                  { id: 4, designation: 'Imputé' },
-                ]"
+                :options="exerciceStatutOptions"
                 :model-value="filters.statut"
                 @update:model-value="(value) => setFilter('statut', value)"
               />
@@ -348,6 +337,11 @@ const fieldsBase = [
             >
               <template #detail-row="{ rowData }">
                 <exercice-details :row-data="rowData" />
+              </template>
+              <template #statut="{ value }">
+                <span class="badge rounded-pill" :class="exerciceStatut(value).badgeClass">
+                  {{ exerciceStatut(value).label }}
+                </span>
               </template>
               <template #actions="{ rowData }">
                 <button

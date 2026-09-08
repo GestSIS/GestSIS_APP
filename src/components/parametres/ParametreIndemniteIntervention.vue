@@ -1,4 +1,5 @@
 <script setup>
+import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
@@ -53,14 +54,7 @@ const indemnitesIntervention = computed(() =>
       categorie: ecritureCategorieStore.liste.find((c) => c.id == e.ecriture_categorie_id)
         ?.designation,
       phase: phaseTypeStore.liste.find((p) => p.id == e.phase_id)?.designation,
-      type_display: {
-        0: "Autre",
-        1: "Solde",
-        2: "Indemnité",
-        3: "Frais forfaitaire",
-        4: "Frais effectif",
-        5: "Côtisations AVS/AC",
-      }[e.type ?? 0],
+      type_display: ecritureTypeLabel(e.type),
     }))
     .sort((a, b) => a.tri - b.tri),
 );

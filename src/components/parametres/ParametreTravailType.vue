@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import useNotification from "../../composables/useNotification.js";
+import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
 import { useModalStore } from "../../stores/common/Modal.js";
@@ -31,17 +32,7 @@ const detailRowOptions = {
     {
       title: "Type",
       key: "type",
-      formatter: (type) => {
-        const mapping = {
-          0: "Autre",
-          1: "Solde",
-          2: "Indemnité",
-          3: "Frais forfaitaire",
-          4: "Frais effectif",
-          5: "Côtisations AVS/AC",
-        };
-        return mapping[type] || "";
-      },
+      formatter: ecritureTypeLabel,
     },
     { title: "Tarif", key: "tarif" },
     { title: "Unité", key: "unite" },
