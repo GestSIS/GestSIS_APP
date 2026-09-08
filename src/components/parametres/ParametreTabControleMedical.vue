@@ -1,10 +1,7 @@
 <script setup>
-import { ref } from "vue";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useMedecinStore } from "../../stores/controleMedical/Medecin.js";
 import { useControleMedicalTypeStore } from "../../stores/controleMedical/ControleMedicalType.js";
-import ParametreMedecin from "./ParametreMedecin.vue";
-import ParametreControleMedicalType from "./ParametreControleMedicalType.vue";
 
 const localiteStore = useLocaliteStore();
 const medecinStore = useMedecinStore();
@@ -14,8 +11,6 @@ const loadType = controleMedicalTypeStore.fetchTypes();
 const loadLocalite = localiteStore.fetchLocalites();
 
 await Promise.all([loadMedecin, loadType, loadLocalite]);
-
-const tab = ref("medecin");
 </script>
 
 <template>
@@ -26,30 +21,27 @@ const tab = ref("medecin");
           <h3 class="card-title">Paramètres contrôles médicaux</h3>
         </div>
         <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-          <a
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'medecin' }"
-            href="#"
+            active-class="active"
             role="tab"
-            @click.prevent="tab = 'medecin'"
+            :to="{ name: 'param-controle-medical-medecin' }"
           >
             Médecins
-          </a>
-          <a
+          </router-link>
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'type' }"
-            href="#"
+            active-class="active"
             role="tab"
-            @click.prevent="tab = 'type'"
+            :to="{ name: 'param-controle-medical-type' }"
           >
             Contrôles médicaux types
-          </a>
+          </router-link>
         </nav>
       </div>
     </div>
     <div class="col-sm-12 col-xl-9">
-      <parametre-medecin v-if="tab === 'medecin'" />
-      <parametre-controle-medical-type v-if="tab === 'type'" />
+      <router-view />
     </div>
   </div>
 </template>

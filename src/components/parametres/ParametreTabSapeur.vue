@@ -2,10 +2,6 @@
 import { useCoursStore } from "../../stores/sapeur/Cours.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
-import ParametreCours from "./ParametreCours.vue";
-import ParametreFonction from "./ParametreFonction.vue";
-import ParametreGrade from "./ParametreGrade.vue";
-import { ref } from "vue";
 
 const coursStore = useCoursStore();
 const fonctionStore = useFonctionStore();
@@ -16,7 +12,6 @@ const loadCours = coursStore.fetchCours();
 const loadGrade = gradeStore.fetchGrades();
 
 await Promise.all([loadFonction, loadCours, loadGrade]);
-const tab = ref("cours");
 </script>
 
 <template>
@@ -27,36 +22,32 @@ const tab = ref("cours");
           <h3 class="card-title">Paramètres sapeurs</h3>
         </div>
         <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-          <a
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'cours' }"
-            href="#"
+            active-class="active"
             role="tab"
-            @click.prevent="tab = 'cours'"
-            >Cours</a
+            :to="{ name: 'param-sapeur-cours' }"
+            >Cours</router-link
           >
-          <a
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'fonction' }"
-            href="#"
+            active-class="active"
             role="tab"
-            @click.prevent="tab = 'fonction'"
-            >Fonctions</a
+            :to="{ name: 'param-sapeur-fonction' }"
+            >Fonctions</router-link
           >
-          <a
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'grade' }"
-            href="#"
-            @click.prevent="tab = 'grade'"
-            >Grades</a
+            active-class="active"
+            role="tab"
+            :to="{ name: 'param-sapeur-grade' }"
+            >Grades</router-link
           >
         </nav>
       </div>
     </div>
     <div class="col-sm-12 col-xl-9">
-      <parametre-cours v-if="tab === 'cours'" />
-      <parametre-grade v-if="tab === 'grade'" />
-      <parametre-fonction v-if="tab === 'fonction'" />
+      <router-view />
     </div>
   </div>
 </template>

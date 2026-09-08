@@ -15,21 +15,25 @@ const routes = [
     to: { name: "param-sapeur" },
     texte: "Sapeur",
     permission: permissions.SAPEUR.CONFIG,
+    exact: false,
   },
   {
     to: { name: "param-exercice" },
     texte: "Exercice",
     permission: permissions.EXERCICE.CONFIG,
+    exact: false,
   },
   {
     to: { name: "param-intervention" },
     texte: "Intervention",
     permission: permissions.INTERVENTION.CONFIG,
+    exact: false,
   },
   {
     to: { name: "param-materiel" },
     texte: "Matériel",
     permission: permissions.MATERIEL.CONFIG,
+    exact: false,
   },
   {
     to: { name: "param-sms" },
@@ -50,11 +54,13 @@ const routes = [
     to: { name: "param-comptabilite" },
     texte: "Comptabilité",
     permission: permissions.COMPTABILITE.CONFIG,
+    exact: false,
   },
   {
     to: { name: "param-controle-medical" },
     texte: "Contrôles médicaux",
     permission: permissions.CONTROLE_MEDICAL.CONFIG,
+    exact: false,
   },
   {
     to: { name: "param-roles" },

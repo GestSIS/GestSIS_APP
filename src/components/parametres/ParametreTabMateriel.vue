@@ -1,15 +1,3 @@
-<script setup>
-import ParametreMaterielTypeCategorie from "./ParametreMaterielTypeCategorie.vue";
-import ParametreMaterielCouleur from "./ParametreMaterielCouleur.vue";
-import ParametreMaterielEmplacement from "./ParametreMaterielEmplacement.vue";
-import ParametreMaterielHangar from "./ParametreMaterielHangar.vue";
-import ParametreBatterieType from "./ParametreBatterieType.vue";
-import ParametreTuyauDiametre from "./ParametreTuyauDiametre.vue";
-import { ref } from "vue";
-
-const tab = ref("categorie");
-</script>
-
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-3 mb-2">
@@ -18,71 +6,60 @@ const tab = ref("categorie");
           <h3 class="card-title">Paramètres matériel personnel</h3>
         </div>
         <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-          <a
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'categorie' }"
-            href="#"
+            active-class="active"
             role="tab"
-            @click.prevent="tab = 'categorie'"
+            :to="{ name: 'param-materiel-categorie' }"
           >
             Catégories et type de matériel
-          </a>
-          <a
+          </router-link>
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'couleur' }"
-            href="#"
+            active-class="active"
             role="tab"
-            @click.prevent="tab = 'couleur'"
+            :to="{ name: 'param-materiel-couleur' }"
           >
             Couleurs
-          </a>
-          <a
+          </router-link>
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'emplacement' }"
-            href="#"
+            active-class="active"
             role="tab"
-            @click.prevent="tab = 'emplacement'"
+            :to="{ name: 'param-materiel-emplacement' }"
           >
             Emplacements
-          </a>
-          <a
+          </router-link>
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'hangar' }"
-            href="#"
+            active-class="active"
             role="tab"
-            @click.prevent="tab = 'hangar'"
+            :to="{ name: 'param-materiel-hangar' }"
           >
             Hangars
-          </a>
-          <a
+          </router-link>
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'batterie-type' }"
-            href="#"
+            active-class="active"
             role="tab"
-            @click.prevent="tab = 'batterie-type'"
+            :to="{ name: 'param-materiel-batterie-type' }"
           >
             Batteries types
-          </a>
-          <a
+          </router-link>
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'tuyau-diametre' }"
-            href="#"
+            active-class="active"
             role="tab"
-            @click.prevent="tab = 'tuyau-diametre'"
+            :to="{ name: 'param-materiel-tuyau-diametre' }"
           >
             Tuyau diamètres
-          </a>
+          </router-link>
         </nav>
       </div>
     </div>
     <div class="col-sm-12 col-xl-9">
       <suspense>
-        <parametre-materiel-type-categorie v-if="tab === 'categorie'" />
-        <parametre-materiel-couleur v-else-if="tab === 'couleur'" />
-        <parametre-materiel-emplacement v-else-if="tab === 'emplacement'" />
-        <parametre-materiel-hangar v-else-if="tab === 'hangar'" />
-        <parametre-batterie-type v-else-if="tab === 'batterie-type'" />
-        <parametre-tuyau-diametre v-else-if="tab === 'tuyau-diametre'" />
+        <router-view />
         <template #fallback>Chargement...</template>
       </suspense>
     </div>

@@ -714,18 +714,99 @@ const router = createRouter({
           name: "param-sapeur",
           beforeEnter: permissionGuard(permissions.SAPEUR.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabSapeur.vue"),
+          redirect: { name: "param-sapeur-cours" },
+          children: [
+            {
+              path: "cours",
+              name: "param-sapeur-cours",
+              beforeEnter: permissionGuard(permissions.SAPEUR.CONFIG),
+              component: () => import("/src/components/parametres/ParametreCours.vue"),
+            },
+            {
+              path: "fonction",
+              name: "param-sapeur-fonction",
+              beforeEnter: permissionGuard(permissions.SAPEUR.CONFIG),
+              component: () => import("/src/components/parametres/ParametreFonction.vue"),
+            },
+            {
+              path: "grade",
+              name: "param-sapeur-grade",
+              beforeEnter: permissionGuard(permissions.SAPEUR.CONFIG),
+              component: () => import("/src/components/parametres/ParametreGrade.vue"),
+            },
+          ],
         },
         {
           path: "exercice",
           name: "param-exercice",
           beforeEnter: permissionGuard(permissions.EXERCICE.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabExercice.vue"),
+          redirect: { name: "param-exercice-categorie" },
+          children: [
+            {
+              path: "categorie",
+              name: "param-exercice-categorie",
+              beforeEnter: permissionGuard(permissions.EXERCICE.CONFIG),
+              component: () => import("/src/components/parametres/ParametreExerciceCategorie.vue"),
+            },
+            {
+              path: "excuse",
+              name: "param-exercice-excuse",
+              beforeEnter: permissionGuard(permissions.EXERCICE.CONFIG),
+              component: () => import("/src/components/parametres/ParametreExerciceExcuse.vue"),
+            },
+          ],
         },
         {
           path: "intervention",
           name: "param-intervention",
           beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabIntervention.vue"),
+          redirect: { name: "param-intervention-vehicule" },
+          children: [
+            {
+              path: "vehicule",
+              name: "param-intervention-vehicule",
+              beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
+              component: () => import("/src/components/parametres/ParametreVehicule.vue"),
+            },
+            {
+              path: "materiel",
+              name: "param-intervention-materiel",
+              beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
+              component: () => import("/src/components/parametres/ParametreMateriel.vue"),
+            },
+            {
+              path: "mission",
+              name: "param-intervention-mission",
+              beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
+              component: () => import("/src/components/parametres/ParametreMission.vue"),
+            },
+            {
+              path: "telephone",
+              name: "param-intervention-telephone",
+              beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
+              component: () => import("/src/components/parametres/ParametreTelephone.vue"),
+            },
+            {
+              path: "traitement",
+              name: "param-intervention-traitement",
+              beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
+              component: () => import("/src/components/parametres/ParametreTraitement.vue"),
+            },
+            {
+              path: "type",
+              name: "param-intervention-type",
+              beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
+              component: () => import("/src/components/parametres/ParametreTypeIntervention.vue"),
+            },
+            {
+              path: "stat",
+              name: "param-intervention-stat",
+              beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
+              component: () => import("/src/components/parametres/ParametreStatFederal.vue"),
+            },
+          ],
         },
         {
           path: "fiche-travail",
@@ -750,18 +831,134 @@ const router = createRouter({
           name: "param-comptabilite",
           beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabComptabilite.vue"),
+          redirect: { name: "param-comptabilite-compte" },
+          children: [
+            {
+              path: "compte",
+              name: "param-comptabilite-compte",
+              beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
+              component: () => import("/src/components/parametres/ParametreCompte.vue"),
+            },
+            {
+              path: "categorie",
+              name: "param-comptabilite-categorie",
+              beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
+              component: () => import("/src/components/parametres/ParametreEcritureCategorie.vue"),
+            },
+            {
+              path: "indemnite-exercice",
+              name: "param-comptabilite-indemnite-exercice",
+              beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
+              component: () => import("/src/components/parametres/ParametreIndemniteExercice.vue"),
+            },
+            {
+              path: "indemnite-intervention",
+              name: "param-comptabilite-indemnite-intervention",
+              beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
+              component: () =>
+                import("/src/components/parametres/ParametreIndemniteIntervention.vue"),
+            },
+            {
+              path: "indemnite-cours",
+              name: "param-comptabilite-indemnite-cours",
+              beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
+              component: () => import("/src/components/parametres/ParametreIndemniteCours.vue"),
+            },
+            {
+              path: "heure-exercice",
+              name: "param-comptabilite-heure-exercice",
+              beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
+              component: () => import("/src/components/parametres/ParametreHeureExercice.vue"),
+            },
+            {
+              path: "indemnite-frais-annuel",
+              name: "param-comptabilite-indemnite-frais-annuel",
+              beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
+              component: () =>
+                import("/src/components/parametres/ParametreIndemniteFraisAnnuel.vue"),
+            },
+            {
+              path: "cotisations",
+              name: "param-comptabilite-cotisations",
+              beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
+              component: () => import("/src/components/parametres/ParametreAvs.vue"),
+            },
+            {
+              path: "amende",
+              name: "param-comptabilite-amende",
+              beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
+              component: () => import("/src/components/parametres/ParametreAmende.vue"),
+            },
+          ],
         },
         {
           path: "controle-medical",
           name: "param-controle-medical",
           beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabControleMedical.vue"),
+          redirect: { name: "param-controle-medical-medecin" },
+          children: [
+            {
+              path: "medecin",
+              name: "param-controle-medical-medecin",
+              beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.CONFIG),
+              component: () => import("/src/components/parametres/ParametreMedecin.vue"),
+            },
+            {
+              path: "type",
+              name: "param-controle-medical-type",
+              beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.CONFIG),
+              component: () =>
+                import("/src/components/parametres/ParametreControleMedicalType.vue"),
+            },
+          ],
         },
         {
           path: "materiel",
           name: "param-materiel",
           beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabMateriel.vue"),
+          redirect: { name: "param-materiel-categorie" },
+          children: [
+            {
+              path: "categorie",
+              name: "param-materiel-categorie",
+              beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
+              component: () =>
+                import("/src/components/parametres/ParametreMaterielTypeCategorie.vue"),
+            },
+            {
+              path: "couleur",
+              name: "param-materiel-couleur",
+              beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
+              component: () => import("/src/components/parametres/ParametreMaterielCouleur.vue"),
+            },
+            {
+              path: "emplacement",
+              name: "param-materiel-emplacement",
+              beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
+              component: () =>
+                import("/src/components/parametres/ParametreMaterielEmplacement.vue"),
+            },
+            {
+              path: "hangar",
+              name: "param-materiel-hangar",
+              beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
+              component: () => import("/src/components/parametres/ParametreMaterielHangar.vue"),
+            },
+            {
+              path: "batterie-type",
+              name: "param-materiel-batterie-type",
+              beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
+              component: () => import("/src/components/parametres/ParametreBatterieType.vue"),
+            },
+            {
+              path: "tuyau-diametre",
+              name: "param-materiel-tuyau-diametre",
+              beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
+              component: () => import("/src/components/parametres/ParametreTuyauDiametre.vue"),
+            },
+          ],
         },
         {
           path: "roles",

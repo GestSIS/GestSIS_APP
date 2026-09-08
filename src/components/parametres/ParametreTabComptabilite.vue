@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useAvsParamStore } from "../../stores/comptabilite/AvsParam.js";
@@ -9,16 +8,6 @@ import { useAmendeStore } from "../../stores/comptabilite/Amende.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
-
-import ParametreCompte from "./ParametreCompte.vue";
-import ParametreEcritureCategorie from "./ParametreEcritureCategorie.vue";
-import ParametreIndemniteFraisAnnuel from "./ParametreIndemniteFraisAnnuel.vue";
-import ParametreIndemniteExercice from "./ParametreIndemniteExercice.vue";
-import ParametreIndemniteCours from "./ParametreIndemniteCours.vue";
-import ParametreHeureExercice from "./ParametreHeureExercice.vue";
-import ParametreIndemniteIntervention from "./ParametreIndemniteIntervention.vue";
-import ParametreAvs from "./ParametreAvs.vue";
-import ParametreAmende from "./ParametreAmende.vue";
 
 const uniteStore = useUniteStore();
 const fonctionStore = useFonctionStore();
@@ -51,7 +40,6 @@ await Promise.all([
   loadPhases,
   loadHeures,
 ]);
-const tab = ref("compte");
 </script>
 
 <template>
@@ -62,85 +50,68 @@ const tab = ref("compte");
           <h3 class="card-title">Paramètres comptabilité</h3>
         </div>
         <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-          <a
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'compte' }"
-            href="#"
+            active-class="active"
             role="tab"
-            @click.prevent="tab = 'compte'"
-            >Compte</a
+            :to="{ name: 'param-comptabilite-compte' }"
+            >Compte</router-link
           >
-          <a
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'categorie' }"
-            href="#"
+            active-class="active"
             role="tab"
-            @click.prevent="tab = 'categorie'"
-            >Catégories comptables</a
+            :to="{ name: 'param-comptabilite-categorie' }"
+            >Catégories comptables</router-link
           >
-          <a
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'indemnite-exercice' }"
-            href="#"
-            @click.prevent="tab = 'indemnite-exercice'"
-            >Imputation exercice &amp; séance</a
+            active-class="active"
+            :to="{ name: 'param-comptabilite-indemnite-exercice' }"
+            >Imputation exercice &amp; séance</router-link
           >
-          <a
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'indemnite-intervention' }"
-            href="#"
-            @click.prevent="tab = 'indemnite-intervention'"
-            >Imputation intervention</a
+            active-class="active"
+            :to="{ name: 'param-comptabilite-indemnite-intervention' }"
+            >Imputation intervention</router-link
           >
-          <a
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'indemnite-cours' }"
-            href="#"
-            @click.prevent="tab = 'indemnite-cours'"
-            >Imputation cours</a
+            active-class="active"
+            :to="{ name: 'param-comptabilite-indemnite-cours' }"
+            >Imputation cours</router-link
           >
-          <a
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'heure-exercice' }"
-            href="#"
-            @click.prevent="tab = 'heure-exercice'"
-            >Heures additionnelles pour exercice</a
+            active-class="active"
+            :to="{ name: 'param-comptabilite-heure-exercice' }"
+            >Heures additionnelles pour exercice</router-link
           >
-          <a
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'indemnite-frais-annuel' }"
-            href="#"
+            active-class="active"
             role="tab"
-            @click.prevent="tab = 'indemnite-frais-annuel'"
-            >Frais &amp; indemnité annuel</a
+            :to="{ name: 'param-comptabilite-indemnite-frais-annuel' }"
+            >Frais &amp; indemnité annuel</router-link
           >
-          <a
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'comptabilite' }"
-            href="#"
-            @click.prevent="tab = 'comptabilite'"
-            >Côtisations sociales</a
+            active-class="active"
+            :to="{ name: 'param-comptabilite-cotisations' }"
+            >Côtisations sociales</router-link
           >
-          <a
+          <router-link
             class="nav-link"
-            :class="{ active: tab === 'amende' }"
-            href="#"
-            @click.prevent="tab = 'amende'"
-            >Amende</a
+            active-class="active"
+            :to="{ name: 'param-comptabilite-amende' }"
+            >Amende</router-link
           >
         </nav>
       </div>
     </div>
     <div class="col-sm-12 col-xl-9">
-      <parametre-compte v-if="tab === 'compte'" />
-      <parametre-ecriture-categorie v-if="tab === 'categorie'" />
-      <parametre-indemnite-frais-annuel v-if="tab === 'indemnite-frais-annuel'" />
-      <parametre-heure-exercice v-if="tab === 'heure-exercice'" />
-      <parametre-indemnite-exercice v-if="tab === 'indemnite-exercice'" />
-      <parametre-indemnite-intervention v-if="tab === 'indemnite-intervention'" />
-      <parametre-indemnite-cours v-if="tab === 'indemnite-cours'" />
-      <parametre-avs v-if="tab === 'comptabilite'" />
-      <parametre-amende v-if="tab === 'amende'" />
+      <router-view />
     </div>
   </div>
 </template>
