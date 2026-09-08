@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
 import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
-import { travailStatut } from "../../composables/travailStatuts.js";
+import { travailStatut, travailStatutOptions } from "../../composables/travailStatuts.js";
 import useNotification from "../../composables/useNotification.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useTravailStore } from "../../stores/travail/Travail.js";
@@ -235,11 +235,7 @@ const fields = [
               <base-select
                 class="col-md-4"
                 base-option="<Statut>"
-                :options="[
-                  { id: -1, designation: 'Refusé' },
-                  { id: 0, designation: 'En attente' },
-                  { id: 1, designation: 'Accepté' },
-                ]"
+                :options="travailStatutOptions"
                 :model-value="filters.statut"
                 @update:model-value="(value) => setFilter('statut', value)"
               />
@@ -271,9 +267,7 @@ const fields = [
                 <generic-details-row :options="detailRowOptions" :row-data="rowData" />
               </template>
               <template #statut="{ value }">
-                <span class="badge rounded-pill" :class="travailStatut(value).badgeClass">
-                  {{ travailStatut(value).label }}
-                </span>
+                <status-badge :status="travailStatut(value)" />
               </template>
               <template #actions="{ rowData }">
                 <button

@@ -364,9 +364,7 @@ const fields = [
                 <generic-details-row :options="detailRowOptions" :row-data="rowData" />
               </template>
               <template #statut="{ value }">
-                <span class="badge rounded-pill" :class="interventionStatut(value).badgeClass">
-                  {{ interventionStatut(value).label }}
-                </span>
+                <status-badge :status="interventionStatut(value)" />
               </template>
               <template #actions="{ rowData }">
                 <button

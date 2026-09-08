@@ -29,6 +29,7 @@ import StatefulFilter from "/src/components/base/StatefulFilter.vue";
 import BaseTable from "/src/components/table/BaseTable.vue";
 import BaseNavigationTab from "/src/components/base/BaseNavigationTab.vue";
 import BaseCard from "/src/components/base/BaseCard.vue";
+import StatusBadge from "/src/components/base/StatusBadge.vue";
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -104,6 +105,7 @@ app
   .component("BaseTable", BaseTable)
   .component("BaseCard", BaseCard)
   .component("BaseNavigationTab", BaseNavigationTab)
+  .component("StatusBadge", StatusBadge)
   .component("DefaultLayout", Default)
   .component("EmptyLayout", Empty)
   .component("NoSidebarLayout", NoSidebar)

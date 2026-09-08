@@ -33,7 +33,7 @@ const {
 
   noData: {
     type: String,
-    default: () => "Aucune donné à afficher",
+    default: () => "Aucune donnée à afficher",
   },
   selectable: {
     type: Boolean,

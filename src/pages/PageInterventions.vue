@@ -296,9 +296,7 @@ const fields = [
                 @selected="select"
               >
                 <template #statut="{ value }">
-                  <span class="badge rounded-pill" :class="interventionStatut(value).badgeClass">
-                    {{ interventionStatut(value).label }}
-                  </span>
+                  <status-badge :status="interventionStatut(value)" />
                 </template>
                 <template #actions="{ rowData }">
                   <router-link v-slot="{ navigate }" :to="'/interventions/' + rowData.id" custom>
@@ -308,13 +306,14 @@ const fields = [
                   </router-link>
                   <button
                     v-if="hasValidationPermission && rowData.statut === 1"
+                    title="Valider"
                     class="btn btn-outline-primary border-0"
                     @click="validerIntervention(rowData.id)"
                   >
                     <font-awesome-icon :icon="['fas', 'check']" />
                   </button>
                   <button
-                    v-if="hasEditPermission && rowData.statut <= 3"
+                    v-if="hasEditPermission && rowData.statut < 3"
                     title="supprimer"
                     class="btn btn-outline-danger border-0"
                     @click="supprimerIntervention(rowData.id)"

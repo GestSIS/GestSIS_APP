@@ -10,3 +10,8 @@ export const travailStatuts = {
 export function travailStatut(statut) {
   return travailStatuts[statut] ?? { label: "Inconnu", badgeClass: "text-bg-secondary" };
 }
+
+export const travailStatutOptions = Object.entries(travailStatuts).map(([id, s]) => ({
+  id: Number(id),
+  designation: s.label,
+}));

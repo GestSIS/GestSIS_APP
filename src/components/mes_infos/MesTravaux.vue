@@ -85,9 +85,7 @@ const fields = [
         no-data="Aucun travail pour le moment"
       >
         <template #statut="{ value }">
-          <span class="badge rounded-pill" :class="travailStatut(value).badgeClass">
-            {{ travailStatut(value).label }}
-          </span>
+          <status-badge :status="travailStatut(value)" />
         </template>
       </base-table>
     </div>

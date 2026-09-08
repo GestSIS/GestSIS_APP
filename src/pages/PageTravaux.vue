@@ -10,7 +10,7 @@ import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceCompta
 import { useAuthStore } from "../stores/auth/Auth.js";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 import useHasPermission from "../composables/usePermission.js";
-import { travailStatut } from "../composables/travailStatuts.js";
+import { travailStatut, travailStatutOptions } from "../composables/travailStatuts.js";
 
 const authStore = useAuthStore();
 const sapeurStore = useSapeurStore();
@@ -159,17 +159,18 @@ const fields = [
                 Ajouter un travail
               </button>
               <button
-                v-if="hasValidationPermission && selectedItem?.statut < 1"
+                v-if="hasValidationPermission && selectedItem?.statut == 0"
                 class="btn btn-outline-success"
-                :disabled="!(selectedItem?.statut < 1)"
                 @click="reviewTravail(selectedItem)"
               >
                 Traiter
               </button>
               <button
-                v-if="hasValidationPermission && !selectedItem?.statut < 1"
+                v-if="
+                  hasValidationPermission &&
+                  (selectedItem?.statut == -1 || selectedItem?.statut == 1)
+                "
                 class="btn btn-outline-warning"
-                :disabled="selectedItem?.statut == 0 || selectedItem?.statut == 2"
                 @click="cancelReviewTravail(selectedItem)"
               >
                 Annuler l'examen
@@ -210,11 +211,7 @@ const fields = [
                 <base-select
                   class="col-md-4"
                   base-option="<Statut>"
-                  :options="[
-                    { id: -1, designation: 'Refusé' },
-                    { id: 0, designation: 'En attente' },
-                    { id: 1, designation: 'Accepté' },
-                  ]"
+                  :options="travailStatutOptions"
                   :model-value="filters.statut"
                   @update:model-value="(value) => setFilter('statut', value)"
                 />
@@ -240,9 +237,7 @@ const fields = [
                 @selected="select"
               >
                 <template #statut="{ value }">
-                  <span class="badge rounded-pill" :class="travailStatut(value).badgeClass">
-                    {{ travailStatut(value).label }}
-                  </span>
+                  <status-badge :status="travailStatut(value)" />
                 </template>
                 <template #actions="{ rowData }">
                   <button
@@ -259,7 +254,7 @@ const fields = [
                   </button>
                   <button
                     v-if="hasValidationPermission && (rowData.statut == -1 || rowData.statut == 1)"
-                    title="Examen"
+                    title="Annuler l'examen"
                     class="btn btn-outline-warning border-0"
                     @click="cancelReviewTravail(rowData)"
                   >

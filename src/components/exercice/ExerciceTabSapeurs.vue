@@ -456,9 +456,7 @@ const statuts = [
 
       <!-- État de l'exercice + action pour le faire avancer, regroupés -->
       <div class="ms-md-auto d-flex flex-wrap align-items-center gap-2">
-        <span class="badge rounded-pill" :class="statutActuel.badgeClass">
-          {{ statutActuel.label }}
-        </span>
+        <status-badge :status="statutActuel" />
         <span v-if="activeExerciceData.statut == 1 && nbConvoques > 0" class="text-muted small">
           {{ nbConvoques - nbConvoquesSansPresence }}/{{ nbConvoques }} présences saisies
         </span>

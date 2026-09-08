@@ -318,9 +318,7 @@ const fields = [
                 <generic-details-row :options="detailRowOptions" :row-data="rowData" />
               </template>
               <template #statut="{ value }">
-                <span class="badge rounded-pill" :class="exerciceStatut(value).badgeClass">
-                  {{ exerciceStatut(value).label }}
-                </span>
+                <status-badge :status="exerciceStatut(value)" />
               </template>
               <template #actions="{ rowData }">
                 <button

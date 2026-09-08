@@ -78,13 +78,7 @@ const validerIntervention = () =>
         </ol>
       </div>
       <div class="col-sm-6 d-flex justify-content-end align-items-center gap-2">
-        <span
-          v-if="!newMode"
-          class="badge rounded-pill"
-          :class="interventionStatut(activeInterventionData.statut).badgeClass"
-        >
-          {{ interventionStatut(activeInterventionData.statut).label }}
-        </span>
+        <status-badge v-if="!newMode" :status="interventionStatut(activeInterventionData.statut)" />
         <button
           v-if="showValiderButton"
           class="btn btn-sm btn-primary"
