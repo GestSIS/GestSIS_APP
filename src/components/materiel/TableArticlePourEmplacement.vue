@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
 import ArticleService from "../../services/materiel/ArticleService";
 import TagCouleur from "./TagCouleur.vue";
 import { indexedData } from "../../tools/index.js";
@@ -62,6 +63,7 @@ const piecesColonnes = computed(() => [
 ]);
 
 const { showModal, confirm } = useModalStore();
+const awn = useNotification();
 const infoMateriel = (materiel) =>
   //TODO: Gérer le cas affichageIndividuel
   showModal({
@@ -90,7 +92,8 @@ const supprimer = (article) =>
     "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
   )
     .then(() => ArticleService.supprimerArticles([article.id]))
-    .then(refresh);
+    .then(refresh)
+    .catch((e) => awn.alert(e.message || "Une erreur est survenue"));
 </script>
 
 <template>
@@ -137,15 +140,7 @@ const supprimer = (article) =>
         <font-awesome-icon :icon="['far', 'edit']" />
       </button>
       <button
-        v-if="hasEditPermission && rowData.type.est_attribuable && rowData.sapeur_id !== null"
-        title="Retour"
-        class="btn btn-outline-primary border-0"
-        @click="retourMateriel(rowData)"
-      >
-        <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
-      </button>
-      <button
-        v-if="hasEditPermission && rowData.type.est_attribuable && rowData.sapeur_id === null"
+        v-if="hasEditPermission && rowData.type.est_attribuable"
         title="Attribuer"
         class="btn btn-outline-primary border-0"
         @click="attribuerMateriel(rowData)"

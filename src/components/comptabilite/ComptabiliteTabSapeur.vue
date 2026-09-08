@@ -218,7 +218,9 @@ const fields = [
             <h3 class="card-title">Actions</h3>
           </div>
           <div class="card-body d-grid gap-1">
-            <button class="btn btn-outline-primary" disabled>Créer un décompte individuel</button>
+            <button class="btn btn-outline-primary" title="Fonctionnalité à venir" disabled>
+              Créer un décompte individuel
+            </button>
           </div>
         </div>
       </div>

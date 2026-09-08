@@ -82,7 +82,7 @@ const addEmptyLine = () => {
     </thead>
     <tbody v-if="types.length === 0">
       <tr>
-        <td colspan="6">Aucun matériel type de configuré ! Impossible d'ajouter du matériel'.</td>
+        <td colspan="4">Aucun matériel type de configuré ! Impossible d'ajouter du matériel.</td>
       </tr>
     </tbody>
     <tbody v-else>

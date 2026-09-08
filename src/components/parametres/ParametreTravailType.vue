@@ -24,7 +24,7 @@ const fields = [
   { title: "Désignation", key: "designation" },
   { title: "Catégorie comptable", key: "categorie" },
   { title: "Actif", key: "actif", type: Boolean },
-  { title: "Actions", slot: "actions" },
+  { title: "Actions", slot: "actions", columnClass: "align-middle text-center" },
 ];
 
 const detailRowOptions = {
@@ -100,22 +100,20 @@ const deleteTravailType = (travailType) =>
           <generic-details-row :options="detailRowOptions" :row-data="rowData" />
         </template>
         <template #actions="{ rowData }">
-          <td class="align-middle text-center">
-            <button
-              type="button"
-              class="btn btn-outline-primary border-0"
-              @click="updateTravailType(rowData)"
-            >
-              <font-awesome-icon :icon="['far', 'edit']" />
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-danger border-0"
-              @click="deleteTravailType(rowData)"
-            >
-              <font-awesome-icon :icon="['far', 'trash-alt']" />
-            </button>
-          </td>
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateTravailType(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteTravailType(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
         </template>
       </base-table>
     </div>

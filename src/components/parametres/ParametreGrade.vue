@@ -28,14 +28,19 @@ const listeGrade = computed(() =>
     .sort((a, b) => b.tri - a.tri),
 );
 
-const { showModal } = useModalStore();
+const { showModal, confirm } = useModalStore();
 const awn = useNotification();
 const ajoutGrade = () => showModal({ component: "ModalGrade", data: {} });
 const updateGrade = (grade) => showModal({ component: "ModalGrade", data: { ...grade } });
 const deleteGrade = (grade) =>
-  gradeStore
-    .removeGrade(grade.id)
-    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+  confirm(
+    "Voulez-vous vraiment supprimer ce grade ?",
+    "Attention, la suppression d'un grade est irréversible !",
+  ).then(() =>
+    gradeStore
+      .removeGrade(grade.id)
+      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression")),
+  );
 </script>
 
 <template>

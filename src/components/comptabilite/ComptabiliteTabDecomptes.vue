@@ -218,8 +218,8 @@ const fields = [
   { title: "A payer", key: "a_payer_total" },
   { title: "A facturer", key: "a_facturer_total" },
   { title: "Déductions", key: "deduction", type: Boolean },
-  { title: "Côtisations AVS", key: "avs_total" },
-  { title: "Côtisations AC", key: "ac_total" },
+  { title: "Cotisations AVS", key: "avs_total" },
+  { title: "Cotisations AC", key: "ac_total" },
   { title: "Total", key: "total" },
   { title: "Actions", key: "id", slot: "actions" },
 ];

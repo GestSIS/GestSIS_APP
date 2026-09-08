@@ -124,7 +124,7 @@ const fields = [
           </template>
           <template #foot>
             <tr>
-              <th colspan="5">Nombre : {{ computedData.length }}</th>
+              <th colspan="3">Nombre : {{ computedData.length }}</th>
             </tr>
           </template>
         </base-table>

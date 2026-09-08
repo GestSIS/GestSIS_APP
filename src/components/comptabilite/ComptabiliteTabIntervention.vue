@@ -370,9 +370,18 @@ const fields = [
                 <button
                   v-if="hasEditPermission && rowData.statut === 2"
                   class="btn btn-outline-primary border-0"
+                  title="Imputer"
                   @click="imputer(rowData.id)"
                 >
                   <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
+                </button>
+                <button
+                  v-if="hasEditPermission && rowData.statut === 3"
+                  class="btn btn-outline-primary border-0"
+                  title="Annuler imputation"
+                  @click="annulerImputer(rowData.id)"
+                >
+                  <font-awesome-icon :icon="['fas', 'ban']" />
                 </button>
               </template>
             </base-table>

@@ -98,7 +98,7 @@ const editMateriel = () =>
         <template #body>
           <table class="table mb-0">
             <tr>
-              <th class="col-3 pe-3">Longeure</th>
+              <th class="col-3 pe-3">Longueur</th>
               <td>{{ materielType.tuyau.longeur }} m</td>
             </tr>
             <tr>
@@ -114,7 +114,7 @@ const editMateriel = () =>
             <tr>
               <th class="col-3 pe-3">Roulé</th>
               <td>
-                {{ materielType.tuyau.separement ? "Separément" : "Dévidoir" }}
+                {{ materielType.tuyau.separement ? "Séparément" : "Dévidoir" }}
               </td>
             </tr>
           </table>

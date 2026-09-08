@@ -63,12 +63,12 @@ const filteredData = computed(() => {
         <h3>Stats modules comptables</h3>
         <div class="form-check form-switch mb-2">
           <input
-            id="switch-vehicule"
+            id="switch-module-comptable"
             v-model="allModule"
             type="checkbox"
             class="form-check-input"
           />
-          <label class="form-check-label" for="switch-vehicule"
+          <label class="form-check-label" for="switch-module-comptable"
             >Afficher les modules sans écriture</label
           >
         </div>

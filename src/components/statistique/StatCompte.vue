@@ -55,13 +55,8 @@ const filteredData = computed(() => {
       <div class="card-header d-flex justify-content-between">
         <h3>Stats comptes</h3>
         <div class="form-check form-switch mb-2">
-          <input
-            id="switch-vehicule"
-            v-model="allCompte"
-            type="checkbox"
-            class="form-check-input"
-          />
-          <label class="form-check-label" for="switch-vehicule"
+          <input id="switch-compte" v-model="allCompte" type="checkbox" class="form-check-input" />
+          <label class="form-check-label" for="switch-compte"
             >Afficher les comptes sans écriture</label
           >
         </div>

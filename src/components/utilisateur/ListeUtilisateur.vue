@@ -125,7 +125,7 @@ const fields = [
             <base-checkbox
               v-model="filters.inactif"
               class="mb-3"
-              label="Afficher sapeurs inactif"
+              label="Afficher sapeurs inactifs"
             />
           </div>
           <div class="col-md-3">

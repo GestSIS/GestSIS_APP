@@ -455,7 +455,7 @@ const degre = [
             <div class="col-sm-12 col-xl-12">
               <!-- Proprio -->
               <div class="mb-3">
-                <label for="m-int-save-ani">Propriétaire</label>
+                <label for="m-int-proprietaire">Propriétaire</label>
                 <textarea
                   id="m-int-proprietaire"
                   v-model="form.proprietaire"
@@ -469,7 +469,7 @@ const degre = [
               </div>
               <!-- Responsable -->
               <div class="mb-3">
-                <label for="m-int-save-ani">Responsable</label>
+                <label for="m-int-responsable">Responsable</label>
                 <textarea
                   id="m-int-responsable"
                   v-model="form.responsable"

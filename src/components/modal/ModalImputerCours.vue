@@ -73,7 +73,7 @@ const cancel = () => {
 };
 const imputer = () => {
   if (activeIndemnite.value === null) {
-    awn.warning("Veuillez sélectioner une indemnité type");
+    awn.warning("Veuillez sélectionner une indemnité type");
     return;
   }
 

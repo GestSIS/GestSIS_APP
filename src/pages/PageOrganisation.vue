@@ -282,7 +282,7 @@ const addSapeurs = (node) => {
           </div>
           <div class="card-body">
             <div class="mb-3">
-              <label for="abreviation">No</label>
+              <label for="no">No</label>
               <input
                 id="no"
                 v-model="groupeEdit.no"
@@ -292,7 +292,7 @@ const addSapeurs = (node) => {
               />
             </div>
             <div class="mb-3">
-              <label for="abreviation">Nom</label>
+              <label for="designation">Nom</label>
               <input
                 id="designation"
                 v-model="groupeEdit.designation"

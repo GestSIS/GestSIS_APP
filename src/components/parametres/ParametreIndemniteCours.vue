@@ -26,7 +26,7 @@ const fields = [
     key: "designation",
   },
   { title: "Catégorie comptable", key: "categorie" },
-  { title: "Actions", slot: "actions" },
+  { title: "Actions", slot: "actions", columnClass: "align-middle text-center" },
 ];
 const detailRowOptions = {
   fields: [
@@ -58,7 +58,7 @@ const computedData = computed(() => {
   }));
 });
 
-const { showModal } = useModalStore();
+const { showModal, confirm } = useModalStore();
 const awn = useNotification();
 
 const ajoutIndemnite = () =>
@@ -74,9 +74,14 @@ const updateIndemnite = (indemnite) =>
     data: { ...indemnite },
   });
 const deleteIndemnite = (indemnite) =>
-  imputationStore
-    .removeIndemniteCours(indemnite.id)
-    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+  confirm(
+    "Voulez-vous vraiment supprimer cette indemnité ?",
+    "Attention, la suppression d'une indemnité est irréversible ! Toutes les données de cette indemnité seront perdues !",
+  ).then(() =>
+    imputationStore
+      .removeIndemniteCours(indemnite.id)
+      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression")),
+  );
 </script>
 
 <template>
@@ -98,22 +103,20 @@ const deleteIndemnite = (indemnite) =>
           <generic-details-row :options="detailRowOptions" :row-data="rowData" />
         </template>
         <template #actions="{ rowData }">
-          <td class="align-middle text-center">
-            <button
-              type="button"
-              class="btn btn-outline-primary border-0"
-              @click="updateIndemnite(rowData)"
-            >
-              <font-awesome-icon :icon="['far', 'edit']" />
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-danger border-0"
-              @click="deleteIndemnite(rowData)"
-            >
-              <font-awesome-icon :icon="['far', 'trash-alt']" />
-            </button>
-          </td>
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="updateIndemnite(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="deleteIndemnite(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
         </template>
       </base-table>
     </div>

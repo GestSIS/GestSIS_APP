@@ -73,7 +73,7 @@ const save = async () => {
     })
     .catch((err) => {
       errors.value = err;
-      awn.alert(e?.message || "Erreur lors de l'enregistrement");
+      awn.alert(err?.message || "Erreur lors de l'enregistrement");
     });
 };
 </script>

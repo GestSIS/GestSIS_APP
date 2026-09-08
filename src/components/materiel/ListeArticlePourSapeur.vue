@@ -139,7 +139,7 @@ const linearCategories = (categorieId) => {
           v-if="hasEditPermission && articles.length"
           class="ms-2 btn btn-outline-warning"
           @click="retournerMateriel"
-          title="Retouner du materiel"
+          title="Retourner du matériel"
         >
           <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
         </button>

@@ -31,14 +31,19 @@ const listeCompte = computed(() =>
     .sort((a, b) => a.numero.localeCompare(b.numero)),
 );
 
-const { showModal } = useModalStore();
+const { showModal, confirm } = useModalStore();
 const awn = useNotification();
 const ajoutCompte = () => showModal({ component: "ModalCompte", data: {} });
 const updateCompte = (compte) => showModal({ component: "ModalCompte", data: { ...compte } });
 const deleteCompte = (compteId) =>
-  compteStore
-    .removeCompte(compteId)
-    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+  confirm(
+    "Voulez-vous vraiment supprimer ce compte ?",
+    "Attention, la suppression d'un compte est irréversible !",
+  ).then(() =>
+    compteStore
+      .removeCompte(compteId)
+      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression")),
+  );
 </script>
 
 <template>

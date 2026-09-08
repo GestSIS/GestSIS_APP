@@ -157,10 +157,10 @@ const save = async () => {
           class="mb-3 col-4"
           :class="activeUnite?.comptable ? 'col-4' : 'col-12'"
         >
-          <label for="tarif">Total</label>
+          <label for="total">Total</label>
           <div class="input-group input-group-sm">
             <input
-              id="tarif"
+              id="total"
               type="text"
               readonly
               :value="form?.quantite * form?.tarif || 0"

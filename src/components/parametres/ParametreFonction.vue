@@ -18,15 +18,20 @@ const fields = [
 
 const listeFonction = computed(() => fonctionStore.liste.slice().sort((a, b) => b.tri - a.tri));
 
-const { showModal } = useModalStore();
+const { showModal, confirm } = useModalStore();
 const awn = useNotification();
 const ajoutFonction = () => showModal({ component: "ModalFonction", data: {} });
 const updateFonction = (fonction) =>
   showModal({ component: "ModalFonction", data: { ...fonction } });
 const deleteFonction = (fonction) =>
-  fonctionStore
-    .removeFonction(fonction.id)
-    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+  confirm(
+    "Voulez-vous vraiment supprimer cette fonction ?",
+    "Attention, la suppression d'une fonction est irréversible !",
+  ).then(() =>
+    fonctionStore
+      .removeFonction(fonction.id)
+      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression")),
+  );
 </script>
 
 <template>

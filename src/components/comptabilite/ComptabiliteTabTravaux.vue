@@ -83,7 +83,7 @@ const imputer = (travailId) => {
   const ids = travailId ? [travailId] : travaux.value.filter((t) => t.statut == 1).map((t) => t.id);
 
   if (!ids.length) {
-    awn.warning("Aucun travail à impossible");
+    awn.warning("Aucun travail à imputer");
     return;
   }
 

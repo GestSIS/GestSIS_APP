@@ -44,7 +44,7 @@ const computedData = computed(() => {
       ...s,
       ...(reducedPresences[s.id] ?? { duree: 0, nb: 0 }),
     }))
-    .filter((s) => (allSapeurs.value && s.actif) || s.duree !== 0);
+    .filter((s) => allSapeurs.value || s.duree !== 0);
 });
 </script>
 

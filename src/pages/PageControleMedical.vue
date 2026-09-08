@@ -229,13 +229,13 @@ const validite = (duree) => {
             <div class="row">
               <div class="col-12" :class="{ 'col-xl-6': expirable }">
                 <div class="mb-3">
-                  <label for="m-exe-date">Consultation</label>
+                  <label for="m-exe-date-consultation">Consultation</label>
                   <div class="input-group input-group-sm">
                     <div class="input-group-text">
                       <font-awesome-icon :icon="['far', 'calendar-alt']" />
                     </div>
                     <input
-                      id="m-exe-date"
+                      id="m-exe-date-consultation"
                       v-model="controleMedical.consultation"
                       type="date"
                       class="form-control form-control-sm"
@@ -262,13 +262,13 @@ const validite = (duree) => {
               </div>
               <div v-if="expirable" class="col-12 col-xl-6">
                 <div class="mb-3">
-                  <label for="m-exe-date">Validité</label>
+                  <label for="m-exe-date-validite">Validité</label>
                   <div class="input-group input-group-sm">
                     <div class="input-group-text">
                       <font-awesome-icon :icon="['far', 'calendar-alt']" />
                     </div>
                     <input
-                      id="m-exe-date"
+                      id="m-exe-date-validite"
                       v-model="controleMedical.validite"
                       type="date"
                       class="form-control form-control-sm"

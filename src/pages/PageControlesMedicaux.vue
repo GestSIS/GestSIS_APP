@@ -108,9 +108,7 @@ const downloadJustificatif = ({ id, filename }) =>
 const awn = useNotification();
 const sms = (controleMedicaux) => {
   if (!hasSmsEnvoiePermission.value) {
-    awn.value.alert(
-      "Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS",
-    );
+    awn.alert("Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS");
     return;
   }
 

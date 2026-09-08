@@ -40,7 +40,7 @@ const save = () =>
     </div>
     <div class="modal-body">
       <div class="mb-3">
-        <label for="designation">Rôles</label>
+        <label>Rôles</label>
         <div v-for="role in roles" :key="role.id" class="form-check">
           <input
             :id="'r' + role.id"

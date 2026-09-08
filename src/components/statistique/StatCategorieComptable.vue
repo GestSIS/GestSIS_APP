@@ -58,12 +58,12 @@ const filteredData = computed(() => {
         <h3>Stats catégories comptables</h3>
         <div class="form-check form-switch mb-2">
           <input
-            id="switch-vehicule"
+            id="switch-categorie-comptable"
             v-model="allCategorie"
             type="checkbox"
             class="form-check-input"
           />
-          <label class="form-check-label" for="switch-vehicule"
+          <label class="form-check-label" for="switch-categorie-comptable"
             >Afficher les catégories sans écriture</label
           >
         </div>
