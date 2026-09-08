@@ -2,7 +2,7 @@
 import { ref } from "vue";
 
 const model = defineModel({
-  type: [Boolean, Number],
+  type: [Boolean, Number, String],
   default: undefined,
 });
 

@@ -7,6 +7,11 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { DateTime } from "luxon";
 import BaseAutocomplete from "/src/components/base/BaseAutocomplete.vue";
 
+const responsableOptions = [
+  { value: "sapeur_id", label: "Sapeur" },
+  { value: "sapeur", label: "Externe au SIS" },
+];
+
 const sapeurStore = useSapeurStore();
 const missionStore = useMissionStore();
 const interventionStore = useInterventionStore();
@@ -103,28 +108,15 @@ const save = async () => {
           title="Titre"
         />
       </div>
-      <label class="form-check-label" for="flexSwitchCheckDefault"> Responsable </label>
-      <div class="form-check">
-        <input
-          id="sapeur_id"
+      <div class="mb-3">
+        <label class="form-label d-block">Responsable</label>
+        <base-radio
           v-model="responsableMode"
-          class="form-check-input"
-          type="radio"
-          name="responsable"
-          value="sapeur_id"
+          button-style
+          size="sm"
+          label="Responsable"
+          :options="responsableOptions"
         />
-        <label class="form-check-label" for="sapeur_id">Sapeur</label>
-      </div>
-      <div class="form-check">
-        <input
-          id="sapeur"
-          v-model="responsableMode"
-          class="form-check-input"
-          type="radio"
-          name="responsable"
-          value="sapeur"
-        />
-        <label class="form-check-label" for="sapeur">Externe au SIS</label>
       </div>
       <base-select
         v-if="responsableMode == 'sapeur_id'"

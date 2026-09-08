@@ -6,6 +6,11 @@ import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 
+const imputationTypeOptions = [
+  { value: "tarif-min", label: "Tarif min" },
+  { value: "taux", label: "Taux week-end et taux nuit" },
+];
+
 const { data } = defineProps({
   data: {
     type: Object,
@@ -123,29 +128,14 @@ const save = () => {
         </div>
       </div>
       <div class="mb-3">
-        <label class="d-block">Type d'imputation</label>
-        <div class="form-check form-check-inline">
-          <input
-            id="tarif-min"
-            v-model="imputationType"
-            class="form-check-input"
-            type="radio"
-            name="tarif-min"
-            value="tarif-min"
-          />
-          <label class="form-check-label" for="tarif-min">Tarif min</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input
-            id="taux"
-            v-model="imputationType"
-            class="form-check-input"
-            type="radio"
-            name="taux"
-            value="taux"
-          />
-          <label class="form-check-label" for="taux">Taux week-end et taux nuit</label>
-        </div>
+        <label class="form-label d-block">Type d'imputation</label>
+        <base-radio
+          v-model="imputationType"
+          button-style
+          size="sm"
+          label="Type d'imputation"
+          :options="imputationTypeOptions"
+        />
       </div>
       <div class="container-fluid">
         <div v-if="imputationType != 'taux'" class="row">
@@ -170,17 +160,13 @@ const save = () => {
             />
           </div>
           <div class="mb-3 col-4">
-            <label for="unite">Unité</label>
-            <select
-              id="unite"
+            <base-select
               v-model="form.type_unite_id"
-              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['type_unite_id'] }"
-            >
-              <option v-for="u in unites" :key="u.id" :value="u.id">
-                {{ u.unite }}
-              </option>
-            </select>
+              label="Unité"
+              display-key="unite"
+              :options="unites"
+            />
           </div>
           <div class="mb-3 col-3">
             <label for="min-pro-rata">Pro-rata</label>
@@ -202,18 +188,15 @@ const save = () => {
             </div>
           </div>
           <div class="mb-3 col-12">
-            <label for="phase_id">Tarif min pour phase</label>
-            <select
-              id="phase_id"
+            <base-select
               v-model="form.phase_id"
-              class="form-select form-select-sm"
               :class="{ 'is-invalid': errors['phase_id'] }"
-            >
-              <option :value="null">toutes les phases</option>
-              <option v-for="p in phases" :key="p.id" :value="p.id">
-                uniquement phase {{ p.designation }}
-              </option>
-            </select>
+              label="Tarif min pour phase"
+              base-option="toutes les phases"
+              :base-value="null"
+              :options="phases"
+              :formatter="(p) => 'uniquement phase ' + p.designation"
+            />
           </div>
         </div>
         <div v-if="imputationType == 'taux'" class="row">
@@ -260,30 +243,20 @@ const save = () => {
         </div>
       </div>
       <div class="mb-3">
-        <label for="compte">Compte</label>
-        <select
-          id="compte"
+        <base-select
           v-model="form.compte_id"
-          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['compte_id'] }"
-        >
-          <option v-for="c in comptes" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
-        </select>
+          label="Compte"
+          :options="comptes"
+        />
       </div>
       <div class="mb-3">
-        <label for="categorie">Catégorie comptable</label>
-        <select
-          id="categorie"
+        <base-select
           v-model="form.ecriture_categorie_id"
-          class="form-select form-select-sm"
           :class="{ 'is-invalid': errors['ecriture_categorie_id'] }"
-        >
-          <option v-for="c in categories" :key="c.id" :value="c.id">
-            {{ c.designation }}
-          </option>
-        </select>
+          label="Catégorie comptable"
+          :options="categories"
+        />
       </div>
       <base-select
         v-model="form.type"

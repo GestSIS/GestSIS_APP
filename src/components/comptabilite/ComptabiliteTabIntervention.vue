@@ -15,6 +15,7 @@ import ImputationService from "/src/services/ImputationService.js";
 import permissions from "../../composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import { interventionStatut } from "../../composables/interventionStatuts.js";
 
 const sapeurStore = useSapeurStore();
 const uniteStore = useUniteStore();
@@ -246,15 +247,9 @@ const fields = [
   {
     title: "Statut",
     key: "statut",
-    formatter(value) {
-      const statuts = {
-        0: "A saisir",
-        1: "A valider",
-        2: "Validée",
-        3: "Imputée",
-      };
-      return statuts[value];
-    },
+    slot: "statut",
+    titleClass: "text-center",
+    columnClass: "text-center",
   },
   {
     title: "Actions",
@@ -367,6 +362,11 @@ const fields = [
             >
               <template #detail-row="{ rowData }">
                 <generic-details-row :options="detailRowOptions" :row-data="rowData" />
+              </template>
+              <template #statut="{ value }">
+                <span class="badge rounded-pill" :class="interventionStatut(value).badgeClass">
+                  {{ interventionStatut(value).label }}
+                </span>
               </template>
               <template #actions="{ rowData }">
                 <button

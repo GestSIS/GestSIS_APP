@@ -5,9 +5,17 @@ import { computed } from "vue";
 import router from "../router";
 import { useRoute } from "vue-router";
 import { useInterventionStore } from "../stores/intervention/Intervention.js";
+import { useModalStore } from "../stores/common/Modal.js";
+import useNotification from "../composables/useNotification.js";
+import permissions from "../composables/permissions.js";
+import useHasPermission from "../composables/usePermission.js";
+import { interventionStatut } from "../composables/interventionStatuts.js";
 
 const interventionStore = useInterventionStore();
 const route = useRoute();
+const { confirm } = useModalStore();
+const awn = useNotification();
+const hasValidationPermission = useHasPermission(permissions.INTERVENTION.VALIDATION);
 
 const { id } = defineProps({
   id: {
@@ -36,6 +44,21 @@ const breadcrumbFinal = computed(() =>
       " - " +
       activeInterventionData.value.objet,
 );
+
+const showValiderButton = computed(
+  () =>
+    !newMode.value && hasValidationPermission.value && activeInterventionData.value.statut === 1,
+);
+const validerIntervention = () =>
+  confirm(
+    "Valider l'intervention ?",
+    "Une fois validée, seule une personne avec la permission de validation pourra encore la modifier. Voulez-vous continuer ?",
+  ).then(() =>
+    interventionStore
+      .validerIntervention(id)
+      .then(() => awn.success("Intervention validée."))
+      .catch((err) => awn.alert(err?.message ?? "Erreur lors de la validation de l'intervention.")),
+  );
 </script>
 
 <template>
@@ -54,7 +77,22 @@ const breadcrumbFinal = computed(() =>
           </li>
         </ol>
       </div>
-      <div class="col-sm-6 d-flex justify-content-end">
+      <div class="col-sm-6 d-flex justify-content-end align-items-center gap-2">
+        <span
+          v-if="!newMode"
+          class="badge rounded-pill"
+          :class="interventionStatut(activeInterventionData.statut).badgeClass"
+        >
+          {{ interventionStatut(activeInterventionData.statut).label }}
+        </span>
+        <button
+          v-if="showValiderButton"
+          class="btn btn-sm btn-primary"
+          @click="validerIntervention"
+        >
+          <font-awesome-icon :icon="['fas', 'check']" class="me-1" />
+          Valider
+        </button>
         <exercice-comptable />
       </div>
     </div>

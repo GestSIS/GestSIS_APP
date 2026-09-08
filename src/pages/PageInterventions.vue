@@ -11,6 +11,7 @@ import { useInterventionStore } from "../stores/intervention/Intervention.js";
 import { useInterventionTraitementStore } from "../stores/intervention/InterventionTraitement.js";
 import { useStatFederalStore } from "../stores/intervention/StatFederal.js";
 import { useTypeInterventionStore } from "../stores/intervention/TypeIntervention.js";
+import { interventionStatut } from "../composables/interventionStatuts.js";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -148,15 +149,9 @@ const fields = [
   {
     title: "Statut",
     key: "statut",
-    formatter: (value) => {
-      const statuts = {
-        0: "A saisir",
-        1: "A valider",
-        2: "Validée",
-        3: "Imputée",
-      };
-      return statuts[value];
-    },
+    slot: "statut",
+    titleClass: "text-center",
+    columnClass: "text-center",
   },
   { title: "Actions", slot: "actions" },
 ];
@@ -300,6 +295,11 @@ const fields = [
                 :selectable="true"
                 @selected="select"
               >
+                <template #statut="{ value }">
+                  <span class="badge rounded-pill" :class="interventionStatut(value).badgeClass">
+                    {{ interventionStatut(value).label }}
+                  </span>
+                </template>
                 <template #actions="{ rowData }">
                   <router-link v-slot="{ navigate }" :to="'/interventions/' + rowData.id" custom>
                     <button class="btn btn-outline-primary border-0" @click="navigate">

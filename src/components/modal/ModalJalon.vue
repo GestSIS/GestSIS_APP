@@ -5,6 +5,12 @@ import { useInterventionStore } from "../../stores/intervention/Intervention.js"
 import { useModalStore } from "../../stores/common/Modal.js";
 import { DateTime } from "luxon";
 
+const responsableOptions = [
+  { value: "aucun", label: "Aucun" },
+  { value: "sapeur_id", label: "Sapeur" },
+  { value: "sapeur", label: "Externe au SIS" },
+];
+
 const sapeurStore = useSapeurStore();
 const interventionStore = useInterventionStore();
 sapeurStore.fetchListeSapeur();
@@ -104,39 +110,15 @@ const save = async () => {
           :class="{ 'is-invalid': errors['titre'] }"
         />
       </div>
-      <label class="form-check-label" for="flexSwitchCheckDefault"> Responsable </label>
-      <div class="form-check">
-        <input
-          id="responsable_aucun"
+      <div class="mb-3">
+        <label class="form-label d-block">Responsable</label>
+        <base-radio
           v-model="responsableMode"
-          class="form-check-input"
-          type="radio"
-          name="responsable"
-          value="aucun"
+          button-style
+          size="sm"
+          label="Responsable"
+          :options="responsableOptions"
         />
-        <label class="form-check-label" for="responsable_aucun">Aucun</label>
-      </div>
-      <div class="form-check">
-        <input
-          id="responsable_sapeur_id"
-          v-model="responsableMode"
-          class="form-check-input"
-          type="radio"
-          name="responsable"
-          value="sapeur_id"
-        />
-        <label class="form-check-label" for="responsable_sapeur_id">Sapeur</label>
-      </div>
-      <div class="form-check">
-        <input
-          id="responsable_sapeur"
-          v-model="responsableMode"
-          class="form-check-input"
-          type="radio"
-          name="responsable"
-          value="sapeur"
-        />
-        <label class="form-check-label" for="responsable_sapeur">Externe au SIS</label>
       </div>
       <base-select
         v-if="responsableMode == 'sapeur_id'"
