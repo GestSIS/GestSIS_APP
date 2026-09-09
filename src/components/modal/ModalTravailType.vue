@@ -33,8 +33,6 @@ if (!base.value.length) {
     type: 1,
     id: null,
     tarif: null,
-    tarif_min: null,
-    tarif_min_pour: null,
     compte_id: null,
     fonction_id: null,
   });
@@ -51,8 +49,6 @@ const ajoutType = () => {
   base.value.push({
     type: 1,
     tarif: null,
-    tarif_min: null,
-    tarif_min_pour: null,
     compte_id: null,
     fonction_id: null,
   });
@@ -75,8 +71,6 @@ const save = async () => {
     if (!e.type) errors.value["base-type" + i] = true;
     if (!e.compte_id) errors.value["base-compte" + i] = true;
     if (!e.tarif || e.tarif < 0) errors.value["base-tarif" + i] = true;
-    if (e.tarif_min && e.tarif_min < 0) errors.value["base-tarif-min" + i] = true;
-    if (e.tarif_min_pour && e.tarif_min_pour < 0) errors.value["base-tarif-min-pour" + i] = true;
   });
 
   // Return en cas d'erreurs
