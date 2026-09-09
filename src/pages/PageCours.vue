@@ -2,20 +2,29 @@
 import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
 import { useCoursStore } from "../stores/sapeur/Cours.js";
 import { useCoursSapeurStore } from "../stores/sapeur/CoursSapeur.js";
+import { useGradeStore } from "../stores/sapeur/Grade.js";
+import { useFonctionStore } from "../stores/sapeur/Fonction.js";
 import { useLocaliteStore } from "../stores/common/Localite.js";
 import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
+import { useModalStore } from "../stores/common/Modal.js";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 import { computed, ref, watchEffect } from "vue";
+import permissions from "../composables/permissions.js";
+import useHasPermission from "../composables/usePermission.js";
 
 const sapeurStore = useSapeurStore();
 const coursStore = useCoursStore();
 const coursSapeurStore = useCoursSapeurStore();
+const gradeStore = useGradeStore();
+const fonctionStore = useFonctionStore();
 const localiteStore = useLocaliteStore();
 const exerciceComptableStore = useExerciceComptableStore();
 
 const loadLocalities = localiteStore.fetchLocalites();
 const loadCours = coursStore.fetchCours();
 const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadGrades = gradeStore.fetchGrades();
+const loadFonctions = fonctionStore.fetchFonctions();
 
 await exerciceComptableStore.fetchExercicesComptables();
 
@@ -28,7 +37,11 @@ watchEffect(async () => {
   loading.value = false;
 });
 
-await Promise.all([loadLocalities, loadCours, loadSapeurs]);
+await Promise.all([loadLocalities, loadCours, loadSapeurs, loadGrades, loadFonctions]);
+
+const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
+const { showModal } = useModalStore();
+const createCoursMultiple = () => showModal({ component: "ModalCoursMultiple" });
 
 const sapeurs = computed(() =>
   sapeurStore.liste.slice().sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom)),
@@ -96,7 +109,23 @@ const fields = [
         </div>
       </div>
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-3">
+          <div class="card card-primary card-outline mb-2">
+            <div class="card-header d-flex justify-content-between">
+              <h5>Actions</h5>
+            </div>
+            <div class="card-body d-grid gap-1">
+              <button
+                v-if="hasEditPermission"
+                class="btn btn-outline-primary"
+                @click="createCoursMultiple"
+              >
+                Ajouter un cours
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-9">
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h5>Filtres</h5>

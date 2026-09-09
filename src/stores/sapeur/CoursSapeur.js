@@ -16,5 +16,10 @@ export const useCoursSapeurStore = defineStore("coursSapeur", {
         c.id == payload.id ? { ...c, ecritures: payload.ecritures } : c,
       );
     },
+    async addCoursMultiple(payload) {
+      const data = await CoursSapeurService.addCoursMultiple(payload);
+      this.liste = [...this.liste, ...data.map((d) => d.cours)];
+      return data;
+    },
   },
 });
