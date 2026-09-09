@@ -140,19 +140,11 @@ const addSapeurs = (node) => {
             <h3>Affichage</h3>
           </div>
           <div class="card-body d-grid gap-2">
-            <button
-              v-tooltip.top="'Tout développer'"
-              class="btn btn-outline-primary"
-              @click="expand"
-            >
-              <font-awesome-icon :icon="['far', 'plus-square']" /> Tout dérouler
+            <button title="Tout développer" class="btn btn-outline-primary" @click="expand">
+              <font-awesome-icon :icon="['far', 'plus-square']" /> Tout développer
             </button>
-            <button
-              v-tooltip.top="'Tout réduire'"
-              class="btn btn-outline-primary"
-              @click="contract"
-            >
-              <font-awesome-icon :icon="['far', 'minus-square']" /> Tout replier
+            <button title="Tout réduire" class="btn btn-outline-primary" @click="contract">
+              <font-awesome-icon :icon="['far', 'minus-square']" /> Tout réduire
             </button>
           </div>
         </div>
