@@ -214,6 +214,10 @@ const expand = () => treeRef.value.expand();
 defineExpose({
   expand,
   contract,
+  up,
+  down,
+  left,
+  right,
 });
 </script>
 
