@@ -6,6 +6,23 @@ export const useGroupeStore = defineStore("groupe", {
     liste: [],
   }),
   getters: {
+    // `liste` est maintenu trié par `tri` après chaque mutation (voir actions
+    // ci-dessous) : la position d'un groupe parmi ses frères et sœurs (même
+    // `parent_id`) peut donc être déduite de son index dans cette sous-liste
+    // filtrée. Centralisé ici pour que ce calcul reste réactif et cohérent
+    // partout où il est utilisé (page Organisation, arbre d'édition).
+    avecPosition: (state) => {
+      return state.liste.map((g) => {
+        const siblings = state.liste.filter((s) => s.parent_id == g.parent_id);
+        const index = siblings.findIndex((s) => s.id == g.id);
+        return {
+          ...g,
+          isRoot: g.parent_id == null,
+          isFirstOfLevel: index === 0,
+          isLastOfLevel: index === siblings.length - 1,
+        };
+      });
+    },
     treeGroupesSapeurs: (state) => {
       let insideGroupes = (groupeId) =>
         state.liste

@@ -113,11 +113,14 @@ const right = (node) => {
   });
 };
 const up = (node) => {
-  const groupe = groupes.value.find((g) => g.id == node.data.id);
+  // Lu depuis le getter `avecPosition` (même source que les boutons de
+  // PageOrganisation.vue) plutôt que du flag transmis par l'arbre, qui peut
+  // être obsolète après un précédent déplacement.
+  const groupe = groupeStore.avecPosition.find((g) => g.id == node.data.id);
   if (!groupe) return;
 
-  if (node.isFirstOfLevel) {
-    // On change parent_id uniquement
+  if (groupe.isFirstOfLevel) {
+    // Premier de son niveau : on change parent_id uniquement
     const parent = groupes.value.find((g) => g.id == groupe.parent_id);
     if (!parent) return;
     const groupesOfSameLevelAsParent = groupes.value
@@ -135,10 +138,10 @@ const up = (node) => {
   } else {
     // On échange tri avec l'autre élément adjacent
     const groupeTri = groupe.tri;
-    const groupesOfSameLevel = groupes.value
+    const groupesAvant = groupes.value
       .filter((g) => g.parent_id == groupe.parent_id)
       .filter((g) => g.tri < groupe.tri);
-    const previousGroupe = groupesOfSameLevel[groupesOfSameLevel.length - 1];
+    const previousGroupe = groupesAvant[groupesAvant.length - 1];
     if (!previousGroupe) return;
     groupeStore.updateGroupe({
       groupeId: groupe.id,
@@ -157,10 +160,13 @@ const up = (node) => {
   }
 };
 const down = (node) => {
-  const groupe = groupes.value.find((g) => g.id == node.data.id);
+  // Lu depuis le getter `avecPosition` (même source que les boutons de
+  // PageOrganisation.vue) plutôt que du flag transmis par l'arbre, qui peut
+  // être obsolète après un précédent déplacement.
+  const groupe = groupeStore.avecPosition.find((g) => g.id == node.data.id);
   if (!groupe) return;
 
-  if (node.isLastOfLevel) {
+  if (groupe.isLastOfLevel) {
     // FIXME: problème lorsque le groupe parent n'a pas de groupe suivant direct
     // On change parent_id uniquement
     let nextParentGroupe = null;
@@ -185,10 +191,10 @@ const down = (node) => {
   } else {
     // On échange tri avec l'autre élément adjacent
     const groupeTri = groupe.tri;
-    const groupesOfSameLevel = groupes.value
+    const groupesApres = groupes.value
       .filter((g) => g.parent_id == groupe.parent_id)
       .filter((g) => g.tri > groupe.tri);
-    const nextGroupe = groupesOfSameLevel[0];
+    const nextGroupe = groupesApres[0];
     if (!nextGroupe) return;
     groupeStore.updateGroupe({
       groupeId: groupe.id,

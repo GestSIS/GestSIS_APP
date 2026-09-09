@@ -23,20 +23,34 @@ const groupes = computed(() =>
     label: (g.no ? g.no + " " : "") + g.designation,
   })),
 );
+const filteredGroupes = computed(() => {
+  if (!form.id) {
+    return groupes.value;
+  }
+  // Un groupe ne peut pas devenir son propre descendant : on exclut le
+  // groupe édité et tous ses enfants de la liste des parents possibles.
+  const rec = (groupeId) => {
+    const children = groupeStore.liste.filter((g) => g.parent_id == groupeId);
+    return children.flatMap((g) => [g.id, ...rec(g.id)]);
+  };
+  const excludedIds = new Set([form.id, ...rec(form.id)]);
+  return groupes.value.filter((g) => !excludedIds.has(g.id));
+});
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  groupeStore
-    .createGroupe(form)
-    .then(closeModal)
-    .catch((err) => (errors.value = err));
+  errors.value = {};
+  const action = form.id
+    ? groupeStore.updateGroupe({ groupeId: form.id, data: form })
+    : groupeStore.createGroupe(form);
+  action.then(closeModal).catch((err) => (errors.value = err));
 };
 </script>
 
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">Ajouter un groupe</h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un groupe</h5>
       <button type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -69,7 +83,7 @@ const save = async () => {
         base-option="-"
         :base-value="null"
         display-key="label"
-        :options="groupes"
+        :options="filteredGroupes"
       />
       <div class="mb-3">
         <div class="form-check">
@@ -87,7 +101,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">Ajouter</button>
+      <button type="submit" class="btn btn-primary">{{ form.id ? "Modifier" : "Ajouter" }}</button>
     </div>
   </form>
 </template>

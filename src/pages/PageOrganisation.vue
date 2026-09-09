@@ -10,10 +10,8 @@ import permissions from "../composables/permissions.js";
 import useHasPermission from "../composables/usePermission.js";
 
 const active = ref(null);
-const groupeEdit = ref({});
 const editMode = ref(false);
 const groupesTypes = ref(["groupe", "groupeInter"]);
-const errors = ref({});
 
 const sapeurStore = useSapeurStore();
 const groupeStore = useGroupeStore();
@@ -25,27 +23,13 @@ await sapeurStore.fetchListeSapeur();
 const groupeEdition = useTemplateRef("groupe-edition-component");
 
 const groupes = computed(() =>
-  groupeStore.liste.map((g) => ({
+  groupeStore.avecPosition.map((g) => ({
     ...g,
     label: (g.no ? g.no + " " : "") + g.designation,
   })),
 );
 const hasEditPermission = useHasPermission(permissions.ORGANISATION.MODIFICATION);
 
-const filteredGroupes = computed(() => {
-  const activeId = active.value?.data?.id || 0;
-  if (activeId) {
-    const rec = (groupeId) => {
-      // Retourne la liste des ids des groupes enfants
-      const children = groupes.value.filter((g) => g.parent_id == groupeId);
-      return children.flatMap((g) => [g.id, ...rec(g.id)]);
-    };
-    const filteredIds = new Set([activeId, ...rec(activeId)]);
-    return groupes.value.filter((g) => !filteredIds.has(g.id));
-  } else {
-    return [];
-  }
-});
 const activeIsGroupe = computed(() => {
   return (
     (!!active.value &&
@@ -53,21 +37,20 @@ const activeIsGroupe = computed(() => {
     false
   );
 });
-const canMoveDown = computed(() => {
-  return (groupesTypes.value.includes(active.value?.data?.type) && !active.value?.isLast) || false;
+
+// `groupes` porte déjà isRoot/isFirstOfLevel/isLastOfLevel (getter réactif
+// `avecPosition` du store), donc ce lookup reste à jour après un déplacement
+// sans devoir re-sélectionner le groupe dans l'arbre.
+const activeGroupe = computed(() => {
+  if (!activeIsGroupe.value) {
+    return null;
+  }
+  return groupes.value.find((g) => g.id == active.value.data.id) || null;
 });
-const canMoveUp = computed(() => {
-  return (groupesTypes.value.includes(active.value?.data?.type) && !active.value?.isFirst) || false;
-});
-const canMoveLeft = computed(() => {
-  return (groupesTypes.value.includes(active.value?.data?.type) && !active.value?.isRoot) || false;
-});
-const canMoveRight = computed(() => {
-  return (
-    (groupesTypes.value.includes(active.value?.data?.type) && !active.value?.isFirstOfLevel) ||
-    false
-  );
-});
+const canMoveDown = computed(() => !!activeGroupe.value && !activeGroupe.value.isLastOfLevel);
+const canMoveUp = computed(() => !!activeGroupe.value && !activeGroupe.value.isFirstOfLevel);
+const canMoveLeft = computed(() => !!activeGroupe.value && !activeGroupe.value.isRoot);
+const canMoveRight = computed(() => !!activeGroupe.value && !activeGroupe.value.isFirstOfLevel);
 
 const { confirm, showModal } = useModalStore();
 
@@ -79,27 +62,6 @@ const expand = () => {
 };
 const selected = (elem) => {
   active.value = elem;
-  if (groupesTypes.value.includes(elem.data.type)) {
-    groupeEdit.value = { ...groupes.value.find((g) => g.id == elem.data.id) };
-  } else {
-    groupeEdit.value = {};
-  }
-};
-const save = async () => {
-  groupeStore
-    .updateGroupe({
-      groupeId: groupeEdit.value.id,
-      data: {
-        ...groupeEdit.value,
-      },
-    })
-    .then(() => {
-      awn.success("Groupe modifié avec succès");
-    })
-    .catch((err) => {
-      errors.value = err;
-      awn.alert(err.message || "Erreur lors de la modification du groupe");
-    });
 };
 const up = () => groupeEdition.value.up(active.value);
 const down = () => groupeEdition.value.down(active.value);
@@ -118,6 +80,12 @@ const deleteGroupe = () => {
 const addGroupe = () => {
   showModal({
     component: "ModalGroupe",
+  });
+};
+const editGroupe = () => {
+  showModal({
+    component: "ModalGroupe",
+    data: { ...groupes.value.find((g) => g.id == active.value.data.id) },
   });
 };
 const addSapeurs = (node) => {
@@ -166,25 +134,103 @@ const addSapeurs = (node) => {
       </div>
     </div>
     <div class="row">
-      <div class="col-md-8 mb-3">
+      <div class="col-md-4 mb-3">
         <div class="card card-primary card-outline">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Groupes</h3>
-            <!-- <button class="btn btn-outline-primary">Modifier</button> -->
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h3>Affichage</h3>
           </div>
-          <div class="card-body">
-            <groupe-edition
-              ref="groupe-edition-component"
-              :edit-mode="editMode"
-              @selected="selected"
-            />
+          <div class="card-body d-grid gap-2">
+            <button
+              v-tooltip.top="'Tout développer'"
+              class="btn btn-outline-primary"
+              @click="expand"
+            >
+              <font-awesome-icon :icon="['far', 'plus-square']" /> Tout dérouler
+            </button>
+            <button
+              v-tooltip.top="'Tout réduire'"
+              class="btn btn-outline-primary"
+              @click="contract"
+            >
+              <font-awesome-icon :icon="['far', 'minus-square']" /> Tout replier
+            </button>
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-4 mb-3">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
+            <h3>Actions</h3>
+          </div>
+          <div class="card-body d-grid gap-2">
+            <button
+              class="btn btn-outline-primary"
+              :disabled="!activeIsGroupe"
+              @click="addSapeurs(active)"
+            >
+              Ajouter/enlever des sapeurs
+            </button>
+            <template v-if="hasEditPermission">
+              <button class="btn btn-outline-primary" @click="addGroupe">Ajouter un groupe</button>
+              <button
+                class="btn btn-outline-primary"
+                :disabled="!activeIsGroupe"
+                @click="editGroupe"
+              >
+                Modifier le groupe
+              </button>
+              <button
+                class="btn btn-outline-danger"
+                :disabled="!activeIsGroupe"
+                @click="deleteGroupe"
+              >
+                Supprimer
+              </button>
+              <div>
+                <div class="fw-bold mb-1">Réorganiser le groupe</div>
+                <div class="d-flex gap-1">
+                  <button
+                    class="btn btn-sm flex-fill"
+                    :class="{ 'btn-outline-primary': canMoveLeft }"
+                    :disabled="!canMoveLeft"
+                    @click.prevent="left"
+                  >
+                    ←
+                  </button>
+                  <button
+                    class="btn btn-sm flex-fill"
+                    :class="{ 'btn-outline-primary': canMoveRight }"
+                    :disabled="!canMoveRight"
+                    @click.prevent="right"
+                  >
+                    →
+                  </button>
+                  <button
+                    class="btn btn-sm flex-fill"
+                    :class="{ 'btn-outline-primary': canMoveUp }"
+                    :disabled="!canMoveUp"
+                    @click.prevent="up"
+                  >
+                    ↑
+                  </button>
+                  <button
+                    class="btn btn-sm flex-fill"
+                    :class="{ 'btn-outline-primary': canMoveDown }"
+                    :disabled="!canMoveDown"
+                    @click.prevent="down"
+                  >
+                    ↓
+                  </button>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between align-items-center">
-            <h3>Actions</h3>
+            <h3>Groupes</h3>
             <div v-if="hasEditPermission" class="form-check form-switch">
               <input
                 id="modeEdition"
@@ -196,129 +242,12 @@ const addSapeurs = (node) => {
               <label class="form-check-label" for="modeEdition">Mode édition</label>
             </div>
           </div>
-          <div class="card-body pb-2">
-            <button v-tooltip.top="'Tout développer'" class="btn btn-info me-1" @click="expand">
-              <font-awesome-icon :icon="['far', 'plus-square']" />
-            </button>
-            <button v-tooltip.top="'Tout réduire'" class="btn btn-info me-1" @click="contract">
-              <font-awesome-icon :icon="['far', 'minus-square']" />
-            </button>
-          </div>
-          <div v-if="!editMode" class="card-body pt-0">
-            <button
-              class="btn btn-primary mb-2"
-              :disabled="!activeIsGroupe"
-              @click="addSapeurs(active)"
-            >
-              Ajouter/enlever des sapeurs
-            </button>
-          </div>
-          <div v-if="editMode" class="card-body pt-0">
-            <button class="btn btn-primary d-block mb-2" @click="addGroupe">
-              Ajouter un groupe
-            </button>
-            <button
-              class="btn btn-danger d-block mb-2"
-              :disabled="!activeIsGroupe"
-              @click="deleteGroupe"
-            >
-              Supprimer
-            </button>
-          </div>
-          <div v-if="editMode" class="card-body pt-0">
-            <h3>Réorganiser le groupe</h3>
-            <button
-              class="btn btn-sm"
-              :class="{
-                'btn-primary': canMoveLeft,
-                'btn-secondary': !canMoveLeft,
-              }"
-              :disabled="!canMoveLeft"
-              @click.prevent="left"
-            >
-              ←
-            </button>
-            <button
-              class="btn btn-sm"
-              :class="{
-                'btn-primary': canMoveRight,
-                'btn-secondary': !canMoveRight,
-              }"
-              :disabled="!canMoveRight"
-              @click.prevent="right"
-            >
-              →
-            </button>
-            <button
-              class="btn btn-sm"
-              :class="{
-                'btn-primary': canMoveUp,
-                'btn-secondary': !canMoveUp,
-              }"
-              :disabled="!canMoveUp"
-              @click.prevent="up"
-            >
-              ↑
-            </button>
-            <button
-              class="btn btn-sm"
-              :class="{
-                'btn-primary': canMoveDown,
-                'btn-secondary': !canMoveDown,
-              }"
-              :disabled="!canMoveDown"
-              @click.prevent="down"
-            >
-              ↓
-            </button>
-          </div>
-        </div>
-        <div
-          v-if="editMode && active && groupesTypes.includes(active.data.type)"
-          class="card card-primary card-outline mt-2"
-        >
-          <div class="card-header d-flex justify-content-between">
-            <h3>Modifier</h3>
-          </div>
           <div class="card-body">
-            <div class="mb-3">
-              <label for="no">No</label>
-              <input
-                id="no"
-                v-model="groupeEdit.no"
-                maxlength="10"
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['no'] }"
-              />
-            </div>
-            <div class="mb-3">
-              <label for="designation">Nom</label>
-              <input
-                id="designation"
-                v-model="groupeEdit.designation"
-                type="text"
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['designation'] }"
-              />
-            </div>
-            <base-select
-              v-model="groupeEdit.parent_id"
-              class="mb-3"
-              label="Groupe parent"
-              base-option="-"
-              :base-value="null"
-              display-key="label"
-              :options="filteredGroupes"
+            <groupe-edition
+              ref="groupe-edition-component"
+              :edit-mode="editMode"
+              @selected="selected"
             />
-            <div class="mb-3">
-              <base-checkbox
-                v-model="groupeEdit.type"
-                label="Groupe d'alarme"
-                :true-value="1"
-                :false-value="0"
-              />
-            </div>
-            <button class="btn btn-primary" @click="save">Modifier</button>
           </div>
         </div>
       </div>

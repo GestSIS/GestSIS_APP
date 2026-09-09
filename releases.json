@@ -2,12 +2,13 @@
   "releases": [
     {
       "date": "09.09.2026",
-      "version": "2.0",
+      "version": "3.0",
       "app": "GestSIS APP",
       "changes": [
         "Ajout de cours pour plusieurs sapeurs en une fois",
         "Validation du numero avs",
-        "Ajout matériel dans fiche sapeur"
+        "Ajout matériel dans fiche sapeur",
+        "Refonte de l'interface organisation"
       ]
     },
     {
