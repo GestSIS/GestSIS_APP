@@ -5,10 +5,12 @@ import { useRouter } from "vue-router";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import RecrutementService from "/src/services/RecrutementService.js";
+import useNotification from "../../composables/useNotification.js";
 
 const authStore = useAuthStore();
 const router = useRouter();
 const { closeModal } = useModalStore();
+const awn = useNotification();
 
 const sisKey = computed(() => authStore.sis.activeKey);
 
@@ -64,6 +66,7 @@ const invalider = () => {
 
 const copyToClipboard = (value) => {
   navigator.clipboard.writeText(value);
+  awn.success("Lien copié dans le presse-papier");
 };
 </script>
 
@@ -108,6 +111,15 @@ const copyToClipboard = (value) => {
             >
               <font-awesome-icon :icon="['fas', 'copy']" />
             </button>
+            <a
+              :href="lien"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-outline-secondary"
+              title="Ouvrir le lien dans un nouvel onglet"
+            >
+              <font-awesome-icon :icon="['fas', 'up-right-from-square']" />
+            </a>
           </div>
           <p class="text-muted mb-0">Valide jusqu'au {{ new Date(expireAt).toLocaleString() }}</p>
         </div>
