@@ -285,6 +285,7 @@ const mutate = () => {
         <a
           href="https://gestionrta-jura.ch"
           target="_blank"
+          rel="noopener noreferrer"
           class="col-auto btn btn-link"
           @click="mutate"
         >

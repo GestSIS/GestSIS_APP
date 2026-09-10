@@ -88,6 +88,7 @@ const quitterImpersonation = () => {
         <a
           href="https://github.com/GestSIS"
           target="_blank"
+          rel="noopener noreferrer"
           class="btn btn-sm btn-link nav-link pt-0 pb-0"
         >
           <font-awesome-icon :icon="['brands', 'github']" />

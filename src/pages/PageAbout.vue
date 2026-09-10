@@ -92,7 +92,7 @@ const copyToClipboard = (text) => navigator.clipboard.writeText(text);
             <p>Auteur : Bastien Wermeille</p>
             <p>
               Code source :
-              <a href="https://github.com/GestSIS" target="_blank">
+              <a href="https://github.com/GestSIS" target="_blank" rel="noopener noreferrer">
                 <font-awesome-icon :icon="['fab', 'github']" /> GitHub
               </a>
             </p>
@@ -109,6 +109,7 @@ const copyToClipboard = (text) => navigator.clipboard.writeText(text);
               <a
                 href="https://github.com/GestSIS/GestSIS_dev_docker/blob/main/CONTRIBUTING.md"
                 target="_blank"
+                rel="noopener noreferrer"
                 >guide de contribution</a
               >
               sur GitHub.

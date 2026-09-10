@@ -105,7 +105,12 @@ const fonctionnalites = [
         <p class="text-muted">
           GestSIS est développé en open source, son code source est librement consultable.
         </p>
-        <a href="https://github.com/GestSIS" target="_blank" class="btn btn-outline-secondary me-2">
+        <a
+          href="https://github.com/GestSIS"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-outline-secondary me-2"
+        >
           <font-awesome-icon :icon="['brands', 'github']" class="me-1" />
           Voir sur GitHub
         </a>
@@ -127,6 +132,7 @@ const fonctionnalites = [
             class="btn btn-primary"
             href="https://play.google.com/store/apps/details?id=ch.gestsis.app"
             target="_blank"
+            rel="noopener noreferrer"
           >
             <font-awesome-icon :icon="['brands', 'google-play']" class="me-1" />
             Télécharger sur Google Play
