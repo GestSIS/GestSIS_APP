@@ -36,7 +36,7 @@ const register = async () => {
       router.push(route.query.redirect ? route.query.redirect : "accueil");
     })
     .catch((data) => {
-      error.value = data.error;
+      error.value = data?.error ?? {};
     })
     .finally(() => {
       submitting.value = false;
