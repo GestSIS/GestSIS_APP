@@ -117,7 +117,7 @@ const { showModal } = useModalStore();
 const ajouter = () =>
   showModal({
     component: "ModalArticle",
-    data: {},
+    data: { materiel_type_id: parseInt(id) },
     size: 1,
   });
 </script>
