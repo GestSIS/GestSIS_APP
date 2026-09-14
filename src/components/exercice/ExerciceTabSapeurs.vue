@@ -121,7 +121,7 @@ const nbConvoquesSansPresence = computed(
   () => presences.value.filter((p) => p.convoque && !p.present && !p.absent && !p.remplace).length,
 );
 
-const { confirm, showModal } = useModalStore();
+const { confirm, showModal, closeModal } = useModalStore();
 const awn = useNotification();
 
 // Colonnes du tableau : Nom + Convoqué + Présence (fusionne
@@ -413,6 +413,29 @@ const downloadJustificatif = (sapeur) => {
   ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
 };
 
+const listePresences = () => {
+  showModal({ component: "ModalChargement" });
+  ExerciceService.downloadListPresence(id, "liste-presence.pdf")
+    .catch((err) => {
+      awn.alert(
+        err?.message ||
+          "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
+      );
+    })
+    .then(closeModal);
+};
+const listeAppel = () => {
+  showModal({ component: "ModalChargement" });
+  ExerciceService.downloadListAppel(id, "liste-appel.pdf")
+    .catch((err) => {
+      awn.alert(
+        err?.message ||
+          "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
+      );
+    })
+    .then(closeModal);
+};
+
 const statuts = [
   { id: -2, designation: "Amendée" },
   { id: -1, designation: "Refusée" },
@@ -434,188 +457,219 @@ const statuts = [
     ></button>
     Exercice déjà imputé, uniquement possible de modifier le type d'absence et la mise à l'amende.
   </div>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex flex-wrap align-items-center gap-2">
-      <!-- Actions sur la liste des sapeurs -->
-      <button
-        v-if="hasPresencePermission"
-        class="btn btn-outline-primary"
-        :disabled="!canEditPresence"
-        @click="manageSapeurs"
-      >
-        Gérer la liste des sapeurs
-      </button>
-      <base-checkbox
-        v-if="hasPresencePermission"
-        class="mb-0"
-        label="Tout convoquer"
-        :model-value="allConvoque"
-        :disabled="!canEditPresence"
-        @update:model-value="selectAllConvoque"
-      />
-
-      <!-- État de l'exercice + action pour le faire avancer, regroupés -->
-      <div class="ms-md-auto d-flex flex-wrap align-items-center gap-2">
-        <status-badge :status="statutActuel" />
-        <span v-if="activeExerciceData.statut == 1 && nbConvoques > 0" class="text-muted small">
-          {{ nbConvoques - nbConvoquesSansPresence }}/{{ nbConvoques }} présences saisies
-        </span>
-        <button
-          v-if="showValidateButton"
-          class="btn"
-          :class="canValidate ? 'btn-primary' : 'btn-outline-primary'"
-          :disabled="!canValidate"
-          :title="
-            canValidate
-              ? 'Valider cet exercice'
-              : `Encore ${nbConvoquesSansPresence} sapeur(s) convoqué(s) sans présence renseignée`
-          "
-          @click="validate"
-        >
-          <font-awesome-icon :icon="['fas', 'check']" class="me-1" />
-          Valider
-        </button>
-        <button
-          v-if="showDevaliderButton"
-          class="btn btn-outline-warning"
-          title="Repasser l'exercice en attente de validation"
-          @click="devalider"
-        >
-          <font-awesome-icon :icon="['fas', 'rotate-left']" class="me-1" />
-          Annuler la validation
-        </button>
+  <div class="row">
+    <div v-if="hasPresencePermission" class="col-12 col-sm-6 col-lg-4 col-xl-3">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Actions</h3>
+        </div>
+        <div class="card-body d-grid gap-1">
+          <button
+            class="btn btn-outline-primary"
+            :disabled="!canEditPresence"
+            @click="manageSapeurs"
+          >
+            Gérer la liste des sapeurs
+          </button>
+        </div>
       </div>
     </div>
-    <div class="card-body table-responsive p-0">
-      <base-table
-        class="tableau-presences"
-        :loading="loading"
-        :fields="fields"
-        :data="presences"
-        :row-class="(row) => (!row.actif ? 'table-danger' : '')"
-        no-data="Aucun sapeur"
-        hide-download
-      >
-        <template #convoque="{ rowData: sap }">
-          <!-- base-checkbox enveloppe l'input dans un <div class="form-check">
-               (bloc, positionnement flottant Bootstrap) : contrairement à un
-               <input> brut, `text-align: center` sur le <td> ne le centre pas.
-               Un conteneur flex le fait explicitement. -->
-          <div class="d-flex justify-content-center">
-            <base-checkbox
-              :model-value="sap.convoque"
-              :true-value="1"
-              :false-value="0"
-              :disabled="!canEditPresence"
-              @update:model-value="
-                (val) => {
-                  sap.convoque = val;
-                  selectConvoque(sap);
-                }
-              "
-            />
-          </div>
-        </template>
-
-        <template #presence="{ rowData: sap }">
-          <base-radio
-            button-style
-            size="sm"
-            :options="presenceOptions(sap)"
-            :model-value="presenceStatut(sap)"
-            @update:model-value="(statut) => selectPresenceStatut(sap, statut)"
+    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex justify-content-between">
+          <h3 class="card-title">Impressions</h3>
+        </div>
+        <div class="card-body d-grid gap-1">
+          <button class="btn btn-outline-primary" @click="listePresences">
+            <font-awesome-icon :icon="['far', 'file-pdf']" class="me-1" />
+            Liste de présence
+          </button>
+          <button class="btn btn-outline-primary" @click="listeAppel">
+            <font-awesome-icon :icon="['far', 'file-pdf']" class="me-1" />
+            Liste d'appel
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card card-primary card-outline mb-3">
+        <div class="card-header d-flex flex-wrap align-items-center gap-2">
+          <h3 class="card-title mb-0">Présences</h3>
+          <base-checkbox
+            v-if="hasPresencePermission"
+            class="mb-0"
+            label="Tout convoquer"
+            :model-value="allConvoque"
+            :disabled="!canEditPresence"
+            @update:model-value="selectAllConvoque"
           />
-        </template>
-
-        <template #excuse="{ rowData: sap }">
-          <span
-            v-if="sap.excuse_type_id && sap.excuse_type_id !== true"
-            class="badge rounded-pill text-bg-primary"
-            :class="{
-              'text-bg-danger': sap.excuse_statut == -2,
-              'text-bg-warning': sap.excuse_statut == -1,
-              'text-bg-secondary': sap.excuse_statut == 0,
-              'text-bg-success': sap.excuse_statut == 1,
-            }"
-            @click="detailExcuse(sap)"
-            >{{ excusesTypes.find((e) => e.id == sap.excuse_type_id)?.designation }}</span
-          >
-          <button v-if="sap.justificatif_path" class="btn" @click="downloadJustificatif(sap)">
-            <font-awesome-icon :icon="['far', 'file-pdf']" />
-          </button>
-          <button
-            v-if="!sap.excuse_type_id"
-            class="btn btn-outline-primary border-0"
-            :disabled="!hasPresencePermission"
-            @click="addExcuse(sap)"
-          >
-            <font-awesome-icon :icon="['fas', 'plus']" />
-          </button>
-          <button
-            v-else
-            class="btn btn-outline-danger border-0"
-            :disabled="!hasPresencePermission"
-            @click="removeExcuse(sap)"
-          >
-            <font-awesome-icon :icon="['far', 'trash-alt']" />
-          </button>
-        </template>
-
-        <template #statut="{ rowData: sap }">
-          <span
-            v-if="sap.absent"
-            class="badge rounded-pill text-bg-primary"
-            :class="{
-              'text-bg-danger': sap.excuse_statut == -2,
-              'text-bg-warning': sap.excuse_statut == -1,
-              'text-bg-secondary': sap.excuse_statut == 0,
-              'text-bg-success': sap.excuse_statut == 1,
-            }"
-            @click="detailExcuse(sap)"
-            >{{ statuts.find((s) => s.id == sap.excuse_statut)?.designation }}</span
-          ><span v-else></span>
-        </template>
-
-        <template v-for="h in heureTypes" :key="h.id" #[heureSlotName(h)]="{ rowData: sap }">
-          <div class="input-group input-group-sm">
-            <input
-              class="form-control form-control-sm"
-              type="text"
-              :readonly="!canEditPresence"
-              :value="
-                getHeureValue(
-                  sap.heures.find(
-                    (e) =>
-                      e.heure_exercice_type_id == h.id ||
-                      (!e.heure_exercice_type_id && e.designation == h.designation),
-                  ),
-                )
+          <div class="ms-md-auto d-flex flex-wrap align-items-center gap-2">
+            <status-badge :status="statutActuel" />
+            <span v-if="activeExerciceData.statut == 1 && nbConvoques > 0" class="text-muted small">
+              {{ nbConvoques - nbConvoquesSansPresence }}/{{ nbConvoques }} présences saisies
+            </span>
+            <button
+              v-if="showValidateButton"
+              class="btn"
+              :class="canValidate ? 'btn-primary' : 'btn-outline-primary'"
+              :disabled="!canValidate"
+              :title="
+                canValidate
+                  ? 'Valider cet exercice'
+                  : `Encore ${nbConvoquesSansPresence} sapeur(s) convoqué(s) sans présence renseignée`
               "
-              @change="(e) => updateHeureSapeur(sap, h, e.target.value)"
-            />
-            <span class="input-group-text">{{ formatUnite(h.type_unite_id) }}</span>
+              @click="validate"
+            >
+              <font-awesome-icon :icon="['fas', 'check']" class="me-1" />
+              Valider
+            </button>
+            <button
+              v-if="showDevaliderButton"
+              class="btn btn-outline-warning"
+              title="Repasser l'exercice en attente de validation"
+              @click="devalider"
+            >
+              <font-awesome-icon :icon="['fas', 'rotate-left']" class="me-1" />
+              Annuler la validation
+            </button>
           </div>
-        </template>
+        </div>
+        <div class="card-body table-responsive p-0">
+          <base-table
+            class="tableau-presences"
+            :loading="loading"
+            :fields="fields"
+            :data="presences"
+            :row-class="(row) => (!row.actif ? 'table-danger' : '')"
+            no-data="Aucun sapeur"
+            hide-download
+          >
+            <template #convoque="{ rowData: sap }">
+              <!-- base-checkbox enveloppe l'input dans un <div class="form-check">
+                   (bloc, positionnement flottant Bootstrap) : contrairement à un
+                   <input> brut, `text-align: center` sur le <td> ne le centre pas.
+                   Un conteneur flex le fait explicitement. -->
+              <div class="d-flex justify-content-center">
+                <base-checkbox
+                  :model-value="sap.convoque"
+                  :true-value="1"
+                  :false-value="0"
+                  :disabled="!canEditPresence"
+                  @update:model-value="
+                    (val) => {
+                      sap.convoque = val;
+                      selectConvoque(sap);
+                    }
+                  "
+                />
+              </div>
+            </template>
 
-        <template #foot="{ data }">
-          <tr>
-            <th>Nb sapeurs : {{ data.length }}</th>
-            <th class="text-center">{{ data.filter((s) => s.convoque).length }}</th>
-            <th class="text-center presence-totaux">
-              <span class="text-success">{{ data.filter((s) => s.present).length }} présents</span>
-              <span class="text-danger">{{ data.filter((s) => s.absent).length }} absents</span>
-              <span class="text-warning"
-                >{{ data.filter((s) => s.remplace).length }} remplacés</span
+            <template #presence="{ rowData: sap }">
+              <base-radio
+                button-style
+                size="sm"
+                :options="presenceOptions(sap)"
+                :model-value="presenceStatut(sap)"
+                @update:model-value="(statut) => selectPresenceStatut(sap, statut)"
+              />
+            </template>
+
+            <template #excuse="{ rowData: sap }">
+              <span
+                v-if="sap.excuse_type_id && sap.excuse_type_id !== true"
+                class="badge rounded-pill text-bg-primary"
+                :class="{
+                  'text-bg-danger': sap.excuse_statut == -2,
+                  'text-bg-warning': sap.excuse_statut == -1,
+                  'text-bg-secondary': sap.excuse_statut == 0,
+                  'text-bg-success': sap.excuse_statut == 1,
+                }"
+                @click="detailExcuse(sap)"
+                >{{ excusesTypes.find((e) => e.id == sap.excuse_type_id)?.designation }}</span
               >
-            </th>
-            <th class="text-center">{{ data.filter((s) => s.excuse_type_id).length }} excusé(s)</th>
-            <th class="text-center">{{ data.filter((s) => s.amende).length }} amende(s)</th>
-            <th v-for="h in heureTypes" :key="h.id" class="text-center">
-              {{ totalHeure(data, h) }} {{ formatUnite(h.type_unite_id) }}
-            </th>
-          </tr>
-        </template>
-      </base-table>
+              <button v-if="sap.justificatif_path" class="btn" @click="downloadJustificatif(sap)">
+                <font-awesome-icon :icon="['far', 'file-pdf']" />
+              </button>
+              <button
+                v-if="!sap.excuse_type_id"
+                class="btn btn-outline-primary border-0"
+                :disabled="!hasPresencePermission"
+                @click="addExcuse(sap)"
+              >
+                <font-awesome-icon :icon="['fas', 'plus']" />
+              </button>
+              <button
+                v-else
+                class="btn btn-outline-danger border-0"
+                :disabled="!hasPresencePermission"
+                @click="removeExcuse(sap)"
+              >
+                <font-awesome-icon :icon="['far', 'trash-alt']" />
+              </button>
+            </template>
+
+            <template #statut="{ rowData: sap }">
+              <span
+                v-if="sap.absent"
+                class="badge rounded-pill text-bg-primary"
+                :class="{
+                  'text-bg-danger': sap.excuse_statut == -2,
+                  'text-bg-warning': sap.excuse_statut == -1,
+                  'text-bg-secondary': sap.excuse_statut == 0,
+                  'text-bg-success': sap.excuse_statut == 1,
+                }"
+                @click="detailExcuse(sap)"
+                >{{ statuts.find((s) => s.id == sap.excuse_statut)?.designation }}</span
+              ><span v-else></span>
+            </template>
+
+            <template v-for="h in heureTypes" :key="h.id" #[heureSlotName(h)]="{ rowData: sap }">
+              <div class="input-group input-group-sm">
+                <input
+                  class="form-control form-control-sm"
+                  type="text"
+                  :readonly="!canEditPresence"
+                  :value="
+                    getHeureValue(
+                      sap.heures.find(
+                        (e) =>
+                          e.heure_exercice_type_id == h.id ||
+                          (!e.heure_exercice_type_id && e.designation == h.designation),
+                      ),
+                    )
+                  "
+                  @change="(e) => updateHeureSapeur(sap, h, e.target.value)"
+                />
+                <span class="input-group-text">{{ formatUnite(h.type_unite_id) }}</span>
+              </div>
+            </template>
+
+            <template #foot="{ data }">
+              <tr>
+                <th>Nb sapeurs : {{ data.length }}</th>
+                <th class="text-center">{{ data.filter((s) => s.convoque).length }}</th>
+                <th class="text-center presence-totaux">
+                  <span class="text-success"
+                    >{{ data.filter((s) => s.present).length }} présents</span
+                  >
+                  <span class="text-danger">{{ data.filter((s) => s.absent).length }} absents</span>
+                  <span class="text-warning"
+                    >{{ data.filter((s) => s.remplace).length }} remplacés</span
+                  >
+                </th>
+                <th class="text-center">
+                  {{ data.filter((s) => s.excuse_type_id).length }} excusé(s)
+                </th>
+                <th class="text-center">{{ data.filter((s) => s.amende).length }} amende(s)</th>
+                <th v-for="h in heureTypes" :key="h.id" class="text-center">
+                  {{ totalHeure(data, h) }} {{ formatUnite(h.type_unite_id) }}
+                </th>
+              </tr>
+            </template>
+          </base-table>
+        </div>
+      </div>
     </div>
   </div>
 </template>
