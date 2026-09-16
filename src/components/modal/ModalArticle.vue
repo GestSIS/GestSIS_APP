@@ -6,6 +6,7 @@ import ArticleService from "../../services/materiel/ArticleService";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
 import SelectCouleur from "../materiel/SelectCouleur.vue";
 import useNotification from "../../composables/useNotification.js";
+import { toDateInputValue } from "../../tools/index.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -27,6 +28,9 @@ const form = reactive({
   statut: true,
   quantite: 1,
   ...articleData,
+  // L'API sérialise la date en ISO complet, l'input attend "YYYY-MM-DD" :
+  // sans cette normalisation la valeur repart telle quelle et l'API la rejette.
+  date_peremption: toDateInputValue(articleData.date_peremption),
   emplacementRepresentee: { statut: true, ...data?.emplacement_representee },
 });
 
@@ -52,6 +56,7 @@ const typeOptions = computed(() => {
 });
 
 const { closeModal, resize } = useModalStore();
+
 watchEffect(() => resize(type.value?.est_emplacement ? 1 : 0));
 
 const save = async () => {
@@ -80,7 +85,10 @@ const save = async () => {
       closeModal();
       callback();
     })
-    .catch((err) => (errors.value = err));
+    .catch((err) => {
+      errors.value = err;
+      awn.warning(err.message ?? "Erreur lors de la sauvegarde de l'article");
+    });
 };
 </script>
 
@@ -265,6 +273,17 @@ const save = async () => {
             type="text"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['taille'] }"
+          />
+        </div>
+        <div v-if="type && type.est_perimable" class="mb-3">
+          <label for="date_peremption" class="form-label">Péremption</label>
+          <input
+            id="date_peremption"
+            v-model="form.date_peremption"
+            required
+            type="date"
+            class="form-control form-control-sm"
+            :class="{ 'is-invalid': errors['date_peremption'] }"
           />
         </div>
         <div class="mb-3">

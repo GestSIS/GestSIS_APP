@@ -22,6 +22,7 @@ const activeItem = ref({
   est_taillee: false,
   est_lavable: false,
   a_batterie: false,
+  est_perimable: false,
   ...data,
   tuyau: data?.tuyau ?? {
     separement: true,
@@ -173,6 +174,7 @@ const save = async () => {
                 :class="{ 'is-invalid': errors['prefix'] }"
               />
             </div>
+            <base-checkbox v-model="activeItem.est_perimable" class="mb-0" label="Est périmable" />
           </fieldset>
           <template v-if="activeItem.type === 1">
             <legend class="w-auto px-2 fs-6 mb-2">Tuyau</legend>

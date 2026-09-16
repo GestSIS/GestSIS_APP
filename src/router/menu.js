@@ -103,7 +103,7 @@ const links = [
     permission: permissions.CONTROLE_MEDICAL.TOUT,
   },
   {
-    to: { name: "materiel-par-type" },
+    to: { name: "materiel-tableau-bord" },
     icon: "shirt",
     nom: "Matériel",
     permission: permissions.MATERIEL.LECTURE,

@@ -4,6 +4,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import { useControleStore } from "../../stores/materiel/Controle.js";
 import { groupedByData, indexedData } from "../../tools/index.js";
 import { emplacementIdPourArticle } from "../../tools/materiel.js";
 import useHasPermission from "../../composables/usePermission.js";
@@ -24,6 +25,7 @@ const sapeurStore = useSapeurStore();
 const emplacementStore = useEmplacementStore();
 const couleurStore = useCouleurStore();
 const materielTypeStore = useMaterielTypeStore();
+const controleStore = useControleStore();
 
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
@@ -47,9 +49,15 @@ await Promise.all([
   couleurStore.fetchCouleurs(),
   materielTypeStore.fetchMaterielTypes(),
   sapeurStore.fetchListeSapeur(),
+  controleStore.fetchControles(),
 ]);
 
 const materielType = computed(() => materielTypeStore.liste.find((m) => m.id === parseInt(id)));
+const controlesApplicables = computed(() =>
+  controleStore.liste.filter((c) =>
+    c.materiel_types?.some((mt) => mt.materiel_type_id === parseInt(id)),
+  ),
+);
 
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
@@ -149,6 +157,7 @@ const ajouter = () =>
         :loading="loading"
         :articles="computedData"
         :materiel-type="materielType"
+        :controles-applicables="controlesApplicables"
         :refresh="loadArticles"
       />
       <base-table
@@ -180,6 +189,7 @@ const ajouter = () =>
             :loading="loading"
             :articles="rowData.data"
             :materiel-type="materielType"
+            :controles-applicables="controlesApplicables"
             :avec-emplacement="false"
             :refresh="loadArticles"
           />

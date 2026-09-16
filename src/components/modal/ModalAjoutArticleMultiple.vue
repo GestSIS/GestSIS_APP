@@ -67,7 +67,7 @@ const save = async () => {
 </script>
 
 <template>
-  <div>
+  <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">Ajouter du matériel</h5>
       <button type="button" class="btn-close" @click="closeModal"></button>
@@ -84,7 +84,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="save">Ajouter</button>
+      <button type="submit" class="btn btn-primary">Ajouter</button>
     </div>
-  </div>
+  </form>
 </template>

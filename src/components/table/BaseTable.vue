@@ -75,8 +75,16 @@ const sorted = ref({
   func: (a) => a,
 });
 const selected = ref(null);
+
+// data à plat, que les lignes viennent de `data` ou (si groupée) de `groupedData` :
+// utilisé partout où on doit connaître "toutes les lignes" indépendamment du groupement
+// (bascule tout ouvrir/fermer, export CSV).
+const allRows = computed(() =>
+  groupedData.length > 0 ? groupedData.flatMap((g) => g.data) : data,
+);
+
 const detailsRowVisibility = ref(
-  slots["detail-row"] ? Object.fromEntries(data.map((d) => [d[selectKey], false])) : {},
+  slots["detail-row"] ? Object.fromEntries(allRows.value.map((d) => [d[selectKey], false])) : {},
 );
 const defaultFormatter = (e) => e;
 
@@ -205,7 +213,7 @@ const showDetailRow = (id) => {
 const showAllDetailRow = () => {
   detailsRowVisibility.value = Object.fromEntries([
     ...Object.keys(detailsRowVisibility.value).map((key) => [key, true]),
-    ...data.map((d) => [d[selectKey], true]),
+    ...allRows.value.map((d) => [d[selectKey], true]),
   ]);
 };
 const hideDetailRow = (id) => {
@@ -217,7 +225,7 @@ const hideDetailRow = (id) => {
 const hideAllDetailRow = () => {
   detailsRowVisibility.value = Object.fromEntries([
     ...Object.keys(detailsRowVisibility.value).map((key) => [key, false]),
-    ...data.map((d) => [d[selectKey], false]),
+    ...allRows.value.map((d) => [d[selectKey], false]),
   ]);
 };
 const toggleDetailRow = (id) => {
@@ -227,8 +235,10 @@ const toggleDetailRow = (id) => {
   };
 };
 const toggleAllDetailRow = () => {
-  const allVisible = data.every((d) => detailsRowVisibility.value[d[selectKey]]);
-  detailsRowVisibility.value = Object.fromEntries(data.map((d) => [d[selectKey], !allVisible]));
+  const allVisible = allRows.value.every((d) => detailsRowVisibility.value[d[selectKey]]);
+  detailsRowVisibility.value = Object.fromEntries(
+    allRows.value.map((d) => [d[selectKey], !allVisible]),
+  );
 };
 
 defineExpose({
@@ -253,7 +263,7 @@ defineExpose({
         <tr>
           <th v-if="detailRowColumn && (data.length || groupedData.length)">
             <button
-              v-if="data.every((d) => detailsRowVisibility[d[selectKey]])"
+              v-if="allRows.every((d) => detailsRowVisibility[d[selectKey]])"
               class="btn btn-link border-0"
               @click="hideAllDetailRow"
             >

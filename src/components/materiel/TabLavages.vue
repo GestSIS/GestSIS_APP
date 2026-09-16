@@ -69,6 +69,7 @@ const computedData = computed(() =>
       ...a,
       ...a.article,
       id: a.id,
+      article_id: a.article.id,
       nbLavages: a.article.lavages.length,
       designation: indexedTypes.value[a.article.materiel_type_id]?.designation,
       emplacements: linearEmplacements(emplacementIdPourArticle(a.article)),

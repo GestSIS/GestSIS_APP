@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 export const useMaterielTypeStore = defineStore("materielType", {
   state: () => ({
     liste: [],
+    statuts: [],
   }),
   actions: {
     async fetchMaterielTypes() {
@@ -12,6 +13,9 @@ export const useMaterielTypeStore = defineStore("materielType", {
       }
       const data = await MaterielTypeService.getTypes();
       this.liste = data.slice(0).sort((t1, t2) => t1.designation.localeCompare(t2.designation));
+    },
+    async fetchStatuts() {
+      this.statuts = await MaterielTypeService.getStatuts();
     },
     async addMaterielType(type) {
       const data = await MaterielTypeService.addType(type);
