@@ -34,9 +34,14 @@ const hasConfigPermission = useHasPermission(permissions.MATERIEL.CONFIG);
 
 await Promise.all([
   typeStore.fetchMaterielTypes(),
+  typeStore.fetchStatuts(),
   couleurStore.fetchCouleurs(),
   categorieStore.fetchMaterielCategories(),
 ]);
+
+const statutParTypeId = computed(() =>
+  Object.fromEntries(typeStore.statuts.map((s) => [s.materiel_type_id, s.nb_perimes > 0])),
+);
 
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedCategories = computed(() => indexedData(categorieStore.liste));
@@ -74,6 +79,7 @@ const categoriesAvecTypes = computed(() => {
         ...t,
         value: t.id,
         label: t.designation,
+        perime: statutParTypeId.value[t.id] ?? false,
       })),
     }))
     .filter((groupe) => groupe.types.length > 0);
@@ -139,7 +145,7 @@ const selectedTypeId = computed({
                 :value="type.value"
                 :label="type.label"
               >
-                {{ type.label }}
+                {{ type.perime ? "🔴 " : "" }}{{ type.label }}
               </select-option>
             </select-group>
           </select-listbox>
@@ -193,6 +199,12 @@ const selectedTypeId = computed({
             :class="{ active: isExactActive }"
             @click="navigate"
           >
+            <font-awesome-icon
+              v-if="item.data.perime"
+              v-tooltip.bottom="'Du matériel de ce type est périmé'"
+              :icon="['fas', 'triangle-exclamation']"
+              class="me-1 text-danger"
+            />
             {{ item.data.designation }}
           </a>
           <div v-else class="list-group-item p-1 bg-body-secondary">

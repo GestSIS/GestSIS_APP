@@ -54,6 +54,14 @@
           >
             Tuyau diamètres
           </router-link>
+          <router-link
+            class="nav-link"
+            active-class="active"
+            role="tab"
+            :to="{ name: 'param-materiel-controles' }"
+          >
+            Contrôles
+          </router-link>
         </nav>
       </div>
     </div>

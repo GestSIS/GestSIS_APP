@@ -31,4 +31,7 @@ export default {
   getLavable() {
     return Api.api().get(`articles?lavable=true`);
   },
+  getARecuperer() {
+    return Api.api().get(`articles/a-recuperer`);
+  },
 };

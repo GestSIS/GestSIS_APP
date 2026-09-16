@@ -1,6 +1,16 @@
 {
   "releases": [
     {
+      "date": "XX.09.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout des contrôles pour le matériel",
+        "Ajout système de péremption pour le matériel",
+        "Ajout d'un tableau de bord du matériel"
+      ]
+    },
+    {
       "date": "09.09.2026",
       "version": "3.0",
       "app": "GestSIS APP",

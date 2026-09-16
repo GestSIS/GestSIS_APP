@@ -584,6 +584,12 @@ const router = createRouter({
       component: () => import("/src/pages/PageMateriel.vue"),
       children: [
         {
+          path: "tableau-bord",
+          name: "materiel-tableau-bord",
+          beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          component: () => import("/src/components/materiel/TabTableauBord.vue"),
+        },
+        {
           path: "par-type",
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
           children: [
@@ -639,6 +645,23 @@ const router = createRouter({
           name: "materiel-lavages",
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
           component: () => import("/src/components/materiel/TabLavages.vue"),
+        },
+        {
+          path: "controles",
+          beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          children: [
+            {
+              path: "",
+              name: "materiel-controles",
+              component: () => import("/src/components/materiel/TabControles.vue"),
+            },
+            {
+              path: ":id",
+              name: "materiel-controles-details",
+              props: true,
+              component: () => import("/src/components/materiel/TabControles.vue"),
+            },
+          ],
         },
         //   {
         //     path: 'inventaire',
@@ -957,6 +980,12 @@ const router = createRouter({
               name: "param-materiel-tuyau-diametre",
               beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
               component: () => import("/src/components/parametres/ParametreTuyauDiametre.vue"),
+            },
+            {
+              path: "controles",
+              name: "param-materiel-controles",
+              beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
+              component: () => import("/src/components/parametres/ParametreControles.vue"),
             },
           ],
         },

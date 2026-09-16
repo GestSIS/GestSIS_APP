@@ -4,6 +4,12 @@ export default {
   getTypes() {
     return Api.api().get("/materiel-types");
   },
+  getStatuts() {
+    return Api.api().get("/materiel-types/statuts");
+  },
+  getArticlesPerimes() {
+    return Api.api().get("/materiel-types/articles-perimes");
+  },
   addType(type) {
     return Api.api().post("/materiel-types", type);
   },

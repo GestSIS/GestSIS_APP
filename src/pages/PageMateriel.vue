@@ -17,6 +17,11 @@
         <base-navigation-tab
           :routes="[
             {
+              to: { name: 'materiel-tableau-bord' },
+              texte: 'Tableau de bord',
+              exact: false,
+            },
+            {
               to: { name: 'materiel-par-type' },
               texte: 'Par type',
               exact: false,
@@ -36,7 +41,11 @@
               texte: 'Lavages',
               exact: false,
             },
-            // { to: { name: 'materiel-maintenance' }, texte: 'Maintenances' },
+            {
+              to: { name: 'materiel-controles' },
+              texte: 'Contrôles',
+              exact: false,
+            },
           ]"
         />
         <div id="nav-tabContent" class="tab-content">
