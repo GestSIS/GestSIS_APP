@@ -6,9 +6,9 @@ import useNotification from "../../composables/useNotification.js";
 import useHasPermission from "../../composables/usePermission.js";
 import permissions from "../../composables/permissions.js";
 
-const { articleId, controleId } = defineProps({
+const { articleId, controle } = defineProps({
   articleId: { type: Number, required: true },
-  controleId: { type: Number, required: true },
+  controle: { type: Object, required: true },
 });
 
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
@@ -16,13 +16,16 @@ const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 const execs = ref([]);
 const loadExecs = async () => {
   execs.value = (await ControleExecService.getExecsPourArticle(articleId))
-    .filter((e) => e.controle_id === controleId)
+    .filter((e) => e.controle_id === controle.id)
     .sort((a, b) => new Date(b.executed_at) - new Date(a.executed_at));
 };
 await loadExecs();
 
 const colonnes = [
   { title: "Date", key: "executed_at", type: "date" },
+  ...(controle.recurrence_type === "PERIODIQUE"
+    ? [{ title: "Échéance", key: "date_echeance", type: "date" }]
+    : []),
   { title: "Résultat", slot: "resultat" },
   { title: "Exécuté par", slot: "executeur" },
   { title: "Remarque", key: "remarque_globale" },
@@ -40,6 +43,7 @@ const modifier = (exec) =>
       controleId: exec.controle_id,
       articleId: exec.article_id,
       executed_at: exec.executed_at,
+      date_echeance: exec.date_echeance,
       remarque_globale: exec.remarque_globale,
       execTaches: exec.exec_taches,
     },

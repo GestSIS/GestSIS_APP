@@ -97,9 +97,13 @@ const derniereExecPourControle = (controleId) =>
 const lignesControles = computed(() =>
   controlesAffiches.value.map((controle) => {
     const derniere = derniereExecPourControle(controle.id);
+    // Échéance enregistrée sur la dernière exécution (voir
+    // ControleExecBusiness::resolveDateEcheance), pas recalculée depuis la
+    // récurrence du contrôle : elle peut s'en écarter (ex : premier service
+    // véhicule à 5 ans, puis tous les 2 ans).
     const prochaine =
       derniere && controle.recurrence_type === "PERIODIQUE"
-        ? addMonths(derniere.executed_at, controle.recurrence_value)
+        ? new Date(derniere.date_echeance)
         : null;
 
     let niveau = null;

@@ -22,3 +22,13 @@ export const toLocalIsoDate = (date = new Date()) =>
 // de passer par un objet Date : ces colonnes sont des dates pures, les
 // convertir en heure locale pourrait les décaler d'un jour.
 export const toDateInputValue = (value) => (value ? String(value).slice(0, 10) : null);
+
+// Ajoute un nombre de mois à une date (chaîne "YYYY-MM-DD" ou ISO complet),
+// sans déborder sur le mois suivant si le jour d'origine n'existe pas dans le
+// mois cible (31 janvier + 1 mois -> 28 février, + 2 mois -> 31 mars). Sert de
+// valeur par défaut pré-remplie, modifiable ensuite par l'utilisateur.
+export const addMonthsIso = (dateStr, months) => {
+  const [year, month, day] = String(dateStr).slice(0, 10).split("-").map(Number);
+  const dernierJourDuMoisCible = new Date(year, month + months, 0).getDate();
+  return toLocalIsoDate(new Date(year, month - 1 + months, Math.min(day, dernierJourDuMoisCible)));
+};

@@ -6,7 +6,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import useNotification from "../../composables/useNotification.js";
 import ControleExecService from "../../services/materiel/ControleExecService.js";
 import ArticleService from "../../services/materiel/ArticleService.js";
-import { indexedData, toLocalIsoDate } from "../../tools/index.js";
+import { addMonthsIso, indexedData, toDateInputValue, toLocalIsoDate } from "../../tools/index.js";
 
 const { data, callback } = defineProps({
   data: { type: Object, default: () => {} },
@@ -77,9 +77,26 @@ const form = reactive({
   article_id: modeEdition.value ? data.articleId : articleFixe.value ? data.id : null,
   executed_at: modeEdition.value ? toLocalIsoDate(new Date(data.executed_at)) : toLocalIsoDate(),
   remarque_globale: modeEdition.value ? (data.remarque_globale ?? "") : "",
+  // Échéance du prochain contrôle (contrôle PERIODIQUE uniquement) : pré-remplie
+  // par défaut à partir de la date d'exécution et de la récurrence du contrôle,
+  // mais modifiable — utile pour une récurrence qui varie d'un passage à l'autre
+  // (ex : premier service véhicule à 5 ans, puis tous les 2 ans).
+  date_echeance: modeEdition.value ? toDateInputValue(data.date_echeance) : null,
 });
 
 const controle = computed(() => controlesApplicables.value.find((c) => c.id === form.controle_id));
+
+// En édition, la valeur enregistrée fait foi : on ne la recalcule jamais
+// automatiquement. À la création, elle reste synchronisée avec la date
+// d'exécution et le contrôle choisi tant que l'utilisateur ne l'a pas modifiée
+// lui-même (détecté via l'évènement "input", qui ne se déclenche pas sur une
+// mise à jour programmatique du champ).
+const dateEcheanceTouchee = ref(modeEdition.value);
+const dateEcheanceParDefaut = (executedAt, c) =>
+  c?.recurrence_type === "PERIODIQUE" ? addMonthsIso(executedAt, c.recurrence_value) : null;
+if (!modeEdition.value) {
+  form.date_echeance = dateEcheanceParDefaut(form.executed_at, controle.value);
+}
 
 const buildResultat = (tache) => {
   const existant = modeEdition.value
@@ -118,6 +135,14 @@ onMounted(focusPremierResultat);
 watch(controle, (c) => {
   resultats.value = c ? c.taches.map(buildResultat) : [];
   focusPremierResultat();
+
+  // Changer de contrôle (uniquement possible en mode article fixe, via le
+  // select) change aussi la récurrence de référence : on oublie une éventuelle
+  // échéance déjà saisie pour resynchroniser sur le nouveau contrôle.
+  if (!modeEdition.value) {
+    dateEcheanceTouchee.value = false;
+    form.date_echeance = dateEcheanceParDefaut(form.executed_at, c);
+  }
 });
 
 const tacheParId = computed(() =>
@@ -143,12 +168,34 @@ const mkLigneKey = () => nextLigneKey++;
 const buildLigneMultiple = () => ({
   _key: mkLigneKey(),
   article_id: null,
+  date_echeance: dateEcheanceParDefaut(form.executed_at, controle.value),
+  // Comme form.date_echeance en mode simple : figé dès que l'utilisateur
+  // modifie l'échéance de cette ligne, sinon resynchronisé avec la date
+  // d'exécution partagée (voir le watcher plus bas).
+  dateEcheanceTouchee: false,
   resultats: Object.fromEntries(
     (controle.value?.taches ?? []).map((t) => [t.id, { statut: "", value_measured: "" }]),
   ),
 });
 
 const lignesMultiples = ref([buildLigneMultiple()]);
+
+// La date d'exécution est partagée par toutes les lignes en mode multiple :
+// un changement doit resynchroniser l'échéance par défaut de chaque ligne non
+// modifiée manuellement, en plus du champ du mode simple.
+watch(
+  () => form.executed_at,
+  (executedAt) => {
+    if (!dateEcheanceTouchee.value) {
+      form.date_echeance = dateEcheanceParDefaut(executedAt, controle.value);
+    }
+    lignesMultiples.value.forEach((ligne) => {
+      if (!ligne.dateEcheanceTouchee) {
+        ligne.date_echeance = dateEcheanceParDefaut(executedAt, controle.value);
+      }
+    });
+  },
+);
 
 // Un même article ne doit pas pouvoir être sélectionné sur deux lignes.
 const articlesDejaChoisis = computed(
@@ -181,6 +228,9 @@ const removeLigneMultiple = (key) => {
 
 const colonnesMultiples = computed(() => [
   { key: "article_id", title: "Article", slot: "article-select" },
+  ...(controle.value?.recurrence_type === "PERIODIQUE"
+    ? [{ key: "date_echeance", title: "Échéance", slot: "echeance-select" }]
+    : []),
   ...(controle.value?.taches ?? []).map((t) => ({
     key: `tache_${t.id}`,
     title: t.nom,
@@ -222,6 +272,7 @@ const save = async () => {
         remarque_globale: form.remarque_globale || null,
         executions: lignesValides.map((ligne) => ({
           article_id: ligne.article_id,
+          date_echeance: ligne.date_echeance || null,
           taches: (controle.value.taches ?? []).map((t) => {
             const r = ligne.resultats[t.id];
             return {
@@ -238,6 +289,7 @@ const save = async () => {
       const payload = {
         executed_at: form.executed_at,
         remarque_globale: form.remarque_globale || null,
+        date_echeance: form.date_echeance || null,
         taches: resultats.value.map((r) => ({
           tache_id: r.tache_id,
           statut: r.statut || null,
@@ -323,6 +375,21 @@ const save = async () => {
               :class="{ 'is-invalid': errors['executed_at'] }"
             />
           </div>
+          <div v-if="controle?.recurrence_type === 'PERIODIQUE'" class="col-md-6 mt-3">
+            <label>Échéance du prochain contrôle</label>
+            <input
+              v-model="form.date_echeance"
+              type="date"
+              required
+              class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['date_echeance'] }"
+              @input="dateEcheanceTouchee = true"
+            />
+            <div class="form-text">
+              Pré-remplie à partir de la récurrence du contrôle, modifiable si besoin (ex : une
+              première échéance différente des suivantes).
+            </div>
+          </div>
         </div>
         <template v-if="controle">
           <template v-if="modeMultiple">
@@ -340,11 +407,13 @@ const save = async () => {
                 <thead>
                   <tr>
                     <th>Article</th>
+                    <th v-if="controle.recurrence_type === 'PERIODIQUE'">Échéance</th>
                     <th v-for="tache in controle.taches" :key="tache.id">{{ tache.nom }}</th>
                     <th></th>
                   </tr>
                   <tr v-if="controle.taches.length > 0" class="table-light">
                     <th></th>
+                    <th v-if="controle.recurrence_type === 'PERIODIQUE'"></th>
                     <th
                       v-for="tache in controle.taches"
                       :key="'detail-' + tache.id"
@@ -366,6 +435,16 @@ const save = async () => {
                   v-model="rowData.article_id"
                   :options="optionsPourLigneMultiple(rowData)"
                   display-key="label"
+                />
+              </template>
+              <template #echeance-select="{ rowData }">
+                <input
+                  v-model="rowData.date_echeance"
+                  type="date"
+                  class="form-control form-control-sm"
+                  :disabled="!rowData.article_id"
+                  :required="!!rowData.article_id"
+                  @input="rowData.dateEcheanceTouchee = true"
                 />
               </template>
               <template #tacheCell="{ key, rowData }">

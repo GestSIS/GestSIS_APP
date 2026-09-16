@@ -55,69 +55,25 @@ const colonnes = computed(() => [
 const derniereExecution = (article) =>
   article.derniere_execution ? new Date(article.derniere_execution) : null;
 
-const prochaineExecution = (article) => {
-  if (controle.recurrence_type !== "PERIODIQUE") {
-    return null;
-  }
-  const derniere = derniereExecution(article);
-  if (derniere === null) {
-    return null;
-  }
-  const date = new Date(derniere);
-  date.setMonth(date.getMonth() + controle.recurrence_value);
-  return date;
-};
-
-// "danger" si la date du prochain contrôle est dépassée, "warning" si on est
-// entré dans la période de préavis (prochain contrôle moins la durée de
-// préavis), sinon null (rien à signaler). Un dernier contrôle en échec est
-// signalé en "danger" même si la date du prochain contrôle n'est pas encore
-// atteinte.
-const statutProchainControle = (article) => {
-  if (article.dernier_controle_echec) {
-    return "danger";
-  }
-
-  const prochaine = prochaineExecution(article);
-  if (prochaine === null) {
-    return null;
-  }
-  const maintenant = new Date();
-  if (maintenant >= prochaine) {
-    return "danger";
-  }
-  if (controle.duree_preavis) {
-    const debutPreavis = new Date(prochaine);
-    debutPreavis.setMonth(debutPreavis.getMonth() - controle.duree_preavis);
-    if (maintenant >= debutPreavis) {
-      return "warning";
-    }
-  }
-  return null;
-};
-
-// "danger" dès que le nombre d'exécutions atteint le maximum configuré sur le
-// contrôle (ex: nombre de lavages), "warning" dès le seuil de préavis, sinon
-// null — uniquement pour les contrôles NON_PERIODIQUE avec un nombre
-// d'exécutions maximum.
-const statutNbExecutions = (article) => {
-  if (!controle.nb_execution_max) {
-    return null;
-  }
-  if (article.nb_executions >= controle.nb_execution_max) {
-    return "danger";
-  }
-  if (controle.nb_execution_preavis && article.nb_executions >= controle.nb_execution_preavis) {
-    return "warning";
-  }
-  return null;
-};
+// "danger" / "warning" / null : calculé côté API (voir
+// ControleBusiness::statutArticlePourControle, exposé via
+// ListeArticlePourControle.enrichir), pas recalculé ici depuis la récurrence
+// du contrôle — que ce dernier soit PERIODIQUE (échéance par date) ou
+// NON_PERIODIQUE à compteur d'usage (nombre d'exécutions), c'est le même champ.
+// Un dernier contrôle en échec (tâche KO ou valeur hors plage) est toujours
+// affiché en "danger", même si l'échéance ou le compteur ne le justifient pas
+// encore.
+const statutAffiche = (article) =>
+  article.dernier_controle_echec ? "danger" : article.statut_controle;
 
 const tooltipProchainControle = (article) => {
   if (article.dernier_controle_echec) {
     return "Dernier contrôle en échec";
   }
-  return statutProchainControle(article) === "danger"
+  if (!article.prochaine_execution) {
+    return "Aucun contrôle réalisé";
+  }
+  return statutAffiche(article) === "danger"
     ? "Contrôle en retard"
     : "Contrôle à prévoir prochainement";
 };
@@ -189,9 +145,9 @@ const supprimer = (article) =>
       <span
         class="badge"
         :class="{
-          'bg-danger': statutNbExecutions(rowData) === 'danger',
-          'bg-warning text-dark': statutNbExecutions(rowData) === 'warning',
-          'bg-secondary': !statutNbExecutions(rowData),
+          'bg-danger': statutAffiche(rowData) === 'danger',
+          'bg-warning text-dark': statutAffiche(rowData) === 'warning',
+          'bg-secondary': !statutAffiche(rowData),
         }"
       >
         {{ rowData.nb_executions }}
@@ -207,36 +163,30 @@ const supprimer = (article) =>
 
     <template #prochainControle="{ rowData }">
       <template v-if="controle.recurrence_type === 'PERIODIQUE'">
-        <template v-if="prochaineExecution(rowData)">
-          <span
-            :class="{
-              'text-danger': statutProchainControle(rowData) === 'danger',
-              'text-warning': statutProchainControle(rowData) === 'warning',
-            }"
-          >
-            <font-awesome-icon
-              v-if="statutProchainControle(rowData)"
-              v-tooltip.bottom="tooltipProchainControle(rowData)"
-              :icon="['fas', 'triangle-exclamation']"
-              class="me-1"
-            />
-            {{ prochaineExecution(rowData).toLocaleDateString("fr-CH") }}
-          </span>
-        </template>
-        <span v-else class="text-warning">
+        <span
+          :class="{
+            'text-danger': statutAffiche(rowData) === 'danger',
+            'text-warning': statutAffiche(rowData) === 'warning',
+          }"
+        >
           <font-awesome-icon
-            v-tooltip.bottom="'Aucun contrôle réalisé'"
+            v-if="statutAffiche(rowData)"
+            v-tooltip.bottom="tooltipProchainControle(rowData)"
             :icon="['fas', 'triangle-exclamation']"
             class="me-1"
           />
-          À planifier
+          {{
+            rowData.prochaine_execution
+              ? new Date(rowData.prochaine_execution).toLocaleDateString("fr-CH")
+              : "À planifier"
+          }}
         </span>
       </template>
     </template>
 
     <template #detail-row="{ rowData }">
       <suspense>
-        <historique-controle-exec :article-id="rowData.id" :controle-id="controle.id" />
+        <historique-controle-exec :article-id="rowData.id" :controle="controle" />
         <template #fallback>Chargement...</template>
       </suspense>
     </template>

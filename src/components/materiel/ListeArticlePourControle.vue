@@ -56,6 +56,8 @@ const linearEmplacements = (emplacementId) => {
 
 const enrichir = (article, type, dernieresExecutions) => {
   const emplacementId = emplacementIdPourArticle(article);
+  const derniere = dernieresExecutions[article.id] ?? null;
+
   return {
     ...article,
     type,
@@ -67,9 +69,21 @@ const enrichir = (article, type, dernieresExecutions) => {
       (indexedSapeurs.value[article.sapeur_id]?.nom_prenom ?? "") +
       "ZZZZ" +
       (indexedEmplacements.value[emplacementId]?.designation ?? ""),
-    derniere_execution: dernieresExecutions[article.id]?.derniere_execution ?? null,
-    nb_executions: dernieresExecutions[article.id]?.nb_executions ?? 0,
-    dernier_controle_echec: dernieresExecutions[article.id]?.dernier_controle_echec ?? false,
+    derniere_execution: derniere?.derniere_execution ?? null,
+    // Échéance de la dernière exécution, stockée par l'API — voir
+    // ControleExecBusiness::resolveDateEcheance — plutôt que recalculée ici
+    // depuis la récurrence du contrôle.
+    prochaine_execution: derniere?.date_echeance ?? null,
+    nb_executions: derniere?.nb_executions ?? 0,
+    dernier_controle_echec: derniere?.dernier_controle_echec ?? false,
+    // Un article jamais contrôlé n'a pas de ligne dans dernieresExecutions :
+    // l'API ne calcule le statut que pour les articles déjà contrôlés (voir
+    // ControleBusiness::statutArticlePourControle) — on reproduit ici la même
+    // règle par défaut pour ce seul cas restant : "warning" pour un contrôle
+    // périodique jamais passé, rien pour un contrôle à compteur d'usage sans
+    // exécution.
+    statut_controle:
+      derniere?.statut ?? (controle.value?.recurrence_type === "PERIODIQUE" ? "warning" : null),
   };
 };
 
