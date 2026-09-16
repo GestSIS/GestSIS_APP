@@ -43,7 +43,7 @@
             },
             {
               to: { name: 'materiel-controles' },
-              texte: 'Contrôles',
+              texte: 'Contrôles & Maintenances',
               exact: false,
             },
           ]"

@@ -60,7 +60,7 @@
             role="tab"
             :to="{ name: 'param-materiel-controles' }"
           >
-            Contrôles
+            Contrôles & Maintenances
           </router-link>
         </nav>
       </div>
