@@ -45,7 +45,7 @@ const save = async () => {
     .addSisContact({ ...form, liste: data.id })
     .then(closeModal)
     .catch((err) => {
-      errors.value = err;
+      errors.value = err.errors ?? {};
       awn.alert(err?.message ?? "Erreur lors de l'ajout du contact");
     });
 };

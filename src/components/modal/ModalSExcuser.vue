@@ -111,7 +111,7 @@ const validate = () => {
       closeModal();
     })
     .catch((err) => {
-      errors.value = err;
+      errors.value = err.errors ?? {};
       awn.alert(err?.message ?? "Erreur lors de la création de l'excuse");
     });
 };

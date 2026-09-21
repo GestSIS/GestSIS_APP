@@ -36,7 +36,7 @@ const save = () => {
       : heureExerciceStore.updateExerciceHeure;
   return action(form)
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

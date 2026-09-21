@@ -26,7 +26,7 @@ const { closeModal } = useModalStore();
 const save = () => {
   ((form.id || 0) === 0 ? sapeurStore.addSapeurGrade : sapeurStore.editSapeurGrade)(form)
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

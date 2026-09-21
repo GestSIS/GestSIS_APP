@@ -73,7 +73,7 @@ const save = () => {
     ? imputationStore.addIndemniteIntervention
     : imputationStore.updateIndemniteIntervention)(form)
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

@@ -21,7 +21,7 @@ const submit = async () => {
       closeModal();
     }
   } catch (err) {
-    errors.value = err ?? {};
+    errors.value = err.errors ?? {};
   }
 };
 </script>

@@ -312,7 +312,7 @@ const save = async () => {
     closeModal();
     callback();
   } catch (err) {
-    errors.value = err ?? {};
+    errors.value = err.errors ?? {};
     awn.alert(err?.message ?? "Erreur lors de l'enregistrement du contrôle");
   } finally {
     saving.value = false;

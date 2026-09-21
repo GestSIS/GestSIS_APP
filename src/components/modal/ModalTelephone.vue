@@ -21,7 +21,7 @@ const telephoneStore = useTelephoneStore();
 const save = async () => {
   ((form.id || 0) === 0 ? telephoneStore.addTelephone : telephoneStore.updateTelephone)(form)
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

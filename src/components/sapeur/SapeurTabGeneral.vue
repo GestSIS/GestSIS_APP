@@ -92,7 +92,7 @@ const saveSapeur = async () => {
     })
     .catch((err) => {
       awn.alert(err.message || "Erreur lors de l'enregistrement des données");
-      errors.value = err;
+      errors.value = err.errors ?? {};
     });
 };
 const saveNonSapeurStatut = async () => {
@@ -108,7 +108,7 @@ const saveNonSapeurStatut = async () => {
     })
     .catch((err) => {
       awn.alert(err.message || "Erreur lors de l'enregistrement des données");
-      errors.value = err;
+      errors.value = err.errors ?? {};
     });
 };
 const saveSapeurRefPro = () =>

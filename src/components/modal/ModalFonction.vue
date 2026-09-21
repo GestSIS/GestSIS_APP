@@ -23,7 +23,7 @@ const { closeModal } = useModalStore();
 const save = async () => {
   (form?.id ? fonctionStore.updateFonction : fonctionStore.addFonction)(form)
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

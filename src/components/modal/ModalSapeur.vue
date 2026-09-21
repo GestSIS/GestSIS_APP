@@ -49,7 +49,7 @@ const save = async () => {
     }
   } catch (err) {
     console.log(err);
-    errors.value = err;
+    errors.value = err.errors ?? {};
   }
 };
 </script>

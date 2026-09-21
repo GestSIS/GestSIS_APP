@@ -48,7 +48,7 @@ const save = async () => {
     activeItem.value,
   )
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

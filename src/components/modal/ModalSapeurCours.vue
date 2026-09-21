@@ -85,7 +85,7 @@ const save = () => {
 
   (addMode.value ? sapeurStore.addSapeurCours : sapeurStore.editSapeurCours)(saveData)
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 const dateChange = () => {
   if (!form.date_grade) {

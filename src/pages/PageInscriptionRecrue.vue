@@ -125,7 +125,7 @@ const soumettre = async () => {
     errors.value = {};
     envoye.value = true;
   } catch (err) {
-    errors.value = err ?? {};
+    errors.value = err.errors ?? {};
   } finally {
     submitting.value = false;
   }

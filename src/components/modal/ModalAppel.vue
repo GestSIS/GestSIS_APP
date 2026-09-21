@@ -54,12 +54,13 @@ const save = async () => {
     }
     closeModal();
   } catch (err) {
+    const fieldErrors = err.errors ?? {};
     errors.value = {
-      ...err,
-      date: err["appels.0.date"],
-      nom: err["appels.0.nom"],
-      numero: err["appels.0.numero"],
-      commentaire: err["appels.0.commentaire"],
+      ...fieldErrors,
+      date: fieldErrors["appels.0.date"],
+      nom: fieldErrors["appels.0.nom"],
+      numero: fieldErrors["appels.0.numero"],
+      commentaire: fieldErrors["appels.0.commentaire"],
     };
   }
 };

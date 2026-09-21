@@ -71,13 +71,14 @@ const save = async () => {
     }
     closeModal();
   } catch (err) {
+    const fieldErrors = err.errors ?? {};
     errors.value = {
-      ...err,
-      debut: err["missions.0.debut"],
-      fin: err["missions.0.fin"],
-      sapeur_id: err["missions.0.sapeur_id"],
-      sapeur: err["missions.0.sapeur"],
-      titre: err["missions.0.titre"],
+      ...fieldErrors,
+      debut: fieldErrors["missions.0.debut"],
+      fin: fieldErrors["missions.0.fin"],
+      sapeur_id: fieldErrors["missions.0.sapeur_id"],
+      sapeur: fieldErrors["missions.0.sapeur"],
+      titre: fieldErrors["missions.0.titre"],
     };
   }
 };

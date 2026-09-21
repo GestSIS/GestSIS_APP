@@ -73,7 +73,7 @@ const save = () => {
         callback();
         closeModal();
       })
-      .catch((err) => (errors.value = err));
+      .catch((err) => (errors.value = err.errors ?? {}));
   }
 
   const articleIdsParEmplacement = Object.entries(
@@ -100,7 +100,7 @@ const save = () => {
       callback();
       closeModal();
     })
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

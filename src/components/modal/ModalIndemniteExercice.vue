@@ -188,7 +188,7 @@ const save = () => {
     ? imputationStore.addIndemniteExercice
     : imputationStore.updateIndemniteExercice)(indemnite)
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

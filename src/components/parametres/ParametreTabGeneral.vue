@@ -99,7 +99,7 @@ const save = async () => {
     awn.success(res?.message || "Modifications enregistrées");
   } catch (err) {
     errors.value = {
-      ...err,
+      ...err.errors,
     };
     awn.alert(err?.message || "Erreur lors de l'enregistrement");
   }
@@ -130,7 +130,7 @@ const saveLogo = async () => {
     })
     .catch((e) => {
       errors.value = {
-        ...e,
+        ...e.errors,
       };
       awn.alert(e?.message || "Erreur lors de l'enregistrement");
     });

@@ -29,7 +29,7 @@ const save = async () => {
     }
     closeModal();
   } catch (err) {
-    errors.value = err;
+    errors.value = err.errors ?? {};
   }
 };
 </script>

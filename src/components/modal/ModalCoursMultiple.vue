@@ -115,7 +115,7 @@ const save = () => {
     .addCoursMultiple(saveData)
     .then(closeModal)
     .catch((err) => {
-      errors.value = err;
+      errors.value = err.errors ?? {};
       awn.alert(err?.message ?? "Erreur lors de l'enregistrement");
     });
 };

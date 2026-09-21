@@ -79,7 +79,7 @@ const save = () => {
       awn.success(data?.message || "Exercice créé");
     })
     .catch((err) => {
-      errors.value = err;
+      errors.value = err.errors ?? {};
       awn.alert(err?.message || "Erreur lors de l'enregistrement");
     });
 };

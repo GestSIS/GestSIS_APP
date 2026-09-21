@@ -32,7 +32,7 @@ const save = () =>
     ? imputationStore.updateFraisIndemniteAnnuelType
     : imputationStore.addFraisIndemniteAnnuelType)(form)
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 </script>
 
 <template>

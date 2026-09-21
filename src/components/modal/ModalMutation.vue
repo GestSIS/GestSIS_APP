@@ -64,12 +64,12 @@ const save = () => {
     sapeurStore
       .addMutation(form)
       .then(onSaved)
-      .catch((err) => (errors.value = err));
+      .catch((err) => (errors.value = err.errors ?? {}));
   } else {
     sapeurStore
       .editMutation(form)
       .then(onSaved)
-      .catch((err) => (errors.value = err));
+      .catch((err) => (errors.value = err.errors ?? {}));
   }
 };
 </script>

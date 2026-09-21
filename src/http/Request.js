@@ -50,22 +50,13 @@ const request = {
 
     api.interceptors.response.use(
       function (response) {
-        let error = null;
-        try {
-          error = JSON.parse(new TextDecoder().decode(response.data)) ?? null;
-        } catch (e) {
-          error = null;
-        }
-        if (error?.error) {
-          throw error.error;
-        }
         return response;
       },
       function (error) {
         if (!error.response) throw error;
         const decoder = new TextDecoder();
         const res = decoder.decode(error.response.data);
-        throw JSON.parse(res)?.data;
+        throw JSON.parse(res);
       },
     );
 
@@ -97,9 +88,6 @@ const request = {
 
     api.interceptors.response.use(
       (response) => {
-        if (response.data.error !== undefined) {
-          throw response.data.error;
-        }
         // `|| response.data` would return the whole envelope for falsy payloads
         // like {"data": 0} or {"data": false}
         return response.data?.data !== undefined ? response.data.data : response.data;
@@ -120,11 +108,11 @@ const request = {
             });
           } catch (e) {
             // Refresh has failed - reject the original request
-            throw error;
+            throw error.response?.data ?? error;
           }
         }
 
-        return Promise.reject(error);
+        return Promise.reject(error.response?.data ?? error);
       },
     );
 

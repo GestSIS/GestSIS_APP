@@ -88,7 +88,7 @@ const save = async () => {
     ? travailTypeStore.addTravailType
     : travailTypeStore.updateTravailType)(indemnite)
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

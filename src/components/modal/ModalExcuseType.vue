@@ -25,7 +25,7 @@ const save = async () => {
     (form.id || 0) === 0 ? excuseTypeStore.addExcuseType : excuseTypeStore.updateExcuseType;
   action(form)
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

@@ -3,7 +3,7 @@ import { onUnmounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth/Auth";
 
-const error = ref(null);
+const errors = ref(null);
 const success = ref(null);
 const sec = ref(10);
 const interval = ref(null);
@@ -18,7 +18,7 @@ if (!token) {
   useAuthStore()
     .confirmation(token)
     .then(() => {
-      error.value = null;
+      errors.value = null;
       success.value = true;
       interval.value = setInterval(() => {
         sec.value -= 1;
@@ -29,7 +29,7 @@ if (!token) {
       }, 1000);
     })
     .catch((err) => {
-      error.value = err.message ?? "Ce lien de confirmation n'est pas valide.";
+      errors.value = err.message ?? "Ce lien de confirmation n'est pas valide.";
     });
 }
 
@@ -52,7 +52,7 @@ const redirect = () => {
         Email validé avec succès, vous allez être redirigé dans
         {{ sec }} secondes
       </h2>
-      <div v-if="error" class="h3 mb-3">{{ error }}</div>
+      <div v-if="errors" class="h3 mb-3">{{ errors }}</div>
       <button class="btn btn-lg btn-primary btn-block" type="submit" @click="redirect">
         Accueil
       </button>

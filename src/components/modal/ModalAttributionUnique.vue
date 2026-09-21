@@ -40,7 +40,7 @@ const save = async () => {
       callback();
     })
     .catch((err) => {
-      errors.value = err;
+      errors.value = err.errors ?? {};
       awn.warning(err.message ?? "Erreur lors de l'attribution du matériel");
     });
 };

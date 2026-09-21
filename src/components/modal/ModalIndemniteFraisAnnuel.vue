@@ -31,7 +31,7 @@ const save = () =>
     form,
   )
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 </script>
 
 <template>

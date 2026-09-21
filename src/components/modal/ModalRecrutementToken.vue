@@ -52,7 +52,7 @@ const generer = async () => {
     const data = await RecrutementService.genererToken(dureeHeures.value);
     await afficherToken(data.token, data.expire_at);
   } catch (err) {
-    errors.value = err ?? {};
+    errors.value = err.errors ?? {};
   }
 };
 

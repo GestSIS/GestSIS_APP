@@ -5,7 +5,7 @@ import { useAuthStore } from "../stores/auth/Auth";
 
 const email = ref(null);
 const password = ref(null);
-const error = ref(null);
+const errors = ref(null);
 
 const router = useRouter();
 const route = useRoute();
@@ -16,7 +16,7 @@ const login = async () => {
     email.value?.trim()?.toLowerCase() !== "admin@gestsis.ch" &&
     email.value?.trim()?.toLowerCase() !== "demo@gestsis.ch"
   ) {
-    error.value = {
+    errors.value = {
       email: "Email invalid",
     };
     return;
@@ -28,11 +28,11 @@ const login = async () => {
       password: password.value,
     })
     .then(() => {
-      error.value = null;
+      errors.value = null;
       router.push(route.query.redirect ? route.query.redirect : "accueil");
     })
     .catch((err) => {
-      error.value = err;
+      errors.value = err;
     });
 };
 </script>
@@ -53,7 +53,7 @@ const login = async () => {
         required
         autofocus
         autocomplete="off"
-        :class="{ 'is-invalid': error }"
+        :class="{ 'is-invalid': errors }"
       />
       <label for="inputPassword" class="visually-hidden">Mot de passe</label>
       <input
@@ -64,9 +64,9 @@ const login = async () => {
         placeholder="Mot de passe"
         required
         autocomplete="off"
-        :class="{ 'is-invalid': error }"
+        :class="{ 'is-invalid': errors }"
       />
-      <div v-if="error" class="invalid-feedback">Informations de connexion invalides</div>
+      <div v-if="errors" class="invalid-feedback">Informations de connexion invalides</div>
       <button class="btn btn-lg btn-primary w-100" type="submit">Se connecter</button>
       <p class="mt-5 mb-3 text-body-secondary">© GestSIS {{ new Date().getFullYear() }}</p>
 

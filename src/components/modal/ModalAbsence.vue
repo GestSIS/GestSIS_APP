@@ -30,7 +30,7 @@ const save = async () => {
   absenceStore[action](form)
     .then(closeModal)
     .catch((err) => {
-      errors.value = err;
+      errors.value = err.errors ?? {};
       awn.alert(err?.message ?? "Impossible d'ajouter cette absence");
     });
 };

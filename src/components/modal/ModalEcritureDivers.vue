@@ -63,11 +63,11 @@ const save = async () => {
     .then(closeModal)
     .catch((err) => {
       errors.value = {
-        ...err,
+        ...err.errors,
       };
 
       if (err.message) {
-        awn.alert(errors.value?.message);
+        awn.alert(err.message);
       }
     });
 };

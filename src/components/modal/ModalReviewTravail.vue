@@ -35,7 +35,7 @@ const review = (accepte) => {
   useTravailStore()
     .reviewTravail({ ...form, accepte })
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

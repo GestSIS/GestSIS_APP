@@ -74,7 +74,7 @@ const send = () => {
       closeModal();
     })
     .catch((err) => {
-      errors.value = err;
+      errors.value = err.errors ?? {};
       sending.value = false;
       awn.alert(err?.message ?? "Erreur lors de l'envoie des SMS");
     });

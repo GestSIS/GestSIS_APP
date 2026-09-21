@@ -22,7 +22,7 @@ const { closeModal } = useModalStore();
 const save = async () => {
   ((form.id || 0) === 0 ? gradeStore.addGrade : gradeStore.updateGrade)(form)
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

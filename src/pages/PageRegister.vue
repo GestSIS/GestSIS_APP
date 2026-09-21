@@ -13,7 +13,7 @@ const email = ref(null);
 const password = ref(null);
 const password_confirmation = ref(null);
 const token = ref(route.query?.token ?? "");
-const error = ref({});
+const errors = ref({});
 const submitting = ref(false);
 
 const register = async () => {
@@ -32,11 +32,11 @@ const register = async () => {
       token: token.value?.trim() || null,
     })
     .then(() => {
-      error.value = {};
+      errors.value = {};
       router.push(route.query.redirect ? route.query.redirect : "accueil");
     })
-    .catch((data) => {
-      error.value = data?.errors ?? {};
+    .catch((error) => {
+      errors.value = error?.errors ?? {};
     })
     .finally(() => {
       submitting.value = false;
@@ -60,9 +60,9 @@ const register = async () => {
         required
         autofocus
         autocomplete="off"
-        :class="{ 'is-invalid': error.name }"
+        :class="{ 'is-invalid': errors.name }"
       />
-      <div v-if="error.name" class="invalid-feedback">Nom invalide</div>
+      <div v-if="errors.name" class="invalid-feedback">Nom invalide</div>
       <label for="inputEmail" class="visually-hidden">Email</label>
       <input
         id="inputEmail"
@@ -72,9 +72,9 @@ const register = async () => {
         placeholder="Email"
         required
         autocomplete="off"
-        :class="{ 'is-invalid': error.email }"
+        :class="{ 'is-invalid': errors.email }"
       />
-      <div v-if="error.email" class="invalid-feedback">Email déjà existant</div>
+      <div v-if="errors.email" class="invalid-feedback">Email déjà existant</div>
       <label for="inputPassword" class="visually-hidden">Mot de passe</label>
       <input
         id="inputPassword"
@@ -84,9 +84,9 @@ const register = async () => {
         placeholder="Mot de passe"
         required
         autocomplete="off"
-        :class="{ 'is-invalid': error.password }"
+        :class="{ 'is-invalid': errors.password }"
       />
-      <div v-if="error.password" class="invalid-feedback">Taille minimum: 8</div>
+      <div v-if="errors.password" class="invalid-feedback">Taille minimum: 8</div>
       <label for="inputPasswordConfirmation" class="visually-hidden">Confirmation</label>
       <input
         id="inputPasswordConfirmation"
@@ -97,10 +97,10 @@ const register = async () => {
         required
         autocomplete="off"
         :class="{
-          'is-invalid': error.password_confirmation || password !== password_confirmation,
+          'is-invalid': errors.password_confirmation || password !== password_confirmation,
         }"
       />
-      <div v-if="error.password_confirmation" class="invalid-feedback">Mot de passe différent</div>
+      <div v-if="errors.password_confirmation" class="invalid-feedback">Mot de passe différent</div>
       <button class="btn btn-link btn-block" type="button" @click.prevent="avance = !avance">
         Avancé
       </button>

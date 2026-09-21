@@ -43,7 +43,7 @@ const save = async () => {
   const action = form.id
     ? groupeStore.updateGroupe({ groupeId: form.id, data: form })
     : groupeStore.createGroupe(form);
-  action.then(closeModal).catch((err) => (errors.value = err));
+  action.then(closeModal).catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

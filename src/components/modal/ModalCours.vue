@@ -33,7 +33,7 @@ const { closeModal } = useModalStore();
 const save = async () => {
   (form?.id ? coursStore.updateCours : coursStore.addCours)(form)
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

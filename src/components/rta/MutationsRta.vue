@@ -244,7 +244,7 @@ const mutate = () => {
       awn.success("Mutation transmise avec succès");
     })
     .catch((err) => {
-      errors.value = err;
+      errors.value = err.errors ?? {};
       awn.alert(err.message ?? "Une erreur s'est produite lors du transfert");
     });
 };

@@ -41,10 +41,11 @@ const save = async () => {
     }
     closeModal();
   } catch (err) {
+    const fieldErrors = err.errors ?? {};
     errors.value = {
-      ...err,
-      materiel_id: err["materiels.0.materiel_id"],
-      quantite: err["materiels.0.quantite"],
+      ...fieldErrors,
+      materiel_id: fieldErrors["materiels.0.materiel_id"],
+      quantite: fieldErrors["materiels.0.quantite"],
     };
   }
 };

@@ -94,7 +94,7 @@ const save = () => {
         errors.value = {};
       })
       .catch((err) => {
-        errors.value = err;
+        errors.value = err.errors ?? {};
         awn.alert(err?.message || "Erreur lors de l'enregistrement");
       });
   } else {
@@ -105,7 +105,7 @@ const save = () => {
         awn.success(res?.message || "Modifications enregistrées");
       })
       .catch((err) => {
-        errors.value = err;
+        errors.value = err.errors ?? {};
         awn.alert(err?.message || "Erreur lors de l'enregistrement");
       });
   }

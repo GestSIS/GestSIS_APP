@@ -24,7 +24,7 @@ const save = async () => {
   action(activeAbsence.value)
     .then(closeModal)
     .catch((err) => {
-      errors.value = err;
+      errors.value = err.errors ?? {};
       awn.alert(err?.message ?? "Impossible d'ajouter cette absence");
     });
 };

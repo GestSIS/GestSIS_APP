@@ -91,12 +91,13 @@ const save = () => {
         });
       })
       .catch((err) => {
+        const fieldErrors = err.errors ?? {};
         errors.value = {
-          ...err,
-          date_debut: err["sapeurs.0.debut"],
-          date_fin: err["sapeurs.0.fin"],
-          heure_debut: err["sapeurs.0.debut"],
-          heure_fin: err["sapeurs.0.fin"],
+          ...fieldErrors,
+          date_debut: fieldErrors["sapeurs.0.debut"],
+          date_fin: fieldErrors["sapeurs.0.fin"],
+          heure_debut: fieldErrors["sapeurs.0.debut"],
+          heure_fin: fieldErrors["sapeurs.0.fin"],
         };
       });
   } else {
@@ -116,12 +117,13 @@ const save = () => {
         });
       })
       .catch((error) => {
+        const fieldErrors = error.errors ?? {};
         errors.value = {
-          ...error,
-          date_debut: error["sapeurs.0.debut"],
-          date_fin: error["sapeurs.0.fin"],
-          heure_debut: error["sapeurs.0.debut"],
-          heure_fin: error["sapeurs.0.fin"],
+          ...fieldErrors,
+          date_debut: fieldErrors["sapeurs.0.debut"],
+          date_fin: fieldErrors["sapeurs.0.fin"],
+          heure_debut: fieldErrors["sapeurs.0.debut"],
+          heure_fin: fieldErrors["sapeurs.0.fin"],
         };
       });
   }

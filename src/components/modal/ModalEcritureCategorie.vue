@@ -22,7 +22,7 @@ const save = async () => {
   const action = form?.id ? "updateEcritureCategorie" : "addEcritureCategorie";
   ecritureCategorieStore[action](form)
     .then(closeModal)
-    .catch((err) => (errors.value = err));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

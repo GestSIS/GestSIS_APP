@@ -69,13 +69,14 @@ const save = async () => {
     }
     closeModal();
   } catch (err) {
+    const fieldErrors = err.errors ?? {};
     errors.value = {
-      ...err,
-      date_time: err["jalons.0.date_time"],
-      titre: err["jalons.0.titre"],
-      description: err["jalons.0.description"],
-      sapeur_id: err["jalons.0.sapeur_id"],
-      sapeur: err["jalons.0.sapeur"],
+      ...fieldErrors,
+      date_time: fieldErrors["jalons.0.date_time"],
+      titre: fieldErrors["jalons.0.titre"],
+      description: fieldErrors["jalons.0.description"],
+      sapeur_id: fieldErrors["jalons.0.sapeur_id"],
+      sapeur: fieldErrors["jalons.0.sapeur"],
     };
   }
 };
