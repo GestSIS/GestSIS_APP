@@ -28,8 +28,8 @@ if (!token) {
         }
       }, 1000);
     })
-    .catch(({ error }) => {
-      error.value = error;
+    .catch(({ error: err }) => {
+      error.value = err.message ?? "Ce lien de confirmation n'est pas valide.";
     });
 }
 

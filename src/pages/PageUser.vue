@@ -42,7 +42,7 @@ const utiliserJeton = async () => {
         awn.success(message || "Jeton enregistré avec succès");
         jeton.value = "";
       })
-      .catch((e) => awn.alert(e?.message || "Jeton déjà utilisé ou invalide."));
+      .catch((e) => awn.alert(e?.error?.message || "Jeton déjà utilisé ou invalide."));
   }
 };
 
@@ -63,7 +63,7 @@ const changerMotDePasse = async () => {
       newPassword.value = "";
       newPasswordRepeated.value = "";
     })
-    .catch((e) => awn.alert(e?.message || "Mot de passe incorrect"));
+    .catch((e) => awn.alert(e?.error?.message || "Mot de passe incorrect"));
 };
 
 const deleteApiToken = async (id) =>

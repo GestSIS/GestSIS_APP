@@ -54,14 +54,13 @@ const save = async () => {
     .then((res) => {
       token.value = res.token;
     })
-    .catch((err) => {
+    .catch(({ error }) => {
       // Le backend renvoie soit { error: { champ: [...] } } (validation),
-      // soit { error: "message" } (permissions/SIS manquants).
-      const payload = err?.error ?? err;
-      if (typeof payload === "string") {
-        awn.alert(payload);
+      // soit { error: { message: "..." } } (permissions/SIS manquants).
+      if (error?.message) {
+        awn.alert(error.message);
       } else {
-        errors.value = payload ?? {};
+        errors.value = error ?? {};
       }
     });
 };

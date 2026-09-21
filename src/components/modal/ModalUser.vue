@@ -37,9 +37,9 @@ const save = () => {
   adminStore
     .editUser(form)
     .then(closeModal)
-    .catch((err) => {
-      errors.value = err;
-      awn.alert(err?.message ?? "Erreur lors de l'enregistrement");
+    .catch(({ error }) => {
+      errors.value = error;
+      awn.alert(error?.message ?? "Erreur lors de l'enregistrement");
     });
 };
 </script>

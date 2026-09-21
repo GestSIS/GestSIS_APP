@@ -53,8 +53,8 @@ const save = () => {
       step.value = 2;
       token.value.token = res;
     })
-    .catch((err) => {
-      errors.value = err;
+    .catch(({ error }) => {
+      errors.value = error;
     });
 };
 </script>

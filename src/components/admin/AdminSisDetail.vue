@@ -42,7 +42,7 @@ const impersonateUser = (user) =>
   authStore
     .impersonate(user.user_id)
     .then(() => router.push({ name: "accueil" }))
-    .catch((e) => awn.alert(e?.message || "Erreur lors de l'usurpation"));
+    .catch((e) => awn.alert(e?.error?.message || "Erreur lors de l'usurpation"));
 
 const computedDataUsers = computed(() => {
   const usersById = {};

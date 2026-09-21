@@ -39,9 +39,9 @@ const close = () => {
 const save = async () => {
   (form?.id ? adminStore.editSis : adminStore.addSis)(form)
     .then(closeModal)
-    .catch((err) => {
-      errors.value = err;
-      awn.alert(err?.message ?? "Erreur lors de l'ajout du SIS");
+    .catch(({ error }) => {
+      errors.value = error;
+      awn.alert(error?.message ?? "Erreur lors de l'ajout du SIS");
     });
 };
 </script>

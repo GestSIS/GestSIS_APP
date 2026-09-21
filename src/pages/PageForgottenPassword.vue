@@ -1,16 +1,18 @@
 <script setup>
 import { ref } from "vue";
 import { useAuthStore } from "../stores/auth/Auth";
+import useNotification from "../composables/useNotification";
 
 const email = ref(null);
-const error = ref({});
+const errors = ref({});
 const sent = ref(false);
 
 const authStore = useAuthStore();
+const awn = useNotification();
 
 const request = async () => {
   if (email.value?.trim()?.toLowerCase()?.endsWith("@gestsis.ch")) {
-    error.value = {
+    errors.value = {
       email: "Email invalid",
     };
     return;
@@ -19,11 +21,12 @@ const request = async () => {
   authStore
     .forgottenPassword(email.value)
     .then(() => {
-      error.value = {};
+      errors.value = {};
       sent.value = true;
     })
-    .catch((err) => {
-      error.value = err;
+    .catch(({ error }) => {
+      errors.value = error;
+      awn.alert(error?.message ?? "Erreur lors de la demande de récupération du mot de passe");
     });
 };
 </script>
@@ -45,10 +48,10 @@ const request = async () => {
         required
         autofocus
         autocomplete="off"
-        :class="{ 'is-invalid': error['email'] }"
+        :class="{ 'is-invalid': errors['email'] }"
       />
-      <div v-if="!sent && error['email']" class="invalid-feedback">
-        {{ error["email"] }}
+      <div v-if="!sent && errors['email']" class="invalid-feedback">
+        {{ errors["email"] }}
       </div>
       <button v-if="!sent" class="btn btn-lg btn-primary btn-block mt-3" type="submit">
         M'envoyer un lien de récupération

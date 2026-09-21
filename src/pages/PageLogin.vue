@@ -31,8 +31,8 @@ const login = async () => {
       error.value = null;
       router.push(route.query.redirect ? route.query.redirect : "accueil");
     })
-    .catch((error) => {
-      error.value = error;
+    .catch((err) => {
+      error.value = err;
     });
 };
 </script>
