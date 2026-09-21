@@ -26,7 +26,7 @@ const { closeModal } = useModalStore();
 const save = async () => {
   authStore[form.id ? "updateRole" : "createRole"](form)
     .then(closeModal)
-    .catch(({ error }) => (errors.value = error));
+    .catch((err) => (errors.value = err.errors ?? {}));
 };
 </script>
 

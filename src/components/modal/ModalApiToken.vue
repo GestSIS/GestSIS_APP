@@ -54,13 +54,13 @@ const save = async () => {
     .then((res) => {
       token.value = res.token;
     })
-    .catch(({ error }) => {
-      // Le backend renvoie soit { error: { champ: [...] } } (validation),
-      // soit { error: { message: "..." } } (permissions/SIS manquants).
-      if (error?.message) {
-        awn.alert(error.message);
+    .catch((err) => {
+      // Le backend renvoie soit { message, errors: { champ: [...] } } (validation),
+      // soit { message } seul (permissions/SIS manquants).
+      if (err?.errors) {
+        errors.value = err.errors;
       } else {
-        errors.value = error ?? {};
+        awn.alert(err?.message ?? "Erreur lors de la création du jeton");
       }
     });
 };

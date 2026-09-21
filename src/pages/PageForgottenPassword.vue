@@ -24,9 +24,9 @@ const request = async () => {
       errors.value = {};
       sent.value = true;
     })
-    .catch(({ error }) => {
-      errors.value = error;
-      awn.alert(error?.message ?? "Erreur lors de la demande de récupération du mot de passe");
+    .catch((err) => {
+      errors.value = { email: err.message };
+      awn.alert(err?.message ?? "Erreur lors de la demande de récupération du mot de passe");
     });
 };
 </script>

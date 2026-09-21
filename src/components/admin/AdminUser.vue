@@ -58,7 +58,7 @@ const impersonateUser = (user) =>
   authStore
     .impersonate(user.id)
     .then(() => router.push({ name: "accueil" }))
-    .catch((e) => awn.alert(e?.error?.message || "Erreur lors de l'usurpation"));
+    .catch((e) => awn.alert(e?.message || "Erreur lors de l'usurpation"));
 
 const computedDataRoles = computed(() =>
   (user.value.user_roles || []).map((ur) => {
@@ -95,7 +95,7 @@ const supprimerRole = (userRole) =>
       .removeUserRole(userRole)
       .then((res) => awn.success(res?.message || "Rôle supprimé"))
       .then(loadUser)
-      .catch((e) => awn.alert(e?.error?.message || "Erreur lors de la suppression"));
+      .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression"));
   });
 const supprimerSapeur = (sapeurLink) =>
   confirm(
@@ -106,7 +106,7 @@ const supprimerSapeur = (sapeurLink) =>
       .removeSapeur(sapeurLink)
       .then((res) => awn.success(res?.message || "Lien sapeur supprimé"))
       .then(loadUser)
-      .catch((e) => awn.alert(e?.error?.message || "Erreur lors de la suppression"));
+      .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression"));
   });
 
 const fieldsRoles = [

@@ -53,7 +53,7 @@ const save = () =>
     .addUserRole(form.user_id, form.role_id)
     .then(closeModal)
     .then(() => callback(true))
-    .catch(({ error }) => (errors.value = error));
+    .catch((err) => (errors.value = err.errors ?? {}));
 </script>
 
 <template>

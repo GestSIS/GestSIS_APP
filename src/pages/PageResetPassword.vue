@@ -9,7 +9,7 @@ const router = useRouter();
 const password = ref(null);
 const password_confirmation = ref(null);
 const token = ref(route.query.token);
-const error = ref({});
+const errors = ref({});
 const reseted = ref(false);
 // Jetons d'API révoqués par la réinitialisation (cf. GestSIS_Auth reset()) : l'utilisateur
 // doit savoir quelles intégrations ont perdu l'accès et devront être reconfigurées.
@@ -29,10 +29,10 @@ onUnmounted(() => {
 
 const reset = async () => {
   if (password.value.length < 12) {
-    error.value["password"] = "Mot de passe trop court (min 12 charactères)";
+    errors.value["password"] = "Mot de passe trop court (min 12 charactères)";
     return;
   }
-  error.value = {};
+  errors.value = {};
   useAuthStore()
     .resetPassword({
       password: password.value,
@@ -40,7 +40,7 @@ const reset = async () => {
       token: token.value || null,
     })
     .then((data) => {
-      error.value = {};
+      errors.value = {};
       reseted.value = true;
       revokedApiTokens.value = data?.revoked_api_tokens ?? [];
       if (!timeInterval.value) {
@@ -54,8 +54,8 @@ const reset = async () => {
         }, 1000);
       }
     })
-    .catch((data) => {
-      error.value = { ...data?.error };
+    .catch((error) => {
+      errors.value = error;
     });
 };
 </script>
@@ -76,9 +76,9 @@ const reset = async () => {
           placeholder="Mot de passe"
           required
           autocomplete="off"
-          :class="{ 'is-invalid': error.password }"
+          :class="{ 'is-invalid': errors.password }"
         />
-        <div v-if="error.password" class="invalid-feedback">Taille minimum: 12</div>
+        <div v-if="errors.password" class="invalid-feedback">Taille minimum: 12</div>
         <label for="inputPasswordConfirmation" class="visually-hidden">Confirmation</label>
         <input
           id="inputPasswordConfirmation"
@@ -89,14 +89,14 @@ const reset = async () => {
           required
           autocomplete="off"
           :class="{
-            'is-invalid': error.password_confirmation || password !== password_confirmation,
+            'is-invalid': errors.password_confirmation || password !== password_confirmation,
           }"
         />
         <div v-if="password !== password_confirmation" class="invalid-feedback">
           Mot de passe différent
         </div>
-        <div v-if="error.message" class="invalid-feedback d-block">
-          {{ error.message }}
+        <div v-if="errors.message" class="invalid-feedback d-block">
+          {{ errors.message }}
         </div>
         <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Réinitialiser</button>
       </template>

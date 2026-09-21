@@ -155,7 +155,7 @@ const resend = () => {
     })
     .catch((err) => {
       awn.alert(
-        err?.error?.message ?? "Une erreur a eu lieu durant le renvoie de l'email de confirmation",
+        err?.message ?? "Une erreur a eu lieu durant le renvoie de l'email de confirmation",
       );
       callback();
     });

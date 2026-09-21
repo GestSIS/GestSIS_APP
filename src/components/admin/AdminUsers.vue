@@ -33,7 +33,7 @@ const impersonateUser = (user) =>
   authStore
     .impersonate(user.id)
     .then(() => router.push({ name: "accueil" }))
-    .catch((e) => awn.alert(e?.error?.message || "Erreur lors de l'usurpation"));
+    .catch((e) => awn.alert(e?.message || "Erreur lors de l'usurpation"));
 const editUser = (user) => showModal({ component: "ModalUser", data: user });
 const deleteUser = (user) =>
   confirm(
@@ -43,7 +43,7 @@ const deleteUser = (user) =>
     adminStore
       .deleteUser(user?.id)
       .then((res) => awn.success(res?.message || "Utilisateur supprimé"))
-      .catch((e) => awn.alert(e?.error?.message || "Erreur lors de la suppression")),
+      .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression")),
   );
 
 const fields = [

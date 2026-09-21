@@ -27,7 +27,7 @@ const save = () =>
   authStore
     .updateUserRoles(form)
     .then(closeModal)
-    .catch(({ error }) => (errors.value = error));
+    .catch((err) => (errors.value = err.errors ?? {}));
 </script>
 
 <template>
