@@ -19,7 +19,7 @@ const { id } = defineProps({
 const sis = ref({});
 
 const loadSis = () => {
-  return AdminService.getSis({ id }).then(({ data }) => {
+  return AdminService.getSis({ id }).then((data) => {
     sis.value = data;
   });
 };

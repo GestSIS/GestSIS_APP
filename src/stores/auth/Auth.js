@@ -116,8 +116,7 @@ export const useAuthStore = defineStore("auth", {
       });
     },
     async confirmation(token) {
-      const data = await AuthService.confirmation(token);
-      return data.data;
+      return AuthService.confirmation(token);
     },
     logout() {
       TokenService.removeAccessToken();
@@ -152,13 +151,15 @@ export const useAuthStore = defineStore("auth", {
       Sentry.setTag("sis_key", null);
     },
     async useToken(token) {
-      const { message, accessToken } = await AuthService.useToken(token);
+      // Success responses no longer carry a `message` field (harmonized envelope,
+      // see http/Request.js) — the caller (PageUser.vue) already falls back to a
+      // default success text when nothing is returned here.
+      const { accessToken } = await AuthService.useToken(token);
       await this.setAuthSuccessful({
         accessToken,
         refreshToken: TokenService.getRefreshToken(),
         user: TokenService.getUser(),
       });
-      return message;
     },
     async impersonate(userId) {
       if (userId === this.user?.id) {
@@ -167,7 +168,7 @@ export const useAuthStore = defineStore("auth", {
 
       const [{ accessToken }, targetUser] = await Promise.all([
         AdminService.getUserToken(userId),
-        AdminService.getUser({ id: userId }).then(({ data }) => data),
+        AdminService.getUser({ id: userId }),
       ]);
 
       // Le refresh token n'est pas touché : `admin/token` n'en fournit pas
@@ -222,14 +223,13 @@ export const useAuthStore = defineStore("auth", {
     async loadSisListe() {
       if (this.sis.liste.length <= 0) {
         const sis = await AuthService.sisListe();
-        this.sis.liste = sis.data;
-        return sis.data;
+        this.sis.liste = sis;
+        return sis;
       }
       return Promise.resolve();
     },
     async newRegisterToken(token) {
-      const t = await AuthService.newRegisterToken(token);
-      return t.data;
+      return AuthService.newRegisterToken(token);
     },
     async updateUserRoles(user) {
       const data = await AuthService.updateUserRoles(user);
@@ -237,27 +237,27 @@ export const useAuthStore = defineStore("auth", {
         if (u.id === user.id) {
           return {
             ...u,
-            user_roles: data.data,
+            user_roles: data,
           };
         }
         return u;
       });
-      return data.data;
+      return data;
     },
     async updateRole(role) {
       const result = await AuthService.updateRole(role);
       this.roles = this.roles.map((r) => {
         if (r.id === role.id) {
-          return result.data;
+          return result;
         }
         return r;
       });
-      return result.data;
+      return result;
     },
     async createRole(role) {
       const result = await AuthService.createRole(role);
-      this.roles.push(result.data);
-      return result.data;
+      this.roles.push(result);
+      return result;
     },
     async deleteRole(roleId) {
       await AuthService.deleteRole(roleId);
@@ -265,18 +265,18 @@ export const useAuthStore = defineStore("auth", {
     },
     async loadApiToken() {
       const result = await AuthService.getApiTokens();
-      this.apiTokens = result.data;
-      return result.data;
+      this.apiTokens = result;
+      return result;
     },
     async createApiToken(apiToken) {
       const result = await AuthService.createApiToken(apiToken);
-      this.apiTokens.push(result.data);
-      return result.data;
+      this.apiTokens.push(result);
+      return result;
     },
     async deleteApiToken(apiTokenId) {
       const result = await AuthService.deleteApiToken(apiTokenId);
       this.apiTokens = this.apiTokens.filter((t) => t.id !== apiTokenId);
-      return result.data;
+      return result;
     },
     // `redirectPath` surcharge la page vers laquelle revenir après connexion : au
     // chargement de la page (voir verifySession), la navigation ciblée n'est pas
@@ -291,7 +291,7 @@ export const useAuthStore = defineStore("auth", {
         try {
           if (this.sis.liste.length === 0) {
             const sis = await AuthService.sisListe();
-            this.sis.liste = sis.data;
+            this.sis.liste = sis;
           }
           const data = await AuthService.refreshToken(TokenService.getRefreshToken());
           await this.setAuthSuccessful(data);
@@ -361,7 +361,7 @@ export const useAuthStore = defineStore("auth", {
       if (this.permissions.length > 0) {
         return Promise.resolve();
       }
-      const { data } = await AuthService.getPermissions();
+      const data = await AuthService.getPermissions();
       this.permissions = data;
       return data;
     },
@@ -369,14 +369,14 @@ export const useAuthStore = defineStore("auth", {
       if (this.roles.length > 0) {
         return Promise.resolve();
       }
-      const { data } = await AuthService.getRoles();
+      const data = await AuthService.getRoles();
       this.roles = data;
       return data;
     },
     async fetchUsers() {
       const users = await AuthService.getUsers();
-      this.users = users.data;
-      return users.data;
+      this.users = users;
+      return users;
     },
     async fetchLocalitesSis() {
       const localiteStore = useLocaliteStore();

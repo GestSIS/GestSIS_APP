@@ -129,13 +129,10 @@ const request = {
     });
 
     auth.interceptors.response.use(
-      function (response) {
-        if (response.status === 401) {
-          throw response.data;
-        }
-        return response.data;
+      (response) => {
+        return response.data?.data !== undefined ? response.data.data : response.data;
       },
-      function (error) {
+      (error) => {
         return Promise.reject(error.response?.data ?? error);
       },
     );

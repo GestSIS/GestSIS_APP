@@ -24,7 +24,7 @@ const loadRoles = adminStore.loadAllRoles();
 adminStore.loadAllUsers();
 
 const loadUser = () => {
-  return AdminService.getUser({ id }).then(({ data }) => {
+  return AdminService.getUser({ id }).then((data) => {
     user.value = data;
   });
 };
