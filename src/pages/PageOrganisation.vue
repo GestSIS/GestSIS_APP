@@ -136,21 +136,6 @@ const addSapeurs = (node) => {
     <div class="row">
       <div class="col-md-4 mb-3">
         <div class="card card-primary card-outline">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <h3>Affichage</h3>
-          </div>
-          <div class="card-body d-grid gap-2">
-            <button title="Tout développer" class="btn btn-outline-primary" @click="expand">
-              <font-awesome-icon :icon="['far', 'plus-square']" /> Tout développer
-            </button>
-            <button title="Tout réduire" class="btn btn-outline-primary" @click="contract">
-              <font-awesome-icon :icon="['far', 'minus-square']" /> Tout réduire
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-3">
-        <div class="card card-primary card-outline">
           <div class="card-header">
             <h3>Actions</h3>
           </div>
@@ -216,6 +201,21 @@ const addSapeurs = (node) => {
                 </div>
               </div>
             </template>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card card-primary card-outline">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h3>Affichage</h3>
+          </div>
+          <div class="card-body d-grid gap-2">
+            <button title="Tout développer" class="btn btn-outline-primary" @click="expand">
+              <font-awesome-icon :icon="['far', 'plus-square']" /> Tout développer
+            </button>
+            <button title="Tout réduire" class="btn btn-outline-primary" @click="contract">
+              <font-awesome-icon :icon="['far', 'minus-square']" /> Tout réduire
+            </button>
           </div>
         </div>
       </div>

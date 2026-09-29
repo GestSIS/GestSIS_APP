@@ -17,6 +17,12 @@ const { id } = defineProps({
   },
 });
 
+// `no` est nullable (et textuel) côté API
+const groupeNo = (g) => (g.no ?? "").toString();
+const pseudoId = (g) => groupeNo(g) + "_" + g.designation;
+// Dédoublonnage par numéro, ou par désignation pour les groupes sans numéro
+const dedupKey = (g) => (groupeNo(g) ? groupeNo(g) : pseudoId(g));
+
 const selected = ref({});
 const loading = ref(true);
 
@@ -24,25 +30,25 @@ watchEffect(async () => {
   loading.value = true;
   await interventionStore.fetchInterventionGroupes(id);
   selected.value = Object.fromEntries(
-    interventionStore.active.groupes.map((g) => [g.no + "_" + g.designation, true]),
+    interventionStore.active.groupes.map((g) => [pseudoId(g), true]),
   );
   loading.value = false;
 });
 
 const groupes = computed(() => {
   const selectedGroupes = interventionStore.active.groupes;
-  const selectedNumeros = new Set(selectedGroupes.map((g) => g.no.toString()));
+  const selectedKeys = new Set(selectedGroupes.map(dedupKey));
   const availableGroupes = groupeStore.liste
     .filter((g) => g.type === 1)
-    .filter((g) => !selectedNumeros.has(g.no.toString()));
+    .filter((g) => !selectedKeys.has(dedupKey(g)));
 
   return [...selectedGroupes, ...availableGroupes]
     .map((g) => ({
       ...g,
-      pseudo_id: g.no + "_" + g.designation,
-      label: g.no + " " + g.designation,
+      pseudo_id: pseudoId(g),
+      label: [groupeNo(g), g.designation].filter(Boolean).join(" "),
     }))
-    .sort((g1, g2) => g1.no - g2.no);
+    .sort((g1, g2) => groupeNo(g1).localeCompare(groupeNo(g2), undefined, { numeric: true }));
 });
 
 // TODO: Check si intervention pas déjà imputé
