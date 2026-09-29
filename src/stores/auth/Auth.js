@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { nextTick } from "vue";
 import * as Sentry from "@sentry/vue";
 import AuthService from "../../services/AuthService";
 import AdminService from "../../services/AdminService";
@@ -118,7 +119,10 @@ export const useAuthStore = defineStore("auth", {
     async confirmation(token) {
       return AuthService.confirmation(token);
     },
-    logout() {
+    // Redirige vers /login avant de vider les stores : si on les vidait avec la page
+    // encore montée, ses watchers relanceraient leurs requêtes sans Sis-Key (401
+    // « Sis non sélectionné » non intercepté, voir GESTSIS_APP-50).
+    async logout(redirect) {
       TokenService.removeAccessToken();
       TokenService.removeRefreshToken();
       TokenService.removeUser();
@@ -129,6 +133,11 @@ export const useAuthStore = defineStore("auth", {
       this.impersonating = false;
       Api.setAccessToken("");
       Api.setSisKey(null);
+
+      // Tokens retirés : le guard du routeur autorise désormais /login
+      await router.push({ name: "login", query: redirect ? { redirect } : undefined });
+      // Laisse le rendu démonter l'ancienne page avant de toucher aux stores
+      await nextTick();
 
       this.user = null;
       this.email = null;
@@ -300,8 +309,7 @@ export const useAuthStore = defineStore("auth", {
           const current = router.currentRoute.value;
           const redirect =
             redirectPath ?? (current.name !== "login" ? current.fullPath : undefined);
-          this.logout();
-          await router.push({ name: "login", query: { redirect } });
+          await this.logout(redirect);
           throw e;
         } finally {
           this.refreshTokenPromise = null;

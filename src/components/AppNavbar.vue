@@ -37,9 +37,8 @@ const parametres = () => {
   dropdownComponent.value.close();
   router.push({ name: "utilisateur" });
 };
-const logout = () => {
-  authStore.logout();
-  router.push({ name: "login" });
+const logout = async () => {
+  await authStore.logout();
 };
 const quitterImpersonation = () => {
   authStore.stopImpersonation().then(() => router.push({ name: "admin-users" }));
