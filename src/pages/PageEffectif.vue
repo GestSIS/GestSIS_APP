@@ -92,10 +92,9 @@ const computedData = computed(() => {
       groupes: s.groupes,
       formatedGroupes: s.groupes
         .map((g) => indexedGroupes.get(g.groupe_id))
-        .sort((a, b) => a.no - b.no)
-        .filter((g) => g.type)
-        .map((g) => g.no)
-        .filter((g) => g)
+        .filter((g) => g?.type && g.no)
+        .map((g) => g.no.toString())
+        .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
         .join(", "),
     }))
     .sort((a, b) => b.fonction_tri - a.fonction_tri);
