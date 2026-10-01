@@ -19,6 +19,7 @@
           :routes="[
             { to: { name: 'admin-sis' }, texte: 'Sis' },
             { to: { name: 'admin-users' }, texte: 'Utilisateurs' },
+            { to: { name: 'admin-2fa' }, texte: '2FA' },
           ]"
         />
         <div id="nav-tabContent" class="tab-content">

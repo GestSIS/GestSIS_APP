@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import { nextTick } from "vue";
 import * as Sentry from "@sentry/vue";
+import { startAuthentication, startRegistration } from "@simplewebauthn/browser";
+import { translateWebauthnError } from "../../tools/webauthnErrors.js";
 import AuthService from "../../services/AuthService";
 import AdminService from "../../services/AdminService";
 import { TokenService } from "../../services/StorageService";
@@ -74,6 +76,17 @@ export const useAuthStore = defineStore("auth", {
     apiTokens: [],
     users: [],
     impersonating: !!TokenService.getAdminAccessToken(),
+    // 2FA — au plus un des deux est non-null à la fois : `twoFactorChallenge`
+    // (compte déjà protégé, en attente du code) ou `twoFactorSetupToken`
+    // (parcours forcé par la politique d'enforcement, compte pas encore protégé).
+    twoFactorChallenge: null,
+    twoFactorSetupToken: null,
+    // Méthodes 2FA actives sur le compte, renvoyées avec le pre-auth token —
+    // permet au front de proposer un choix quand plusieurs sont disponibles.
+    twoFactorAvailableMethods: [],
+    // Présent tant que le compte n'a pas activé le 2FA et que la politique n'est
+    // pas encore obligatoire (période de grâce) : alimente le bandeau d'incitation.
+    twoFactorNudge: null,
     sis: {
       activeId: null,
       activeKey: null,
@@ -93,13 +106,158 @@ export const useAuthStore = defineStore("auth", {
     },
   },
   actions: {
+    // Résout vers les données de connexion complètes (comme avant) quand le
+    // compte n'a pas de 2FA, ou vers `{ requiresTwoFactor: true }` /
+    // `{ requiresTwoFactorSetup: true }` sinon — l'appelant (PageLogin) doit
+    // alors afficher l'étape suivante plutôt que de considérer la connexion terminée.
     async login(payload) {
       const data = await AuthService.login(payload);
+
+      if (data.requiresTwoFactor) {
+        this.twoFactorChallenge = data.preAuthToken;
+        this.twoFactorAvailableMethods = data.availableMethods ?? ["totp"];
+        return { requiresTwoFactor: true };
+      }
+      if (data.requiresTwoFactorSetup) {
+        this.twoFactorSetupToken = data.setupToken;
+        return { requiresTwoFactorSetup: true };
+      }
+
       await this.setAuthSuccessful(data);
       return data;
     },
+    async verifyTwoFactor(code) {
+      const data = await AuthService.verifyTwoFactor(this.twoFactorChallenge, code);
+      this.twoFactorChallenge = null;
+      await this.setAuthSuccessful(data);
+      return data;
+    },
+    cancelTwoFactorChallenge() {
+      this.twoFactorChallenge = null;
+      this.twoFactorSetupToken = null;
+    },
+    // Même endpoint côté API pour les deux parcours (volontaire vs forcé) : le
+    // jeton à présenter dépend uniquement de l'état courant du store. `stepUp`
+    // ({password, code?}) n'est nécessaire que pour ajouter une seconde
+    // méthode — jamais en parcours forcé (rien n'est encore actif alors).
+    async enableTwoFactor(stepUp = null) {
+      return AuthService.enableTwoFactor(this.twoFactorSetupToken, stepUp);
+    },
+    async confirmTwoFactor(code) {
+      const data = await AuthService.confirmTwoFactor(code, this.twoFactorSetupToken);
+
+      if (this.twoFactorSetupToken) {
+        // Parcours forcé : aucune session valide n'existait encore, cette
+        // confirmation la crée (accessToken/refreshToken/user inclus).
+        this.twoFactorSetupToken = null;
+        await this.setAuthSuccessful(data);
+      } else {
+        // Parcours volontaire : la session ne change pas, seul le statut 2FA
+        // affiché du compte doit refléter l'activation.
+        await this.loadTwoFactorStatus();
+      }
+
+      return data;
+    },
+    async disableTwoFactor(password, code) {
+      const data = await AuthService.disableTwoFactor(password, code);
+      // Ne pas supposer que désactiver le TOTP désactive tout le 2FA : une
+      // méthode WebAuthn peut rester active sur le compte. loadTwoFactorStatus()
+      // relit l'état réel plutôt que de deviner côté front.
+      await this.loadTwoFactorStatus();
+      return data;
+    },
+    async regenerateTwoFactorRecoveryCodes(password, code) {
+      return AuthService.regenerateTwoFactorRecoveryCodes(password, code);
+    },
+    // Statut 2FA toutes méthodes confondues (voir TwoFactorStatusController
+    // côté Auth) : `user.two_factor_enabled` est recalé ici depuis la source de
+    // vérité serveur plutôt que deviné après chaque action 2FA.
+    async loadTwoFactorStatus() {
+      const data = await AuthService.getTwoFactorStatus();
+      if (this.user) {
+        this.user = { ...this.user, two_factor_enabled: data.enabled };
+        TokenService.saveUser(this.user);
+      }
+      return data;
+    },
+    // WebAuthn — enregistrement. `startRegistration`/`startAuthentication`
+    // (@simplewebauthn/browser) pilotent navigator.credentials et gèrent tout
+    // l'encodage base64url/ArrayBuffer attendu par le navigateur.
+    async registerWebauthnCredential(name, stepUp = null) {
+      const options = await AuthService.getWebauthnRegisterChallenge(
+        this.twoFactorSetupToken,
+        stepUp,
+      );
+      let response;
+      try {
+        response = await startRegistration({ optionsJSON: options });
+      } catch (err) {
+        // Erreur navigateur (annulation, refus, timeout...), pas l'API — message
+        // natif souvent en anglais, retraduit plutôt que remonté tel quel.
+        throw new Error(translateWebauthnError(err));
+      }
+      const data = await AuthService.verifyWebauthnRegistration(
+        response,
+        name,
+        this.twoFactorSetupToken,
+      );
+
+      if (this.twoFactorSetupToken) {
+        this.twoFactorSetupToken = null;
+        await this.setAuthSuccessful(data);
+      } else {
+        await this.loadTwoFactorStatus();
+      }
+
+      return data;
+    },
+    async loadWebauthnCredentials() {
+      return AuthService.getWebauthnCredentials();
+    },
+    async loadSessions() {
+      return AuthService.getSessions();
+    },
+    async deleteSession(id) {
+      return AuthService.deleteSession(id);
+    },
+    async deleteWebauthnCredential(id, password, code = null) {
+      await AuthService.deleteWebauthnCredential(id, password, code);
+      await this.loadTwoFactorStatus();
+    },
+    // WebAuthn — login. Le pre-auth token joue le même rôle que pour verifyTwoFactor.
+    async verifyWebauthnLogin() {
+      const options = await AuthService.getWebauthnLoginChallenge(this.twoFactorChallenge);
+      let response;
+      try {
+        response = await startAuthentication({ optionsJSON: options });
+      } catch (err) {
+        throw new Error(translateWebauthnError(err));
+      }
+      const data = await AuthService.verifyWebauthnLogin(this.twoFactorChallenge, response);
+      this.twoFactorChallenge = null;
+      await this.setAuthSuccessful(data);
+      return data;
+    },
+    // Résout vers `{ requiresEmailConfirmation: true, email }` : l'inscription
+    // n'émet plus de session tant que l'email n'est pas confirmé (voir
+    // confirmRegistrationEmail). L'appelant (PageRegister) doit alors afficher
+    // l'étape de saisie du code plutôt que de considérer l'inscription terminée.
     async register(credentials) {
       const data = await AuthService.register(credentials);
+      return data;
+    },
+    // Résout comme login()/verifyTwoFactor() : session complète, ou
+    // `{ requiresTwoFactorSetup: true }` si l'enforcement est actif (le compte
+    // vient d'être créé, il n'a donc jamais encore pu configurer de 2FA).
+    async confirmRegistrationEmail(email, code) {
+      const data = await AuthService.confirmRegistrationEmail(email, code);
+
+      if (data.requiresTwoFactorSetup) {
+        this.twoFactorSetupToken = data.setupToken;
+        return { requiresTwoFactorSetup: true };
+      }
+
       await this.setAuthSuccessful(data);
       return data;
     },
@@ -109,20 +267,28 @@ export const useAuthStore = defineStore("auth", {
     async resetPassword({ token, password }) {
       return AuthService.resetPassword(token, password);
     },
-    async changePassword({ password, newPassword }) {
+    // `code` : exigé par Auth si le TOTP est actif sur le compte (sinon ignoré).
+    async changePassword({ password, newPassword, code = null }) {
       return AuthService.changePassword({
         email: this.email,
         password: password,
         new_password: newPassword,
+        ...(code ? { code } : {}),
       });
     },
-    async confirmation(token) {
-      return AuthService.confirmation(token);
-    },
-    // Redirige vers /login avant de vider les stores : si on les vidait avec la page
-    // encore montée, ses watchers relanceraient leurs requêtes sans Sis-Key (401
-    // « Sis non sélectionné » non intercepté, voir GESTSIS_APP-50).
+    // Révoque le refresh token côté serveur (sans attendre la réponse : la
+    // déconnexion locale ne dépend pas du réseau). Sans ça, "se déconnecter" ne
+    // faisait que vider le stockage local, le refresh token restait valide côté
+    // serveur jusqu'à son expiration.
+    // Redirige ensuite vers /login avant de vider les stores : si on les vidait avec
+    // la page encore montée, ses watchers relanceraient leurs requêtes sans Sis-Key
+    // (401 « Sis non sélectionné » non intercepté, voir GESTSIS_APP-50).
     async logout(redirect) {
+      const refreshToken = TokenService.getRefreshToken();
+      if (refreshToken) {
+        AuthService.logout(refreshToken).catch(() => {});
+      }
+
       TokenService.removeAccessToken();
       TokenService.removeRefreshToken();
       TokenService.removeUser();
@@ -130,6 +296,7 @@ export const useAuthStore = defineStore("auth", {
       // prochain utilisateur du poste pourrait la restaurer via stopImpersonation().
       TokenService.removeAdminAccessToken();
       TokenService.removeAdminUser();
+      TokenService.removeTwoFactorNudge();
       this.impersonating = false;
       Api.setAccessToken("");
       Api.setSisKey(null);
@@ -150,6 +317,9 @@ export const useAuthStore = defineStore("auth", {
       this.sis.available = [];
       this.sis.allPermissions = {};
       this.sis.sapeurs = {};
+      this.twoFactorChallenge = null;
+      this.twoFactorSetupToken = null;
+      this.twoFactorNudge = null;
 
       // Clear roles/users/apiTokens and every domain-store cache so the next
       // user on this tab cannot see the previous user's data. The global
@@ -193,6 +363,7 @@ export const useAuthStore = defineStore("auth", {
         accessToken,
         refreshToken: TokenService.getRefreshToken(),
         user: targetUser,
+        twoFactorNudge: null,
       });
     },
     async stopImpersonation() {
@@ -303,6 +474,16 @@ export const useAuthStore = defineStore("auth", {
             this.sis.liste = sis;
           }
           const data = await AuthService.refreshToken(TokenService.getRefreshToken());
+          if (this.impersonating) {
+            // Le refresh token est celui de l'admin : le jeton d'usurpation
+            // (1 h, sans refresh) a expiré et c'est une session admin qui
+            // revient. L'usurpation est terminée — sans ce nettoyage, l'UI la
+            // croyait encore active et « Arrêter » restaurait un jeton périmé.
+            TokenService.removeAdminAccessToken();
+            TokenService.removeAdminUser();
+            this.impersonating = false;
+            this.clearCache();
+          }
           await this.setAuthSuccessful(data);
           return data;
         } catch (e) {
@@ -362,8 +543,8 @@ export const useAuthStore = defineStore("auth", {
       // et propage l'erreur pour que l'appelant coupe la navigation en cours.
       await this.refreshToken(redirectPath);
     },
-    async resendValidationEmail() {
-      return AuthService.resendValidationEmail();
+    async resendValidationEmail(email) {
+      return AuthService.resendValidationEmail(email ?? this.email);
     },
     async fetchPermissions() {
       if (this.permissions.length > 0) {
@@ -411,6 +592,15 @@ export const useAuthStore = defineStore("auth", {
       this.email = jwt.data.email;
       this.admin = jwt.data.admin;
       this.validated = jwt.data.validated;
+      // Présent (éventuellement null) dans les réponses login/refresh ; absent
+      // quand la session est restaurée depuis le stockage (rechargement de page)
+      // ou juste rééchangée (useToken) : on garde alors la dernière valeur connue.
+      if ("twoFactorNudge" in data) {
+        this.twoFactorNudge = data.twoFactorNudge ?? null;
+        TokenService.saveTwoFactorNudge(this.twoFactorNudge);
+      } else {
+        this.twoFactorNudge = TokenService.getTwoFactorNudge();
+      }
 
       this.sis.sapeurs = sapeurParSis;
       this.sis.available = availableSis;

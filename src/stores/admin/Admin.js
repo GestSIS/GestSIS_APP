@@ -9,6 +9,8 @@ export const useAdminStore = defineStore("admin", {
     users: [],
     contacts: {},
     params: {},
+    twoFactorPolicy: { enforcedAt: null },
+    twoFactorStats: null,
   }),
   actions: {
     async loadAllSis() {
@@ -82,6 +84,49 @@ export const useAdminStore = defineStore("admin", {
       if (user) {
         user.sapeur = (user.sapeur || []).filter((s) => s.id !== sapeurLink.id);
       }
+    },
+    async loadTwoFactorPolicy() {
+      const data = await AdminService.getTwoFactorPolicy();
+      this.twoFactorPolicy = data;
+      return data;
+    },
+    async updateTwoFactorPolicy(enforcedAt) {
+      const data = await AdminService.updateTwoFactorPolicy(enforcedAt);
+      this.twoFactorPolicy = data;
+      return data;
+    },
+    async loadTwoFactorStats() {
+      const data = await AdminService.getTwoFactorStats();
+      this.twoFactorStats = data;
+      return data;
+    },
+    async grantTwoFactorExemption(userId, reason, until) {
+      const data = await AdminService.grantTwoFactorExemption(userId, reason, until);
+      const user = this.users.find((u) => u.id === userId);
+      if (user) {
+        Object.assign(user, data);
+      }
+      return data;
+    },
+    async revokeTwoFactorExemption(userId) {
+      await AdminService.revokeTwoFactorExemption(userId);
+      const user = this.users.find((u) => u.id === userId);
+      if (user) {
+        user.two_factor_exempt = false;
+        user.two_factor_exempt_reason = null;
+        user.two_factor_exempt_until = null;
+      }
+    },
+    async updateSessionPolicy(userId, maxDays) {
+      const data = await AdminService.updateSessionPolicy(userId, maxDays);
+      const user = this.users.find((u) => u.id === userId);
+      if (user) {
+        Object.assign(user, data);
+      }
+      return data;
+    },
+    async revokeAllSessions(userId) {
+      return AdminService.revokeAllSessions(userId);
     },
   },
 });

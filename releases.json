@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "01.10.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Ajout authentification à 2 facteurs (TOTP + clé de sécurité/Webauthn)",
+        "Ajout de la gestion des sessions, avec possibilité de consulter et déconnecter chaque appareil individuellement",
+        "Ajout de l'option « Se souvenir de moi » à la connexion",
+        "Confirmation de l'inscription par un code reçu par email plutôt qu'un lien"
+      ]
+    },
+    {
       "date": "16.09.2026",
       "version": "1.0",
       "app": "GestSIS APP",

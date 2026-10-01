@@ -48,6 +48,84 @@ const roles = computed(() => adminStore.roles);
 const { showModal, confirm } = useModalStore();
 const awn = useNotification();
 
+const twoFactorExemptStep = ref("status"); // status | grant
+const twoFactorExemptReason = ref("");
+const twoFactorExemptUntil = ref("");
+
+// Une exemption dont la date de fin est passée reste enregistrée mais ne
+// s'applique plus (voir User::isTwoFactorExempt côté Auth) : elle doit pouvoir
+// être renouvelée directement, sans passer par une révocation.
+const twoFactorExemptionActive = computed(
+  () =>
+    !!user.value.two_factor_exempt &&
+    (!user.value.two_factor_exempt_until ||
+      new Date(user.value.two_factor_exempt_until) > new Date()),
+);
+
+const grantTwoFactorExemption = () => {
+  adminStore
+    .grantTwoFactorExemption(
+      user.value.id,
+      twoFactorExemptReason.value,
+      // `<input type="date">` donne "YYYY-MM-DD", que `new Date()` lirait comme
+      // minuit UTC : l'exemption doit couvrir toute la journée choisie, en heure locale.
+      twoFactorExemptUntil.value
+        ? new Date(`${twoFactorExemptUntil.value}T23:59:59`).toISOString()
+        : null,
+    )
+    .then((data) => {
+      user.value = { ...user.value, ...data };
+      twoFactorExemptStep.value = "status";
+      twoFactorExemptReason.value = "";
+      twoFactorExemptUntil.value = "";
+      awn.success("Exemption accordée");
+    })
+    .catch((e) => awn.alert(e?.message || "Erreur lors de l'octroi de l'exemption"));
+};
+
+const revokeTwoFactorExemption = () =>
+  adminStore
+    .revokeTwoFactorExemption(user.value.id)
+    .then(() => {
+      user.value = {
+        ...user.value,
+        two_factor_exempt: false,
+        two_factor_exempt_reason: null,
+        two_factor_exempt_until: null,
+      };
+      awn.success("Exemption révoquée");
+    })
+    .catch((e) => awn.alert(e?.message || "Erreur lors de la révocation"));
+
+// Durée maximale des sessions du compte, depuis le login (30 jours par
+// défaut) : 90 jours pour une tablette ou un appareil partagé.
+const sessionMaxDaysOptions = [
+  { id: 30, designation: "30 jours (défaut)" },
+  { id: 90, designation: "90 jours (tablette / appareil partagé)" },
+];
+const sessionMaxDays = computed({
+  get: () => user.value.session_max_days ?? 30,
+  set: (maxDays) =>
+    adminStore
+      .updateSessionPolicy(user.value.id, maxDays)
+      .then((data) => {
+        user.value = { ...user.value, ...data };
+        awn.success("Durée des sessions mise à jour");
+      })
+      .catch((e) => awn.alert(e?.message || "Erreur lors de la mise à jour")),
+});
+
+const revokeAllSessions = () =>
+  confirm(
+    "Déconnecter tous les appareils de cet utilisateur ?",
+    "Chaque appareil devra se reconnecter avec le mot de passe (et le 2FA si actif). Utile en cas d'appareil perdu ou volé.",
+  ).then(() =>
+    adminStore
+      .revokeAllSessions(user.value.id)
+      .then(() => awn.success("Tous les appareils ont été déconnectés"))
+      .catch((e) => awn.alert(e?.message || "Erreur lors de la déconnexion")),
+  );
+
 const tokenForUser = (user) =>
   AdminService.getUserToken(user.id).then((data) => {
     navigator.clipboard.writeText(data.accessToken);
@@ -219,6 +297,95 @@ const fieldsSapeurs = [
               class="form-control form-control-sm"
               name="disabled_at"
             />
+          </div>
+          <div class="mb-3">
+            <label>2FA</label>
+            <div>
+              <span v-if="user.two_factor_enabled" class="badge bg-success">Activé</span>
+              <span v-else class="badge bg-secondary">Désactivé</span>
+              <span v-if="twoFactorExemptionActive" class="badge bg-info ms-1">
+                Exempté<template v-if="user.two_factor_exempt_until">
+                  jusqu'au {{ formatDate(user.two_factor_exempt_until) }}</template
+                >
+              </span>
+              <span v-else-if="user.two_factor_exempt" class="badge bg-warning text-dark ms-1">
+                Exemption expirée le {{ formatDate(user.two_factor_exempt_until) }}
+              </span>
+            </div>
+            <p v-if="user.two_factor_exempt_reason" class="text-body-secondary small mb-1 mt-1">
+              {{ user.two_factor_exempt_reason }}
+            </p>
+            <template v-if="twoFactorExemptStep === 'status'">
+              <button
+                v-if="!twoFactorExemptionActive"
+                type="button"
+                class="btn btn-sm btn-outline-secondary mt-1 me-1"
+                @click="twoFactorExemptStep = 'grant'"
+              >
+                {{ user.two_factor_exempt ? "Renouveler l'exemption" : "Exempter du 2FA" }}
+              </button>
+              <button
+                v-if="user.two_factor_exempt"
+                type="button"
+                class="btn btn-sm btn-outline-danger mt-1"
+                @click="revokeTwoFactorExemption"
+              >
+                Révoquer l'exemption
+              </button>
+            </template>
+            <template v-else>
+              <div class="mb-2 mt-2">
+                <label for="exempt-reason">Raison (obligatoire)</label>
+                <input
+                  id="exempt-reason"
+                  v-model="twoFactorExemptReason"
+                  type="text"
+                  class="form-control form-control-sm"
+                />
+              </div>
+              <div class="mb-2">
+                <label for="exempt-until">Jusqu'au (optionnel)</label>
+                <input
+                  id="exempt-until"
+                  v-model="twoFactorExemptUntil"
+                  type="date"
+                  class="form-control form-control-sm"
+                />
+              </div>
+              <button
+                type="button"
+                class="btn btn-sm btn-primary me-1"
+                :disabled="!twoFactorExemptReason"
+                @click="grantTwoFactorExemption"
+              >
+                Confirmer
+              </button>
+              <button
+                type="button"
+                class="btn btn-sm btn-link"
+                @click="twoFactorExemptStep = 'status'"
+              >
+                Annuler
+              </button>
+            </template>
+          </div>
+          <div class="mb-3">
+            <base-select
+              v-model="sessionMaxDays"
+              :options="sessionMaxDaysOptions"
+              label="Durée maximale des sessions"
+            />
+            <p class="text-body-secondary small mb-1 mt-1">
+              Au-delà, l'utilisateur doit se reconnecter (2FA compris), même s'il utilise
+              l'application tous les jours.
+            </p>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-danger mt-1"
+              @click="revokeAllSessions"
+            >
+              Déconnecter tous les appareils
+            </button>
           </div>
         </div>
       </div>

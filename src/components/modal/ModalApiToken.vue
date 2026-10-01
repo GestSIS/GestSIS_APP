@@ -14,12 +14,19 @@ const { data } = defineProps({
 const authStore = useAuthStore();
 const awn = useNotification();
 
+// `totpActive` : la création exige le mot de passe, et aussi un code TOTP si
+// c'est une méthode active du compte (même ré-authentification que pour les
+// autres actions 2FA sensibles).
+const { totpActive = false, ...initialForm } = data ?? {};
+
 const errors = ref({});
 const form = reactive({
   expires_in_days: 30,
   permission_ids: [],
   sis_ids: [],
-  ...data,
+  password: "",
+  code: "",
+  ...initialForm,
 });
 const token = ref("");
 
@@ -175,6 +182,33 @@ const copyToClipboard = (text) => {
         <div class="invalid-feedback" :class="{ 'd-block': errors['permission_ids'] }">
           {{ errors["permission_ids"] }}
         </div>
+      </div>
+      <p class="text-body-secondary small mb-2">
+        Confirmez votre identité pour créer ce jeton : il donne un accès durable à votre compte.
+      </p>
+      <div class="mb-3">
+        <label for="api-token-password">Mot de passe</label>
+        <input
+          id="api-token-password"
+          v-model="form.password"
+          type="password"
+          autocomplete="off"
+          required
+          class="form-control form-control-sm"
+        />
+      </div>
+      <div v-if="totpActive" class="mb-3">
+        <label for="api-token-code">Code de votre application d'authentification</label>
+        <input
+          id="api-token-code"
+          v-model="form.code"
+          type="text"
+          autocomplete="one-time-code"
+          autocapitalize="off"
+          placeholder="123456"
+          required
+          class="form-control form-control-sm"
+        />
       </div>
     </div>
     <div class="modal-footer">

@@ -51,6 +51,7 @@ const fields = [
   { title: "name", key: "name" },
   { title: "email", key: "email" },
   { title: "admin", key: "admin", type: Boolean },
+  { title: "2FA", key: "two_factor_enabled", type: Boolean },
   { title: "sapeur", key: "sapeur", slot: "liste" },
   { title: "created_at", key: "created_at", type: Date },
   { title: "email_verified_at", key: "email_verified_at", type: Date },
