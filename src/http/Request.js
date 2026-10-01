@@ -138,6 +138,32 @@ const request = {
     );
     return auth;
   },
+
+  // Variante de `auth()` portant un jeton explicite plutôt que l'access token
+  // global (`axios.defaults.headers.common`) : utilisée pour le flow 2FA, où
+  // les jetons pre-auth/setup sont volontairement à portée restreinte et ne
+  // doivent jamais remplacer la session courante (voire n'existent que quand
+  // aucune session n'existe encore).
+  authWithToken: (token) => {
+    const auth = axios.create({
+      baseURL: AUTH_URL,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    auth.interceptors.response.use(
+      (response) => {
+        return response.data?.data !== undefined ? response.data.data : response.data;
+      },
+      (error) => {
+        return Promise.reject(error.response?.data ?? error);
+      },
+    );
+    return auth;
+  },
 };
 
 export default request;

@@ -3,18 +3,36 @@ import { ref } from "vue";
 import TransitionExpand from "/src/components/transition/TransitionExpand.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth/Auth";
+import TwoFactorForcedSetup from "../components/TwoFactorForcedSetup.vue";
+import useNotification from "../composables/useNotification.js";
 
 const route = useRoute();
 const router = useRouter();
+const authStore = useAuthStore();
+const awn = useNotification();
 
 const avance = ref(false);
 const name = ref(null);
-const email = ref(null);
+// `?confirm=<email>` : arrivée depuis PageLogin sur un compte dont l'email
+// n'est pas encore confirmé — reprend directement à la saisie du code et en
+// envoie un nouveau. `?email=<email>` : même étape, sans renvoi (URL réécrite
+// après l'envoi, pour qu'un rechargement n'invalide pas le code reçu).
+const pendingConfirmationEmail = route.query?.confirm ?? route.query?.email ?? null;
+const email = ref(pendingConfirmationEmail);
 const password = ref(null);
 const password_confirmation = ref(null);
 const token = ref(route.query?.token ?? "");
 const errors = ref({});
 const submitting = ref(false);
+
+// 'form' -> 'confirm-email' (code reçu par email à saisir) -> 'setup'
+// (2FA obligatoire, uniquement si l'enforcement est actif).
+const step = ref(pendingConfirmationEmail ? "confirm-email" : "form");
+const confirmationCode = ref("");
+const codeError = ref(null);
+const resending = ref(false);
+
+const goToDestination = () => router.push(route.query.redirect ? route.query.redirect : "accueil");
 
 const register = async () => {
   // Empêche les envois en double (double-clic, réseau lent) qui provoquent
@@ -23,7 +41,7 @@ const register = async () => {
     return;
   }
   submitting.value = true;
-  return useAuthStore()
+  return authStore
     .register({
       name: name.value?.trim(),
       email: email.value?.trim(),
@@ -33,7 +51,7 @@ const register = async () => {
     })
     .then(() => {
       errors.value = {};
-      router.push(route.query.redirect ? route.query.redirect : "accueil");
+      step.value = "confirm-email";
     })
     .catch((error) => {
       errors.value = error?.errors ?? {};
@@ -42,11 +60,48 @@ const register = async () => {
       submitting.value = false;
     });
 };
+
+const confirmEmail = async () => {
+  codeError.value = null;
+  try {
+    const result = await authStore.confirmRegistrationEmail(
+      email.value?.trim(),
+      confirmationCode.value,
+    );
+    if (result?.requiresTwoFactorSetup) {
+      step.value = "setup";
+      return;
+    }
+    goToDestination();
+  } catch (err) {
+    codeError.value = err?.message || "Code invalide";
+  }
+};
+
+const resendCode = async () => {
+  resending.value = true;
+  try {
+    await authStore.resendValidationEmail(email.value?.trim());
+    awn.success("Un nouveau code vous a été envoyé");
+  } catch {
+    awn.alert("Erreur lors du renvoi du code");
+  } finally {
+    resending.value = false;
+  }
+};
+
+// Depuis PageLogin, aucun code n'a été envoyé à l'instant (l'ancien a pu
+// expirer) : en envoyer un nouveau d'office.
+if (route.query?.confirm) {
+  resendCode();
+  const { confirm, ...query } = route.query;
+  router.replace({ query: { ...query, email: confirm } });
+}
 </script>
 
 <template>
   <div class="centered">
-    <form class="text-center form-signin d-grid" @submit.prevent="register">
+    <form v-if="step === 'form'" class="text-center form-signin d-grid" @submit.prevent="register">
       <div :class="{ conditional: true }"></div>
       <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
       <h1 class="h3 mb-3">Veuillez-vous enregistrer</h1>
@@ -124,6 +179,42 @@ const register = async () => {
 
       <router-link :to="{ name: 'login' }" class="btn btn-link is-active">Se connecter</router-link>
     </form>
+
+    <form
+      v-else-if="step === 'confirm-email'"
+      class="text-center form-signin"
+      @submit.prevent="confirmEmail"
+    >
+      <h1 class="h3 mb-3">Confirmez votre email</h1>
+      <p class="text-body-secondary">
+        Un code de 8 caractères a été envoyé à <strong>{{ email }}</strong> — saisissez-le
+        ci-dessous pour terminer votre inscription.
+      </p>
+      <label for="confirmation-code" class="visually-hidden">Code de confirmation</label>
+      <input
+        id="confirmation-code"
+        v-model="confirmationCode"
+        type="text"
+        autocapitalize="characters"
+        autocomplete="one-time-code"
+        class="form-control form-control-sm mb-2"
+        placeholder="Code à 8 caractères"
+        required
+        autofocus
+        :class="{ 'is-invalid': codeError }"
+      />
+      <div v-if="codeError" class="invalid-feedback d-block mb-2">{{ codeError }}</div>
+      <button class="btn btn-lg btn-primary w-100 mb-2" type="submit">Valider</button>
+      <button type="button" class="btn btn-link" :disabled="resending" @click="resendCode">
+        {{ resending ? "Envoi…" : "Renvoyer le code" }}
+      </button>
+    </form>
+
+    <TwoFactorForcedSetup
+      v-else-if="step === 'setup'"
+      @done="goToDestination"
+      @cancel="router.push({ name: 'login' })"
+    />
   </div>
 </template>
 

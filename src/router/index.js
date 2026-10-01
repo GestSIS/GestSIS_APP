@@ -61,12 +61,6 @@ const router = createRouter({
       component: () => import("/src/pages/PageLogin.vue"),
     },
     {
-      path: "/confirmation",
-      name: "confirmation",
-      meta: { layout: "no-sidebar", public: true },
-      component: () => import("/src/pages/PageConfirmation.vue"),
-    },
-    {
       path: "/reset-mdp",
       name: "reset-password",
       meta: { layout: "no-sidebar", public: true },
@@ -1085,6 +1079,12 @@ const router = createRouter({
           beforeEnter: adminGuard(),
           component: () => import("/src/components/admin/AdminUser.vue"),
         },
+        {
+          path: "2fa",
+          name: "admin-2fa",
+          beforeEnter: adminGuard(),
+          component: () => import("/src/components/admin/AdminTwoFactor.vue"),
+        },
       ],
     },
   ],
@@ -1153,6 +1153,40 @@ router.afterEach(async () => {
     sessionStorage.removeItem(CHUNK_RELOAD_GUARD_KEY);
   } catch {
     // sessionStorage indisponible : rien à nettoyer.
+  }
+});
+
+// `localStorage` est partagé entre onglets : si un autre onglet se connecte
+// (login normal, ou usurpation/fin d'usurpation admin — même clé `access_token`
+// dans les deux cas) pendant qu'on est resté sur /login ou /register, le guard
+// `beforeEach` ci-dessus ne se redéclenche pas de lui-même puisqu'aucune
+// navigation n'a lieu dans cet onglet. L'événement `storage` (déclenché
+// uniquement sur les *autres* onglets que celui qui écrit, jamais l'auteur du
+// changement) permet de réagir sans attendre un rechargement manuel.
+window.addEventListener("storage", (event) => {
+  if (event.key !== "access_token") {
+    return;
+  }
+
+  if (event.newValue) {
+    const onlyWhenLoggedOut = router.currentRoute.value.matched.some(
+      (record) => record.meta.onlyWhenLoggedOut,
+    );
+    if (onlyWhenLoggedOut) {
+      router.push({ name: "accueil" }).catch(() => {});
+    }
+    return;
+  }
+
+  // `access_token` supprimé (déconnexion, ou refresh token définitivement
+  // révoqué côté serveur) : les autres onglets doivent s'aligner plutôt que
+  // de continuer avec un état qui n'existe plus. Le stockage local est déjà
+  // nettoyé par l'onglet à l'origine du logout() ; on ne fait ici que purger
+  // l'état en mémoire de celui-ci et le renvoyer vers /login.
+  const authStore = useAuthStore();
+  authStore.logout();
+  if (router.currentRoute.value.name !== "login") {
+    router.push({ name: "login" }).catch(() => {});
   }
 });
 

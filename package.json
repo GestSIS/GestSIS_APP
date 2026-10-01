@@ -20,6 +20,7 @@
     "@fortawesome/vue-fontawesome": "^3.3.3",
     "@popperjs/core": "^2.11.8",
     "@sentry/vue": "^10.74.0",
+    "@simplewebauthn/browser": "^14.0.0",
     "awesome-notifications": "^3.1.3",
     "axios": "^1.20.0",
     "bootstrap": "^5.3.8",

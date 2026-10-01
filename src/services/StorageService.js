@@ -3,6 +3,7 @@ const USER_KEY = "logged_user";
 const REFRESH_TOKEN_KEY = "refresh_token";
 const ADMIN_TOKEN_KEY = "admin_access_token";
 const ADMIN_USER_KEY = "admin_logged_user";
+const TWO_FACTOR_NUDGE_KEY = "two_factor_nudge";
 
 /**
  * Manage the how Access Tokens are being stored and retreived from storage.
@@ -108,6 +109,18 @@ const TokenService = {
   },
   removeAdminUser() {
     safeRemoveItem(ADMIN_USER_KEY);
+  },
+
+  // Bandeau d'incitation 2FA : conservé pour survivre à un rechargement de
+  // page (qui restaure la session sans repasser par login/refresh).
+  getTwoFactorNudge() {
+    return JSON.parse(safeGetItem(TWO_FACTOR_NUDGE_KEY));
+  },
+  saveTwoFactorNudge(nudge) {
+    safeSetItem(TWO_FACTOR_NUDGE_KEY, JSON.stringify(nudge));
+  },
+  removeTwoFactorNudge() {
+    safeRemoveItem(TWO_FACTOR_NUDGE_KEY);
   },
 };
 

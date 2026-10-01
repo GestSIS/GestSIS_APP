@@ -45,4 +45,25 @@ export default {
   deleteUser(userId) {
     return Api.auth().delete("/admin/users/" + userId);
   },
+  getTwoFactorPolicy() {
+    return Api.auth().get("/admin/2fa/policy");
+  },
+  updateTwoFactorPolicy(enforcedAt) {
+    return Api.auth().put("/admin/2fa/policy", { enforcedAt });
+  },
+  getTwoFactorStats() {
+    return Api.auth().get("/admin/2fa/stats");
+  },
+  grantTwoFactorExemption(userId, reason, until) {
+    return Api.auth().post(`/admin/users/${userId}/2fa-exemption`, { reason, until });
+  },
+  revokeTwoFactorExemption(userId) {
+    return Api.auth().delete(`/admin/users/${userId}/2fa-exemption`);
+  },
+  updateSessionPolicy(userId, maxDays) {
+    return Api.auth().put(`/admin/users/${userId}/session-policy`, { max_days: maxDays });
+  },
+  revokeAllSessions(userId) {
+    return Api.auth().delete(`/admin/users/${userId}/sessions`);
+  },
 };

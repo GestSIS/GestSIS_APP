@@ -4,6 +4,7 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import AppNavbar from "/src/components/AppNavbar.vue";
 import AppModal from "/src/components/AppModal.vue";
 import AppSidebar from "/src/components/AppSidebar.vue";
+import AppTwoFactorBanner from "/src/components/AppTwoFactorBanner.vue";
 
 // Sidebar affichée statiquement à partir du breakpoint Bootstrap "lg" (992px),
 // en offcanvas (par-dessus le contenu, avec backdrop) en dessous.
@@ -42,6 +43,7 @@ const isMobile = computed(() => {
       <div v-if="sidebarOpen" class="sidebar-backdrop d-lg-none" @click="sidebarOpen = false" />
       <div class="content" :class="isMobile ? 'pb-6' : ''">
         <app-navbar @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+        <app-two-factor-banner />
         <slot />
       </div>
       <app-modal />

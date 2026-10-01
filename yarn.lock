@@ -1065,6 +1065,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@simplewebauthn/browser@npm:^14.0.0":
+  version: 14.0.0
+  resolution: "@simplewebauthn/browser@npm:14.0.0"
+  checksum: 10/b27c5ff04c35ba2491aea4b59d5852f2ef7ffa58bcc58c71dc17f86573223e71ae82fdc3ed232dc1864f2a0aa12d71548715a6ba01298f7ff8d92b53db24153f
+  languageName: node
+  linkType: hard
+
 "@standard-schema/spec@npm:^1.1.0":
   version: 1.1.0
   resolution: "@standard-schema/spec@npm:1.1.0"
@@ -2519,6 +2526,7 @@ __metadata:
     "@popperjs/core": "npm:^2.11.8"
     "@sentry/vite-plugin": "npm:^5.4.0"
     "@sentry/vue": "npm:^10.74.0"
+    "@simplewebauthn/browser": "npm:^14.0.0"
     "@vitejs/plugin-vue": "npm:^6.0.9"
     "@vue/devtools-api": "npm:^8.2.1"
     autoprefixer: "npm:^10.6.0"
