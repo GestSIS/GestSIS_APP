@@ -104,7 +104,7 @@ const request = {
             return axios({
               ...error.config,
             }).then((response) => {
-              return response.data.data;
+              return response.data?.data !== undefined ? response.data.data : response.data;
             });
           } catch (e) {
             // Refresh has failed - reject the original request

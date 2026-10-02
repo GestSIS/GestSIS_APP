@@ -83,7 +83,7 @@ export default {
         responseType: "blob",
       })
       .then((data) => {
-        if (data?.type == "application/json") {
+        if (!(data instanceof Blob) || data.type == "application/json") {
           return null;
         } else {
           return URL.createObjectURL(data);
