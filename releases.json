@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "02.10.2026",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.6.13",
+      "changes": ["Mise en place double authentification"]
+    },
+    {
       "date": "01.10.2026",
       "version": "1.0",
       "app": "GestSIS APP",
