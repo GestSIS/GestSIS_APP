@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.get_login_creds"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "ch.gestsis.app",
+      "sha256_cert_fingerprints": [
+        "20:76:44:DB:1F:A2:FD:9B:D6:45:6E:27:39:8D:4C:06:19:07:9A:E3:A4:63:3A:FA:6A:47:57:47:6D:82:75:7B"
+      ]
+    }
+  }
+]
