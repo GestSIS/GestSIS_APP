@@ -108,10 +108,11 @@ const supprimer = (article) =>
   confirm(
     "Voulez-vous vraiment supprimer cet article ?",
     "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-  )
-    .then(() => ArticleService.supprimerArticles([article.id]))
-    .then(refresh)
-    .catch((e) => awn.alert(e.message || "Une erreur est survenue"));
+  ).then(() =>
+    ArticleService.supprimerArticles([article.id])
+      .then(refresh)
+      .catch((e) => awn.alert(e?.message || "Une erreur est survenue")),
+  );
 </script>
 
 <template>
