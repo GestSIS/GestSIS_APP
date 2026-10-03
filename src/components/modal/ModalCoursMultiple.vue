@@ -26,7 +26,9 @@ const cours = computed(() => coursStore.liste);
 const grades = computed(() => gradeStore.liste);
 const fonctions = computed(() => fonctionStore.liste);
 const localites = computed(() => localiteStore.liste);
-const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
+const sapeurs = computed(() =>
+  sapeurStore.liste.filter((s) => s.actif).filter((s) => s.type === 0),
+);
 const sapeursDisponibles = (index) => {
   const selectionnesAilleurs = new Set(
     form.sapeurs
