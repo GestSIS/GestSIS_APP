@@ -74,6 +74,7 @@ const ajoutSapeur = () => {
   });
 };
 const supprimerSapeur = (i) => {
+  errors.value = {};
   form.sapeurs.splice(i, 1);
 };
 
@@ -116,7 +117,13 @@ const save = () => {
     .then(closeModal)
     .catch((err) => {
       errors.value = err.errors ?? {};
-      awn.alert(err?.message ?? "Erreur lors de l'enregistrement");
+      // Erreurs par sapeur (ex. fonction déjà attribuée) : détail affiché sous chaque ligne
+      const erreurSapeur = Object.keys(errors.value).some((key) => key.startsWith("sapeur_ids."));
+      awn.alert(
+        erreurSapeur
+          ? "Aucun cours n'a été ajouté, certains sapeurs posent problème (voir le détail)."
+          : err?.message || "Erreur lors de l'enregistrement",
+      );
     });
 };
 </script>
@@ -249,10 +256,13 @@ const save = () => {
                   ref="sapeur-selecteur"
                   v-model="item.sapeur_id"
                   :required="true"
-                  :class="{ 'is-invalid': errors['base-sapeur' + i] }"
+                  :select-class="{ 'is-invalid': errors['sapeur_ids.' + i] }"
                   display-key="nom_prenom"
                   :options="sapeursDisponibles(i)"
                 />
+                <div v-if="errors['sapeur_ids.' + i]" class="invalid-feedback d-block">
+                  {{ [errors["sapeur_ids." + i]].flat().join(" ") }}
+                </div>
               </td>
               <td class="text-center">
                 <button

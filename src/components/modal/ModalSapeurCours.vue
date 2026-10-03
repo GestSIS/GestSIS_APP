@@ -6,6 +6,7 @@ import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useCoursStore } from "../../stores/sapeur/Cours.js";
+import useNotification from "../../composables/useNotification.js";
 
 const { data } = defineProps({
   data: {
@@ -76,6 +77,7 @@ if ((data.id || 0) === 0) {
 }
 
 const { closeModal } = useModalStore();
+const awn = useNotification();
 
 const save = () => {
   let saveData = Object.assign({}, form);
@@ -85,7 +87,10 @@ const save = () => {
 
   (addMode.value ? sapeurStore.addSapeurCours : sapeurStore.editSapeurCours)(saveData)
     .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+    .catch((err) => {
+      errors.value = err.errors ?? {};
+      awn.alert(err?.message || "Erreur lors de l'enregistrement");
+    });
 };
 const dateChange = () => {
   if (!form.date_grade) {
@@ -193,7 +198,7 @@ const dateChange = () => {
             v-model="form.fonction_id"
             :required="true"
             class="mb-3"
-            :class="{ 'is-invalid': errors['fonction_id'] }"
+            :select-class="{ 'is-invalid': errors['fonction_id'] }"
             base-option="-"
             base-value="0"
             display-key="nom"
