@@ -38,15 +38,18 @@ const update = (elem) =>
     data: elem.article ? { ...elem.article, emplacement_representee: elem } : { ...elem },
     callback: elem.article ? () => emplacementStore.fetchEmplacements() : undefined,
   });
-const remove = (elem) =>
-  confirm(
-    `Voulez-vous vraiment supprimer cet emplacement ?`,
-    "Attention, la suppression de cet élément est irréversible !",
-  ).then(() =>
+const remove = async (elem) => {
+  if (
+    await confirm(
+      `Voulez-vous vraiment supprimer cet emplacement ?`,
+      "Attention, la suppression de cet élément est irréversible !",
+    )
+  ) {
     emplacementStore
       .removeEmplacement(elem.id)
-      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression")),
-  );
+      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+  }
+};
 
 const fields = [
   { title: "Emplacement", slot: "emplacement" },

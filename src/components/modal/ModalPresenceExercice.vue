@@ -139,13 +139,16 @@ const addExcuse = (sapeur) => {
   });
 };
 const removeExcuse = async (sapeur) => {
-  try {
+  if (
     await confirm(
       "Voulez-vous vraiment supprimer cette excuse ?",
       "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-    );
-    await exerciceStore.removeExcuse(sapeur?.presence);
-  } catch {}
+    )
+  ) {
+    try {
+      await exerciceStore.removeExcuse(sapeur?.presence);
+    } catch {}
+  }
 
   showModal({
     component: "ModalPresenceExercice",

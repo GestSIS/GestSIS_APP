@@ -106,28 +106,26 @@ const soumettre = async () => {
     return;
   }
 
-  try {
+  if (
     await confirm(
       "Confirmer l'inscription",
       "Avez-vous bien vérifié que toutes les informations saisies sont correctes ? Une fois envoyées, elles seront transmises au sis et vous ne pourrez plus les modifier.",
-    );
-  } catch {
-    return;
-  }
-
-  submitting.value = true;
-  try {
-    await RecrutementService.soumettreFormulaire(sisKey, token, {
-      ...form,
-      telephones: form.telephones.filter((t) => t.numero && t.telephone_type_id),
-      permis: form.permis.filter((p) => p.permis_type_id && p.date),
-    });
-    errors.value = {};
-    envoye.value = true;
-  } catch (err) {
-    errors.value = err.errors ?? {};
-  } finally {
-    submitting.value = false;
+    )
+  ) {
+    submitting.value = true;
+    try {
+      await RecrutementService.soumettreFormulaire(sisKey, token, {
+        ...form,
+        telephones: form.telephones.filter((t) => t.numero && t.telephone_type_id),
+        permis: form.permis.filter((p) => p.permis_type_id && p.date),
+      });
+      errors.value = {};
+      envoye.value = true;
+    } catch (err) {
+      errors.value = err.errors ?? {};
+    } finally {
+      submitting.value = false;
+    }
   }
 };
 </script>

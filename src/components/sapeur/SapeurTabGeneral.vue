@@ -124,15 +124,18 @@ const saveSapeurRefPro = () =>
     .catch((err) => {
       awn.alert(err.message || "Erreur lors de l'enregistrement des données");
     });
-const supprimerPhoto = () =>
-  confirm(
-    `Voulez-vous vraiment supprimer cette photo ?`,
-    "Attention, cette action est irréversible ! La photo sera perdue.",
-  ).then(() =>
+const supprimerPhoto = async () => {
+  if (
+    await confirm(
+      `Voulez-vous vraiment supprimer cette photo ?`,
+      "Attention, cette action est irréversible ! La photo sera perdue.",
+    )
+  ) {
     SapeurService.deletePhoto(activeSapeurId.value).then(() => {
       photo.value = null;
-    }),
-  );
+    });
+  }
+};
 const editPhoto = () =>
   showModal({
     component: "ModalPhotoSapeur",

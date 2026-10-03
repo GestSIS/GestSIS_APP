@@ -60,11 +60,16 @@ const editPhase = (phase) =>
     },
   });
 
-const removePhase = (id) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette phase ?",
-    "Attention, la suppression d'une phase est irréversible ! Toutes les données de cette phase seront perdues !",
-  ).then(() => interventionStore.removePhase(id));
+const removePhase = async (id) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette phase ?",
+      "Attention, la suppression d'une phase est irréversible ! Toutes les données de cette phase seront perdues !",
+    )
+  ) {
+    interventionStore.removePhase(id);
+  }
+};
 
 const fields = [
   { title: "Début", key: "date_heure", type: "datetime" },

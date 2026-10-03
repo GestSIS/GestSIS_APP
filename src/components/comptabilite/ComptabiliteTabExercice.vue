@@ -94,11 +94,13 @@ const imputer = (exerciceId) =>
     size: 2,
     callback: init,
   });
-const annulerImputer = (exerciceId) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette imputation ?",
-    "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cet exercice.",
-  ).then(() =>
+const annulerImputer = async (exerciceId) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette imputation ?",
+      "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cet exercice.",
+    )
+  ) {
     imputationStore
       .annulerImputationExercice(exerciceId)
       .then(({ statut }) => {
@@ -112,8 +114,9 @@ const annulerImputer = (exerciceId) =>
       })
       .catch((err) => {
         awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
-      }),
-  );
+      });
+  }
+};
 
 const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {

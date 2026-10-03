@@ -75,16 +75,18 @@ const update = (elem) =>
     data: { ...elem },
   });
 
-const remove = (elem) => {
+const remove = async (elem) => {
   const designation = elem.estCategorie ? "cette catégorie" : "ce type";
-  confirm(
-    `Voulez-vous vraiment supprimer ${designation} ?`,
-    "Attention, la suppression de cet élément est irréversible !",
-  ).then(() =>
+  if (
+    await confirm(
+      `Voulez-vous vraiment supprimer ${designation} ?`,
+      "Attention, la suppression de cet élément est irréversible !",
+    )
+  ) {
     (elem.estCategorie ? categorieStore.removeMaterielCategorie : typeStore.removeMaterielType)(
       elem.id,
-    ).catch((res) => awn.alert(res.message || "Erreur lors de la suppression")),
-  );
+    ).catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+  }
 };
 
 const fields = [

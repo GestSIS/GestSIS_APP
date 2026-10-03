@@ -32,15 +32,18 @@ const update = (elem) =>
     component: "ModalHangar",
     data: { ...elem },
   });
-const remove = (elem) =>
-  confirm(
-    "Voulez-vous vraiment supprimer ce hangar ?",
-    "Attention, la suppression de cet élément est irréversible !",
-  ).then(() =>
+const remove = async (elem) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce hangar ?",
+      "Attention, la suppression de cet élément est irréversible !",
+    )
+  ) {
     emplacementStore
       .removeEmplacement(elem.id)
-      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression")),
-  );
+      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+  }
+};
 
 const fields = [
   { title: "Hangar", slot: "hangar" },

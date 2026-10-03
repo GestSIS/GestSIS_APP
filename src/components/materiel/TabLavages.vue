@@ -97,13 +97,16 @@ const ajouterLavages = () =>
     callback: loadLavages,
   });
 
-const supprimer = (lavage) =>
-  confirm(
-    "Voulez-vous vraiment supprimer ce lavage ?",
-    "Attention, la suppression d'un lavage est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-  )
-    .then(() => LavageService.supprimerLavages([lavage.id]))
-    .then(loadLavages);
+const supprimer = async (lavage) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce lavage ?",
+      "Attention, la suppression d'un lavage est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
+    )
+  ) {
+    LavageService.supprimerLavages([lavage.id]).then(loadLavages);
+  }
+};
 </script>
 
 <template>

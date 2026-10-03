@@ -140,11 +140,16 @@ const email = (controleMedicaux) => {
       .join(", ");
   link.click();
 };
-const supprimer = async (controle) =>
-  confirm(
-    "Voulez-vous vraiment supprimer ce contrôle médical ?",
-    "Attention, la suppression d'un contrôle est irréversible ! Il vous sera cependant possible d'en ajouter un nouveau'.",
-  ).then(() => controleMedicalStore.removeControleMedical(controle.id));
+const supprimer = async (controle) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce contrôle médical ?",
+      "Attention, la suppression d'un contrôle est irréversible ! Il vous sera cependant possible d'en ajouter un nouveau'.",
+    )
+  ) {
+    controleMedicalStore.removeControleMedical(controle.id);
+  }
+};
 
 const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {

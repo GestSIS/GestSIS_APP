@@ -197,19 +197,22 @@ const addExcuse = (rowData = {}) => {
   });
 };
 
-const removeExcuse = (rowData) =>
-  confirm(
-    "Voulez-vous vraiment supprimer votre excuse ?",
-    "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-  ).then(() =>
+const removeExcuse = async (rowData) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer votre excuse ?",
+      "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
+    )
+  ) {
     infosStore
       .removeMonExcuse(rowData, rowData.sis_key)
       .then(() => {
         awn.success("Excuse supprimée avec succès");
         fetchProchainesConvocations();
       })
-      .catch((err) => awn.alert(err?.message ?? "Impossible de supprimer l'excuse")),
-  );
+      .catch((err) => awn.alert(err?.message ?? "Impossible de supprimer l'excuse"));
+  }
+};
 
 const downloadJustificatif = (rowData) => {
   ExerciceService.downloadMonExcuseJustificatif(

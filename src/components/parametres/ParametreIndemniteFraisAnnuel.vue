@@ -81,12 +81,16 @@ const updateType = (type) =>
     component: "ModalIndemniteFraisAnnuelType",
     data: { ...type },
   });
-const deleteType = (type) => {
+const deleteType = async (type) => {
   const description = type.type == "frais" ? "ce frais type" : "cette indemnité type";
-  confirm(
-    `Voulez-vous vraiment supprimer ${description} ?`,
-    "Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.",
-  ).then(() => imputationStore.removeFraisIndemniteAnnuelType(type.id));
+  if (
+    await confirm(
+      `Voulez-vous vraiment supprimer ${description} ?`,
+      "Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.",
+    )
+  ) {
+    imputationStore.removeFraisIndemniteAnnuelType(type.id);
+  }
 };
 
 const addFonction = (type, fonction) => {
@@ -113,13 +117,17 @@ const updateFonction = (type, fonction) => {
     },
   });
 };
-const deleteFonction = (type, fonction) => {
+const deleteFonction = async (type, fonction) => {
   const elem = type.fonctions.find((e) => e.fonction_id == fonction.id);
   const description = type.type == "frais" ? "ce frais" : "cette indemnité";
-  confirm(
-    `Voulez-vous vraiment supprimer ${description} ?`,
-    "Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.",
-  ).then(() => imputationStore.removeFraisIndemniteAnnuel(elem.id));
+  if (
+    await confirm(
+      `Voulez-vous vraiment supprimer ${description} ?`,
+      "Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.",
+    )
+  ) {
+    imputationStore.removeFraisIndemniteAnnuel(elem.id);
+  }
 };
 </script>
 

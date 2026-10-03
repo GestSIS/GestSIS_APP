@@ -147,11 +147,16 @@ const events = computed(() => {
 
 const { confirm, showModal } = useModalStore();
 
-const supprimerAppel = (id) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cet appel ?",
-    "Attention, la suppression d'un appel est irréversible ! Toutes les données de cet appel seront perdues !",
-  ).then(() => interventionStore.removeInterventionAppel(id));
+const supprimerAppel = async (id) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cet appel ?",
+      "Attention, la suppression d'un appel est irréversible ! Toutes les données de cet appel seront perdues !",
+    )
+  ) {
+    interventionStore.removeInterventionAppel(id);
+  }
+};
 
 const newAppel = () => {
   const newAppel = {
@@ -186,11 +191,16 @@ const editAppel = (id) => {
   });
 };
 
-const supprimerJalon = (id) =>
-  confirm(
-    "Voulez-vous vraiment supprimer ce jalon ?",
-    "Attention, la suppression d'un jalon est irréversible ! Toutes les données de ce jalon seront perdues !",
-  ).then(() => interventionStore.removeInterventionJalon(id));
+const supprimerJalon = async (id) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce jalon ?",
+      "Attention, la suppression d'un jalon est irréversible ! Toutes les données de ce jalon seront perdues !",
+    )
+  ) {
+    interventionStore.removeInterventionJalon(id);
+  }
+};
 
 const newJalon = () => {
   const newJalon = {
@@ -226,11 +236,16 @@ const editJalon = (id) => {
   });
 };
 
-const supprimerMission = (id) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette mission ?",
-    "Attention, la suppression d'un mission est irréversible ! Toutes les données de cette mission seront perdues !",
-  ).then(() => interventionStore.removeInterventionMission(id));
+const supprimerMission = async (id) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette mission ?",
+      "Attention, la suppression d'un mission est irréversible ! Toutes les données de cette mission seront perdues !",
+    )
+  ) {
+    interventionStore.removeInterventionMission(id);
+  }
+};
 
 const newMission = () => {
   const newMission = {

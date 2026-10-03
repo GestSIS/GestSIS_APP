@@ -50,15 +50,17 @@ const computedData = computed(() =>
 const awn = useNotification();
 const { closeModal, confirm, showModal } = useModalStore();
 
-const supprimer = (decompteId) => {
-  confirm(
-    "Voulez-vous vraiment supprimer ce décompte ?",
-    "Attention, la suppression d'un décompte est irréversible ! Il vous sera cependant possible de générer un nouveau décompte incluant les écritures de ce décompte.",
-  ).then(() =>
+const supprimer = async (decompteId) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce décompte ?",
+      "Attention, la suppression d'un décompte est irréversible ! Il vous sera cependant possible de générer un nouveau décompte incluant les écritures de ce décompte.",
+    )
+  ) {
     decompteStore
       .removeDecompte(decompteId)
-      .catch((err) => awn.alert(err?.message ?? "Impossible d'effectuer cette action")),
-  );
+      .catch((err) => awn.alert(err?.message ?? "Impossible d'effectuer cette action"));
+  }
 };
 const impressionResumeParSapeur = () => {
   showModal({ component: "ModalChargement" });

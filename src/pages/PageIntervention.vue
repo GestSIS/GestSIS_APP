@@ -49,16 +49,19 @@ const showValiderButton = computed(
   () =>
     !newMode.value && hasValidationPermission.value && activeInterventionData.value.statut === 1,
 );
-const validerIntervention = () =>
-  confirm(
-    "Valider l'intervention ?",
-    "Une fois validée, seule une personne avec la permission de validation pourra encore la modifier. Voulez-vous continuer ?",
-  ).then(() =>
+const validerIntervention = async () => {
+  if (
+    await confirm(
+      "Valider l'intervention ?",
+      "Une fois validée, seule une personne avec la permission de validation pourra encore la modifier. Voulez-vous continuer ?",
+    )
+  ) {
     interventionStore
       .validerIntervention(id)
       .then(() => awn.success("Intervention validée."))
-      .catch((err) => awn.alert(err?.message ?? "Erreur lors de la validation de l'intervention.")),
-  );
+      .catch((err) => awn.alert(err?.message ?? "Erreur lors de la validation de l'intervention."));
+  }
+};
 </script>
 
 <template>

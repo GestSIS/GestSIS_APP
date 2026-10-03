@@ -67,12 +67,16 @@ const up = () => groupeEdition.value.up(active.value);
 const down = () => groupeEdition.value.down(active.value);
 const right = () => groupeEdition.value.right(active.value);
 const left = () => groupeEdition.value.left(active.value);
-const deleteGroupe = () => {
+const deleteGroupe = async () => {
   if (activeIsGroupe.value) {
-    confirm(
-      "Voulez-vous vraiment supprimer ce groupe ?",
-      "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
-    ).then(() => groupeStore.deleteGroupe(active.value.data.id));
+    if (
+      await confirm(
+        "Voulez-vous vraiment supprimer ce groupe ?",
+        "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
+      )
+    ) {
+      groupeStore.deleteGroupe(active.value.data.id);
+    }
   } else {
     awn.warning("Sélectionnez un groupe afin de pouvoir le supprimer.");
   }

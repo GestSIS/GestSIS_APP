@@ -28,11 +28,16 @@ const finServiceButtonState = computed(
 
 const { showModal, confirm } = useModalStore();
 
-const removeMutation = (mutation) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette mutation ?",
-    "Attention, la suppression d'une mutation est irréversible ! Toutes les données de cette mutation seront perdues !",
-  ).then(() => sapeurStore.removeMutation(mutation?.id));
+const removeMutation = async (mutation) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette mutation ?",
+      "Attention, la suppression d'une mutation est irréversible ! Toutes les données de cette mutation seront perdues !",
+    )
+  ) {
+    sapeurStore.removeMutation(mutation?.id);
+  }
+};
 
 const editMutation = (mutation) => showModal({ component: "ModalMutation", data: mutation });
 

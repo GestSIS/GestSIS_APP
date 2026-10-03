@@ -55,15 +55,18 @@ const controler = (article, controleId) =>
     callback: loadArticles,
   });
 
-const supprimer = (article) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cet article ?",
-    "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-  ).then(() =>
+const supprimer = async (article) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cet article ?",
+      "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
+    )
+  ) {
     ArticleService.supprimerArticles([article.id])
       .then(loadArticles)
-      .catch((e) => awn.alert(e?.message || "Une erreur est survenue")),
-  );
+      .catch((e) => awn.alert(e?.message || "Une erreur est survenue"));
+  }
+};
 </script>
 
 <template>

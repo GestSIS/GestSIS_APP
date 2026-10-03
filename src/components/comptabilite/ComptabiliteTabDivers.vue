@@ -84,15 +84,17 @@ const editEcriture = (ecriture) => {
     awn.alert("Impossible de modifier une écriture déjà présente dans un décompte");
   }
 };
-const deleteEcriture = (ecritureId) => {
-  confirm(
-    "Voulez-vous vraiment supprimer cette écriture ?",
-    "Attention, la suppression d'une écriture est irréversible ! Toutes les données de cette écriture seront perdues !",
-  ).then(() =>
+const deleteEcriture = async (ecritureId) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette écriture ?",
+      "Attention, la suppression d'une écriture est irréversible ! Toutes les données de cette écriture seront perdues !",
+    )
+  ) {
     imputationStore
       .removeEcriture(ecritureId)
-      .catch((err) => awn.alert(err?.message ?? "Erreur, impossible de supprimer cette écriture")),
-  );
+      .catch((err) => awn.alert(err?.message ?? "Erreur, impossible de supprimer cette écriture"));
+  }
 };
 const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {

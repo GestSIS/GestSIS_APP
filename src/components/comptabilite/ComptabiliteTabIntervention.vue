@@ -92,18 +92,21 @@ const imputer = (interventionId) =>
     size: 2,
   });
 
-const annulerImputer = (interventionId) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette imputation ?",
-    "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cette intervention.",
-  ).then(() =>
+const annulerImputer = async (interventionId) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette imputation ?",
+      "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cette intervention.",
+    )
+  ) {
     imputationStore
       .annulerImputationIntervention(interventionId)
       .then(init)
       .catch((err) => {
         awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
-      }),
-  );
+      });
+  }
+};
 const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {
     return;

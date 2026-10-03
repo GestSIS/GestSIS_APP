@@ -72,16 +72,19 @@ const changerMotDePasse = async () => {
     .catch((e) => awn.alert(e?.message || "Mot de passe incorrect"));
 };
 
-const deleteApiToken = async (id) =>
-  confirm(
-    "Êtes-vous sûr de vouloir supprimer ce jeton d'API ?",
-    "Attention, l'action est irréversible et un nouveau jeton d'API devra être recréé, les applications utilisant ce jeton perdront l'accès à l'API et devront être reconfigurées avec le nouveau jeton d'API.",
-  ).then(() =>
+const deleteApiToken = async (id) => {
+  if (
+    await confirm(
+      "Êtes-vous sûr de vouloir supprimer ce jeton d'API ?",
+      "Attention, l'action est irréversible et un nouveau jeton d'API devra être recréé, les applications utilisant ce jeton perdront l'accès à l'API et devront être reconfigurées avec le nouveau jeton d'API.",
+    )
+  ) {
     authStore
       .deleteApiToken(id)
       .then(() => awn.success("Jeton d'API supprimé"))
-      .catch(() => awn.alert("Erreur lors de la suppression du jeton d'API")),
-  );
+      .catch(() => awn.alert("Erreur lors de la suppression du jeton d'API"));
+  }
+};
 
 const revocationReasons = {
   password_reset: "réinitialisation du mot de passe",

@@ -34,15 +34,18 @@ const ajoutControle = () => showModal({ component: "ModalControle", data: {}, si
 const editControle = (controle) =>
   showModal({ component: "ModalControle", data: { ...controle }, size: 2 });
 
-const deleteControle = (controle) =>
-  confirm(
-    "Supprimer ce contrôle ?",
-    `Voulez-vous vraiment supprimer le contrôle "${controle.nom}" ? Cette action est irréversible.`,
-  ).then(() =>
+const deleteControle = async (controle) => {
+  if (
+    await confirm(
+      "Supprimer ce contrôle ?",
+      `Voulez-vous vraiment supprimer le contrôle "${controle.nom}" ? Cette action est irréversible.`,
+    )
+  ) {
     store
       .removeControle(controle.id)
-      .catch((err) => awn.alert(err.message ?? "Impossible de supprimer ce contrôle")),
-  );
+      .catch((err) => awn.alert(err.message ?? "Impossible de supprimer ce contrôle"));
+  }
+};
 
 const fields = [
   { title: "Nom", key: "nom" },

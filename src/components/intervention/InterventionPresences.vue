@@ -159,11 +159,16 @@ const editPresence = (presence) => {
     },
   });
 };
-const removePresence = (id) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette présence ?",
-    "Attention, la suppression d'une présence est irréversible ! Toutes les données de cette présence seront perdues !",
-  ).then(() => interventionStore.removePresence(id));
+const removePresence = async (id) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette présence ?",
+      "Attention, la suppression d'une présence est irréversible ! Toutes les données de cette présence seront perdues !",
+    )
+  ) {
+    interventionStore.removePresence(id);
+  }
+};
 
 const editQuittance = (e, id) => {
   const filteredQuittances = quittances.value.filter((q) => q.sapeur_id === parseInt(id));

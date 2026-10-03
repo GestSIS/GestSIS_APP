@@ -79,11 +79,16 @@ const updateIndemnite = (indemnite) =>
     data: { ...indemnite },
     size: 2,
   });
-const removeIndemnite = (indemnite) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette indemnité ?",
-    "Attention, la suppression d'une indemnité est irréversible ! Toutes les données de cette indemnité seront perdues !",
-  ).then(() => imputationStore.removeIndemniteExercice(indemnite.id));
+const removeIndemnite = async (indemnite) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette indemnité ?",
+      "Attention, la suppression d'une indemnité est irréversible ! Toutes les données de cette indemnité seront perdues !",
+    )
+  ) {
+    imputationStore.removeIndemniteExercice(indemnite.id);
+  }
+};
 </script>
 
 <template>

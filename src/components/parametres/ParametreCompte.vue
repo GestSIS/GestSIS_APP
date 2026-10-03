@@ -35,15 +35,18 @@ const { showModal, confirm } = useModalStore();
 const awn = useNotification();
 const ajoutCompte = () => showModal({ component: "ModalCompte", data: {} });
 const updateCompte = (compte) => showModal({ component: "ModalCompte", data: { ...compte } });
-const deleteCompte = (compteId) =>
-  confirm(
-    "Voulez-vous vraiment supprimer ce compte ?",
-    "Attention, la suppression d'un compte est irréversible !",
-  ).then(() =>
+const deleteCompte = async (compteId) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce compte ?",
+      "Attention, la suppression d'un compte est irréversible !",
+    )
+  ) {
     compteStore
       .removeCompte(compteId)
-      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression")),
-  );
+      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+  }
+};
 </script>
 
 <template>

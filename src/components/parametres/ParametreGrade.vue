@@ -32,15 +32,18 @@ const { showModal, confirm } = useModalStore();
 const awn = useNotification();
 const ajoutGrade = () => showModal({ component: "ModalGrade", data: {} });
 const updateGrade = (grade) => showModal({ component: "ModalGrade", data: { ...grade } });
-const deleteGrade = (grade) =>
-  confirm(
-    "Voulez-vous vraiment supprimer ce grade ?",
-    "Attention, la suppression d'un grade est irréversible !",
-  ).then(() =>
+const deleteGrade = async (grade) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce grade ?",
+      "Attention, la suppression d'un grade est irréversible !",
+    )
+  ) {
     gradeStore
       .removeGrade(grade.id)
-      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression")),
-  );
+      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+  }
+};
 </script>
 
 <template>

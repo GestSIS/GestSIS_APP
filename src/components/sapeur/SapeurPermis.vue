@@ -70,15 +70,19 @@ const clearPermisDate = (permis_type_id) => {
     },
   };
 };
-const supprimerPermis = (permis) => {
+const supprimerPermis = async (permis) => {
   if (permis.id === null) {
     clearPermisDate(permis.permis_type_id);
     return;
   }
-  confirm(
-    "Voulez-vous vraiment supprimer ce permis ?",
-    "Attention, la suppression d'un permis est irréversible une fois enregistrée !",
-  ).then(() => clearPermisDate(permis.permis_type_id));
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce permis ?",
+      "Attention, la suppression d'un permis est irréversible une fois enregistrée !",
+    )
+  ) {
+    clearPermisDate(permis.permis_type_id);
+  }
 };
 const savePermis = () => {
   Object.values(permisData.value).forEach((p) => {

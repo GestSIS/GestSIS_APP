@@ -29,21 +29,17 @@ export const useModalStore = defineStore("Modal", {
     resize(payload) {
       this.size = payload;
     },
+    // Résout `true` si l'utilisateur confirme, `false` s'il annule (ou ferme la fenêtre).
+    // Ne rejette jamais : usage `if (await confirm(...)) { ... }`
     confirm(title, question) {
-      return new Promise((resolve, reject) =>
+      return new Promise((resolve) =>
         this.showModal({
           component: "ModalConfirmation",
           data: {
             title: title,
             question: question,
           },
-          callback: (confirmed) => {
-            if (confirmed) {
-              resolve();
-            } else {
-              reject();
-            }
-          },
+          callback: (confirmed) => resolve(!!confirmed),
         }),
       );
     },

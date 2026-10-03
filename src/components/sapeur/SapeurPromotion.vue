@@ -31,11 +31,16 @@ const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 const { showModal, confirm } = useModalStore();
 const newGrade = () => showModal("ModalSapeurPromotion");
 const editGrade = (grade) => showModal({ component: "ModalSapeurPromotion", data: grade });
-const supprimerGrade = (grade) =>
-  confirm(
-    "Voulez-vous vraiment supprimer ce grade ?",
-    "Attention, la suppression d'un grade est irréversible ! Toutes les données de ce grade seront perdues !",
-  ).then(() => sapeurStore.removeSapeurGrade(grade?.id));
+const supprimerGrade = async (grade) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce grade ?",
+      "Attention, la suppression d'un grade est irréversible ! Toutes les données de ce grade seront perdues !",
+    )
+  ) {
+    sapeurStore.removeSapeurGrade(grade?.id);
+  }
+};
 
 const fields = [
   { title: "Date", key: "date", type: Date },

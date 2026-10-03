@@ -97,11 +97,13 @@ const imputer = (travailId) => {
       awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
     });
 };
-const annulerImputer = (travailId) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette imputation ?",
-    "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau ce travail.",
-  ).then(() =>
+const annulerImputer = async (travailId) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette imputation ?",
+      "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau ce travail.",
+    )
+  ) {
     imputationStore
       .annulerImputationTravail(travailId)
       .then((res) => {
@@ -109,8 +111,9 @@ const annulerImputer = (travailId) =>
       })
       .catch((err) => {
         awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
-      }),
-  );
+      });
+  }
+};
 
 const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {

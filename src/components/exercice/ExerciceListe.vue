@@ -107,11 +107,16 @@ const validerExercice = (id) => exerciceStore.validerExercice(id);
 const annulerExercice = (id) => exerciceStore.annulerExercice(id);
 const reactiverExercice = (id) => exerciceStore.reactiverExercice(id);
 
-const removeExercice = (id) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cet exercice ?",
-    "Attention, la suppression d'un exercice est irréversible ! Toutes les données de cet exercice seront perdues !",
-  ).then(() => exerciceStore.removeExercice(id));
+const removeExercice = async (id) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cet exercice ?",
+      "Attention, la suppression d'un exercice est irréversible ! Toutes les données de cet exercice seront perdues !",
+    )
+  ) {
+    exerciceStore.removeExercice(id);
+  }
+};
 
 const importExerciceComptable = () =>
   showModal({

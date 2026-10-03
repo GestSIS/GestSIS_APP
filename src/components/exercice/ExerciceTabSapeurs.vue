@@ -218,27 +218,31 @@ const updateHeureSapeur = (sap, h, quantite) => {
       .catch((err) => awn.alert(err?.message || "Erreur lors de l'enregistrement"));
   }
 };
-const validate = () => {
-  confirm(
-    "Valider l'exercice ?",
-    "Une fois validé, les présences ne seront plus modifiables sans permission de validation. Voulez-vous continuer ?",
-  ).then(() =>
+const validate = async () => {
+  if (
+    await confirm(
+      "Valider l'exercice ?",
+      "Une fois validé, les présences ne seront plus modifiables sans permission de validation. Voulez-vous continuer ?",
+    )
+  ) {
     exerciceStore
       .validerExercice(id)
       .then((res) => awn.success(res?.message || "Exercice validé avec succès."))
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la validation de l'exercice.")),
-  );
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la validation de l'exercice."));
+  }
 };
-const devalider = () => {
-  confirm(
-    "Annuler la validation ?",
-    `L'exercice repassera au statut « ${exerciceStatut(2).label} » et redeviendra modifiable. Voulez-vous continuer ?`,
-  ).then(() =>
+const devalider = async () => {
+  if (
+    await confirm(
+      "Annuler la validation ?",
+      `L'exercice repassera au statut « ${exerciceStatut(2).label} » et redeviendra modifiable. Voulez-vous continuer ?`,
+    )
+  ) {
     exerciceStore
       .devaliderExercice(id)
       .then(() => awn.success("Validation annulée."))
-      .catch((err) => awn.alert(err?.message || "Erreur lors de l'annulation de la validation.")),
-  );
+      .catch((err) => awn.alert(err?.message || "Erreur lors de l'annulation de la validation."));
+  }
 };
 const formatUnite = (type_unite_id) => {
   return unites.value.find((u) => u.id == type_unite_id)?.abreviation;
@@ -395,11 +399,16 @@ const addExcuse = (sapeur) =>
     },
   });
 
-const removeExcuse = (presence) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette excuse ?",
-    "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-  ).then(() => exerciceStore.removeExcuse(presence.exercice_id, presence.sapeur_id));
+const removeExcuse = async (presence) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette excuse ?",
+      "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
+    )
+  ) {
+    exerciceStore.removeExcuse(presence.exercice_id, presence.sapeur_id);
+  }
+};
 
 const downloadJustificatif = (sapeur) => {
   if (!hasPresencePermission.value) {

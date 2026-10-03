@@ -39,11 +39,16 @@ const selectRole = (role) => (selectedId.value = role.id);
 
 const edit = (role) => showModal({ component: "ModalRole", data: role });
 const newRole = () => showModal({ component: "ModalRole", data: {} });
-const remove = (role) =>
-  confirm(
-    "Voulez-vous vraiment supprimer ce rôle ?",
-    "Attention, la suppression d'un rôle est irréversible ! Les utilisateurs ayant ce rôle perdront ces permissions.",
-  ).then(() => authStore.deleteRole(role.id));
+const remove = async (role) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce rôle ?",
+      "Attention, la suppression d'un rôle est irréversible ! Les utilisateurs ayant ce rôle perdront ces permissions.",
+    )
+  ) {
+    authStore.deleteRole(role.id);
+  }
+};
 
 const moduleMapping = (key) => {
   // Permet d'améliorer certains textes à afficher

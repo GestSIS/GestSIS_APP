@@ -21,15 +21,18 @@ const update = (elem) => {
     data: { ...elem },
   });
 };
-const remove = (elem) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette batterie ?",
-    "Attention, la suppression d'une batterie est irréversible !",
-  ).then(() =>
+const remove = async (elem) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette batterie ?",
+      "Attention, la suppression d'une batterie est irréversible !",
+    )
+  ) {
     batterieStore
       .removeBatterieType(elem.id)
-      .catch((error) => awn.alert(error.message ?? "Impossible de supprimer cette batterie")),
-  );
+      .catch((error) => awn.alert(error.message ?? "Impossible de supprimer cette batterie"));
+  }
+};
 
 const fields = [
   { title: "Designation", key: "nom" },

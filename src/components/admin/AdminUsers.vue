@@ -35,16 +35,19 @@ const impersonateUser = (user) =>
     .then(() => router.push({ name: "accueil" }))
     .catch((e) => awn.alert(e?.message || "Erreur lors de l'usurpation"));
 const editUser = (user) => showModal({ component: "ModalUser", data: user });
-const deleteUser = (user) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cet utilisateur ?",
-    "Attention, l'action est irréversible et l'utilisateur devra recréer un compte pour utiliser GestSIS.",
-  ).then(() =>
+const deleteUser = async (user) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cet utilisateur ?",
+      "Attention, l'action est irréversible et l'utilisateur devra recréer un compte pour utiliser GestSIS.",
+    )
+  ) {
     adminStore
       .deleteUser(user?.id)
       .then((res) => awn.success(res?.message || "Utilisateur supprimé"))
-      .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression")),
-  );
+      .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression"));
+  }
+};
 
 const fields = [
   { title: "id", key: "id" },

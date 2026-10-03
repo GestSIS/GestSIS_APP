@@ -43,11 +43,16 @@ const editMateriel = (materielId) =>
     data: activeMateriels.value.find((m) => m.id == materielId),
   });
 
-const supprimerMateriel = (materielId) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette absence ?",
-    "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
-  ).then(() => interventionStore.removeInterventionMateriel(id, materielId));
+const supprimerMateriel = async (materielId) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette absence ?",
+      "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
+    )
+  ) {
+    interventionStore.removeInterventionMateriel(id, materielId);
+  }
+};
 
 const fields = [
   { title: "Matériel", key: "designation" },

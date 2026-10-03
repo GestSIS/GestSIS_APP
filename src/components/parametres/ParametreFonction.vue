@@ -23,15 +23,18 @@ const awn = useNotification();
 const ajoutFonction = () => showModal({ component: "ModalFonction", data: {} });
 const updateFonction = (fonction) =>
   showModal({ component: "ModalFonction", data: { ...fonction } });
-const deleteFonction = (fonction) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette fonction ?",
-    "Attention, la suppression d'une fonction est irréversible !",
-  ).then(() =>
+const deleteFonction = async (fonction) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette fonction ?",
+      "Attention, la suppression d'une fonction est irréversible !",
+    )
+  ) {
     fonctionStore
       .removeFonction(fonction.id)
-      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression")),
-  );
+      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+  }
+};
 </script>
 
 <template>

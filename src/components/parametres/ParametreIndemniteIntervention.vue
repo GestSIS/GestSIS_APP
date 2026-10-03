@@ -70,11 +70,16 @@ const updateIndemnite = (indemnite) =>
     component: "ModalIndemniteIntervention",
     data: { ...indemnite },
   });
-const removeIndemnite = (indemnite) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette indemnité ?",
-    "Attention, la suppression d'une indemnité est irréversible ! Toutes les données de cette indemnité seront perdues !",
-  ).then(() => imputationStore.removeIndemniteIntervention(indemnite.id));
+const removeIndemnite = async (indemnite) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette indemnité ?",
+      "Attention, la suppression d'une indemnité est irréversible ! Toutes les données de cette indemnité seront perdues !",
+    )
+  ) {
+    imputationStore.removeIndemniteIntervention(indemnite.id);
+  }
+};
 </script>
 
 <template>

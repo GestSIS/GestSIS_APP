@@ -222,15 +222,17 @@ const addSapeur = () => {
     },
   });
 };
-const deleteSapeur = () =>
-  confirm(
-    isRecrue.value
-      ? "Voulez-vous vraiment rejeter cette recrue ?"
-      : "Voulez-vous vraiment supprimer ce sapeur ?",
-    isRecrue.value
-      ? "Attention, le rejet d'une recrue est irréversible ! Toutes ses données seront perdues !"
-      : "Attention, la suppression d'un sapeur est irréversible ! Toutes les données de ce sapeur seront perdues !",
-  ).then(() =>
+const deleteSapeur = async () => {
+  if (
+    await confirm(
+      isRecrue.value
+        ? "Voulez-vous vraiment rejeter cette recrue ?"
+        : "Voulez-vous vraiment supprimer ce sapeur ?",
+      isRecrue.value
+        ? "Attention, le rejet d'une recrue est irréversible ! Toutes ses données seront perdues !"
+        : "Attention, la suppression d'un sapeur est irréversible ! Toutes les données de ce sapeur seront perdues !",
+    )
+  ) {
     sapeurStore
       .deleteSapeur(activeSapeur.value.id)
       .then(() => {
@@ -244,8 +246,9 @@ const deleteSapeur = () =>
       })
       .catch((err) => {
         awn.alert(err?.message ?? "Impossible de supprimer ce sapeur");
-      }),
-  );
+      });
+  }
+};
 </script>
 
 <template>

@@ -75,17 +75,27 @@ const updateTravail = (travail) => showModal({ component: "ModalTravail", data: 
 
 const reviewTravail = (travail) => showModal({ component: "ModalReviewTravail", data: travail });
 
-const cancelReviewTravail = (travail) =>
-  confirm(
-    "Voulez-vous vraiment annuler l'examen de ce travail ?",
-    "Attention, la justification fournie lors de l'examen sera perdue.",
-  ).then(() => travailStore.cancelReviewTravail(travail?.id));
+const cancelReviewTravail = async (travail) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment annuler l'examen de ce travail ?",
+      "Attention, la justification fournie lors de l'examen sera perdue.",
+    )
+  ) {
+    travailStore.cancelReviewTravail(travail?.id);
+  }
+};
 
-const supprimerTravail = (travail) =>
-  confirm(
-    "Voulez-vous vraiment supprimer ce travail ?",
-    "Attention, la suppression d'un travail est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-  ).then(() => travailStore.removeTravail(travail?.id));
+const supprimerTravail = async (travail) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce travail ?",
+      "Attention, la suppression d'un travail est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
+    )
+  ) {
+    travailStore.removeTravail(travail?.id);
+  }
+};
 
 const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {

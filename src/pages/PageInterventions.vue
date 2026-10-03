@@ -89,11 +89,16 @@ const canDelete = computed(() => {
 const { showModal, confirm } = useModalStore();
 const select = (row) => (selectedId.value = row?.id);
 
-const supprimerIntervention = (id) =>
-  confirm(
-    "Voulez-vous vraiment supprimer l'intervention ?",
-    "Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-  ).then(() => interventionStore.removeIntervention(id));
+const supprimerIntervention = async (id) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer l'intervention ?",
+      "Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
+    )
+  ) {
+    interventionStore.removeIntervention(id);
+  }
+};
 const validerIntervention = (id) => interventionStore.validerIntervention(id);
 
 const rapportIntervention = () => {

@@ -87,17 +87,19 @@ const addTelephone = () => {
     ];
   }
 };
-const removeTelephone = (tel) => {
+const removeTelephone = async (tel) => {
   if (tel.id === null) {
     telephones.value = telephones.value.filter((t) => t.priorite !== tel.priorite);
     return;
   }
-  confirm(
-    "Voulez-vous vraiment supprimer ce numéro de téléphone ?",
-    "Attention, la suppression d'un numéro de téléphone est irréversible une fois enregistrée !",
-  ).then(() => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce numéro de téléphone ?",
+      "Attention, la suppression d'un numéro de téléphone est irréversible une fois enregistrée !",
+    )
+  ) {
     telephones.value = telephones.value.filter((t) => t.priorite !== tel.priorite);
-  });
+  }
 };
 
 const fields = computed(() => [

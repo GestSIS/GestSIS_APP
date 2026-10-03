@@ -85,11 +85,13 @@ const awn = useNotification();
 
 const regenererSapeur = () => showModal({ component: "ModalImputerAnnuel", size: 2 });
 
-const annulerImputation = async () =>
-  confirm(
-    "Voulez-vous annuler l'imputation annuel des frais ?",
-    "Attention, les écritures actuelles seront supprimées, mais il vous sera toujours possible de générer ces écritures à nouveau.",
-  ).then(() =>
+const annulerImputation = async () => {
+  if (
+    await confirm(
+      "Voulez-vous annuler l'imputation annuel des frais ?",
+      "Attention, les écritures actuelles seront supprimées, mais il vous sera toujours possible de générer ces écritures à nouveau.",
+    )
+  ) {
     imputationStore
       .annulerImputationAnnuel(activeExerciceComptableId.value)
       .catch((err) =>
@@ -97,8 +99,9 @@ const annulerImputation = async () =>
           err?.message ??
             "Une erreur est survenue durant l'annulation des indemnités/frais annuelles",
         ),
-      ),
-  );
+      );
+  }
+};
 const generer = () => showModal({ component: "ModalImputerAnnuel", size: 2 });
 
 const onRowClass = (dataItem, isSelected) => {

@@ -164,28 +164,34 @@ const ajouterRole = () =>
     data: { user_id: user.value.id },
     callback: loadUser,
   });
-const supprimerRole = (userRole) =>
-  confirm(
-    "Voulez-vous vraiment enlever ce rôle à cet utilisateur ?",
-    "Attention, l'action est irréversible.",
-  ).then(() => {
+const supprimerRole = async (userRole) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment enlever ce rôle à cet utilisateur ?",
+      "Attention, l'action est irréversible.",
+    )
+  ) {
     adminStore
       .removeUserRole(userRole)
       .then((res) => awn.success(res?.message || "Rôle supprimé"))
       .then(loadUser)
       .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression"));
-  });
-const supprimerSapeur = (sapeurLink) =>
-  confirm(
-    "Voulez-vous vraiment supprimer ce lien sapeur ?",
-    "Attention, l'action est irréversible.",
-  ).then(() => {
+  }
+};
+const supprimerSapeur = async (sapeurLink) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce lien sapeur ?",
+      "Attention, l'action est irréversible.",
+    )
+  ) {
     adminStore
       .removeSapeur(sapeurLink)
       .then((res) => awn.success(res?.message || "Lien sapeur supprimé"))
       .then(loadUser)
       .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression"));
-  });
+  }
+};
 
 const fieldsRoles = [
   { title: "id", key: "id" },

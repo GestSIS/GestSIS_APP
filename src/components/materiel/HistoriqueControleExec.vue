@@ -50,14 +50,18 @@ const modifier = (exec) =>
     callback: loadExecs,
   });
 
-const supprimer = (exec) =>
-  confirm(
-    "Supprimer ce contrôle ?",
-    "Voulez-vous vraiment supprimer cette exécution de contrôle ? Cette action est irréversible.",
-  )
-    .then(() => ControleExecService.supprimerExec(exec.id))
-    .then(loadExecs)
-    .catch((err) => awn.alert(err?.message ?? "Impossible de supprimer ce contrôle"));
+const supprimer = async (exec) => {
+  if (
+    await confirm(
+      "Supprimer ce contrôle ?",
+      "Voulez-vous vraiment supprimer cette exécution de contrôle ? Cette action est irréversible.",
+    )
+  ) {
+    ControleExecService.supprimerExec(exec.id)
+      .then(loadExecs)
+      .catch((err) => awn.alert(err?.message ?? "Impossible de supprimer ce contrôle"));
+  }
+};
 </script>
 
 <template>

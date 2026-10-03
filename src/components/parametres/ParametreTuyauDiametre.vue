@@ -22,15 +22,18 @@ const update = (elem) => {
     data: { ...elem },
   });
 };
-const remove = (elem) =>
-  confirm(
-    "Voulez-vous vraiment supprimer ce diamètre ?",
-    "Attention, la suppression d'un diamètre est irréversible !",
-  ).then(() =>
+const remove = async (elem) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce diamètre ?",
+      "Attention, la suppression d'un diamètre est irréversible !",
+    )
+  ) {
     diametreStore
       .removeTuyauDiametre(elem.id)
-      .catch((error) => awn.alert(error.message ?? "Impossible de supprimer ce diamètre")),
-  );
+      .catch((error) => awn.alert(error.message ?? "Impossible de supprimer ce diamètre"));
+  }
+};
 
 const fields = [
   { title: "Diamètre", key: "diametre" },

@@ -73,15 +73,18 @@ const updateIndemnite = (indemnite) =>
     size: 1,
     data: { ...indemnite },
   });
-const deleteIndemnite = (indemnite) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette indemnité ?",
-    "Attention, la suppression d'une indemnité est irréversible ! Toutes les données de cette indemnité seront perdues !",
-  ).then(() =>
+const deleteIndemnite = async (indemnite) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette indemnité ?",
+      "Attention, la suppression d'une indemnité est irréversible ! Toutes les données de cette indemnité seront perdues !",
+    )
+  ) {
     imputationStore
       .removeIndemniteCours(indemnite.id)
-      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression")),
-  );
+      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+  }
+};
 </script>
 
 <template>

@@ -43,11 +43,16 @@ const addAbsence = () => showModal({ component: "ModalAbsence" });
 
 const modifierAbsence = (absence) => showModal({ component: "ModalAbsence", data: absence });
 
-const removeAbsence = (id) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette absence ?",
-    "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
-  ).then(() => absenceStore.removeAbsence(id));
+const removeAbsence = async (id) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette absence ?",
+      "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
+    )
+  ) {
+    absenceStore.removeAbsence(id);
+  }
+};
 
 const onRowClass = (dataItem, isSelected) => {
   if (dataItem.statut == 0) {

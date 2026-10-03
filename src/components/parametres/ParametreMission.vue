@@ -16,11 +16,16 @@ const listeMission = computed(() => missionStore.liste.slice().sort((a, b) => a.
 const { confirm, showModal } = useModalStore();
 const ajoutMission = () => showModal({ component: "ModalMission", data: {} });
 const updateMission = (mission) => showModal({ component: "ModalMission", data: { ...mission } });
-const deleteMission = (mission) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette mission ?",
-    "Attention, la suppression d'une mission est irréversible ! Toutes les données de cette mission seront perdues !",
-  ).then(() => missionStore.removeMission(mission.id));
+const deleteMission = async (mission) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette mission ?",
+      "Attention, la suppression d'une mission est irréversible ! Toutes les données de cette mission seront perdues !",
+    )
+  ) {
+    missionStore.removeMission(mission.id);
+  }
+};
 </script>
 
 <template>

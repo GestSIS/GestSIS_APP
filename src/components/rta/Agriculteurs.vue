@@ -63,14 +63,17 @@ const reorder = (agriculteur, priorite) =>
           "Une erreur est survenue durant le changement de priorité. Veuillez réessayer ou contacter l'administrateur",
       );
     });
-const remove = (agriculteur) =>
-  confirm(
-    "Êtes-vous sûr de vouloir supprimer cet agriculteur ?",
-    "Attention, la suppression d'un agriculteur est irréversible !",
-  ).then(async () => {
+const remove = async (agriculteur) => {
+  if (
+    await confirm(
+      "Êtes-vous sûr de vouloir supprimer cet agriculteur ?",
+      "Attention, la suppression d'un agriculteur est irréversible !",
+    )
+  ) {
     await RtaService.deleteAgriculteur(agriculteur.id);
     loadData();
-  });
+  }
+};
 
 const ajoutListe = () =>
   showModal({

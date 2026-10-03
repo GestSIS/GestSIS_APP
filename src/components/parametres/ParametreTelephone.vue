@@ -20,11 +20,16 @@ const ajoutTelephone = () => showModal({ component: "ModalTelephone", data: {} }
 const updateTelephone = (telephone) =>
   showModal({ component: "ModalTelephone", data: { ...telephone } });
 
-const deleteTelephone = (telephone) =>
-  confirm(
-    "Voulez-vous vraiment supprimer ce contact ?",
-    "Attention, la suppression d'un contact est irréversible ! Toutes les données de ce contact seront perdues !",
-  ).then(() => telephoneStore.removeTelephone(telephone.id));
+const deleteTelephone = async (telephone) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce contact ?",
+      "Attention, la suppression d'un contact est irréversible ! Toutes les données de ce contact seront perdues !",
+    )
+  ) {
+    telephoneStore.removeTelephone(telephone.id);
+  }
+};
 </script>
 
 <template>

@@ -140,11 +140,16 @@ const ajoutJustificatif = () => {
   }
 };
 const { confirm } = useModalStore();
-const removeJustificatif = () =>
-  confirm(
-    "Voulez-vous vraiment supprimer ce justificatif ?",
-    "Attention, la suppression d'un justificatif est irréversible ! Toutes les données de ce justificatif seront perdues !",
-  ).then(() => controleMedicalStore.removeJustificatif());
+const removeJustificatif = async () => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer ce justificatif ?",
+      "Attention, la suppression d'un justificatif est irréversible ! Toutes les données de ce justificatif seront perdues !",
+    )
+  ) {
+    controleMedicalStore.removeJustificatif();
+  }
+};
 
 const validite = (duree) => {
   var d = new Date(controleMedical.value.consultation || Date.now());

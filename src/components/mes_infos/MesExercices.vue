@@ -79,16 +79,19 @@ const addExcuse = (exercice) => {
     },
   });
 };
-const removeExcuse = (exercice) =>
-  confirm(
-    "Voulez-vous vraiment supprimer votre excuse ?",
-    "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-  ).then(() =>
+const removeExcuse = async (exercice) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer votre excuse ?",
+      "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
+    )
+  ) {
     infosStore
       .removeMonExcuse(exercice)
       .then(() => awn.success("Excuse supprimée avec succès"))
-      .catch((err) => awn.alert(err?.message ?? "Impossible de supprimer l'excuse")),
-  );
+      .catch((err) => awn.alert(err?.message ?? "Impossible de supprimer l'excuse"));
+  }
+};
 
 const downloadJustificatif = (exercice) => {
   ExerciceService.downloadMonExcuseJustificatif(exercice.exercice_id, "justificatif.pdf").catch(

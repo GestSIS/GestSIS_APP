@@ -39,16 +39,19 @@ const modifierAbsence = (absence) =>
     component: "ModalSAbsenter",
     data: absence,
   });
-const removeAbsence = (absence) =>
-  confirm(
-    "Voulez-vous vraiment supprimer votre absence ?",
-    "Attention, la suppression d'une absence est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-  ).then(() => {
+const removeAbsence = async (absence) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer votre absence ?",
+      "Attention, la suppression d'une absence est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
+    )
+  ) {
     infosStore
       .removeMonAbsence(absence)
       .then(() => awn.success("Absence supprimée avec succès"))
       .catch((err) => awn.alert(err?.message ?? "Impossible de supprimer l'absence"));
-  });
+  }
+};
 
 const fields = [
   { title: "Début", key: "debut", type: Date },

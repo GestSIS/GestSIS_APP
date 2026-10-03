@@ -63,11 +63,16 @@ const addContact = (liste) =>
     component: "ModalSisContact",
     data: liste,
   });
-const removeContact = (contact) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cet email ?",
-    "Attention, cet email ne recevra plus les emails de cette liste de diffusion !",
-  ).then(() => sisParamStore.removeSisContact(contact.id));
+const removeContact = async (contact) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cet email ?",
+      "Attention, cet email ne recevra plus les emails de cette liste de diffusion !",
+    )
+  ) {
+    sisParamStore.removeSisContact(contact.id);
+  }
+};
 
 const updateLocalitesSis = () => {
   const callback = (res) => {

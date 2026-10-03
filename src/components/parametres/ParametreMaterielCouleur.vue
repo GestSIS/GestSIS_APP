@@ -24,15 +24,18 @@ const update = (elem) => {
     data: { ...elem },
   });
 };
-const remove = (elem) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette couleur ?",
-    "Attention, la suppression d'une couleur est irréversible !",
-  ).then(() =>
+const remove = async (elem) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette couleur ?",
+      "Attention, la suppression d'une couleur est irréversible !",
+    )
+  ) {
     couleurStore
       .removeCouleur(elem.id)
-      .catch((error) => awn.alert(error.message ?? "Impossible de supprimer cette couleur")),
-  );
+      .catch((error) => awn.alert(error.message ?? "Impossible de supprimer cette couleur"));
+  }
+};
 
 const fields = [
   { title: "Couleur", slot: "couleur" },

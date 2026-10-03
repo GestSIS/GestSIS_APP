@@ -37,11 +37,16 @@ const newFonction = () => {
 const editFonction = (fonction) => {
   showModal({ component: "ModalSapeurFonction", data: fonction });
 };
-const supprimerFonction = (fonction) =>
-  confirm(
-    "Voulez-vous vraiment supprimer cette fonction ?",
-    "Attention, la suppression d'une fonction est irréversible ! Toutes les données de cette fonction seront perdues !",
-  ).then(() => sapeurStore.removeSapeurFonction(fonction?.id));
+const supprimerFonction = async (fonction) => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment supprimer cette fonction ?",
+      "Attention, la suppression d'une fonction est irréversible ! Toutes les données de cette fonction seront perdues !",
+    )
+  ) {
+    sapeurStore.removeSapeurFonction(fonction?.id);
+  }
+};
 
 const fields = [
   { title: "Début", key: "debut", type: Date },
