@@ -1,6 +1,7 @@
 <script setup>
 import { computed, watchEffect } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import useNotification from "../composables/useNotification.js";
 import { useExerciceStore } from "../stores/exercice/Exercice.js";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 
@@ -13,12 +14,18 @@ const { id } = defineProps({
 
 const exerciceStore = useExerciceStore();
 const route = useRoute();
+const router = useRouter();
+const awn = useNotification();
 
 const newMode = computed(() => id === "new");
 watchEffect(() => {
   if (id !== "new") {
     exerciceStore.selectExercice(parseInt(id));
-    exerciceStore.fetchExercice(parseInt(id));
+    exerciceStore.fetchExercice(parseInt(id)).catch(() => {
+      // Lien vers un exercice supprimé (favori, ancien onglet…) : retour à la liste.
+      awn.alert("Cet exercice n'existe pas ou n'existe plus.");
+      router.replace({ name: "exercices" });
+    });
   } else {
     if (route.name != "exercice-details") {
       router.push({ name: "exercice-details", id: "new" });

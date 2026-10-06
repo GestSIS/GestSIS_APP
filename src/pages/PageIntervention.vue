@@ -2,8 +2,7 @@
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 import { watchEffect } from "vue";
 import { computed } from "vue";
-import router from "../router";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useInterventionStore } from "../stores/intervention/Intervention.js";
 import { useModalStore } from "../stores/common/Modal.js";
 import useNotification from "../composables/useNotification.js";
@@ -13,6 +12,7 @@ import { interventionStatut } from "../composables/interventionStatuts.js";
 
 const interventionStore = useInterventionStore();
 const route = useRoute();
+const router = useRouter();
 const { confirm } = useModalStore();
 const awn = useNotification();
 const hasValidationPermission = useHasPermission(permissions.INTERVENTION.VALIDATION);
