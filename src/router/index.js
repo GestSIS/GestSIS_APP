@@ -1107,9 +1107,10 @@ router.beforeEach((to) => {
   lastAttemptedPath = to.fullPath;
 });
 
-window.addEventListener("vite:preloadError", () => {
+window.addEventListener("vite:preloadError", (event) => {
   try {
     if (sessionStorage.getItem(CHUNK_RELOAD_GUARD_KEY)) {
+      // Déjà rechargé sans succès : on laisse Vite relancer l'erreur pour qu'elle soit rapportée.
       return;
     }
     sessionStorage.setItem(CHUNK_RELOAD_GUARD_KEY, "1");
@@ -1117,6 +1118,10 @@ window.addEventListener("vite:preloadError", () => {
     // sessionStorage indisponible (navigation privée, quota) : on recharge quand même, au prix
     // d'une éventuelle boucle si l'erreur persiste (préférable à rester bloqué sur l'erreur).
   }
+
+  // Sans preventDefault, Vite relance l'erreur après l'événement : elle remonterait comme rejet
+  // non géré (Sentry) alors que le rechargement la résout.
+  event.preventDefault();
 
   if (lastAttemptedPath) {
     window.location.hash = lastAttemptedPath;
