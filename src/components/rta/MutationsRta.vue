@@ -83,23 +83,26 @@ const actuel = computed(() =>
 );
 
 // Sapeurs faisant partie d'un groupe RTA mais sans aucun numéro de téléphone.
-// On ne peut pas les transmettre au RTA : on les exclut de la liste et de la
-// transmission, et on les signale dans une alerte.
+// Ils ne sont pas alarmables : on ne les transmet pas au RTA. S'ils sont encore
+// dans la base RTA, ils apparaissent comme supprimés et en sont retirés au transfert.
 const sapeursSansNumero = computed(() =>
   actuel.value
     .filter((s) => s.numeros.length === 0)
     .sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom)),
 );
 const sansNumeroIds = computed(() => new Set(sapeursSansNumero.value.map((s) => s.sapeur_id)));
+const actuelTransmissible = computed(() =>
+  actuel.value.filter((s) => !sansNumeroIds.value.has(s.sapeur_id)),
+);
 
 const mutations = computed(() => {
   const referenceIds = new Set(reference.value.map((s) => s.sapeur_id));
-  const actuelIds = new Set(actuel.value.map((s) => s.sapeur_id));
+  const actuelIds = new Set(actuelTransmissible.value.map((s) => s.sapeur_id));
   const potentielModifieIds = new Set([...referenceIds].filter((id) => actuelIds.has(id)));
 
   const sapeurCompare = (a, b) => a.nom_prenom.localeCompare(b.nom_prenom);
 
-  const ajoutes = actuel.value
+  const ajoutes = actuelTransmissible.value
     .filter((s) => !referenceIds.has(s.sapeur_id))
     .map((s) => ({
       ...s,
@@ -112,10 +115,11 @@ const mutations = computed(() => {
     .map((s) => ({
       ...s,
       statut: "supprime",
+      sansNumero: sansNumeroIds.value.has(s.sapeur_id),
       changements: {},
     }))
     .sort(sapeurCompare);
-  const modifies = actuel.value
+  const modifies = actuelTransmissible.value
     .filter((s) => potentielModifieIds.has(s.sapeur_id))
     .map((s) => {
       let modifie = false;
@@ -187,9 +191,7 @@ const mutations = computed(() => {
     .filter((m) => m.changements.modifie)
     .sort(sapeurCompare);
 
-  return [...ajoutes, ...modifies, ...supprimes].filter(
-    (m) => !sansNumeroIds.value.has(m.sapeur_id),
-  );
+  return [...ajoutes, ...modifies, ...supprimes];
 });
 
 const nbNumero = computed(() => {
@@ -230,10 +232,8 @@ const mutate = () => {
     sis,
     sapeurs: [
       ...reference.value.filter((s) => (unselected.value[s.sapeur_id] ?? false) === true),
-      ...actuel.value.filter(
-        (s) =>
-          (unselected.value[s.sapeur_id] ?? false) === false &&
-          !sansNumeroIds.value.has(s.sapeur_id),
+      ...actuelTransmissible.value.filter(
+        (s) => (unselected.value[s.sapeur_id] ?? false) === false,
       ),
     ],
   };
@@ -269,7 +269,8 @@ const mutate = () => {
         <div v-if="sapeursSansNumero.length" class="alert alert-warning" role="alert">
           <p class="mb-1">
             Les sapeurs suivants font partie d'un groupe RTA mais n'ont aucun numéro de téléphone.
-            Ils ne peuvent pas être transmis au RTA :
+            Ils ne sont ainsi pas alarmables par le CET et seront retirés de la base RTA lors du
+            transfert :
           </p>
           <ul class="mb-0">
             <li v-for="s in sapeursSansNumero" :key="s.sapeur_id">
@@ -350,6 +351,7 @@ const mutate = () => {
               }"
             >
               {{ e.nom_prenom }}
+              <span v-if="e.sansNumero" class="badge text-bg-danger ms-1">Sans numéro</span>
             </td>
             <td
               :class="{
