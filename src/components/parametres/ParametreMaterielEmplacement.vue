@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { groupedByData, indexedData } from "../../tools/index.js";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
@@ -59,6 +59,21 @@ const fields = [
   { title: "Couleur", slot: "couleur" },
   { title: "Actions", slot: "actions" },
 ];
+
+const toggled = ref({});
+const toggleLine = (id) => {
+  toggled.value[id] = !(toggled.value[id] ?? false);
+};
+
+const emplacementVisible = computed(() =>
+  computedData.value.reduce((visible, e) => {
+    visible[e.id] =
+      e.level === 0 || (visible[e.parent_id] && !(toggled.value[e.parent_id] ?? false));
+    return visible;
+  }, {}),
+);
+
+const rowClass = (dataItem) => (emplacementVisible.value[dataItem.id] ? "" : "d-none");
 </script>
 
 <template>
@@ -70,9 +85,27 @@ const fields = [
       </button>
     </div>
     <div class="card-body table-responsive p-0">
-      <base-table :data="computedData" :fields="fields">
+      <base-table :data="computedData" :fields="fields" :rowClass="rowClass">
         <template #emplacement="{ rowData }">
           <div :style="{ 'padding-left': rowData.level * 25 + 'px' }">
+            <template v-if="emplacementsGroupedByParent[rowData.id]?.length">
+              <font-awesome-icon
+                v-if="(toggled[rowData.id] ?? false) === false"
+                @click="toggleLine(rowData.id)"
+                v-tooltip.bottom="'Masquer'"
+                :icon="['fas', 'angle-down']"
+                class="me-1"
+              />
+              <font-awesome-icon
+                v-if="(toggled[rowData.id] ?? false) === true"
+                @click="toggleLine(rowData.id)"
+                v-tooltip.bottom="'Afficher'"
+                :icon="['fas', 'angle-right']"
+                class="me-1"
+              />
+            </template>
+            <!-- Sans enfant : pas de toggle, mais on garde la place pour l'alignement. -->
+            <font-awesome-icon v-else :icon="['fas', 'angle-right']" class="me-1 invisible" />
             <tag-couleur :couleur="indexedCouleurs[rowData.couleur_id]">
               <font-awesome-icon
                 v-if="rowData.hangar"
