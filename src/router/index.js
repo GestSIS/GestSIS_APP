@@ -586,6 +586,8 @@ const router = createRouter({
         {
           path: "par-type",
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          // Colonnes à scroll indépendant : PageMateriel occupe toute la hauteur.
+          meta: { pleineHauteur: true },
           children: [
             {
               path: "",
@@ -603,6 +605,8 @@ const router = createRouter({
         {
           path: "par-emplacement",
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          // Colonnes à scroll indépendant : PageMateriel occupe toute la hauteur.
+          meta: { pleineHauteur: true },
           children: [
             {
               path: "",
@@ -620,6 +624,8 @@ const router = createRouter({
         {
           path: "par-sapeur",
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          // Colonnes à scroll indépendant : PageMateriel occupe toute la hauteur.
+          meta: { pleineHauteur: true },
           children: [
             {
               path: "",
@@ -643,6 +649,8 @@ const router = createRouter({
         {
           path: "controles",
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          // Colonnes à scroll indépendant : PageMateriel occupe toute la hauteur.
+          meta: { pleineHauteur: true },
           children: [
             {
               path: "",

@@ -263,6 +263,8 @@ const ajoutEmplacement = () =>
         </router-link>
       </ul>
     </div>
-    <button class="btn btn-sm btn-outline-primary w-100" @click="ajoutEmplacement">Ajouter</button>
+    <button class="btn btn-sm btn-outline-primary w-100 mb-2" @click="ajoutEmplacement">
+      Ajouter
+    </button>
   </div>
 </template>

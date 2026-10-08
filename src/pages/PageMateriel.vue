@@ -1,5 +1,17 @@
+<script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+
+// Certains onglets (ex. Par emplacement) gèrent eux-mêmes le scroll de leurs
+// colonnes (meta `pleineHauteur` de la route) : la page doit alors occuper
+// exactement la hauteur disponible.
+const pleineHauteur = computed(() => route.meta.pleineHauteur === true);
+</script>
+
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid" :class="{ 'custom-container': pleineHauteur }">
     <div class="row">
       <div class="col-md-6 col-12">
         <nav aria-label="breadcrumb">
@@ -12,7 +24,7 @@
         </nav>
       </div>
     </div>
-    <div class="row">
+    <div class="row" :class="{ 'nested-container': pleineHauteur }">
       <div class="col-md-12">
         <base-navigation-tab
           :routes="[
@@ -60,3 +72,36 @@
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins/breakpoints";
+
+@include media-breakpoint-up(md) {
+  .custom-container {
+    display: flex;
+    flex-flow: column;
+    overflow: hidden;
+  }
+
+  .nested-container {
+    overflow: hidden;
+
+    > .col-md-12 {
+      display: flex;
+      flex-flow: column;
+      height: 100%;
+    }
+
+    .tab-content {
+      flex: 1;
+      min-height: 0;
+    }
+
+    .tab-pane {
+      height: 100%;
+    }
+  }
+}
+</style>
