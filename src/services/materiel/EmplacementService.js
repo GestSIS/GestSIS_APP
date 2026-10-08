@@ -13,4 +13,9 @@ export default {
   removeEmplacement(emplacementId) {
     return Api.api().delete(`/emplacements/${emplacementId}`);
   },
+  dupliquerEnfants(emplacementId, cibleId) {
+    return Api.api().post(`/emplacements/${emplacementId}/dupliquer-enfants`, {
+      cible_id: cibleId,
+    });
+  },
 };

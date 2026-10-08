@@ -38,6 +38,8 @@ const update = (elem) =>
     data: elem.article ? { ...elem.article, emplacement_representee: elem } : { ...elem },
     callback: elem.article ? () => emplacementStore.fetchEmplacements() : undefined,
   });
+const dupliquerEnfants = (elem) =>
+  showModal({ component: "ModalDupliquerEmplacementsEnfants", data: { ...elem } });
 const remove = async (elem) => {
   if (
     await confirm(
@@ -85,7 +87,7 @@ const rowClass = (dataItem) => (emplacementVisible.value[dataItem.id] ? "" : "d-
       </button>
     </div>
     <div class="card-body table-responsive p-0">
-      <base-table :data="computedData" :fields="fields" :rowClass="rowClass">
+      <base-table :data="computedData" :fields="fields" :rowClass="rowClass" :selectable="true">
         <template #emplacement="{ rowData }">
           <div :style="{ 'padding-left': rowData.level * 25 + 'px' }">
             <template v-if="emplacementsGroupedByParent[rowData.id]?.length">
@@ -133,6 +135,15 @@ const rowClass = (dataItem) => (emplacementVisible.value[dataItem.id] ? "" : "d-
           </button>
           <button type="button" class="btn btn-outline-danger border-0" @click="remove(rowData)">
             <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+          <button
+            v-if="emplacementsGroupedByParent[rowData.id]?.length"
+            v-tooltip.bottom="'Dupliquer emplacements enfants'"
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="dupliquerEnfants(rowData)"
+          >
+            <font-awesome-icon :icon="['fas', 'copy']" />
           </button>
         </template>
       </base-table>

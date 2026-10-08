@@ -23,5 +23,10 @@ export const useEmplacementStore = defineStore("emplacement", {
       await EmplacementService.removeEmplacement(emplacementId);
       this.liste = this.liste.filter((e) => e.id !== emplacementId);
     },
+    async dupliquerEnfants(emplacementId, cibleId) {
+      const data = await EmplacementService.dupliquerEnfants(emplacementId, cibleId);
+      this.liste.push(...data);
+      return data;
+    },
   },
 });

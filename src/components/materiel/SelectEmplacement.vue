@@ -16,28 +16,34 @@ import {
 import { indexedData } from "../../tools/index.js";
 import TagCouleur from "./TagCouleur.vue";
 
-const { label, emplacementIdToIgnore, emplacementRacine, disabled, required } = defineProps({
-  label: {
-    type: String,
-    default: () => "",
+const { label, emplacementIdToIgnore, emplacementRacine, filtre, disabled, required } = defineProps(
+  {
+    label: {
+      type: String,
+      default: () => "",
+    },
+    required: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    emplacementIdToIgnore: {
+      type: Number,
+      default: () => -1,
+    },
+    emplacementRacine: {
+      type: Boolean,
+      default: () => false,
+    },
+    filtre: {
+      type: Function,
+      default: () => true,
+    },
   },
-  required: {
-    type: Boolean,
-    default: false,
-  },
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
-  emplacementIdToIgnore: {
-    type: Number,
-    default: () => -1,
-  },
-  emplacementRacine: {
-    type: Boolean,
-    default: () => false,
-  },
-});
+);
 
 const model = defineModel();
 
@@ -74,7 +80,10 @@ const emplacements = computed(() => {
       })
       .sort((a, b) => a.tri - b.tri)
       .filter(
-        (c) => c.id !== emplacementIdToIgnore && !c.emplacements.includes(emplacementIdToIgnore),
+        (c) =>
+          c.id !== emplacementIdToIgnore &&
+          !c.emplacements.includes(emplacementIdToIgnore) &&
+          filtre(c),
       ),
   ];
 });

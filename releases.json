@@ -6,7 +6,8 @@
       "app": "GestSIS APP",
       "changes": [
         "Scroll indépendant pour la visualisation de matériel",
-        "Possibilité de réduire l'arbre des emplacements"
+        "Arbre des emplacements réductible",
+        "Duplication de la structure d'emplacements vers un autre emplacement"
       ]
     },
     {
