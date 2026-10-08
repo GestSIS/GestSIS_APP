@@ -112,6 +112,24 @@ const selectedEmplacementId = computed({
     ),
 });
 
+// Emplacements ayant au moins un enfant affiché (seuls ceux-ci ont un toggle).
+const parentsAffiches = computed(() => new Set(computedData.value.map((e) => e.parent_id)));
+
+const toggled = ref({});
+const toggleLine = (id) => {
+  toggled.value[id] = !(toggled.value[id] ?? false);
+};
+
+const emplacementVisible = computed(() =>
+  computedData.value.reduce((visible, e) => {
+    visible[e.id] =
+      filtre.value.trim() !== "" ||
+      e.level === 0 ||
+      (visible[e.parent_id] && !(toggled.value[e.parent_id] ?? false));
+    return visible;
+  }, {}),
+);
+
 const { showModal } = useModalStore();
 const ajoutEmplacement = () =>
   showModal({
@@ -238,12 +256,31 @@ const ajoutEmplacement = () =>
           }"
         >
           <a
+            v-show="emplacementVisible[item.id]"
             class="nav-link list-group-item list-group-item-action pt-1 pb-1"
             href="#"
             role="link"
             :class="{ 'bg-primary-subtle': isExactActive }"
             @click="navigate"
           >
+            <template v-if="parentsAffiches.has(item.id)">
+              <font-awesome-icon
+                v-if="(toggled[item.id] ?? false) === false"
+                v-tooltip.bottom="'Masquer'"
+                :icon="['fas', 'angle-down']"
+                class="me-1"
+                @click.stop.prevent="toggleLine(item.id)"
+              />
+              <font-awesome-icon
+                v-if="(toggled[item.id] ?? false) === true"
+                v-tooltip.bottom="'Afficher'"
+                :icon="['fas', 'angle-right']"
+                class="me-1"
+                @click.stop.prevent="toggleLine(item.id)"
+              />
+            </template>
+            <!-- Sans enfant : pas de toggle, mais on garde la place pour l'alignement. -->
+            <font-awesome-icon v-else :icon="['fas', 'angle-right']" class="me-1 invisible" />
             <tag-couleur :couleur="indexedCouleurs[item.couleur_id]">
               <font-awesome-icon
                 v-if="item.hangar"

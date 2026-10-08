@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "01.10.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Scroll indépendant pour la visualisation de matériel",
+        "Possibilité de réduire l'arbre des emplacements"
+      ]
+    },
+    {
       "date": "02.10.2026",
       "version": "1.0",
       "app": "GestSIS Mobile 2.6.13",
