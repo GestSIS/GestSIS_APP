@@ -2,11 +2,12 @@
   "releases": [
     {
       "date": "01.10.2026",
-      "version": "1.0",
+      "version": "2.0",
       "app": "GestSIS APP",
       "changes": [
         "Scroll indépendant pour la visualisation de matériel",
         "Arbre des emplacements réductible",
+        "Arbre des catégories réductible dans paramètre",
         "Duplication de la structure d'emplacements vers un autre emplacement"
       ]
     },
