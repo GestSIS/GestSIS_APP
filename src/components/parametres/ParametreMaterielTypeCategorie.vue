@@ -1,7 +1,7 @@
 <script setup>
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { groupedByData, indexedData } from "../../tools/index.js";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
@@ -38,6 +38,7 @@ const computedData = computed(() => {
       data.push({
         ...c,
         globalId: "c" + c.id,
+        parentGlobalId: c.parent_id ? "c" + c.parent_id : null,
         estCategorie: true,
         level: level,
         tag: "tag",
@@ -49,6 +50,7 @@ const computedData = computed(() => {
         data.push({
           ...t,
           globalId: "t" + t.id,
+          parentGlobalId: "c" + c.id,
           estCategorie: false,
           level: level + 1,
           tag: "shirt",
@@ -63,6 +65,28 @@ const computedData = computed(() => {
   );
   return data;
 });
+
+// Catégories ayant au moins un enfant (sous-catégorie ou type) : seules
+// celles-ci ont un toggle.
+const parentsAffiches = computed(() => new Set(computedData.value.map((e) => e.parentGlobalId)));
+
+const toggled = ref({});
+const toggleLine = (globalId) => {
+  toggled.value[globalId] = !(toggled.value[globalId] ?? false);
+};
+
+// Même logique que ParametreMaterielEmplacement : replier une catégorie masque
+// ses descendants, pas la catégorie elle-même.
+const ligneVisible = computed(() =>
+  computedData.value.reduce((visible, e) => {
+    visible[e.globalId] =
+      e.parentGlobalId === null ||
+      (visible[e.parentGlobalId] && !(toggled.value[e.parentGlobalId] ?? false));
+    return visible;
+  }, {}),
+);
+
+const rowClass = (dataItem) => (ligneVisible.value[dataItem.globalId] ? "" : "d-none");
 
 const { showModal, confirm } = useModalStore();
 const awn = useNotification();
@@ -118,10 +142,31 @@ const fields = [
         select-key="globalId"
         :data="computedData"
         :fields="fields"
+        :row-class="rowClass"
         no-data="Aucune catégorie"
       >
         <template #type="{ rowData }">
           <div :style="{ 'padding-left': rowData.level * 25 + 'px' }">
+            <template v-if="rowData.estCategorie">
+              <template v-if="parentsAffiches.has(rowData.globalId)">
+                <font-awesome-icon
+                  v-if="(toggled[rowData.globalId] ?? false) === false"
+                  v-tooltip.bottom="'Masquer'"
+                  :icon="['fas', 'angle-down']"
+                  class="me-1"
+                  @click.stop="toggleLine(rowData.globalId)"
+                />
+                <font-awesome-icon
+                  v-if="(toggled[rowData.globalId] ?? false) === true"
+                  v-tooltip.bottom="'Afficher'"
+                  :icon="['fas', 'angle-right']"
+                  class="me-1"
+                  @click.stop="toggleLine(rowData.globalId)"
+                />
+              </template>
+              <!-- Sans enfant : pas de toggle, mais on garde la place pour l'alignement. -->
+              <font-awesome-icon v-else :icon="['fas', 'angle-right']" class="me-1 invisible" />
+            </template>
             <font-awesome-icon
               v-if="!rowData.estCategorie"
               class="me-2"
