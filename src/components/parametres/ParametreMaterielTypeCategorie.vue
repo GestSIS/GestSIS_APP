@@ -70,10 +70,10 @@ const computedData = computed(() => {
 // celles-ci ont un toggle.
 const parentsAffiches = computed(() => new Set(computedData.value.map((e) => e.parentGlobalId)));
 
-const toggled = ref({});
-const toggleLine = (globalId) => {
-  toggled.value[globalId] = !(toggled.value[globalId] ?? false);
-};
+// Catégories repliées (par globalId) ; tout est déplié au départ.
+const replies = ref(new Set());
+const toggleLine = (globalId) =>
+  replies.value.has(globalId) ? replies.value.delete(globalId) : replies.value.add(globalId);
 
 // Même logique que ParametreMaterielEmplacement : replier une catégorie masque
 // ses descendants, pas la catégorie elle-même.
@@ -81,7 +81,7 @@ const ligneVisible = computed(() =>
   computedData.value.reduce((visible, e) => {
     visible[e.globalId] =
       e.parentGlobalId === null ||
-      (visible[e.parentGlobalId] && !(toggled.value[e.parentGlobalId] ?? false));
+      (visible[e.parentGlobalId] && !replies.value.has(e.parentGlobalId));
     return visible;
   }, {}),
 );
@@ -147,26 +147,14 @@ const fields = [
       >
         <template #type="{ rowData }">
           <div :style="{ 'padding-left': rowData.level * 25 + 'px' }">
-            <template v-if="rowData.estCategorie">
-              <template v-if="parentsAffiches.has(rowData.globalId)">
-                <font-awesome-icon
-                  v-if="(toggled[rowData.globalId] ?? false) === false"
-                  v-tooltip.bottom="'Masquer'"
-                  :icon="['fas', 'angle-down']"
-                  class="me-1"
-                  @click.stop="toggleLine(rowData.globalId)"
-                />
-                <font-awesome-icon
-                  v-if="(toggled[rowData.globalId] ?? false) === true"
-                  v-tooltip.bottom="'Afficher'"
-                  :icon="['fas', 'angle-right']"
-                  class="me-1"
-                  @click.stop="toggleLine(rowData.globalId)"
-                />
-              </template>
-              <!-- Sans enfant : pas de toggle, mais on garde la place pour l'alignement. -->
-              <font-awesome-icon v-else :icon="['fas', 'angle-right']" class="me-1 invisible" />
-            </template>
+            <font-awesome-icon
+              v-if="rowData.estCategorie"
+              v-tooltip.bottom="replies.has(rowData.globalId) ? 'Afficher' : 'Masquer'"
+              :icon="['fas', replies.has(rowData.globalId) ? 'angle-right' : 'angle-down']"
+              class="me-1"
+              :class="{ invisible: !parentsAffiches.has(rowData.globalId) }"
+              @click.stop="toggleLine(rowData.globalId)"
+            />
             <font-awesome-icon
               v-if="!rowData.estCategorie"
               class="me-2"

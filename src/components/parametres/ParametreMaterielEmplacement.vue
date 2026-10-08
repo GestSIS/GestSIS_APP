@@ -62,15 +62,14 @@ const fields = [
   { title: "Actions", slot: "actions" },
 ];
 
-const toggled = ref({});
-const toggleLine = (id) => {
-  toggled.value[id] = !(toggled.value[id] ?? false);
-};
+// État initial : tout est replié sauf les hangars.
+const replies = ref(new Set(emplacements.value.filter((e) => !e.hangar).map((e) => e.id)));
+const toggleLine = (id) =>
+  replies.value.has(id) ? replies.value.delete(id) : replies.value.add(id);
 
 const emplacementVisible = computed(() =>
   computedData.value.reduce((visible, e) => {
-    visible[e.id] =
-      e.level === 0 || (visible[e.parent_id] && !(toggled.value[e.parent_id] ?? false));
+    visible[e.id] = e.level === 0 || (visible[e.parent_id] && !replies.value.has(e.parent_id));
     return visible;
   }, {}),
 );
@@ -90,24 +89,13 @@ const rowClass = (dataItem) => (emplacementVisible.value[dataItem.id] ? "" : "d-
       <base-table :data="computedData" :fields="fields" :rowClass="rowClass" :selectable="true">
         <template #emplacement="{ rowData }">
           <div :style="{ 'padding-left': rowData.level * 25 + 'px' }">
-            <template v-if="emplacementsGroupedByParent[rowData.id]?.length">
-              <font-awesome-icon
-                v-if="(toggled[rowData.id] ?? false) === false"
-                @click="toggleLine(rowData.id)"
-                v-tooltip.bottom="'Masquer'"
-                :icon="['fas', 'angle-down']"
-                class="me-1"
-              />
-              <font-awesome-icon
-                v-if="(toggled[rowData.id] ?? false) === true"
-                @click="toggleLine(rowData.id)"
-                v-tooltip.bottom="'Afficher'"
-                :icon="['fas', 'angle-right']"
-                class="me-1"
-              />
-            </template>
-            <!-- Sans enfant : pas de toggle, mais on garde la place pour l'alignement. -->
-            <font-awesome-icon v-else :icon="['fas', 'angle-right']" class="me-1 invisible" />
+            <font-awesome-icon
+              v-tooltip.bottom="replies.has(rowData.id) ? 'Afficher' : 'Masquer'"
+              :icon="['fas', replies.has(rowData.id) ? 'angle-right' : 'angle-down']"
+              class="me-1"
+              :class="{ invisible: !emplacementsGroupedByParent[rowData.id]?.length }"
+              @click.stop="toggleLine(rowData.id)"
+            />
             <tag-couleur :couleur="indexedCouleurs[rowData.couleur_id]">
               <font-awesome-icon
                 v-if="rowData.hangar"

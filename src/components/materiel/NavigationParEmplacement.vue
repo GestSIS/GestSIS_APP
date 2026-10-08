@@ -115,17 +115,22 @@ const selectedEmplacementId = computed({
 // Emplacements ayant au moins un enfant affiché (seuls ceux-ci ont un toggle).
 const parentsAffiches = computed(() => new Set(computedData.value.map((e) => e.parent_id)));
 
-const toggled = ref({});
-const toggleLine = (id) => {
-  toggled.value[id] = !(toggled.value[id] ?? false);
-};
+// État initial : tout est replié sauf les hangars et les ancêtres de la
+// sélection (pour qu'elle reste visible en arrivant directement sur son URL).
+const replies = ref(new Set(emplacementStore.liste.filter((e) => !e.hangar).map((e) => e.id)));
+for (let id = indexedEmplacements.value[selectedEmplacementId.value]?.parent_id; id > 0;) {
+  replies.value.delete(id);
+  id = indexedEmplacements.value[id]?.parent_id;
+}
+const toggleLine = (id) =>
+  replies.value.has(id) ? replies.value.delete(id) : replies.value.add(id);
 
 const emplacementVisible = computed(() =>
   computedData.value.reduce((visible, e) => {
     visible[e.id] =
       filtre.value.trim() !== "" ||
       e.level === 0 ||
-      (visible[e.parent_id] && !(toggled.value[e.parent_id] ?? false));
+      (visible[e.parent_id] && !replies.value.has(e.parent_id));
     return visible;
   }, {}),
 );
@@ -263,24 +268,13 @@ const ajoutEmplacement = () =>
             :class="{ 'bg-primary-subtle': isExactActive }"
             @click="navigate"
           >
-            <template v-if="parentsAffiches.has(item.id)">
-              <font-awesome-icon
-                v-if="(toggled[item.id] ?? false) === false"
-                v-tooltip.bottom="'Masquer'"
-                :icon="['fas', 'angle-down']"
-                class="me-1"
-                @click.stop.prevent="toggleLine(item.id)"
-              />
-              <font-awesome-icon
-                v-if="(toggled[item.id] ?? false) === true"
-                v-tooltip.bottom="'Afficher'"
-                :icon="['fas', 'angle-right']"
-                class="me-1"
-                @click.stop.prevent="toggleLine(item.id)"
-              />
-            </template>
-            <!-- Sans enfant : pas de toggle, mais on garde la place pour l'alignement. -->
-            <font-awesome-icon v-else :icon="['fas', 'angle-right']" class="me-1 invisible" />
+            <font-awesome-icon
+              v-tooltip.bottom="replies.has(item.id) ? 'Afficher' : 'Masquer'"
+              :icon="['fas', replies.has(item.id) ? 'angle-right' : 'angle-down']"
+              class="me-1"
+              :class="{ invisible: !parentsAffiches.has(item.id) }"
+              @click.stop.prevent="toggleLine(item.id)"
+            />
             <tag-couleur :couleur="indexedCouleurs[item.couleur_id]">
               <font-awesome-icon
                 v-if="item.hangar"
