@@ -73,8 +73,6 @@ const reset = async () => {
 <template>
   <div class="centered">
     <form class="text-center form-signin d-grid" @submit.prevent="reset">
-      <div :class="{ conditional: true }"></div>
-      <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
       <h1 class="h3 mb-3">Réinitialisation de votre mot de passe</h1>
       <template v-if="!reseted">
         <label for="inputPassword" class="visually-hidden">Mot de passe</label>

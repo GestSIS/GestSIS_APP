@@ -114,8 +114,6 @@ if (route.query?.confirm) {
 <template>
   <div class="centered">
     <form v-if="step === 'form'" class="text-center form-signin d-grid" @submit.prevent="register">
-      <div :class="{ conditional: true }"></div>
-      <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
       <h1 class="h3 mb-3">Veuillez-vous enregistrer</h1>
       <label for="inputName" class="visually-hidden">Nom Prénom</label>
       <input

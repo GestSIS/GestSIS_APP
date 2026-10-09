@@ -34,8 +34,6 @@ const request = async () => {
 <template>
   <div class="centered">
     <form class="text-center form-signin" @submit.prevent="request">
-      <div :class="{ conditional: true }"></div>
-      <!--<img class="mb-4" src="http://gestsis.ch/images/gestsis.gif" alt="" width="72" height="72">-->
       <h1 class="h3 mb-3">Récupération de votre mot de passe</h1>
       <label v-if="!sent" for="inputEmail" class="visually-hidden">Email</label>
       <input
