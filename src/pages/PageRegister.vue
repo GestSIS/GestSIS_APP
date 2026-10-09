@@ -141,7 +141,7 @@ if (route.query?.confirm) {
         autocomplete="off"
         :class="{ 'is-invalid': errors.password }"
       />
-      <div v-if="errors.password" class="invalid-feedback">Taille minimum: 8</div>
+      <div v-if="errors.password" class="invalid-feedback">Taille minimum: 12</div>
       <label for="inputPasswordConfirmation" class="visually-hidden">Confirmation</label>
       <input
         id="inputPasswordConfirmation"
