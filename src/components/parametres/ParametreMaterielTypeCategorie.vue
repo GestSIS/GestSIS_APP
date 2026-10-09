@@ -70,10 +70,10 @@ const computedData = computed(() => {
 // celles-ci ont un toggle.
 const parentsAffiches = computed(() => new Set(computedData.value.map((e) => e.parentGlobalId)));
 
-// Catégories repliées (par globalId) ; tout est déplié au départ.
-const replies = ref(new Set());
+// Catégories dépliées (par globalId) ; tout est replié au départ.
+const deplies = ref(new Set());
 const toggleLine = (globalId) =>
-  replies.value.has(globalId) ? replies.value.delete(globalId) : replies.value.add(globalId);
+  deplies.value.has(globalId) ? deplies.value.delete(globalId) : deplies.value.add(globalId);
 
 // Même logique que ParametreMaterielEmplacement : replier une catégorie masque
 // ses descendants, pas la catégorie elle-même.
@@ -81,7 +81,7 @@ const ligneVisible = computed(() =>
   computedData.value.reduce((visible, e) => {
     visible[e.globalId] =
       e.parentGlobalId === null ||
-      (visible[e.parentGlobalId] && !replies.value.has(e.parentGlobalId));
+      (visible[e.parentGlobalId] && deplies.value.has(e.parentGlobalId));
     return visible;
   }, {}),
 );
@@ -149,8 +149,8 @@ const fields = [
           <div :style="{ 'padding-left': rowData.level * 25 + 'px' }">
             <font-awesome-icon
               v-if="rowData.estCategorie"
-              v-tooltip.bottom="replies.has(rowData.globalId) ? 'Afficher' : 'Masquer'"
-              :icon="['fas', replies.has(rowData.globalId) ? 'angle-right' : 'angle-down']"
+              v-tooltip.bottom="deplies.has(rowData.globalId) ? 'Masquer' : 'Afficher'"
+              :icon="['fas', deplies.has(rowData.globalId) ? 'angle-down' : 'angle-right']"
               class="me-1"
               :class="{ invisible: !parentsAffiches.has(rowData.globalId) }"
               @click.stop="toggleLine(rowData.globalId)"
