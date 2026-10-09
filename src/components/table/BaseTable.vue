@@ -273,12 +273,12 @@ defineExpose({
 </script>
 
 <template>
-  <div v-if="loading" class="p-3 d-flex justify-content-center">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Chargement...</span>
-    </div>
-  </div>
-  <table v-show="!loading" class="table table-sm table-hover mb-0" v-bind="$attrs">
+  <table class="table table-sm table-hover mb-0 base-table" :aria-busy="loading">
+    <caption v-if="loading && allRows.length" class="base-table-overlay">
+      <div class="spinner-border base-table-overlay-spinner" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+    </caption>
     <slot name="head">
       <thead>
         <tr>
@@ -324,12 +324,17 @@ defineExpose({
       v-for="groupe in sortedGroupedData.length === 0
         ? [{ key: 'default', data: sortedData }]
         : sortedGroupedData"
-      v-show="!loading"
       :key="groupe.key"
     >
       <tr v-if="!groupe.data.length">
-        <td :colspan="fields.length + (detailRowColumn ? 1 : 0)">
-          {{ noData }}
+        <td
+          :colspan="fields.length + (detailRowColumn ? 1 : 0)"
+          :class="{ 'text-center': loading }"
+        >
+          <div v-if="loading" class="spinner-border my-2" role="status">
+            <span class="visually-hidden">Chargement...</span>
+          </div>
+          <template v-else>{{ noData }}</template>
         </td>
       </tr>
 
@@ -439,7 +444,7 @@ defineExpose({
         </tr>
       </template>
     </tbody>
-    <tfoot v-show="!loading">
+    <tfoot>
       <slot name="foot" v-bind="{ data }"></slot>
       <tr v-if="!hideDownload">
         <td :colspan="fields.length + (detailRowColumn ? 1 : 0)" class="p-0">
@@ -453,6 +458,30 @@ defineExpose({
 </template>
 
 <style scoped>
+.base-table {
+  position: relative;
+}
+
+.base-table-overlay {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: rgba(var(--bs-body-bg-rgb), 0.4);
+  backdrop-filter: blur(2px);
+  cursor: progress;
+}
+
+/* Reste visible au milieu de l'écran sur une longue table. */
+.base-table-overlay-spinner {
+  position: sticky;
+  top: calc(50vh - 1rem);
+  margin: 1rem 0;
+}
+
 th,
 tr {
   cursor: pointer;

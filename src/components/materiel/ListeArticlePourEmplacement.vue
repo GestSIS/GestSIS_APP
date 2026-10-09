@@ -184,7 +184,6 @@ const ajouter = () =>
       >
         <template #detail-row="{ rowData }">
           <table-article-pour-type
-            :loading="loading"
             :articles="rowData.data"
             :avec-emplacement="true"
             :materiel-type="rowData.type"
