@@ -54,7 +54,11 @@ const register = async () => {
       step.value = "confirm-email";
     })
     .catch((error) => {
-      errors.value = error?.errors ?? {};
+      // 422 : erreurs par champ ; sinon (jeton invalide, trop de tentatives,
+      // envoi de l'email en échec…) seul `message` est affiché.
+      errors.value = error?.errors ?? {
+        message: error?.message || "Erreur lors de la création du compte",
+      };
     })
     .finally(() => {
       submitting.value = false;
@@ -117,7 +121,7 @@ if (route.query?.confirm) {
         autocomplete="off"
         :class="{ 'is-invalid': errors.name }"
       />
-      <div v-if="errors.name" class="invalid-feedback">Nom invalide</div>
+      <div v-if="errors.name" class="invalid-feedback">{{ errors.name.join(" ") }}</div>
       <label for="inputEmail" class="visually-hidden">Email</label>
       <input
         id="inputEmail"
@@ -129,7 +133,7 @@ if (route.query?.confirm) {
         autocomplete="off"
         :class="{ 'is-invalid': errors.email }"
       />
-      <div v-if="errors.email" class="invalid-feedback">Email déjà existant</div>
+      <div v-if="errors.email" class="invalid-feedback">{{ errors.email.join(" ") }}</div>
       <label for="inputPassword" class="visually-hidden">Mot de passe</label>
       <input
         id="inputPassword"
@@ -141,7 +145,7 @@ if (route.query?.confirm) {
         autocomplete="off"
         :class="{ 'is-invalid': errors.password }"
       />
-      <div v-if="errors.password" class="invalid-feedback">Taille minimum: 12</div>
+      <div v-if="errors.password" class="invalid-feedback">{{ errors.password.join(" ") }}</div>
       <label for="inputPasswordConfirmation" class="visually-hidden">Confirmation</label>
       <input
         id="inputPasswordConfirmation"
@@ -155,7 +159,9 @@ if (route.query?.confirm) {
           'is-invalid': errors.password_confirmation || password !== password_confirmation,
         }"
       />
-      <div v-if="errors.password_confirmation" class="invalid-feedback">Mot de passe différent</div>
+      <div v-if="errors.password_confirmation" class="invalid-feedback">
+        {{ errors.password_confirmation.join(" ") }}
+      </div>
       <button class="btn btn-link btn-block" type="button" @click.prevent="avance = !avance">
         Avancé
       </button>
@@ -172,6 +178,7 @@ if (route.query?.confirm) {
           />
         </div>
       </transition-expand>
+      <div v-if="errors.message" class="invalid-feedback d-block mt-2">{{ errors.message }}</div>
       <button class="btn btn-lg btn-primary btn-block mt-3" type="submit" :disabled="submitting">
         {{ submitting ? "Création…" : "Créer un compte" }}
       </button>

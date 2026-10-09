@@ -51,8 +51,10 @@ const utiliserJeton = async () => {
 };
 
 const changerMotDePasse = async () => {
-  errors.value.password = newPassword.value.length < 7;
-  if (!isPasswordIdentical.value || errors.value.password) {
+  // Les règles (longueur, lettre, fuite connue) sont vérifiées par Auth, qui
+  // renvoie les messages par champ (422) affichés sous le nouveau mot de passe.
+  errors.value = {};
+  if (!isPasswordIdentical.value) {
     return;
   }
 
@@ -69,7 +71,13 @@ const changerMotDePasse = async () => {
       newPasswordRepeated.value = "";
       passwordChangeCode.value = "";
     })
-    .catch((e) => awn.alert(e?.message || "Mot de passe incorrect"));
+    .catch((e) => {
+      if (e?.errors?.new_password) {
+        errors.value = { password: e.errors.new_password };
+        return;
+      }
+      awn.alert(e?.message || "Mot de passe incorrect");
+    });
 };
 
 const deleteApiToken = async (id) => {
@@ -350,7 +358,9 @@ const fields = [
                   class="form-control form-control-sm"
                   :class="{ 'is-invalid': errors.password }"
                 />
-                <div v-if="errors.password" class="invalid-feedback">Taille minimum: 12</div>
+                <div v-if="errors.password" class="invalid-feedback">
+                  {{ errors.password.join(" ") }}
+                </div>
               </div>
 
               <div class="mb-3">

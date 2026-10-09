@@ -28,11 +28,11 @@ onUnmounted(() => {
 });
 
 const reset = async () => {
-  if (password.value.length < 12) {
-    errors.value["password"] = "Mot de passe trop court (min 12 charactères)";
+  errors.value = {};
+  // Les règles du mot de passe sont vérifiées par Auth (messages par champ).
+  if (password.value !== password_confirmation.value) {
     return;
   }
-  errors.value = {};
   useAuthStore()
     .resetPassword({
       password: password.value,
@@ -55,7 +55,11 @@ const reset = async () => {
       }
     })
     .catch((error) => {
-      errors.value = error;
+      // 422 : erreurs par champ (le résumé `message` les répète) ; sinon
+      // (jeton invalide, trop de tentatives…) seul `message` est affiché.
+      errors.value = error?.errors ?? {
+        message: error?.message || "Erreur lors de la réinitialisation",
+      };
     });
 };
 </script>
@@ -78,7 +82,9 @@ const reset = async () => {
           autocomplete="off"
           :class="{ 'is-invalid': errors.password }"
         />
-        <div v-if="errors.password" class="invalid-feedback">Taille minimum: 12</div>
+        <div v-if="errors.password" class="invalid-feedback">
+          {{ errors.password.join(" ") }}
+        </div>
         <label for="inputPasswordConfirmation" class="visually-hidden">Confirmation</label>
         <input
           id="inputPasswordConfirmation"
@@ -95,8 +101,8 @@ const reset = async () => {
         <div v-if="password !== password_confirmation" class="invalid-feedback">
           Mot de passe différent
         </div>
-        <div v-if="errors.message" class="invalid-feedback d-block">
-          {{ errors.message }}
+        <div v-if="errors.message || errors.token" class="invalid-feedback d-block">
+          {{ errors.message || "Jeton de réinitialisation manquant ou invalide" }}
         </div>
         <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Réinitialiser</button>
       </template>
