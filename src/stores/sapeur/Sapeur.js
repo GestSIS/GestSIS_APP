@@ -102,7 +102,6 @@ export const useSapeurStore = defineStore("sapeur", {
       this.liste = [...this.liste, { ...data, nom_prenom: `${data.nom} ${data.prenom}` }].sort(
         (s1, s2) => s1.nom_prenom.localeCompare(s2.nom_prenom),
       );
-      console.log("data", data);
       return data;
     },
     async deleteSapeur(sapeurId) {

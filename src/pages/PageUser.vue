@@ -624,13 +624,3 @@ const fields = [
     - Contrôler ses données et signaler des changements -- Autre interface peut-être
   -->
 </template>
-
-<style>
-.m-td-0 > td {
-  padding: 0 !important;
-}
-
-.m-td-0 > td {
-  padding: 0 !important;
-}
-</style>

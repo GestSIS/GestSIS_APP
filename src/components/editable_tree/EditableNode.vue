@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref, useTemplateRef } from "vue";
-import TransitionExpand from "/src/components/transition/TransitionExpand.vue";
 
 const { types, node, isRoot, isFirst, isFirstOfLevel, isLast, isLastOfLevel, select, active } =
   defineProps({
@@ -125,28 +124,26 @@ defineExpose({ expand });
         ></slot>
       </div>
     </div>
-    <transition-expand>
-      <div v-show="expanded && node.children" class="tree-node-children">
-        <editable-node
-          v-for="(item, index) in node.children"
-          ref="node"
-          :key="item.key"
-          :node="item"
-          :types="types"
-          class="tree-node--parent"
-          :select="select"
-          :active="active"
-          :is-first="isFirst && index == 0"
-          :is-first-of-level="index == 0"
-          :is-last="isLast && index + 1 == node.children.length"
-          :is-last-of-level="index + 1 == node.children.length"
-        >
-          <template #default="props">
-            <slot name:default :node="props.node"></slot>
-          </template>
-        </editable-node>
-      </div>
-    </transition-expand>
+    <div v-show="expanded && node.children" class="tree-node-children">
+      <editable-node
+        v-for="(item, index) in node.children"
+        ref="node"
+        :key="item.key"
+        :node="item"
+        :types="types"
+        class="tree-node--parent"
+        :select="select"
+        :active="active"
+        :is-first="isFirst && index == 0"
+        :is-first-of-level="index == 0"
+        :is-last="isLast && index + 1 == node.children.length"
+        :is-last-of-level="index + 1 == node.children.length"
+      >
+        <template #default="props">
+          <slot name:default :node="props.node"></slot>
+        </template>
+      </editable-node>
+    </div>
   </div>
 </template>
 

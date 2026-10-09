@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from "vue";
-import TransitionExpand from "/src/components/transition/TransitionExpand.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth/Auth";
 import TwoFactorForcedSetup from "../components/TwoFactorForcedSetup.vue";
@@ -171,19 +170,17 @@ if (route.query?.confirm) {
         {{ errors.password_confirmation.join(" ") }}
       </div>
       <button class="btn btn-link" type="button" @click.prevent="avance = !avance">Avancé</button>
-      <transition-expand>
-        <div v-show="avance">
-          <label for="inputToken" class="visually-hidden">Jeton d'enregistrement</label>
-          <input
-            id="inputToken"
-            v-model="token"
-            type="text"
-            class="form-control"
-            placeholder="Jeton (optionnel)"
-            autocomplete="off"
-          />
-        </div>
-      </transition-expand>
+      <div v-show="avance">
+        <label for="inputToken" class="visually-hidden">Jeton d'enregistrement</label>
+        <input
+          id="inputToken"
+          v-model="token"
+          type="text"
+          class="form-control"
+          placeholder="Jeton (optionnel)"
+          autocomplete="off"
+        />
+      </div>
       <div v-if="errors.message" class="invalid-feedback d-block mt-2">{{ errors.message }}</div>
       <button class="btn btn-lg btn-primary mt-3" type="submit" :disabled="submitting">
         {{ submitting ? "Création…" : "Créer un compte" }}
