@@ -57,9 +57,6 @@ const routes = [
     <div class="row">
       <div class="col-md-12">
         <base-navigation-tab :routes="routes" />
-        <div id="nav-tabContent" class="tab-content">
-          <div class="tab-pane fade show active" role="tabpanel"></div>
-        </div>
       </div>
     </div>
     <router-view />

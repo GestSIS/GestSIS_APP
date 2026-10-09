@@ -110,7 +110,7 @@ const reset = async () => {
         <div v-if="errors.message || errors.token" class="invalid-feedback d-block">
           {{ errors.message || "Jeton de réinitialisation manquant ou invalide" }}
         </div>
-        <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">Réinitialiser</button>
+        <button class="btn btn-lg btn-primary mt-3" type="submit">Réinitialiser</button>
       </template>
       <template v-else>
         <div>
@@ -132,7 +132,7 @@ const reset = async () => {
       </template>
       <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
 
-      <router-link :to="{ name: 'login' }" class="btn btn-link is-active">Se connecter</router-link>
+      <router-link :to="{ name: 'login' }" class="btn btn-link">Se connecter</router-link>
     </form>
   </div>
 </template>
@@ -153,31 +153,11 @@ const reset = async () => {
   margin: 0 auto;
 }
 
-.form-signin .checkbox {
-  font-weight: 400;
-}
-
 .form-signin .form-control {
   position: relative;
   box-sizing: border-box;
   height: auto;
   padding: 10px;
   font-size: 16px;
-}
-
-.form-signin .form-control:focus {
-  z-index: 2;
-}
-
-.form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
 }
 </style>

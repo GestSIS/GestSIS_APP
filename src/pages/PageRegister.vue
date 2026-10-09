@@ -120,7 +120,7 @@ if (route.query?.confirm) {
         id="inputName"
         v-model="name"
         type="text"
-        class="form-control form-control-sm"
+        class="form-control"
         placeholder="Nom Prénom"
         required
         autofocus
@@ -133,7 +133,7 @@ if (route.query?.confirm) {
         id="inputEmail"
         v-model="email"
         type="email"
-        class="form-control form-control-sm"
+        class="form-control"
         placeholder="Email"
         required
         autocomplete="off"
@@ -145,7 +145,7 @@ if (route.query?.confirm) {
         id="inputPassword"
         v-model="password"
         type="password"
-        class="form-control form-control-sm"
+        class="form-control"
         placeholder="Mot de passe"
         :minlength="PASSWORD_MIN_LENGTH"
         required
@@ -159,7 +159,7 @@ if (route.query?.confirm) {
         id="inputPasswordConfirmation"
         v-model="password_confirmation"
         type="password"
-        class="form-control form-control-sm"
+        class="form-control"
         placeholder="Confirmation"
         required
         autocomplete="off"
@@ -170,9 +170,7 @@ if (route.query?.confirm) {
       <div v-if="errors.password_confirmation" class="invalid-feedback">
         {{ errors.password_confirmation.join(" ") }}
       </div>
-      <button class="btn btn-link btn-block" type="button" @click.prevent="avance = !avance">
-        Avancé
-      </button>
+      <button class="btn btn-link" type="button" @click.prevent="avance = !avance">Avancé</button>
       <transition-expand>
         <div v-show="avance">
           <label for="inputToken" class="visually-hidden">Jeton d'enregistrement</label>
@@ -180,19 +178,19 @@ if (route.query?.confirm) {
             id="inputToken"
             v-model="token"
             type="text"
-            class="form-control form-control-sm"
+            class="form-control"
             placeholder="Jeton (optionnel)"
             autocomplete="off"
           />
         </div>
       </transition-expand>
       <div v-if="errors.message" class="invalid-feedback d-block mt-2">{{ errors.message }}</div>
-      <button class="btn btn-lg btn-primary btn-block mt-3" type="submit" :disabled="submitting">
+      <button class="btn btn-lg btn-primary mt-3" type="submit" :disabled="submitting">
         {{ submitting ? "Création…" : "Créer un compte" }}
       </button>
       <p class="mt-5 mb-3 text-muted">© GestSIS {{ new Date().getFullYear() }}</p>
 
-      <router-link :to="{ name: 'login' }" class="btn btn-link is-active">Se connecter</router-link>
+      <router-link :to="{ name: 'login' }" class="btn btn-link">Se connecter</router-link>
     </form>
 
     <form
@@ -212,7 +210,7 @@ if (route.query?.confirm) {
         type="text"
         autocapitalize="characters"
         autocomplete="one-time-code"
-        class="form-control form-control-sm mb-2"
+        class="form-control mb-2"
         placeholder="Code à 8 caractères"
         required
         autofocus
@@ -249,31 +247,11 @@ if (route.query?.confirm) {
   margin: 0 auto;
 }
 
-.form-signin .checkbox {
-  font-weight: 400;
-}
-
 .form-signin .form-control {
   position: relative;
   box-sizing: border-box;
   height: auto;
   padding: 10px;
   font-size: 16px;
-}
-
-.form-signin .form-control:focus {
-  z-index: 2;
-}
-
-.form-signin input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.form-signin input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
 }
 </style>
