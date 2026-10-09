@@ -69,7 +69,14 @@ const computedData = computed(() =>
         .sort((a1, a2) => a1.type.localeCompare(a2.type)),
       "categorie_id",
     ),
-  ).map(([key, values]) => ({ key, data: values, categorie_id: key })),
+  ).map(([key, values]) => ({
+    key,
+    label: linearCategories(parseInt(key))
+      .map((c) => c.designation)
+      .join(" > "),
+    data: values,
+    categorie_id: key,
+  })),
 );
 
 const { showModal } = useModalStore();

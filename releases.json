@@ -1,7 +1,16 @@
 {
   "releases": [
     {
-      "date": "01.10.2026",
+      "date": "09.10.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Possibilité de trier les tables groupées",
+        "Amélioration messages d'erreur pour création de compte"
+      ]
+    },
+    {
+      "date": "08.10.2026",
       "version": "2.0",
       "app": "GestSIS APP",
       "changes": [

@@ -108,6 +108,27 @@ const sortedData = computed(() => {
   return sortedData;
 });
 
+const sortedGroupedData = computed(() => {
+  return groupedData
+    .map((g) => ({
+      ...g,
+      data: [...g.data].sort((a1, a2) => {
+        const key = sorted.value.key;
+        const func = sorted.value.func;
+        if (!key) return 0;
+        let aVal = func(a1[key]);
+        let bVal = func(a2[key]);
+        if (parseInt(aVal, 10) == aVal && parseInt(bVal, 10) == bVal) {
+          aVal = parseInt(aVal, 10);
+          bVal = parseInt(bVal, 10);
+        }
+        const res = typeof aVal === "string" ? aVal.localeCompare(bVal) : aVal - bVal;
+        return sorted.value.asc ? res : -1 * res;
+      }),
+    }))
+    .sort((a, b) => a.label?.localeCompare(b.label));
+});
+
 const actions = computed(() => {
   return {
     select: select,
@@ -300,9 +321,9 @@ defineExpose({
       </thead>
     </slot>
     <tbody
-      v-for="groupe in groupedData.length === 0
+      v-for="groupe in sortedGroupedData.length === 0
         ? [{ key: 'default', data: sortedData }]
-        : groupedData"
+        : sortedGroupedData"
       v-show="!loading"
       :key="groupe.key"
     >
@@ -312,7 +333,7 @@ defineExpose({
         </td>
       </tr>
 
-      <tr v-if="groupedData.length > 0" class="table-secondary">
+      <tr v-if="sortedGroupedData.length > 0" class="table-secondary">
         <th :colspan="fields.length + (detailRowColumn ? 1 : 0)">
           <slot name="groupeHeader" v-bind="groupe">{{ groupe.label }}</slot>
         </th>
