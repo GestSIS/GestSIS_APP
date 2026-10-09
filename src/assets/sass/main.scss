@@ -154,3 +154,11 @@ table button.btn {
   background-color: var(--bs-secondary-bg);
   --vs-group-label-text-color: var(--bs-secondary-color);
 }
+
+// Scroll horizontal uniquement : avec le sticky par axe (CSSWG, Chrome 148+ derrière
+// « Experimental Web Platform features »), le spinner sticky du voile de chargement
+// de BaseTable suit le scroll de la page. Sans support, `clip` est traité comme
+// `hidden` : comportement identique à `overflow-x: auto` de Bootstrap.
+.table-responsive {
+  overflow: auto clip;
+}
