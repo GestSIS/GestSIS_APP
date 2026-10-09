@@ -4,6 +4,7 @@ import { useRoute } from "vue-router";
 import { useAuthStore } from "../stores/auth/Auth";
 import useNotification from "../composables/useNotification.js";
 import { useModalStore } from "../stores/common/Modal";
+import { PASSWORD_HINT, PASSWORD_MIN_LENGTH, passwordErrors } from "../tools/passwordPolicy.js";
 
 const jeton = ref("");
 const oldPassword = ref("");
@@ -51,9 +52,14 @@ const utiliserJeton = async () => {
 };
 
 const changerMotDePasse = async () => {
-  // Les règles (longueur, lettre, fuite connue) sont vérifiées par Auth, qui
-  // renvoie les messages par champ (422) affichés sous le nouveau mot de passe.
+  // Longueur et lettre vérifiées ici ; la fuite de données connue par Auth,
+  // qui renvoie ses messages par champ (422) affichés sous le nouveau mot de passe.
   errors.value = {};
+  const localPasswordErrors = passwordErrors(newPassword.value);
+  if (localPasswordErrors.length > 0) {
+    errors.value = { password: localPasswordErrors };
+    return;
+  }
   if (!isPasswordIdentical.value) {
     return;
   }
@@ -352,7 +358,7 @@ const fields = [
                   v-model="newPassword"
                   type="password"
                   placeholder="mot de passe"
-                  minlength="12"
+                  :minlength="PASSWORD_MIN_LENGTH"
                   required
                   autocomplete="off"
                   class="form-control form-control-sm"
@@ -361,6 +367,7 @@ const fields = [
                 <div v-if="errors.password" class="invalid-feedback">
                   {{ errors.password.join(" ") }}
                 </div>
+                <div v-else class="form-text">{{ PASSWORD_HINT }}</div>
               </div>
 
               <div class="mb-3">

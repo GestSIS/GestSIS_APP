@@ -2,6 +2,7 @@
 import { ref, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth/Auth";
+import { PASSWORD_HINT, PASSWORD_MIN_LENGTH, passwordErrors } from "../tools/passwordPolicy.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -29,7 +30,12 @@ onUnmounted(() => {
 
 const reset = async () => {
   errors.value = {};
-  // Les règles du mot de passe sont vérifiées par Auth (messages par champ).
+  // Longueur et lettre vérifiées ici ; la fuite de données connue par Auth.
+  const localPasswordErrors = passwordErrors(password.value);
+  if (localPasswordErrors.length > 0) {
+    errors.value = { password: localPasswordErrors };
+    return;
+  }
   if (password.value !== password_confirmation.value) {
     return;
   }
@@ -79,12 +85,14 @@ const reset = async () => {
           class="form-control form-control-sm"
           placeholder="Mot de passe"
           required
+          :minlength="PASSWORD_MIN_LENGTH"
           autocomplete="off"
           :class="{ 'is-invalid': errors.password }"
         />
         <div v-if="errors.password" class="invalid-feedback">
           {{ errors.password.join(" ") }}
         </div>
+        <div v-else class="form-text text-start mb-2">{{ PASSWORD_HINT }}</div>
         <label for="inputPasswordConfirmation" class="visually-hidden">Confirmation</label>
         <input
           id="inputPasswordConfirmation"
