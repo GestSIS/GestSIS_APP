@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
+import { useControleStore } from "../../stores/materiel/Controle.js";
 import ArticleService from "../../services/materiel/ArticleService";
 import TagCouleur from "./TagCouleur.vue";
 import { indexedData } from "../../tools/index.js";
@@ -54,9 +55,40 @@ const {
 });
 
 const couleurStore = useCouleurStore();
+const controleStore = useControleStore();
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
+
+const controlesUsage = computed(() =>
+  controleStore.liste.filter(
+    (c) =>
+      c.nb_execution_max != null &&
+      (c.materiel_types ?? []).some((mt) => mt.materiel_type_id === materielType.id),
+  ),
+);
+
+const controlesUsageParId = computed(() => indexedData(controlesUsage.value));
+
+const lignes = computed(() =>
+  articles.map((a) => ({
+    ...a,
+    ...Object.fromEntries(
+      controlesUsage.value.map((c) => ["usage_" + c.id, a.usages?.[c.id] ?? 0]),
+    ),
+  })),
+);
+
+const usageControleDepuisCle = (key) =>
+  controlesUsageParId.value[Number(key.replace("usage_", ""))];
+
+const classeUsage = (n, controle) => {
+  if (n >= controle.nb_execution_max) return "bg-danger";
+  if (controle.nb_execution_preavis != null && n >= controle.nb_execution_preavis) {
+    return "bg-warning";
+  }
+  return "bg-secondary";
+};
 
 const colonnes = computed(() => [
   ...(materielType.est_numerote ? [{ title: "Numéro", key: "numero" }] : []),
@@ -74,7 +106,7 @@ const colonnes = computed(() => [
       ]
     : []),
   ...(materielType.est_taillee ? [{ title: "Taille", key: "taille" }] : []),
-  ...(materielType.est_lavable ? [{ title: "Lavages", key: "nbLavages", slot: "lavages" }] : []),
+  ...controlesUsage.value.map((c) => ({ title: c.nom, key: "usage_" + c.id, slot: "usage" })),
   ...(materielType.est_perimable
     ? [{ title: "Péremption", key: "date_peremption", slot: "peremption" }]
     : []),
@@ -140,7 +172,7 @@ const supprimer = async (article) => {
 <template>
   <base-table
     :loading="loading"
-    :data="articles"
+    :data="lignes"
     no-data="Aucune pièce"
     :fields="colonnes"
     :selectable="true"
@@ -170,15 +202,13 @@ const supprimer = async (article) => {
       </span>
     </template>
 
-    <template #lavages="{ rowData }">
+    <template #usage="{ key, rowData }">
       <div
+        v-if="usageControleDepuisCle(key)"
         class="badge"
-        :class="{
-          'bg-danger': rowData.lavages.length >= 10,
-          'bg-secondary': rowData.lavages.length < 10,
-        }"
+        :class="classeUsage(rowData[key], usageControleDepuisCle(key))"
       >
-        {{ rowData.lavages.length }}
+        {{ rowData[key] }} / {{ usageControleDepuisCle(key).nb_execution_max }}
       </div>
     </template>
 

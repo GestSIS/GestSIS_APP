@@ -4,6 +4,7 @@ import { groupedByData, indexedData } from "../../tools/index.js";
 import ArticleService from "../../services/materiel/ArticleService.js";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
+import { useControleStore } from "../../stores/materiel/Controle.js";
 import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
 import TagCouleur from "./TagCouleur.vue";
 import permissions from "../../composables/permissions.js";
@@ -24,6 +25,7 @@ const materielCategorieStore = useMaterielCategorieStore();
 const emplacementStore = useEmplacementStore();
 const materielTypeStore = useMaterielTypeStore();
 const couleurStore = useCouleurStore();
+const controleStore = useControleStore();
 
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
@@ -47,6 +49,7 @@ await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
   materielCategorieStore.fetchMaterielCategories(),
   couleurStore.fetchCouleurs(),
+  controleStore.fetchControles(),
 ]);
 
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
@@ -72,7 +75,6 @@ const computedData = computed(() =>
         .map((a) => ({
           ...a,
           type: indexedTypes.value[a.materiel_type_id],
-          nbLavages: (a.lavages ?? []).length,
           typeDesignation: indexedTypes.value[a.materiel_type_id]?.designation,
           categorie_id: indexedTypes.value[a.materiel_type_id]?.materiel_categorie_id,
           emplacements: linearEmplacements(a.emplacement_id),

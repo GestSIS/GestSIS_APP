@@ -81,7 +81,6 @@ const computedData = computed(() => {
       return {
         ...a,
         emplacements: linearEmplacements(emplacementId),
-        nbLavages: (a.lavages ?? []).length,
         sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? "",
         emplacement: indexedEmplacements.value[emplacementId]?.designation ?? "",
         generic_emplacement_id: (a.sapeur_id ?? "") + "_" + (emplacementId ?? ""),

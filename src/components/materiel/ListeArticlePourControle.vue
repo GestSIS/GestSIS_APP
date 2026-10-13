@@ -62,7 +62,6 @@ const enrichir = (article, type, dernieresExecutions) => {
     ...article,
     type,
     emplacements: linearEmplacements(emplacementId),
-    nbLavages: (article.lavages ?? []).length,
     sapeur: indexedSapeurs.value[article.sapeur_id]?.nom_prenom ?? "",
     emplacement: indexedEmplacements.value[emplacementId]?.designation ?? "",
     emplacement_sort:
