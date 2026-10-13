@@ -92,16 +92,23 @@ const emplacements = computed(() => {
 const emplacementParValeur = computed(() =>
   Object.fromEntries(emplacements.value.map((e) => [e.value, e])),
 );
+
+// Chemin complet en infobulle : l'affichage replié peut en masquer le début.
+const cheminSelectionne = computed(() =>
+  (emplacementParValeur.value[model.value]?.emplacements ?? [])
+    .map((id) => indexedEmplacements.value[id]?.designation)
+    .join(" › "),
+);
 </script>
 
 <template>
-  <div data-assembled-select>
+  <div data-assembled-select class="select-emplacement" :title="cheminSelectionne">
     <label v-if="label">{{ label }}</label>
     <select-root v-model="model" :options="emplacements" :disabled="disabled" clearable>
       <select-trigger>
         <select-value placeholder="Sélectionnez un emplacement">
           <template #default="{ selectedOptions }">
-            <template v-for="sel in selectedOptions" :key="sel.value">
+            <span v-for="sel in selectedOptions" :key="sel.value" class="chemin-selectionne">
               <tag-couleur
                 v-for="id in emplacementParValeur[sel.value]?.emplacements ?? []"
                 :key="id"
@@ -109,7 +116,7 @@ const emplacementParValeur = computed(() =>
               >
                 {{ indexedEmplacements[id].designation }}
               </tag-couleur>
-            </template>
+            </span>
           </template>
         </select-value>
         <select-clear />
@@ -151,6 +158,26 @@ const emplacementParValeur = computed(() =>
 </template>
 
 <style scoped>
+/* Valeur sélectionnée sur une seule ligne : si la hiérarchie est trop longue,
+   on garde visibles les niveaux les plus précis (la fin du chemin) et c'est
+   le début qui est coupé. Le chemin complet reste dans l'infobulle.
+   Le conteneur prend la largeur de son contenu (aligné à gauche) tant que
+   tout tient, et ne dépasse jamais 100 % : seul le débordement est coupé. */
+.select-emplacement :deep([data-select-value]) {
+  flex-wrap: nowrap;
+}
+.chemin-selectionne {
+  display: flex;
+  justify-content: flex-end;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+.chemin-selectionne > * {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 /* Input proxy pour conserver la validation `required` native sans être visible
    (display:none rendrait le contrôle non focusable -> erreur navigateur). */
 .emplacement-required-proxy {

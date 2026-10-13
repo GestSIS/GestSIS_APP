@@ -137,7 +137,7 @@ const colonnes = computed(() => [
 const { showModal } = useModalStore();
 const ajouter = () =>
   showModal({
-    component: "ModalAjoutArticleMultiple",
+    component: "ModalAjoutArticleMultiplePourEmplacement",
     callback: loadArticles,
     data: { emplacementId: id },
     size: 2,

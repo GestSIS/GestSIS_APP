@@ -122,12 +122,24 @@ const piecesColonnes = [
 ];
 
 const { showModal } = useModalStore();
+// Saisie multiple, sauf pour les types emplacement (véhicules) : leur formulaire
+// (emplacement représenté, couleur…) reste celui de ModalArticle.
 const ajouter = () =>
-  showModal({
-    component: "ModalArticle",
-    data: { materiel_type_id: parseInt(id) },
-    size: 1,
-  });
+  showModal(
+    materielType.value?.est_emplacement
+      ? {
+          component: "ModalArticle",
+          data: { materiel_type_id: parseInt(id) },
+          size: 1,
+          callback: loadArticles,
+        }
+      : {
+          component: "ModalAjoutArticleMultiplePourType",
+          data: { materielTypeId: parseInt(id) },
+          size: 2,
+          callback: loadArticles,
+        },
+  );
 </script>
 
 <template>
