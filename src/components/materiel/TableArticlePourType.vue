@@ -106,7 +106,12 @@ const colonnes = computed(() => [
       ]
     : []),
   ...(materielType.est_taillee ? [{ title: "Taille", key: "taille" }] : []),
-  ...controlesUsage.value.map((c) => ({ title: c.nom, key: "usage_" + c.id, slot: "usage" })),
+  ...controlesUsage.value.map((c) => ({
+    title: c.nom,
+    key: "usage_" + c.id,
+    slot: "usage",
+    formatter: (v) => `${v} / ${c.nb_execution_max}`,
+  })),
   ...(materielType.est_perimable
     ? [{ title: "Péremption", key: "date_peremption", slot: "peremption" }]
     : []),
