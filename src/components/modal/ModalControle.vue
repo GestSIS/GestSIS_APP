@@ -138,9 +138,13 @@ const selectedTypes = ref(
 const typesDejaChoisis = computed(
   () => new Set(selectedTypes.value.map((t) => t.materiel_type_id).filter((id) => id !== null)),
 );
+// Seul un type numéroté peut être contrôlé (règle imposée par l'API) : sans
+// numéro, rien ne distingue les articles d'un même type. Un type déjà rattaché
+// mais non numéroté (donnée antérieure à la règle) reste affiché sur sa ligne.
 const optionsPourLigne = (rowData) =>
   materielTypeStore.liste.filter(
-    (t) => t.id === rowData.materiel_type_id || !typesDejaChoisis.value.has(t.id),
+    (t) =>
+      t.id === rowData.materiel_type_id || (t.est_numerote && !typesDejaChoisis.value.has(t.id)),
   );
 
 // Le ref="..." classique ne fonctionne pas ici : ce champ est rendu dans un

@@ -47,7 +47,10 @@ const save = async () => {
     activeItem.value,
   )
     .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+    .catch((err) => {
+      errors.value = err.errors ?? {};
+      awn.warning(err.message ?? "Erreur lors de la sauvegarde du matériel type");
+    });
 };
 </script>
 
@@ -154,6 +157,7 @@ const save = async () => {
             />
             <base-checkbox v-model="activeItem.a_batterie" class="mb-0" label="A une batterie" />
             <base-checkbox
+              v-if="activeItem.type !== 3"
               v-model="activeItem.est_numerote"
               :class="activeItem.est_numerote ? 'mb-3' : 'mb-0'"
               label="Est numéroté"
