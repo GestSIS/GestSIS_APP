@@ -20,11 +20,7 @@ const { data } = defineProps({
 
 const { closeModal } = useModalStore();
 
-// Point d'entrée le plus fiable pour l'id de l'article : la plupart des
-// tableaux passent l'article directement (data.id = id de l'article), mais
-// TabLavages.vue passe un enregistrement de lavage dont l'id est celui du
-// lavage — l'article réel est alors exposé sous data.article_id.
-const articleId = data.article_id ?? data.id;
+const articleId = data.id;
 
 const typeStore = useMaterielTypeStore();
 const emplacementStore = useEmplacementStore();
@@ -282,11 +278,6 @@ const lignesControles = computed(() =>
             <dd class="col-9">
               {{ data.created_at ? new Date(data.created_at).toLocaleDateString("fr-CH") : "-" }}
             </dd>
-
-            <template v-if="type?.est_lavable && data.lavages !== undefined">
-              <dt class="col-3">Lavages</dt>
-              <dd class="col-9">{{ data.lavages.length }}</dd>
-            </template>
           </dl>
         </div>
       </div>

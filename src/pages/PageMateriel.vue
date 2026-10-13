@@ -49,11 +49,6 @@ const pleineHauteur = computed(() => route.meta.pleineHauteur === true);
               exact: false,
             },
             {
-              to: { name: 'materiel-lavages' },
-              texte: 'Lavages',
-              exact: false,
-            },
-            {
               to: { name: 'materiel-controles' },
               texte: 'Contrôles & Maintenances',
               exact: false,

@@ -643,8 +643,7 @@ const router = createRouter({
         {
           path: "lavages",
           name: "materiel-lavages",
-          beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
-          component: () => import("/src/components/materiel/TabLavages.vue"),
+          redirect: { name: "materiel-controles" },
         },
         {
           path: "controles",

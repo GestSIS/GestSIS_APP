@@ -20,7 +20,6 @@ const activeItem = ref({
   est_attribuable: false,
   est_numerote: false,
   est_taillee: false,
-  est_lavable: false,
   a_batterie: false,
   est_perimable: false,
   ...data,
@@ -152,11 +151,6 @@ const save = async () => {
               v-if="activeItem.type !== 3"
               v-model="activeItem.est_taillee"
               label="Possède une taille"
-            />
-            <base-checkbox
-              v-if="activeItem.type !== 3"
-              v-model="activeItem.est_lavable"
-              label="Suivi des lavages"
             />
             <base-checkbox v-model="activeItem.a_batterie" class="mb-0" label="A une batterie" />
             <base-checkbox
