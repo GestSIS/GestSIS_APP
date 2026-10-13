@@ -10,6 +10,9 @@ export default {
   getArticlesPerimes() {
     return Api.api().get("/materiel-types/articles-perimes");
   },
+  getArticlesSansNumero() {
+    return Api.api().get("/materiel-types/articles-sans-numero");
+  },
   addType(type) {
     return Api.api().post("/materiel-types", type);
   },

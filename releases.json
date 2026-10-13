@@ -7,7 +7,8 @@
       "changes": [
         "Migration des lavages vers `contrôles et maintenance`",
         "Le materiel pour les contrôles requiers d'être numéroté",
-        "Amélioration de l'interface pour permettre le scan d'articles"
+        "Amélioration de l'interface pour permettre le scan d'articles",
+        "Affichage des articles avec un numéro manquant"
       ]
     },
     {

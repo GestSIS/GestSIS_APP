@@ -3,6 +3,7 @@ import WidgetControlesAControler from "./WidgetControlesAControler.vue";
 import WidgetLimiteExecutions from "./WidgetLimiteExecutions.vue";
 import WidgetMaterielPerime from "./WidgetMaterielPerime.vue";
 import WidgetMaterielARecuperer from "./WidgetMaterielARecuperer.vue";
+import WidgetArticlesSansNumero from "./WidgetArticlesSansNumero.vue";
 </script>
 
 <template>
@@ -15,6 +16,9 @@ import WidgetMaterielARecuperer from "./WidgetMaterielARecuperer.vue";
       <suspense>
         <widget-materiel-perime />
         <template #fallback>Chargement...</template>
+      </suspense>
+      <suspense>
+        <widget-articles-sans-numero />
       </suspense>
     </div>
     <div class="col-12 col-xl-8">

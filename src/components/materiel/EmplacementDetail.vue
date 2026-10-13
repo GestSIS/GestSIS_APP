@@ -115,11 +115,23 @@ const editEmplacement = () => {
       <div class="card mb-2 h-100">
         <div class="card-header">
           <h5 class="m-0">
-            <font-awesome-icon v-tooltip.bottom="'Véhicule'" :icon="['fas', 'car']" class="me-1" />
+            <font-awesome-icon title="Véhicule" :icon="['fas', 'car']" class="me-1" />
             Véhicule
           </h5>
         </div>
         <div class="card-body">
+          <div class="row">
+            <div class="col-3">Numéro</div>
+            <div class="col-9">
+              <template v-if="emplacement.article.numero?.trim()">
+                {{ emplacement.article.numero }}
+              </template>
+              <span v-else class="text-warning">
+                <font-awesome-icon :icon="['fas', 'triangle-exclamation']" class="me-1" />
+                Numéro manquant
+              </span>
+            </div>
+          </div>
           <div class="row">
             <div class="col-3">Immatriculation</div>
             <div class="col-9">{{ formatEmptyString(emplacement.article.immatriculation) }}</div>
@@ -139,7 +151,7 @@ const editEmplacement = () => {
       <div class="card mb-2 h-100">
         <div class="card-header">
           <h5 class="m-0">
-            <font-awesome-icon v-tooltip.bottom="'Hangar'" :icon="['far', 'house']" class="me-1" />
+            <font-awesome-icon title="Hangar" :icon="['far', 'house']" class="me-1" />
             Hangar
           </h5>
         </div>
