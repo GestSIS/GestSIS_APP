@@ -10,6 +10,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useExcuseParamStore } from "../../stores/exercice/ExcuseParam.js";
 import permissions from "../../composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
+import { indexedData } from "../../tools/index.js";
 
 const sapeurStore = useSapeurStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -18,7 +19,6 @@ const exerciceStore = useExerciceStore();
 const excuseTypeStore = useExcuseTypeStore();
 const exerciceCategorieStore = useExerciceCategorieStore();
 const excuseParamStore = useExcuseParamStore();
-exerciceStore.fetchExerciceAbsences();
 excuseParamStore.fetchParams();
 excuseTypeStore.fetchExcuseTypes();
 
@@ -48,11 +48,13 @@ const localites = computed(() =>
 const hasValidationPermission = useHasPermission(permissions.EXERCICE.VALIDATION);
 
 const computedData = computed(() => {
+  const exercicesParId = indexedData(exercices.value);
   return absences.value
+    .filter((a) => exercicesParId[a.exercice_id])
     .map((a) => ({
       ...a,
       sapeur: sapeurs.value.find((s) => s.id == a.sapeur_id)?.nom_prenom,
-      ...exercices.value.find((e) => e.id == a.exercice_id),
+      ...exercicesParId[a.exercice_id],
       id: a.id,
     }))
     .map((e) => ({
