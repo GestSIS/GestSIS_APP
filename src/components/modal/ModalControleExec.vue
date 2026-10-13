@@ -222,6 +222,57 @@ const addLigneMultiple = () => {
   lignesMultiples.value.push(nouvelleLigne);
   nextTick(() => articleSelectRefs.get(nouvelleLigne._key)?.focus());
 };
+// Passe à la ligne vide suivante (ou en crée une) pour enchaîner les scans.
+const passerLigneSuivante = (ligne) => {
+  const ligneVide = lignesMultiples.value.find((l) => l !== ligne && l.article_id === null);
+  if (ligneVide) {
+    articleSelectRefs.get(ligneVide._key)?.focus();
+  } else {
+    addLigneMultiple();
+  }
+};
+
+// Saisie au scanner : le scanner « tape » le numéro puis Entrée dans le select
+// de l'article. La recherche native du select (par premières lettres) n'est pas
+// fiable (« 12 » peut tomber sur « 123 ») : on accumule les caractères frappés
+// et, sur Entrée, on choisit l'article dont le numéro correspond exactement.
+const DELAI_SAISIE_MS = 1000;
+const saisiesArticle = new Map(); // _key de la ligne -> { texte, dernierAppui }
+const onArticleKeydown = (ligne, event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    const texte = saisiesArticle.get(ligne._key)?.texte.trim().toLowerCase();
+    saisiesArticle.delete(ligne._key);
+    if (texte) {
+      const article = articlesEligibles.value.find(
+        (a) =>
+          String(a.numero || a.designation || a.id)
+            .trim()
+            .toLowerCase() === texte,
+      );
+      if (!article) {
+        awn.warning(`Aucun article éligible avec le numéro « ${texte} »`);
+        return;
+      }
+      if (article.id !== ligne.article_id && articlesDejaChoisis.value.has(article.id)) {
+        awn.warning(`L'article « ${texte} » est déjà dans la liste`);
+        return;
+      }
+      ligne.article_id = article.id;
+    }
+    if (ligne.article_id !== null) {
+      passerLigneSuivante(ligne);
+    }
+    return;
+  }
+  if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+    const maintenant = Date.now();
+    const saisie = saisiesArticle.get(ligne._key);
+    const texte = saisie && maintenant - saisie.dernierAppui < DELAI_SAISIE_MS ? saisie.texte : "";
+    saisiesArticle.set(ligne._key, { texte: texte + event.key, dernierAppui: maintenant });
+  }
+};
+
 const removeLigneMultiple = (key) => {
   lignesMultiples.value = lignesMultiples.value.filter((l) => l._key !== key);
 };
@@ -430,12 +481,16 @@ const save = async () => {
                 </thead>
               </template>
               <template #article-select="{ rowData }">
-                <base-select
-                  :ref="(el) => setArticleSelectRef(rowData._key, el)"
-                  v-model="rowData.article_id"
-                  :options="optionsPourLigneMultiple(rowData)"
-                  display-key="label"
-                />
+                <!-- keydown sur un wrapper : passé à base-select, l'écouteur serait
+                     posé à la fois sur sa div racine et sur le <select> ($attrs). -->
+                <div @keydown="onArticleKeydown(rowData, $event)">
+                  <base-select
+                    :ref="(el) => setArticleSelectRef(rowData._key, el)"
+                    v-model="rowData.article_id"
+                    :options="optionsPourLigneMultiple(rowData)"
+                    display-key="label"
+                  />
+                </div>
               </template>
               <template #echeance-select="{ rowData }">
                 <input

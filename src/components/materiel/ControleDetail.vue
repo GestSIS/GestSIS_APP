@@ -77,13 +77,15 @@ const editControle = () =>
             <tr>
               <th>Types de matériel concernés</th>
               <td>
-                <span
+                <router-link
                   v-for="mt in controle.materiel_types"
                   :key="mt.id"
-                  class="badge bg-secondary me-1"
+                  :to="{ name: 'materiel-par-type-details', params: { id: mt.materiel_type_id } }"
+                  class="badge bg-secondary text-decoration-none me-1"
                 >
                   {{ mt.materiel_type.designation }}
-                </span>
+                  <font-awesome-icon :icon="['fas', 'up-right-from-square']" class="ms-1" />
+                </router-link>
               </td>
             </tr>
           </table>
