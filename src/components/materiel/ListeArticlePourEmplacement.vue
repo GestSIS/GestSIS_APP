@@ -38,13 +38,6 @@ const affichageOptions = [
 ];
 const emplacement = computed(() => emplacementStore.liste.find((e) => e.id === parseInt(id)));
 
-const loadArticles = async () => {
-  loading.value = true;
-  articles.value = await ArticleService.getParEmplacement(id);
-  loading.value = false;
-};
-watchEffect(loadArticles);
-
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
   materielCategorieStore.fetchMaterielCategories(),
@@ -53,6 +46,21 @@ await Promise.all([
 ]);
 
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
+
+// La liste des types est mise en cache au premier chargement : un type créé
+// depuis (autre utilisateur, autre onglet) y manque, et ses articles n'auraient
+// pas de type. On la recharge alors avant d'afficher les articles.
+const loadArticles = async () => {
+  loading.value = true;
+  const data = await ArticleService.getParEmplacement(id);
+  if (data.some((a) => !indexedTypes.value[a.materiel_type_id])) {
+    materielTypeStore.$reset();
+    await materielTypeStore.fetchMaterielTypes();
+  }
+  articles.value = data;
+  loading.value = false;
+};
+watchEffect(loadArticles);
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 const indexedCategories = computed(() => indexedData(materielCategorieStore.liste));
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));

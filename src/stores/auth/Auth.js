@@ -377,12 +377,18 @@ export const useAuthStore = defineStore("auth", {
       TokenService.removeAdminUser();
       this.impersonating = false;
 
-      this.clearCache();
       await this.setAuthSuccessful({
         accessToken: adminAccessToken,
         refreshToken: TokenService.getRefreshToken(),
         user: adminUser,
       });
+
+      // Comme logout() : quitter la page de l'utilisateur usurpé (admin rétabli,
+      // le guard admin passe) et la laisser se démonter avant de vider les stores,
+      // sinon elle se re-rend avec des stores vides (ex. type de matériel introuvable).
+      await router.push({ name: "admin-users" });
+      await nextTick();
+      this.clearCache();
     },
     async selectSis(sis) {
       this.sis.activeId = sis?.id;

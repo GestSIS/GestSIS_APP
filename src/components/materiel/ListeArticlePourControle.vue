@@ -86,11 +86,15 @@ const loading = ref(true);
 
 const loadArticles = async () => {
   loading.value = true;
+  // Figés avant l'await : si les types du contrôle changent pendant le
+  // chargement (store des contrôles rechargé), les réponses restent alignées
+  // sur les types pour lesquels elles ont été demandées.
+  const typeIds = materielTypeIds.value;
   const [resultats, dernieresExecutions] = await Promise.all([
-    Promise.all(materielTypeIds.value.map((typeId) => ArticleService.getParMaterielType(typeId))),
+    Promise.all(typeIds.map((typeId) => ArticleService.getParMaterielType(typeId))),
     ControleExecService.getDernieresExecutions(parseInt(id)),
   ]);
-  groupedArticles.value = materielTypeIds.value.map((typeId, index) => ({
+  groupedArticles.value = typeIds.map((typeId, index) => ({
     key: typeId,
     label: materielTypeParId.value[typeId]?.designation,
     data: resultats[index]

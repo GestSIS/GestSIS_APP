@@ -40,8 +40,9 @@ const parametres = () => {
 const logout = async () => {
   await authStore.logout();
 };
-const quitterImpersonation = () => {
-  authStore.stopImpersonation().then(() => router.push({ name: "admin-users" }));
+// stopImpersonation() ramène elle-même sur la liste des utilisateurs.
+const quitterImpersonation = async () => {
+  await authStore.stopImpersonation();
 };
 </script>
 
