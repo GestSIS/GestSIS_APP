@@ -1,5 +1,6 @@
 <script setup>
 import { computed, nextTick, useTemplateRef } from "vue";
+import ScanArticle from "./ScanArticle.vue";
 
 import { useEmplacementStore } from "../../stores/materiel/Emplacement";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
@@ -120,6 +121,21 @@ const addEmptyLine = () => {
   });
 };
 
+// Article scanné (voir ScanArticle.vue) : placé dans la première ligne vide,
+// sinon dans une nouvelle ligne.
+const articlesDejaSelectionnes = computed(
+  () => new Set(selectedArticles.value.map((a) => a.id).filter(Boolean)),
+);
+const ajouterArticleScanne = (article) => {
+  const ligneVide = selectedArticles.value.find((l) => !l.materiel_type_id && !l.id);
+  if (ligneVide) {
+    ligneVide.id = article.id;
+    ligneVide.materiel_type_id = article.materiel_type_id;
+  } else {
+    selectedArticles.value.push({ id: article.id, materiel_type_id: article.materiel_type_id });
+  }
+};
+
 const selectMaterielTypeNumerote = (item, value) => {
   // Select première combinaison valable
   const materiel = articlesAttribuable.value.find((m) => m.materiel_type_id == value);
@@ -128,6 +144,12 @@ const selectMaterielTypeNumerote = (item, value) => {
 </script>
 
 <template>
+  <scan-article
+    v-if="articlesAttribuable.length > 0"
+    :articles="articlesAttribuable"
+    :deja-selectionnes="articlesDejaSelectionnes"
+    @scan="ajouterArticleScanne"
+  />
   <table class="table table-sm">
     <thead>
       <tr>
@@ -249,6 +271,7 @@ const selectMaterielTypeNumerote = (item, value) => {
         <td>{{ item.remarque }}</td>
         <td>
           <button
+            type="button"
             class="btn btn-outline-danger border-0"
             @click="selectedArticles.splice(index, 1)"
           >
@@ -258,7 +281,7 @@ const selectMaterielTypeNumerote = (item, value) => {
       </tr>
       <tr>
         <td colspan="6">
-          <button class="btn btn-outline-primary" @click="addEmptyLine">
+          <button type="button" class="btn btn-outline-primary" @click="addEmptyLine">
             <font-awesome-icon :icon="['fas', 'plus']" />
           </button>
         </td>
