@@ -265,7 +265,6 @@ const ajoutEmplacement = () =>
             @click="navigate"
           >
             <font-awesome-icon
-              v-tooltip.bottom="replies.has(item.id) ? 'Afficher' : 'Masquer'"
               :icon="['fas', replies.has(item.id) ? 'angle-right' : 'angle-down']"
               class="me-1"
               :class="{ invisible: !parentsAffiches.has(item.id) }"
@@ -274,13 +273,13 @@ const ajoutEmplacement = () =>
             <tag-couleur :couleur="indexedCouleurs[item.couleur_id]">
               <font-awesome-icon
                 v-if="item.hangar"
-                v-tooltip.bottom="'Hangar'"
+                title="Hangar"
                 :icon="['far', 'house']"
                 class="me-1"
               />
               <font-awesome-icon
                 v-if="item.article_id"
-                v-tooltip.bottom="'Véhicule'"
+                title="Véhicule"
                 :icon="['fas', 'car']"
                 class="me-1"
               />
