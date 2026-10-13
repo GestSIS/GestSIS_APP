@@ -8,7 +8,7 @@ export const indexedData = (data, key = "id") =>
 // Group object by the provided key value
 export const groupedByData = (data, key = "id") =>
   data.reduce((acc, elem) => {
-    acc[elem[key]] = [...(acc[elem[key]] ?? []), elem];
+    (acc[elem[key]] ??= []).push(elem);
     return acc;
   }, {});
 

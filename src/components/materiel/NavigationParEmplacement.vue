@@ -41,28 +41,21 @@ const filtre = ref("");
 
 const computedData = computed(() => {
   const lowerFilter = filtre.value.toLowerCase().trim(" ");
-  const filteredIds = emplacementStore.liste
-    .filter((e) => e.statut)
-    .filter((e) => e.designation.toLowerCase().includes(lowerFilter))
-    .flatMap((e) => {
-      const parentIds = (id) =>
-        id > 0
-          ? [
-              indexedEmplacements.value[id]?.parent_id,
-              ...parentIds(indexedEmplacements.value[id]?.parent_id),
-            ]
-          : [];
-      return [e.id, ...parentIds(e.id)];
-    });
+  const ancestorsAndSelf = (id) =>
+    id > 0 ? [id, ...ancestorsAndSelf(indexedEmplacements.value[id]?.parent_id)] : [];
 
-  const recursive = (parent_id, level = 0) => {
-    return [...(emplacementsGroupedByParent.value[parent_id] ?? [])].flatMap((elem) => [
-      { ...elem, level },
-      ...recursive(elem.id, level + 1),
-    ]);
-  };
+  const filteredIds = new Set(
+    emplacementStore.liste
+      .filter((e) => e.statut && e.designation.toLowerCase().includes(lowerFilter))
+      .flatMap((e) => ancestorsAndSelf(e.id)),
+  );
 
-  return recursive(null).filter((e) => filteredIds.includes(e.id));
+  const recursive = (parent_id, level = 0) =>
+    (emplacementsGroupedByParent.value[parent_id] ?? [])
+      .filter((elem) => filteredIds.has(elem.id))
+      .flatMap((elem) => [{ ...elem, level }, ...recursive(elem.id, level + 1)]);
+
+  return recursive(null);
 });
 
 // Liste à plat pour le select mobile (recherche intégrée sur le libellé
@@ -133,6 +126,10 @@ const emplacementVisible = computed(() =>
       (visible[e.parent_id] && !replies.value.has(e.parent_id));
     return visible;
   }, {}),
+);
+
+const lignesVisibles = computed(() =>
+  computedData.value.filter((e) => emplacementVisible.value[e.id]),
 );
 
 const { showModal } = useModalStore();
@@ -248,8 +245,8 @@ const ajoutEmplacement = () =>
           <span class="border-bottom-0">Aucun emplacement</span>
         </li>
         <router-link
-          v-for="item in computedData.slice(0)"
-          :key="item.globalId"
+          v-for="item in lignesVisibles"
+          :key="item.id"
           v-slot="{ navigate, isExactActive }"
           :style="{
             'padding-left': 10 + item.level * 25 + 'px',
@@ -261,7 +258,6 @@ const ajoutEmplacement = () =>
           }"
         >
           <a
-            v-show="emplacementVisible[item.id]"
             class="nav-link list-group-item list-group-item-action pt-1 pb-1"
             href="#"
             role="link"
