@@ -1,11 +1,21 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import TypeService from "../../services/materiel/TypeService.js";
 import { useModalStore } from "../../stores/common/Modal.js";
+import { useEmplacementStore } from "../../stores/materiel/Emplacement";
+import { useCouleurStore } from "../../stores/materiel/Couleur";
+import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import useHasPermission from "../../composables/usePermission.js";
 import permissions from "../../composables/permissions.js";
+import { indexedData } from "../../tools/index.js";
+import { emplacementIdPourArticle } from "../../tools/materiel.js";
+import TagCouleur from "./TagCouleur.vue";
 
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
+
+const emplacementStore = useEmplacementStore();
+const couleurStore = useCouleurStore();
+const sapeurStore = useSapeurStore();
 
 // Articles actifs d'un type numéroté sans numéro, groupés par type (seuls les
 // types concernés sont renvoyés) : le widget n'est affiché que s'il y en a.
@@ -13,7 +23,22 @@ const types = ref([]);
 const loadTypes = async () => {
   types.value = await TypeService.getArticlesSansNumero();
 };
-await loadTypes();
+await Promise.all([
+  loadTypes(),
+  emplacementStore.fetchEmplacements(),
+  couleurStore.fetchCouleurs(),
+  sapeurStore.fetchListeSapeur(),
+]);
+
+const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));
+const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
+const indexedSapeurs = computed(() => indexedData(sapeurStore.liste));
+
+// Chemin de l'emplacement (racine → emplacement), affiché en étiquettes de couleur.
+const cheminEmplacement = (emplacementId) => {
+  const emplacement = indexedEmplacements.value[emplacementId];
+  return emplacement ? [...cheminEmplacement(emplacement.parent_id), emplacement] : [];
+};
 
 const colonnes = [
   { title: "Type", key: "designation" },
@@ -21,9 +46,12 @@ const colonnes = [
   { title: "Actions", slot: "actionsType" },
 ];
 
-const colonnesArticles = [
-  { title: "Désignation", slot: "designation" },
-  { title: "Emplacement / Sapeur", key: "localisation" },
+// Colonnes du détail selon le type : la taille pour un type taillé, la
+// désignation (nom du véhicule) pour un véhicule.
+const colonnesArticles = (type) => [
+  ...(type.est_emplacement ? [{ title: "Désignation", key: "designation" }] : []),
+  { title: "Emplacement / Sapeur", slot: "localisation" },
+  ...(type.est_taillee ? [{ title: "Taille", key: "taille" }] : []),
   { title: "Actions", slot: "actionsArticle" },
 ];
 
@@ -69,12 +97,22 @@ const modifierArticle = (article) =>
         <template #detail-row="{ rowData }">
           <base-table
             :data="rowData.articles"
-            :fields="colonnesArticles"
+            :fields="colonnesArticles(rowData)"
             :hide-download="true"
             no-data="Aucun article"
           >
-            <template #designation="{ rowData: article }">
-              {{ article.designation || article.taille || "-" }}
+            <template #localisation="{ rowData: article }">
+              <div v-if="article.sapeur_id" class="badge bg-primary">
+                {{ indexedSapeurs[article.sapeur_id]?.nom_prenom }}
+              </div>
+              <div v-else>
+                <tag-couleur
+                  v-for="e in cheminEmplacement(emplacementIdPourArticle(article))"
+                  :key="e.id"
+                  :couleur="indexedCouleurs[e.couleur_id]"
+                  >{{ e.designation }}</tag-couleur
+                >
+              </div>
             </template>
 
             <template #actionsArticle="{ rowData: article }">
