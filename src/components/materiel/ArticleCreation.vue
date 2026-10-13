@@ -176,6 +176,7 @@ const addEmptyLine = () => {
             :required="true"
             class="form-control form-control-sm"
             type="text"
+            @keydown.enter.prevent
           />
           <font-awesome-icon
             v-else
@@ -245,7 +246,11 @@ const addEmptyLine = () => {
           <input v-model="item.remarque" class="form-control form-control-sm" type="text" />
         </td>
         <td>
-          <button class="btn btn-outline-danger border-0" @click="articles.splice(index, 1)">
+          <button
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="articles.splice(index, 1)"
+          >
             <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>
         </td>
@@ -262,7 +267,7 @@ const addEmptyLine = () => {
             (afficherColonePeremption ? 1 : 0)
           "
         >
-          <button class="btn btn-outline-primary" @click="addEmptyLine">
+          <button type="button" class="btn btn-outline-primary" @click="addEmptyLine">
             <font-awesome-icon :icon="['fas', 'plus']" />
           </button>
         </td>
