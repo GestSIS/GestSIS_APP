@@ -10,6 +10,8 @@ import ControlesMedicauxService from "/src/services/ControlesMedicauxService.js"
 import PdfViewer from "/src/components/pdf/PdfViewer.vue";
 import { useModalStore } from "../stores/common/Modal";
 import { useControleMedicalStore } from "../stores/controleMedical/ControleMedical.js";
+import permissions from "../composables/permissions.js";
+import useHasPermission from "../composables/usePermission.js";
 
 const sapeurStore = useSapeurStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -18,6 +20,7 @@ const medecinStore = useMedecinStore();
 const controleMedicalTypeStore = useControleMedicalTypeStore();
 const router = useRouter();
 const awn = useNotification();
+const hasEditPermission = useHasPermission(permissions.CONTROLE_MEDICAL.MODIFICATION);
 
 const { id } = defineProps({
   id: {
@@ -186,11 +189,11 @@ const validite = (duree) => {
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h5>Infos</h5>
-            <button class="btn btn-outline-primary" @click="save">
+            <button v-if="hasEditPermission" class="btn btn-outline-primary" @click="save">
               {{ modeAjout ? "Ajouter" : "Enregistrer" }}
             </button>
           </div>
-          <div class="card-body">
+          <fieldset :disabled="!hasEditPermission" class="card-body">
             <div v-if="!modeAjout" class="mb-3">
               <label for="m-exe-des">Sapeur</label>
               <input
@@ -310,7 +313,7 @@ const validite = (duree) => {
                 name="communications"
               ></textarea>
             </div>
-          </div>
+          </fieldset>
         </div>
         <div class="alert alert-info mt-2" role="alert">
           <strong><em>Contrôle médical type, remarque :</em></strong>
@@ -343,12 +346,16 @@ const validite = (duree) => {
               <button class="btn btn-outline-primary ms-2" @click="downloadJustificatif()">
                 Download
               </button>
-              <button class="btn btn-outline-primary ms-2" @click="removeJustificatif()">
+              <button
+                v-if="hasEditPermission"
+                class="btn btn-outline-primary ms-2"
+                @click="removeJustificatif()"
+              >
                 Supprimer
               </button>
             </div>
           </div>
-          <div v-if="!controleMedical.filename" class="card-body">
+          <div v-if="!controleMedical.filename && hasEditPermission" class="card-body">
             <div class="input-group input-group-sm mb-3">
               <p class="w-100">Aucun document</p>
               <input

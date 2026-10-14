@@ -30,7 +30,7 @@ const routes = [
   {
     texte: "Contrôles médicaux",
     to: { name: "sapeur-controles-medicaux" },
-    permission: permissions.CONTROLE_MEDICAL.TOUT,
+    permission: permissions.CONTROLE_MEDICAL.LECTURE,
   },
   { texte: "Fonctions", to: { name: "sapeur-fonctions" }, civil: true },
   { texte: "Cours", to: { name: "sapeur-cours" } },

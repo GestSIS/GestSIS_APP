@@ -34,6 +34,7 @@ const medecins = computed(() => medecinStore.liste);
 const controlesMedicaux = computed(() => controleMedicalStore.liste);
 
 const hasSmsEnvoiePermission = useHasPermission(permissions.SMS.ENVOIE);
+const hasEditPermission = useHasPermission(permissions.CONTROLE_MEDICAL.MODIFICATION);
 
 const computedData = computed(() => {
   const now = Date.now();
@@ -221,6 +222,7 @@ const fields = [
             </div>
             <div class="card-body d-grid gap-2">
               <router-link
+                v-if="hasEditPermission"
                 v-slot="{ navigate }"
                 custom
                 :to="{ name: 'controle-medical', params: { id: 'ajout' } }"
@@ -235,7 +237,7 @@ const fields = [
                 :to="'/controles-medicaux/' + selectedItem?.id"
               >
                 <button :disabled="!selectedItem" class="btn btn-outline-primary" @click="navigate">
-                  Modifier
+                  {{ hasEditPermission ? "Modifier" : "Voir" }}
                 </button>
               </router-link>
               <div class="row">
@@ -366,6 +368,7 @@ const fields = [
                     </button>
                   </router-link>
                   <button
+                    v-if="hasEditPermission"
                     type="button"
                     class="btn btn-outline-danger border-0"
                     @click="supprimer(rowData)"

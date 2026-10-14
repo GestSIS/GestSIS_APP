@@ -233,7 +233,7 @@ const router = createRouter({
         {
           path: "controles-medicaux",
           name: "sapeur-controles-medicaux",
-          beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.TOUT),
+          beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.LECTURE),
           component: () => import("../components/sapeur/SapeurControlesMedicaux.vue"),
         },
         {
@@ -556,13 +556,13 @@ const router = createRouter({
     {
       path: "/controles-medicaux",
       name: "controles-medicaux",
-      beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.TOUT),
+      beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.LECTURE),
       component: () => import("/src/pages/PageControlesMedicaux.vue"),
     },
     {
       path: "/controles-medicaux/:id",
       name: "controle-medical",
-      beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.TOUT),
+      beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.LECTURE),
       props: true,
       component: () => import("/src/pages/PageControleMedical.vue"),
     },

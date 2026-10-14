@@ -100,7 +100,7 @@ const links = [
     to: { name: "controles-medicaux" },
     icon: "file-medical-alt",
     nom: "Contrôles médicaux",
-    permission: permissions.CONTROLE_MEDICAL.TOUT,
+    permission: permissions.CONTROLE_MEDICAL.LECTURE,
   },
   {
     to: { name: "materiel-tableau-bord" },

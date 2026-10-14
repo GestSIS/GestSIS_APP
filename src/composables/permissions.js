@@ -56,7 +56,8 @@ export default {
     MODIFICATION: "organisation.modification",
   },
   CONTROLE_MEDICAL: {
-    TOUT: "controle_medical.tout",
+    LECTURE: "controle_medical.lecture",
+    MODIFICATION: "controle_medical.modification",
     CONFIG: "controle_medical.config",
   },
   MATERIEL: {
