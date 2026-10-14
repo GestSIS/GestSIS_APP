@@ -675,7 +675,7 @@ const router = createRouter({
     },
     {
       path: "/utilisateurs",
-      beforeEnter: permissionGuard(permissions.UTILISATEUR.TOUT),
+      beforeEnter: permissionGuard(permissions.UTILISATEUR.LECTURE),
       props: true,
       component: () => import("/src/pages/PageUtilisateurs.vue"),
       children: [

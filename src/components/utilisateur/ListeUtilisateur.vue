@@ -3,6 +3,8 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { computed, ref } from "vue";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import useHasPermission from "../../composables/usePermission.js";
+import permissions from "../../composables/permissions.js";
 
 const sapeurStore = useSapeurStore();
 const authStore = useAuthStore();
@@ -11,6 +13,8 @@ const loadPermissions = authStore.fetchPermissions();
 const loadRoles = authStore.fetchRoles();
 const loadUsers = authStore.fetchUsers();
 const loadSapeurs = sapeurStore.fetchListeSapeur();
+
+const hasEditPermission = useHasPermission(permissions.UTILISATEUR.MODIFICATION);
 
 const loading = ref(true);
 Promise.all([loadUsers, loadPermissions, loadRoles, loadSapeurs]).then(
@@ -24,10 +28,8 @@ const filters = ref({
   sapeur: "",
 });
 
-const sisId = computed(() => authStore.sis.activeId);
 const users = computed(() => authStore.users);
 const roles = computed(() => authStore.roles);
-const permissions = computed(() => authStore.permissions);
 const sapeurs = computed(() => sapeurStore.liste);
 
 const computedData = computed(() =>
@@ -173,7 +175,11 @@ const fields = [
             <font-awesome-icon v-if="rowData?.type === 1" :icon="['far', 'handshake']" />
           </template>
           <template #actions="{ rowData }">
-            <button class="btn btn-outline-primary border-0" @click="edit(rowData)">
+            <button
+              v-if="hasEditPermission"
+              class="btn btn-outline-primary border-0"
+              @click="edit(rowData)"
+            >
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>
           </template>

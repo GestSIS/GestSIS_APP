@@ -43,7 +43,8 @@ export default {
     CONFIG: "sms.config",
   },
   UTILISATEUR: {
-    TOUT: "utilisateur.tout",
+    LECTURE: "utilisateur.lecture",
+    MODIFICATION: "utilisateur.modification",
     CONFIG: "utilisateur.config",
   },
   COMPTABILITE: {
