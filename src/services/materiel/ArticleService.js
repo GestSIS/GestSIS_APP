@@ -16,6 +16,9 @@ export default {
   retourArticles(emplacementId, articles) {
     return Api.api().post(`emplacements/${emplacementId}/articles`, articles);
   },
+  downloadListeArticles(sapeurId, filename) {
+    return Api.apiFileDownload(filename).get(`sapeurs/${sapeurId}/liste-articles`);
+  },
   getParMaterielType(materieltypeId) {
     return Api.api().get(`materiel-types/${materieltypeId}/articles`);
   },

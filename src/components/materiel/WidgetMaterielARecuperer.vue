@@ -4,6 +4,7 @@ import ArticleService from "../../services/materiel/ArticleService.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import useHasPermission from "../../composables/usePermission.js";
 import permissions from "../../composables/permissions.js";
+import useNotification from "../../composables/useNotification.js";
 
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
@@ -50,7 +51,8 @@ const colonnesArticles = [
   { title: "Actions", slot: "actions" },
 ];
 
-const { showModal } = useModalStore();
+const { showModal, closeModal } = useModalStore();
+const awn = useNotification();
 const retourner = (article) =>
   showModal({
     component: "ModalRetourUnique",
@@ -63,6 +65,20 @@ const retournerTout = (sapeur) =>
     data: sapeur.articles,
     callback: loadSapeurs,
   });
+const pdfArticles = (sapeur) => {
+  showModal({ component: "ModalChargement" });
+  ArticleService.downloadListeArticles(
+    sapeur.sapeur_id,
+    `liste-articles-${sapeur.nom} ${sapeur.prenom}.pdf`,
+  )
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message || "Une erreur a eu lieu durant la génération de la liste des articles",
+      );
+    });
+};
 </script>
 
 <template>
@@ -87,7 +103,16 @@ const retournerTout = (sapeur) =>
         </template>
         <template #actionsSapeur="{ rowData }">
           <button
+            type="button"
+            title="Liste matériel"
+            class="btn btn-outline-primary border-0"
+            @click="pdfArticles(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'file-pdf']" />
+          </button>
+          <button
             v-if="hasEditPermission"
+            type="button"
             title="Retour multiple"
             class="btn btn-outline-warning border-0"
             @click="retournerTout(rowData)"
@@ -113,6 +138,7 @@ const retournerTout = (sapeur) =>
               <button
                 v-if="hasEditPermission"
                 title="Retourner"
+                type="button"
                 class="btn btn-outline-warning border-0"
                 @click="retourner(article)"
               >

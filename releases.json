@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "14.10.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Liste matériel pdf pour sapeur"]
+    },
+    {
       "date": "13.10.2026",
       "version": "1.0",
       "app": "GestSIS APP",

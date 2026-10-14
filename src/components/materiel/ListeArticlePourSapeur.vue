@@ -7,6 +7,7 @@ import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
 import useHasPermission from "../../composables/usePermission.js";
 import permissions from "../../composables/permissions.js";
+import useNotification from "../../composables/useNotification.js";
 import ArticleService from "../../services/materiel/ArticleService";
 import TagCouleur from "./TagCouleur.vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur";
@@ -79,7 +80,7 @@ const computedData = computed(() =>
   })),
 );
 
-const { showModal } = useModalStore();
+const { showModal, closeModal } = useModalStore();
 const infoMateriel = (materiel) =>
   showModal({
     component: "ModalArticleInfo",
@@ -117,6 +118,20 @@ const retournerMateriel = () =>
     callback: loadArticles,
   });
 
+const awn = useNotification();
+const pdfArticles = () => {
+  const nom = indexedSapeurs.value[id]?.nom_prenom ?? id;
+  showModal({ component: "ModalChargement" });
+  ArticleService.downloadListeArticles(id, `liste-articles-${nom}.pdf`)
+    .then(closeModal)
+    .catch((err) => {
+      closeModal();
+      awn.alert(
+        err?.message || "Une erreur a eu lieu durant la génération de la liste des articles",
+      );
+    });
+};
+
 const linearCategories = (categorieId) => {
   if (categorieId === null) {
     return [];
@@ -135,8 +150,16 @@ const linearCategories = (categorieId) => {
     <template #header>
       <div>
         <button
-          v-if="hasEditPermission"
+          type="button"
+          title="Liste matériel"
           class="btn btn-outline-primary"
+          @click="pdfArticles"
+        >
+          <font-awesome-icon :icon="['far', 'file-pdf']" />
+        </button>
+        <button
+          v-if="hasEditPermission"
+          class="ms-2 btn btn-outline-primary"
           @click="attribuer"
           title="Attribuer du materiel"
         >
