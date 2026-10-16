@@ -23,7 +23,7 @@ const errors = ref({});
 const form = reactive({
   expires_in_days: 30,
   permission_ids: [],
-  sis_ids: [],
+  organisation_ids: [],
   password: "",
   code: "",
   ...initialForm,
@@ -42,8 +42,8 @@ const sisListe = computed(() => authStore.availableSisListe);
 // et le jeton est assigné à ce SIS par défaut.
 const hasSingleSis = computed(() => sisListe.value.length === 1);
 
-if (!form.id && hasSingleSis.value && !form.sis_ids.length) {
-  form.sis_ids = [sisListe.value[0].id];
+if (!form.id && hasSingleSis.value && !form.organisation_ids.length) {
+  form.organisation_ids = [sisListe.value[0].id];
 }
 
 const { closeModal } = useModalStore();
@@ -53,7 +53,7 @@ const save = async () => {
     closeModal();
   }
 
-  if (!form.sis_ids?.length && !authStore.admin) {
+  if (!form.organisation_ids?.length && !authStore.admin) {
     awn.alert("Veuillez sélectionner au moins un SIS");
     return;
   }
@@ -156,15 +156,15 @@ const copyToClipboard = (text) => {
         <div v-for="sis in sisListe" :key="sis.id" class="form-check">
           <input
             :id="'s' + sis.id"
-            v-model="form.sis_ids"
+            v-model="form.organisation_ids"
             type="checkbox"
             class="form-check-input"
             :value="sis.id"
           />
           <label class="form-check-label" :for="'s' + sis.id">{{ sis.nom }}</label>
         </div>
-        <div class="invalid-feedback" :class="{ 'd-block': errors['sis_ids'] }">
-          {{ errors["sis_ids"] }}
+        <div class="invalid-feedback" :class="{ 'd-block': errors['organisation_ids'] }">
+          {{ errors["organisation_ids"] }}
         </div>
       </div>
       <div class="mb-3">
