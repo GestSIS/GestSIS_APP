@@ -3,27 +3,25 @@ import { computed, ref } from "vue";
 import useNotification from "../../composables/useNotification";
 import { useModalStore } from "../../stores/common/Modal";
 import { useAdminStore } from "../../stores/admin/Admin";
-import { useAuthStore } from "../../stores/auth/Auth";
 
 const adminStore = useAdminStore();
-const authStore = useAuthStore();
 
 const loading = ref(true);
-const loadSis = authStore.loadSisListe();
-const loadSisAdmin = adminStore.loadAllSis();
+
+const loadOrganisations = adminStore.loadAllOrganisations();
 const loadParams = adminStore.loadAllSisParams();
 const loadContacts = adminStore.loadAllSisContacts();
 
-Promise.all([loadSis, loadSisAdmin, loadContacts, loadParams])
+Promise.all([loadOrganisations, loadContacts, loadParams])
   .then(() => (loading.value = false))
   .catch(() => (loading.value = false));
 
-const sis = computed(() => adminStore.sis);
+const organisations = computed(() => adminStore.organisations);
 const contacts = computed(() => adminStore.contacts);
 const params = computed(() => adminStore.params);
-const computedSis = computed(() =>
-  sis.value?.map((s) => {
-    const computedContacts = contacts.value[s.api_key] ?? [];
+const computedOrganisations = computed(() =>
+  organisations.value?.map((s) => {
+    const computedContacts = contacts.value[s.org_key] ?? [];
     return {
       ...s,
       news: computedContacts.filter((c) => c.liste === "news"),
@@ -36,10 +34,10 @@ const { showModal } = useModalStore();
 const awn = useNotification();
 const jsonExport = () => {
   const data = JSON.stringify(
-    sis.value.map((sis) => ({
-      ...sis,
-      contacts: contacts.value[sis.api_key],
-      params: params.value[sis.api_key],
+    organisations.value.map((organisation) => ({
+      ...organisation,
+      contacts: contacts.value[organisation.org_key],
+      params: params.value[organisation.org_key],
     })),
   );
 
@@ -47,12 +45,13 @@ const jsonExport = () => {
 
   awn.success("Données copiées dans le press papier");
 };
-const editSis = (sis) => showModal({ component: "ModalSis", data: sis });
-const ajoutSis = () => showModal({ component: "ModalSis" });
+const editOrganisation = (organisation) =>
+  showModal({ component: "ModalOrganisation", data: organisation });
+const ajoutOrganisation = () => showModal({ component: "ModalOrganisation" });
 
 const fields = [
   { title: "id", key: "id" },
-  { title: "api_key", key: "api_key" },
+  { title: "org_key", key: "org_key" },
   { title: "Nom", key: "nom" },
   { title: "Abréviation", key: "abreviation" },
   { title: "Mobile", key: "mobile", type: Boolean },
@@ -99,7 +98,7 @@ const fields = [
             :href="
               'mailto:?bcc=' +
               Object.entries(contacts)
-                .filter(([key, _]) => sis.find((s) => s.api_key === key)?.mobile)
+                .filter(([key, _]) => organisations.find((s) => s.org_key === key)?.mobile)
                 .map(([_, value]) => value)
                 .flat()
                 .filter((c) => c.liste === 'news')
@@ -108,7 +107,6 @@ const fields = [
             "
             >Email mobile</a
           >
-          {{}}
         </div>
       </div>
     </div>
@@ -125,18 +123,18 @@ const fields = [
   </div>
   <div class="card card-primary card-outline mb-3 col-12 col-lg-12">
     <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Sis</h3>
+      <h3 class="card-title">Organisations</h3>
       <button class="btn btn-outline-primary" @click="ajoutSis">Ajouter</button>
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
         ref="table"
         :fields="fields"
-        :data="computedSis"
+        :data="computedOrganisations"
         :loading="loading"
         :selectable="true"
         :hide-download="true"
-        no-data="Aucun SIS"
+        no-data="Aucune organisation"
       >
         <template #badges="{ rowData, key }">
           <span v-for="e in rowData[key]" :key="e.id" class="badge bg-primary me-1">{{
@@ -146,7 +144,7 @@ const fields = [
         <template #actions="{ rowData }">
           <router-link
             class="btn btn-sm btn-outline-primary border-0"
-            :to="{ name: 'admin-sis-detail', params: { id: rowData.id } }"
+            :to="{ name: 'admin-organisation-detail', params: { id: rowData.id } }"
           >
             <font-awesome-icon :icon="['far', 'eye']" />
           </router-link>
@@ -156,7 +154,7 @@ const fields = [
         </template>
         <template #foot>
           <tr>
-            <th :colspan="fields.length">Nb : {{ sis.length }}</th>
+            <th :colspan="fields.length">Nb : {{ organisations.length }}</th>
           </tr>
         </template>
       </base-table>

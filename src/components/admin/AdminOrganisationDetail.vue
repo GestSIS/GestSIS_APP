@@ -16,26 +16,34 @@ const { id } = defineProps({
   },
 });
 
-const sis = ref({});
+const organisation = ref({});
 
-const loadSis = () => {
-  return AdminService.getSis({ id }).then((data) => {
-    sis.value = data;
+const loadOrganisation = () => {
+  return AdminService.getOrganisation({ id }).then((data) => {
+    organisation.value = data;
   });
 };
 
-await loadSis();
+await loadOrganisation();
 
 // Vue Router réutilise ce composant quand on navigue entre deux URLs de la
 // même route (seul `id` change) : sans ce watcher, l'UI garderait les
 // données du SIS précédemment affiché.
 watch(
   () => id,
-  () => loadSis(),
+  () => {
+    console.log("loading ...");
+    loadOrganisation();
+  },
 );
 
 const { showModal } = useModalStore();
-const editSis = (sis) => showModal({ component: "ModalSis", data: sis });
+const editOrganisation = () =>
+  showModal({
+    component: "ModalOrganisation",
+    data: organisation.value,
+    callback: loadOrganisation,
+  });
 const awn = useNotification();
 
 const impersonateUser = (user) =>
@@ -47,7 +55,7 @@ const impersonateUser = (user) =>
 const computedDataUsers = computed(() => {
   const usersById = {};
 
-  (sis.value.roles || []).forEach((role) => {
+  (organisation.value.roles || []).forEach((role) => {
     (role.user_roles || []).forEach((ur) => {
       usersById[ur.user_id] ??= {
         id: ur.user_id,
@@ -63,10 +71,10 @@ const computedDataUsers = computed(() => {
 
   // Un utilisateur peut n'avoir aucun rôle et n'apparaître que via un lien
   // sapeur actif (ex: sapeur simple sans rôle de gestion) — sans ce merge il
-  // resterait invisible sur la fiche du SIS. Le lien sapeur n'est pas un
+  // resterait invisible sur la fiche du sis. Le lien sapeur n'est pas un
   // rôle : il a sa propre colonne (mapping sapeur_id), pas un badge "sapeur"
   // mélangé dans la colonne rôle.
-  (sis.value.sapeurs || []).forEach((sapeurLink) => {
+  (organisation.value.sapeurs || []).forEach((sapeurLink) => {
     usersById[sapeurLink.user_id] ??= {
       id: sapeurLink.user_id,
       user_id: sapeurLink.user_id,
@@ -100,14 +108,14 @@ const fieldsUsers = [
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Données</h3>
-          <button class="btn btn-primary" @click="editSis(sis)">Modifier</button>
+          <button class="btn btn-primary" @click="editOrganisation">Modifier</button>
         </div>
         <div class="card-body">
           <div class="mb-3">
             <label for="id">id</label>
             <input
               id="id"
-              v-model="sis.id"
+              v-model="organisation.id"
               type="text"
               readonly
               disabled
@@ -116,22 +124,22 @@ const fieldsUsers = [
             />
           </div>
           <div class="mb-3">
-            <label for="api_key">api_key</label>
+            <label for="org_key">org_key</label>
             <input
-              id="api_key"
-              v-model="sis.api_key"
+              id="org_key"
+              v-model="organisation.org_key"
               type="text"
               readonly
               disabled
               class="form-control form-control-sm"
-              name="api_key"
+              name="org_key"
             />
           </div>
           <div class="mb-3">
             <label for="nom">Nom</label>
             <input
               id="nom"
-              v-model="sis.nom"
+              v-model="organisation.nom"
               type="text"
               readonly
               disabled
@@ -143,7 +151,7 @@ const fieldsUsers = [
             <label for="abreviation">Abréviation</label>
             <input
               id="abreviation"
-              v-model="sis.abreviation"
+              v-model="organisation.abreviation"
               type="text"
               readonly
               disabled
@@ -154,7 +162,7 @@ const fieldsUsers = [
           <div class="mb-3">
             <input
               id="mobile"
-              v-model="sis.mobile"
+              v-model="organisation.mobile"
               name="sis-mobile"
               type="checkbox"
               disabled

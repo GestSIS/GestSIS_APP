@@ -68,7 +68,7 @@ const quitterImpersonation = async () => {
         </button>
       </li>
       <li v-if="isAdmin" class="nav-item position-relative me-2">
-        <router-link v-slot="{ navigate }" :to="{ name: 'admin-sis' }" custom>
+        <router-link v-slot="{ navigate }" :to="{ name: 'admin-organisations' }" custom>
           <button class="btn btn-sm btn-link" @click="clickInfo(navigate)">Admin</button>
         </router-link>
       </li>

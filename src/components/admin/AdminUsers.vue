@@ -11,15 +11,15 @@ const adminStore = useAdminStore();
 const authStore = useAuthStore();
 
 const loading = ref(true);
-const loadSis = adminStore.loadAllSis();
+const loadOrganisations = adminStore.loadAllOrganisations();
 const loadUsers = adminStore.loadAllUsers();
 
-Promise.all([loadSis, loadUsers])
+Promise.all([loadOrganisations, loadUsers])
   .then(() => (loading.value = false))
   .catch(() => (loading.value = false));
 
 const users = computed(() => adminStore.users);
-const sis = computed(() => adminStore.sis);
+const organisations = computed(() => adminStore.organisations);
 
 const showDisabled = ref(false);
 const filteredUsers = computed(() =>
@@ -100,7 +100,7 @@ const fields = [
               'bg-warning': item.deactivated_at == null && item.pending_deactivation_at != null,
               'bg-danger': item.deactivated_at != null,
             }"
-            >{{ sis.find((s) => s.id == item.sis_id)?.api_key }}</span
+            >{{ organisations.find((o) => o.id == item.organisation_id)?.org_key }}</span
           >
         </template>
         <template #actions="{ rowData }">

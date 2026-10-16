@@ -1,10 +1,9 @@
 import { defineStore } from "pinia";
 import AdminService from "../../services/AdminService";
-import AuthService from "../../services/AuthService";
 
 export const useAdminStore = defineStore("admin", {
   state: () => ({
-    sis: [],
+    organisations: [],
     roles: [],
     users: [],
     contacts: {},
@@ -13,21 +12,21 @@ export const useAdminStore = defineStore("admin", {
     twoFactorStats: null,
   }),
   actions: {
-    async loadAllSis() {
-      const data = await AuthService.sisListe();
-      this.sis = data;
+    async loadAllOrganisations() {
+      const data = await AdminService.getOrganisations();
+      this.organisations = data;
       return data;
     },
-    async addSis(sis) {
-      const data = await AdminService.addSis(sis);
-      this.sis.push(data);
+    async addOrganisation(organisation) {
+      const data = await AdminService.addOrganisation(organisation);
+      this.organisations.push(data);
       return data;
     },
-    async editSis(sis) {
-      const data = await AdminService.editSis(sis);
-      const index = this.sis.findIndex((s) => s.id === sis.id);
+    async editOrganisation(organisation) {
+      const data = await AdminService.editOrganisation(organisation);
+      const index = this.organisations.findIndex((s) => s.id === organisation.id);
       if (index !== -1) {
-        this.sis[index] = data;
+        this.organisations[index] = data;
       }
       return data;
     },

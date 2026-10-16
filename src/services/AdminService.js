@@ -1,14 +1,17 @@
 import Api from "/src/http/Request";
 
 export default {
-  addSis(sis) {
-    return Api.auth().post("/admin/sis", sis);
+  getOrganisations() {
+    return Api.auth().get("/admin/organisations");
   },
-  editSis(sis) {
-    return Api.auth().patch("/admin/sis/" + sis.id, sis);
+  getOrganisation(organisation) {
+    return Api.auth().get("/admin/organisations/" + organisation.id);
   },
-  getSis(sis) {
-    return Api.auth().get("/admin/sis/" + sis.id);
+  addOrganisation(organisation) {
+    return Api.auth().post("/admin/organisations", organisation);
+  },
+  editOrganisation(organisation) {
+    return Api.auth().patch("/admin/organisations/" + organisation.id, organisation);
   },
   getUserToken(userId) {
     return Api.auth().get("/admin/token", {

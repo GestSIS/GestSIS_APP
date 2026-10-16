@@ -17,7 +17,7 @@
       <div class="col-md-12">
         <base-navigation-tab
           :routes="[
-            { to: { name: 'admin-sis' }, texte: 'Sis' },
+            { to: { name: 'admin-organisations' }, texte: 'Organisations' },
             { to: { name: 'admin-users' }, texte: 'Utilisateurs' },
             { to: { name: 'admin-2fa' }, texte: '2FA' },
           ]"

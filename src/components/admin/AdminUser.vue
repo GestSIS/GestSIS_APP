@@ -19,7 +19,7 @@ const adminStore = useAdminStore();
 const authStore = useAuthStore();
 
 const user = ref({});
-const loadSis = adminStore.loadAllSis();
+const loadOrganisations = adminStore.loadAllOrganisations();
 const loadRoles = adminStore.loadAllRoles();
 adminStore.loadAllUsers();
 
@@ -29,7 +29,7 @@ const loadUser = () => {
   });
 };
 
-await Promise.all([loadSis, loadRoles, loadUser()]);
+await Promise.all([loadOrganisations, loadRoles, loadUser()]);
 
 // Vue Router réutilise ce composant quand on navigue entre deux URLs de la
 // même route (seul `id` change) : sans ce watcher, l'UI garderait les
@@ -42,7 +42,7 @@ watch(
 const formatDate = (value) =>
   value ? new Date(value).toLocaleDateString("fr-CH").slice(0, 10) : "";
 
-const sis = computed(() => adminStore.sis);
+const organisations = computed(() => adminStore.organisations);
 const roles = computed(() => adminStore.roles);
 
 const { showModal, confirm } = useModalStore();
@@ -144,7 +144,7 @@ const computedDataRoles = computed(() =>
     if (!role) return { ...ur, organisation: "N/A", role: "N/A" };
     return {
       ...ur,
-      organisation: sis.value.find((s) => s.id === role.sis_id)?.nom || "N/A",
+      organisation: organisations.value.find((o) => o.id === role.organisation_id)?.nom || "N/A",
       role: role.nom,
     };
   }),
@@ -153,7 +153,7 @@ const computedDataSapeurs = computed(() =>
   (user.value.sapeur || []).map((e) => {
     return {
       ...e,
-      organisation: sis.value.find((s) => s.id === e.sis_id)?.nom || "N/A",
+      organisation: organisations.value.find((o) => o.id === e.organisation_id)?.nom || "N/A",
     };
   }),
 );

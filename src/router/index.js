@@ -1061,17 +1061,17 @@ const router = createRouter({
       component: () => import("/src/pages/PageAdmin.vue"),
       children: [
         {
-          path: "sis",
-          name: "admin-sis",
+          path: "organisations",
+          name: "admin-organisations",
           beforeEnter: adminGuard(),
-          component: () => import("/src/components/admin/AdminSis.vue"),
+          component: () => import("/src/components/admin/AdminOrganisations.vue"),
         },
         {
-          path: "sis/:id",
-          name: "admin-sis-detail",
+          path: "organisations/:id",
+          name: "admin-organisation-detail",
           props: true,
           beforeEnter: adminGuard(),
-          component: () => import("/src/components/admin/AdminSisDetail.vue"),
+          component: () => import("/src/components/admin/AdminOrganisationDetail.vue"),
         },
         {
           path: "users",

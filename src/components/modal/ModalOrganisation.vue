@@ -20,7 +20,7 @@ const form = reactive({
   nom: "",
   abreviation: "",
   mobile: false,
-  api_key: "",
+  org_key: "",
   ...data,
 });
 
@@ -37,11 +37,12 @@ const close = () => {
 };
 
 const save = async () => {
-  (form?.id ? adminStore.editSis : adminStore.addSis)(form)
+  (form?.id ? adminStore.editOrganisation : adminStore.addOrganisation)(form)
+    .then(callback)
     .then(closeModal)
     .catch((err) => {
       errors.value = err.errors ?? {};
-      awn.alert(err?.message ?? "Erreur lors de l'ajout du SIS");
+      awn.alert(err?.message ?? "Erreur lors de l'ajout de l'organisation");
     });
 };
 </script>
@@ -49,7 +50,7 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} Sis</h5>
+      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} une organisation</h5>
       <button type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
@@ -78,14 +79,14 @@ const save = async () => {
         />
       </div>
       <div class="mb-3">
-        <label for="m-sis-api_key">API KEY</label>
+        <label for="m-sis-org_key">ORG KEY</label>
         <input
-          id="m-sis-api_key"
-          v-model="form.api_key"
+          id="m-sis-org_key"
+          v-model="form.org_key"
           type="text"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['api_key'] }"
-          name="m-sis-api_key"
+          :class="{ 'is-invalid': errors['org_key'] }"
+          name="m-sis-org_key"
           required
           :readonly="form?.id"
           :disabled="form?.id"
