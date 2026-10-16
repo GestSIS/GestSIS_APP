@@ -20,7 +20,7 @@ const decompteStore = useDecompteStore();
 
 await exerciceComptableStore.fetchExercicesComptables();
 
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 uniteStore.fetchUnites();
 
 const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);

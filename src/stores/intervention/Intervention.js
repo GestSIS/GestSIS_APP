@@ -19,7 +19,7 @@ export const useInterventionStore = defineStore("intervention", {
     },
   }),
   actions: {
-    async fetchListeIntervention(exerciceComptableId) {
+    async fetchInterventions(exerciceComptableId) {
       this.liste = await InterventionService.getInterventions(exerciceComptableId);
     },
     async fetchIntervention(id) {

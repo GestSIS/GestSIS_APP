@@ -8,7 +8,7 @@ const authStore = useAuthStore();
 
 const isAdmin = computed(() => authStore.admin);
 const isSapeur = computed(() => authStore.sapeurId);
-const perms = computed(() => authStore.sis.permissions);
+const perms = computed(() => authStore.organisation.permissions);
 
 const filteredLinks = computed(() =>
   links.filter(

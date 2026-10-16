@@ -17,7 +17,7 @@ const medecinStore = useMedecinStore();
 const controleMedicalStore = useControleMedicalStore();
 const controleMedicalTypeStore = useControleMedicalTypeStore();
 
-const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadSapeurs = sapeurStore.fetchSapeurs();
 const loadMedecins = medecinStore.fetchMedecins();
 const loadControlesMedicauxTypes = controleMedicalTypeStore.fetchTypes();
 const loadControlesMedicaux = controleMedicalStore.fetchControlesMedicaux();

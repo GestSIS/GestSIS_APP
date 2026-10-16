@@ -14,7 +14,7 @@ await exerciceComptableStore.fetchExercicesComptables();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await exerciceStore.fetchListeExercice(exerciceComptableStore.activeId);
+  await exerciceStore.fetchExercices(exerciceComptableStore.activeId);
   loading.value = false;
 });
 

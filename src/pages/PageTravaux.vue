@@ -19,7 +19,7 @@ const travailTypeStore = useTravailTypeStore();
 const uniteStore = useUniteStore();
 const exerciceComptableStore = useExerciceComptableStore();
 
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 uniteStore.fetchUnites();
 travailTypeStore.fetchTravailTypes();
 

@@ -21,7 +21,7 @@ const absenceStore = useAbsenceStore();
 
 await exerciceComptableStore.fetchExercicesComptables();
 
-const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadSapeurs = sapeurStore.fetchSapeurs();
 
 const loadFonctions = fonctionStore.fetchFonctions();
 const loadPermis = baseDataStore.fetchPermisType();

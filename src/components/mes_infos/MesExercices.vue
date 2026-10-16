@@ -44,9 +44,9 @@ const excuseParams = computed(() => excuseParamStore.params);
 const annee = computed(
   () => exerciceComptableStore.liste.find((e) => e.id == exerciceComptableStore.activeId)?.annee,
 );
-const sisKey = computed(() => authStore.sis.activeKey);
+const sisKey = computed(() => authStore.organisation.activeKey);
 const sisName = computed(
-  () => authStore.sis.liste.find((s) => s.id == authStore.sis.activeId)?.nom,
+  () => authStore.organisations.find((s) => s.id == authStore.organisation.activeId)?.nom,
 );
 const exercices = computed(() =>
   infosStore.exercices

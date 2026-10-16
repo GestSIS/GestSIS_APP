@@ -15,7 +15,7 @@ const authStore = useAuthStore();
 const errors = ref({});
 const form = reactive({
   permissions: [],
-  organisation_id: authStore.sis.activeId,
+  organisation_id: authStore.organisation.activeId,
   ...data,
 });
 

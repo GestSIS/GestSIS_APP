@@ -9,7 +9,7 @@ import { useInterventionStore } from "../../stores/intervention/Intervention.js"
 const sapeurStore = useSapeurStore();
 const interventionStore = useInterventionStore();
 
-await sapeurStore.fetchListeSapeur();
+await sapeurStore.fetchSapeurs();
 
 const { id } = defineProps({
   id: {

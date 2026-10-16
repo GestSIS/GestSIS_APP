@@ -60,8 +60,8 @@ export default {
   deleteRole(roleId) {
     return Api.auth().delete("roles/" + roleId);
   },
-  sisListe() {
-    return Api.auth().get("sis");
+  getOrganisations() {
+    return Api.auth().get("organisations");
   },
   getPermissions() {
     return Api.auth().get("permissions");

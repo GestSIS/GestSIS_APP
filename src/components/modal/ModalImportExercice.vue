@@ -93,7 +93,7 @@ const importer = async () => {
         }),
       ),
     );
-    await exerciceStore.fetchListeExercice(exerciceComptableStore.activeId);
+    await exerciceStore.fetchExercices(exerciceComptableStore.activeId);
     awn.success(`${form.exercices.length} exercice(s) importé(s) avec succès`);
     closeModal();
   } catch (err) {

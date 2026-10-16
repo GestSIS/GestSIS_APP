@@ -30,16 +30,16 @@ await exerciceComptableStore.fetchExercicesComptables();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await exerciceStore.fetchListeExercice(exerciceComptableStore.activeId);
+  await exerciceStore.fetchExercices(exerciceComptableStore.activeId);
   loading.value = false;
 });
 
 const selectedId = ref(null);
 const selectExercice = (row) => (selectedId.value = row?.id);
 
-const sisKey = computed(() => authStore.sis.activeKey);
+const sisKey = computed(() => authStore.organisation.activeKey);
 const sisName = computed(
-  () => authStore.sis.liste.find((s) => s.id == authStore.sis.activeId)?.nom,
+  () => authStore.organisations.find((s) => s.id == authStore.organisation.activeId)?.nom,
 );
 const annee = computed(
   () => exerciceComptableStore.liste.find((e) => e.id == exerciceComptableStore.activeId)?.annee,

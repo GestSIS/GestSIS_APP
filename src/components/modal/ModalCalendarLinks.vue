@@ -14,7 +14,8 @@ const loading = ref(true);
 const links = ref([]);
 const confirmingSisKey = ref(null);
 
-const sisName = (sisKey) => authStore.sis.liste.find((s) => s.api_key === sisKey)?.nom ?? sisKey;
+const sisName = (sisKey) =>
+  authStore.organisations.find((s) => s.org_key === sisKey)?.nom ?? sisKey;
 
 const load = () => {
   loading.value = true;

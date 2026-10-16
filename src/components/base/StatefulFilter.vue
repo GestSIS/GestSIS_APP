@@ -19,7 +19,7 @@ const { id, data } = defineProps({
   },
 });
 
-const sisKey = computed(() => authStore.sis.activeKey);
+const sisKey = computed(() => authStore.organisation.activeKey);
 
 const filters = ref({});
 

@@ -7,14 +7,14 @@ const router = useRouter();
 const authStore = useAuthStore();
 
 const availableSisListe = computed(() => authStore.availableSisListe);
-const activeSisId = computed(() => authStore.sis.activeId);
-const listeSis = computed(() => authStore.sis.liste);
+const activeSisId = computed(() => authStore.organisation.activeId);
+const organisations = computed(() => authStore.organisations);
 
-const selectSis = async (sisId) => {
-  if (sisId != activeSisId.value) {
+const selectOrganisation = async (id) => {
+  if (id != activeSisId.value) {
     await router.push({ name: "accueil" });
-    const sis = listeSis.value.find((s) => s.id == sisId);
-    authStore.selectSis(sis);
+    const sis = organisations.value.find((s) => s.id == id);
+    authStore.selectOrganisation(sis);
   }
 };
 </script>
@@ -32,7 +32,7 @@ const selectSis = async (sisId) => {
         class="mb-3"
         display-key="nom"
         :options="availableSisListe"
-        @update:model-value="(sisId) => selectSis(sisId)"
+        @update:model-value="(id) => selectOrganisation(id)"
       />
       <!-- <a href="#" class="d-block">
              &lt;!&ndash; @if(!empty($user_details['nom']))

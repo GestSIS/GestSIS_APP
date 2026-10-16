@@ -5,7 +5,7 @@ import { useModalStore } from "../stores/common/Modal";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 import PublipostageService from "/src/services/PublipostageService.js";
 
-useSapeurStore().fetchListeSapeur();
+useSapeurStore().fetchSapeurs();
 
 const sapeurIds = ref([]);
 

@@ -6,7 +6,7 @@ export const useAlarmeStore = defineStore("alarme", {
     liste: [],
   }),
   actions: {
-    async fetchListeAlarme() {
+    async fetchAlarmes() {
       this.liste = await AlarmeService.getAlarmes();
     },
   },

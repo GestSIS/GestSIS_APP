@@ -18,7 +18,7 @@ const groupeStore = useGroupeStore();
 const awn = useNotification();
 
 await groupeStore.fetchGroupes();
-await sapeurStore.fetchListeSapeur();
+await sapeurStore.fetchSapeurs();
 
 const groupeEdition = useTemplateRef("groupe-edition-component");
 

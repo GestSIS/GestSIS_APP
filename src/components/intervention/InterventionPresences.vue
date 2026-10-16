@@ -12,7 +12,7 @@ const interventionStore = useInterventionStore();
 const phaseTypeStore = usePhaseTypeStore();
 
 phaseTypeStore.fetchPhaseTypes();
-await sapeurStore.fetchListeSapeur();
+await sapeurStore.fetchSapeurs();
 
 const { id } = defineProps({
   id: {

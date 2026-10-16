@@ -22,7 +22,7 @@ const statFederalStore = useStatFederalStore();
 const typeInterventionStore = useTypeInterventionStore();
 
 await Promise.all([
-  sapeurStore.fetchListeSapeur(),
+  sapeurStore.fetchSapeurs(),
   localiteStore.fetchLocalites(),
   statFederalStore.fetchStatFederals(),
   typeInterventionStore.fetchTypeInterventions(),

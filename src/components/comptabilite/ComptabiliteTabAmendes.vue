@@ -15,7 +15,7 @@ const imputationStore = useImputationStore();
 
 await exerciceComptableStore.fetchExercicesComptables();
 
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 
 const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);
 

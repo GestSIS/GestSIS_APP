@@ -12,7 +12,7 @@ const router = useRouter();
 const { closeModal } = useModalStore();
 const awn = useNotification();
 
-const sisKey = computed(() => authStore.sis.activeKey);
+const sisKey = computed(() => authStore.organisation.activeKey);
 
 const chargement = ref(true);
 const dureeHeures = ref(24);

@@ -12,7 +12,7 @@ const { routes } = defineProps({
 const authStore = useAuthStore();
 
 const isAdmin = computed(() => authStore.admin);
-const permissions = computed(() => authStore.sis.permissions);
+const permissions = computed(() => authStore.organisation.permissions);
 
 const filteredRoutes = computed(() =>
   routes.filter(

@@ -25,7 +25,9 @@ const authStore = useAuthStore();
 const awn = useNotification();
 
 // N'affiche le nom du SIS dans le select que si le sapeur a un profil dans plusieurs SIS.
-const sapeurDansPlusieursSis = computed(() => Object.keys(authStore.sis.sapeurs ?? {}).length > 1);
+const sapeurDansPlusieursSis = computed(
+  () => Object.keys(authStore.organisation.sapeurs ?? {}).length > 1,
+);
 
 // Les exercices peuvent provenir de plusieurs SIS (ex. depuis Accueil) : exercice_id seul n'est pas
 // unique dans ce cas (chaque SIS a sa propre séquence), donc on identifie chaque option par un

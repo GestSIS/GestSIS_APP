@@ -21,7 +21,7 @@ const compteStore = useCompteStore();
 
 await exerciceComptableStore.fetchExercicesComptables();
 
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 fonctionStore.fetchFonctions();
 compteStore.fetchComptes();
 

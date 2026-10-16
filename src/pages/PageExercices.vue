@@ -10,7 +10,7 @@ const localiteStore = useLocaliteStore();
 const exerciceCategorieStore = useExerciceCategorieStore();
 const exerciceComptableStore = useExerciceComptableStore();
 
-const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadSapeurs = sapeurStore.fetchSapeurs();
 const loadLocalities = localiteStore.fetchLocalites();
 const loadExerciceCategories = exerciceCategorieStore.fetchExerciceCategories();
 const loadExerciceComptables = exerciceComptableStore.fetchExercicesComptables();

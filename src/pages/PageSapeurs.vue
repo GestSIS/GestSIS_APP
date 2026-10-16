@@ -48,7 +48,7 @@ localiteStore.fetchLocalites();
 gradeStore.fetchGrades();
 fonctionStore.fetchFonctions();
 
-await sapeurStore.fetchListeSapeur();
+await sapeurStore.fetchSapeurs();
 
 const route = useRoute();
 const router = useRouter();
@@ -175,7 +175,7 @@ const validerRecrue = () =>
     callback: (incorporation) =>
       RecrutementService.validerRecrue(activeSapeur.value.id, incorporation)
         .then(async () => {
-          await sapeurStore.fetchListeSapeur();
+          await sapeurStore.fetchSapeurs();
           await sapeurStore.fetchSapeur(activeSapeur.value.id);
           awn.success("Recrue validée avec succès");
         })

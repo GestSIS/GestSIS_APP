@@ -7,7 +7,7 @@ const sapeurStore = useSapeurStore();
 const authStore = useAuthStore();
 
 const loadUsers = authStore.fetchUsers();
-const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadSapeurs = sapeurStore.fetchSapeurs();
 
 const loading = ref(true);
 Promise.all([loadUsers, loadSapeurs]).then(() => (loading.value = false));
@@ -17,7 +17,7 @@ const filters = ref({
   email: "",
 });
 
-const sisId = computed(() => authStore.sis.activeId);
+const sisId = computed(() => authStore.organisation.activeId);
 const users = computed(() => authStore.users);
 const sapeurs = computed(() => sapeurStore.liste);
 

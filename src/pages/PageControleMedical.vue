@@ -29,7 +29,7 @@ const { id } = defineProps({
   },
 });
 
-const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadSapeurs = sapeurStore.fetchSapeurs();
 const loadMedecins = medecinStore.fetchMedecins();
 const loadControlesMedicauxTypes = controleMedicalTypeStore.fetchTypes();
 

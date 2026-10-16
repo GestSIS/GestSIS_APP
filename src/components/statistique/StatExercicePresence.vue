@@ -21,7 +21,7 @@ const statistiqueStore = useStatistiqueStore();
 await Promise.all([
   localiteStore.fetchLocalites(),
   fonctionStore.fetchFonctions(),
-  sapeurStore.fetchListeSapeur(),
+  sapeurStore.fetchSapeurs(),
   excuseTypeStore.fetchExcuseTypes(),
   exerciceCategorieStore.fetchExerciceCategories(),
 ]);
@@ -54,7 +54,7 @@ const selectedExerciceA = ref([]);
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await exerciceStore.fetchListeExercice(exerciceComptableStore.activeId);
+  await exerciceStore.fetchExercices(exerciceComptableStore.activeId);
   await statistiqueStore.fetchStatistiquePresenceExercice(exerciceComptableStore.activeId);
   selectedCategories.value = categorieExercices.value.map((c) => c.id);
   selectedSapeurDe.value = localiteSapeurs.value.map((l) => l.id);

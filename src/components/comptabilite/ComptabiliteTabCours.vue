@@ -33,7 +33,7 @@ await exerciceComptableStore.fetchExercicesComptables();
 ecritureCategorieStore.fetchEcritureCategories();
 uniteStore.fetchUnites();
 coursStore.fetchCours();
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 localiteStore.fetchLocalites();
 imputationStore.fetchFraisIndemnitesTypes();
 compteStore.fetchComptes();

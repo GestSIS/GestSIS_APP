@@ -41,7 +41,7 @@ const reference = computed(() =>
   })),
 );
 const activeSisData = computed(() =>
-  authStore.sis.liste.find((s) => s.id == authStore.sis.activeId),
+  authStore.organisations.find((s) => s.id == authStore.organisation.activeId),
 );
 
 const formatNumero = (numero) => {

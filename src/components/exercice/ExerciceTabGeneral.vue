@@ -23,7 +23,7 @@ const exerciceStore = useExerciceStore();
 const exerciceCategorieStore = useExerciceCategorieStore();
 const exerciceComptableStore = useExerciceComptableStore();
 
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 localiteStore.fetchLocalites();
 exerciceCategorieStore.fetchExerciceCategories();
 exerciceComptableStore.fetchExercicesComptables();

@@ -36,7 +36,7 @@ const sapeurStore = useSapeurStore();
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
   emplacementStore.fetchEmplacements(),
-  sapeurStore.fetchListeSapeur(),
+  sapeurStore.fetchSapeurs(),
 ]);
 
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));

@@ -30,7 +30,7 @@ await exerciceComptableStore.fetchExercicesComptables();
 
 ecritureCategorieStore.fetchEcritureCategories();
 uniteStore.fetchUnites();
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 travailTypeStore.fetchTravailTypes();
 compteStore.fetchComptes();
 

@@ -15,7 +15,7 @@ const absenceStore = useAbsenceStore();
 
 await exerciceComptableStore.fetchExercicesComptables();
 
-const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadSapeurs = sapeurStore.fetchSapeurs();
 const loadLocalites = localiteStore.fetchLocalites();
 const loading = ref(true);
 watchEffect(async () => {

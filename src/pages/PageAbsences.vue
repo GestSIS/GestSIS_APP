@@ -12,7 +12,7 @@ const baseDataStore = useBaseDataStore();
 const groupeStore = useGroupeStore();
 const fonctionStore = useFonctionStore();
 
-const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadSapeurs = sapeurStore.fetchSapeurs();
 const loadLocalities = localiteStore.fetchLocalites();
 const loadGroupes = groupeStore.fetchGroupes();
 const loadFonctions = fonctionStore.fetchFonctions();

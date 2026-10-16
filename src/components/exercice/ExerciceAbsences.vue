@@ -26,7 +26,7 @@ const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
   await Promise.all([
-    exerciceStore.fetchListeExercice(exerciceComptableStore.activeId),
+    exerciceStore.fetchExercices(exerciceComptableStore.activeId),
     exerciceStore.fetchExerciceAbsences(exerciceComptableStore.activeId),
   ]);
   loading.value = false;

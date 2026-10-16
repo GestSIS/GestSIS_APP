@@ -16,7 +16,7 @@ const localiteStore = useLocaliteStore();
 const sisParamStore = useSisParamStore();
 const sapeurStore = useSapeurStore();
 const loadLocalites = localiteStore.fetchLocalites();
-const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadSapeurs = sapeurStore.fetchSapeurs();
 const loadParams = sisParamStore.fetchParams();
 const loadContacts = sisParamStore.fetchContacts();
 
@@ -38,7 +38,7 @@ const listes = [
 
 const hasConfigGeneralPermission = useHasPermission(permissions.SIS.CONFIG);
 const authStore = useAuthStore();
-const activeSisKey = computed(() => authStore.sis.activeKey);
+const activeSisKey = computed(() => authStore.organisation.activeKey);
 const params = computed(() => sisParamStore.params);
 const contacts = computed(() => sisParamStore.contacts);
 const localites = computed(() => localiteStore.liste);

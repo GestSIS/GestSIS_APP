@@ -29,7 +29,7 @@ const imputationStore = useImputationStore();
 await exerciceComptableStore.fetchExercicesComptables();
 
 typeInterventionStore.fetchTypeInterventions();
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 localiteStore.fetchLocalites();
 statFederalStore.fetchStatFederals();
 interventionTraitementStore.fetchTraitements();
@@ -38,7 +38,7 @@ imputationStore.fetchFraisIndemnitesTypes();
 const loading = ref(false);
 const init = async () => {
   loading.value = true;
-  await interventionStore.fetchListeIntervention(exerciceComptableStore.activeId);
+  await interventionStore.fetchInterventions(exerciceComptableStore.activeId);
   loading.value = false;
 };
 watchEffect(init);

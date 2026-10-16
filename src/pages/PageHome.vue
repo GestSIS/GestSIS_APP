@@ -20,23 +20,18 @@ const disableInterval = ref(null);
 const resendCounter = ref(0);
 const resendInterval = ref(null);
 
-const listeSis = computed(() => authStore.sis.liste);
 const validated = computed(() => authStore.validated);
 const availableSisListe = computed(() => authStore.availableSisListe);
 
 const awn = useNotification();
 
-if (listeSis.value.length <= 0) {
-  await authStore.loadSisListe();
-}
-
-if (!authStore.sis.activeId && availableSisListe.value.length > 0) {
-  await authStore.selectSis(availableSisListe.value[0]);
+if (!authStore.organisation.activeId && availableSisListe.value.length > 0) {
+  await authStore.selectOrganisation(availableSisListe.value[0]);
 }
 
 await localiteStore.fetchLocalites();
 
-const isSapeur = computed(() => Object.keys(authStore.sis.sapeurs ?? {}).length > 0);
+const isSapeur = computed(() => Object.keys(authStore.organisation.sapeurs ?? {}).length > 0);
 
 const prochainesConvocationsLoading = ref(isSapeur.value);
 const prochainesConvocationsParSis = ref({});
@@ -86,7 +81,7 @@ const prochainesConvocations = computed(() =>
         categorie: exercice.categorie?.designation,
         localite: localiteStore.liste.find((l) => l.id == exercice.localite_id)?.designation,
         sis_key: sisKey,
-        sis_nom: listeSis.value.find((s) => s.api_key === sisKey)?.nom,
+        sis_nom: authStore.organisations.find((s) => s.org_key === sisKey)?.nom,
         excuse: excuseTypesParSis.value[sisKey]?.find(
           (t) => t.id == exercice.presence?.excuse_type_id,
         )?.designation,
@@ -108,7 +103,9 @@ const convocationsAVenir = computed(() =>
 );
 
 // N'affiche le nom du SIS que si le sapeur a un profil sapeur dans plusieurs SIS.
-const sapeurDansPlusieursSis = computed(() => Object.keys(authStore.sis.sapeurs ?? {}).length > 1);
+const sapeurDansPlusieursSis = computed(
+  () => Object.keys(authStore.organisation.sapeurs ?? {}).length > 1,
+);
 
 onUnmounted(() => {
   if (disableInterval.value != null) {

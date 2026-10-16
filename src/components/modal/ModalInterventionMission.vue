@@ -17,7 +17,7 @@ const missionStore = useMissionStore();
 const interventionStore = useInterventionStore();
 
 missionStore.fetchMissions();
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 
 const { data } = defineProps({
   data: {

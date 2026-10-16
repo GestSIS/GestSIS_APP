@@ -16,7 +16,7 @@ const compteStore = useCompteStore();
 
 await exerciceComptableStore.fetchExercicesComptables();
 
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 await compteStore.fetchComptes();
 
 const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);

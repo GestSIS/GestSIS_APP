@@ -24,7 +24,7 @@ const excuseTypeStore = useExcuseTypeStore();
 const heureExerciceStore = useHeureExerciceStore();
 const exerciceComptableStore = useExerciceComptableStore();
 
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 localiteStore.fetchLocalites();
 exerciceCategorieStore.fetchExerciceCategories();
 exerciceComptableStore.fetchExercicesComptables();

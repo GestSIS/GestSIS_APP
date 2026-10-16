@@ -32,7 +32,7 @@ const execs = ref([]);
 await Promise.all([
   typeStore.fetchMaterielTypes(),
   emplacementStore.fetchEmplacements(),
-  sapeurStore.fetchListeSapeur(),
+  sapeurStore.fetchSapeurs(),
   couleurStore.fetchCouleurs(),
   controleStore.fetchControles(),
   ControleExecService.getExecsPourArticle(articleId).then((r) => {

@@ -25,7 +25,7 @@ const compteStore = useCompteStore();
 await exerciceComptableStore.fetchExercicesComptables();
 
 exerciceCategorieStore.fetchExerciceCategories();
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 localiteStore.fetchLocalites();
 imputationStore.fetchFraisIndemnitesTypes();
 compteStore.fetchComptes();

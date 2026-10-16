@@ -11,7 +11,7 @@ const { data } = defineProps({
 });
 
 const sapeurStore = useSapeurStore();
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 
 const sapeurs = computed(() => sapeurStore.liste);
 

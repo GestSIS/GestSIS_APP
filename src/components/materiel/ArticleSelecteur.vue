@@ -49,7 +49,7 @@ await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
   emplacementStore.fetchEmplacements(),
   couleurStore.fetchCouleurs(),
-  sapeurStore.fetchListeSapeur(),
+  sapeurStore.fetchSapeurs(),
 ]);
 
 const types = computed(() => materielTypeStore.liste);

@@ -21,7 +21,7 @@ const traitementStore = useInterventionTraitementStore();
 const statFederalStore = useStatFederalStore();
 const typeInterventionStore = useTypeInterventionStore();
 
-const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadSapeurs = sapeurStore.fetchSapeurs();
 const loadLocalities = localiteStore.fetchLocalites();
 const loadStatFederal = statFederalStore.fetchStatFederals();
 const loadTypeInterventions = typeInterventionStore.fetchTypeInterventions();
@@ -32,7 +32,7 @@ await exerciceComptableStore.fetchExercicesComptables();
 const loading = ref(true);
 watchEffect(async () => {
   loading.value = true;
-  await interventionStore.fetchListeIntervention(exerciceComptableStore.activeId);
+  await interventionStore.fetchInterventions(exerciceComptableStore.activeId);
   loading.value = false;
 });
 

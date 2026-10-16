@@ -22,7 +22,7 @@ const exerciceComptableStore = useExerciceComptableStore();
 
 const loadLocalities = localiteStore.fetchLocalites();
 const loadCours = coursStore.fetchCours();
-const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadSapeurs = sapeurStore.fetchSapeurs();
 const loadGrades = gradeStore.fetchGrades();
 const loadFonctions = fonctionStore.fetchFonctions();
 

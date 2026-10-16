@@ -13,7 +13,7 @@ const responsableOptions = [
 
 const sapeurStore = useSapeurStore();
 const interventionStore = useInterventionStore();
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 
 const { data } = defineProps({
   data: {

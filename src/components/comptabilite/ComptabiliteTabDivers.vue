@@ -21,7 +21,7 @@ const ecritureCategorieStore = useEcritureCategorieStore();
 
 await exerciceComptableStore.fetchExercicesComptables();
 
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 uniteStore.fetchUnites();
 compteStore.fetchComptes();
 ecritureCategorieStore.fetchEcritureCategories();

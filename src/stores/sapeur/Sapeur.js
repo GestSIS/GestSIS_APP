@@ -24,7 +24,7 @@ export const useSapeurStore = defineStore("sapeur", {
     selectSapeur(sapeurId) {
       this.active.id = sapeurId;
     },
-    async fetchListeSapeur() {
+    async fetchSapeurs() {
       const data = await SapeurService.getSapeurs();
       this.liste = data;
       return data;

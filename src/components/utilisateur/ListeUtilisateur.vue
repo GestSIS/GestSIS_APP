@@ -12,7 +12,7 @@ const authStore = useAuthStore();
 const loadPermissions = authStore.fetchPermissions();
 const loadRoles = authStore.fetchRoles();
 const loadUsers = authStore.fetchUsers();
-const loadSapeurs = sapeurStore.fetchListeSapeur();
+const loadSapeurs = sapeurStore.fetchSapeurs();
 
 const hasEditPermission = useHasPermission(permissions.UTILISATEUR.MODIFICATION);
 

@@ -42,7 +42,8 @@ const groupes = computed(() => groupeStore.liste);
 const fonctions = computed(() => fonctionStore.liste.filter((f) => f.actif));
 const grades = computed(() => gradeStore.liste);
 const sisNom = computed(
-  () => authStore.sis.liste.find((sis) => sis.api_key === authStore.sis.activeKey)?.nom,
+  () =>
+    authStore.organisations.find((sis) => sis.org_key === authStore.organisation.activeKey)?.nom,
 );
 const hasSapeurModificationPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 const hasSmsEnvoiePermission = useHasPermission(permissions.SMS.ENVOIE);
@@ -173,7 +174,7 @@ const sms = (sapeurs) => {
 };
 const vcard = (sapeurs) => {
   try {
-    downloadVcard(sapeurs, localites.value, sisNom.value, authStore.sis.activeKey);
+    downloadVcard(sapeurs, localites.value, sisNom.value, authStore.organisation.activeKey);
   } catch (err) {
     awn.alert(err?.message || "Une erreur a eu lieu durant la génération du fichier VCard");
   }

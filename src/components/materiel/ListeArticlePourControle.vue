@@ -30,7 +30,7 @@ await Promise.all([
   controleStore.fetchControles(),
   materielTypeStore.fetchMaterielTypes(),
   emplacementStore.fetchEmplacements(),
-  sapeurStore.fetchListeSapeur(),
+  sapeurStore.fetchSapeurs(),
   couleurStore.fetchCouleurs(),
 ]);
 

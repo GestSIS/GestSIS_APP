@@ -27,7 +27,7 @@ await Promise.all([
   loadTypes(),
   emplacementStore.fetchEmplacements(),
   couleurStore.fetchCouleurs(),
-  sapeurStore.fetchListeSapeur(),
+  sapeurStore.fetchSapeurs(),
 ]);
 
 const indexedEmplacements = computed(() => indexedData(emplacementStore.liste));

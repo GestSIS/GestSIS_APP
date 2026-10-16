@@ -82,7 +82,7 @@ if (import.meta.env.VITE_SENTRY_DSN) {
 const authStore = useAuthStore();
 
 router.beforeEach(async (to, from) => {
-  if (authStore.sis.liste.length <= 0) {
+  if (authStore.organisations.length <= 0) {
     try {
       await authStore.verifySession(to.fullPath);
     } catch (e) {

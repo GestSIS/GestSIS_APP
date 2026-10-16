@@ -12,7 +12,7 @@ const exerciceComptableStore = useExerciceComptableStore();
 const statistiqueStore = useStatistiqueStore();
 
 localiteStore.fetchLocalites();
-sapeurStore.fetchListeSapeur();
+sapeurStore.fetchSapeurs();
 await exerciceComptableStore.fetchExercicesComptables();
 
 watchEffect(() =>

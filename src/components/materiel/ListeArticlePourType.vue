@@ -48,7 +48,7 @@ await Promise.all([
   emplacementStore.fetchEmplacements(),
   couleurStore.fetchCouleurs(),
   materielTypeStore.fetchMaterielTypes(),
-  sapeurStore.fetchListeSapeur(),
+  sapeurStore.fetchSapeurs(),
   controleStore.fetchControles(),
 ]);
 

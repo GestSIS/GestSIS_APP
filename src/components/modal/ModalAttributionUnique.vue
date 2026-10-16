@@ -19,7 +19,7 @@ const { data, callback } = defineProps({
 });
 
 const sapeurStore = useSapeurStore();
-await sapeurStore.fetchListeSapeur();
+await sapeurStore.fetchSapeurs();
 const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
 
 const errors = ref({});

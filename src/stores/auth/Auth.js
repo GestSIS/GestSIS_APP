@@ -87,11 +87,11 @@ export const useAuthStore = defineStore("auth", {
     // Présent tant que le compte n'a pas activé le 2FA et que la politique n'est
     // pas encore obligatoire (période de grâce) : alimente le bandeau d'incitation.
     twoFactorNudge: null,
-    sis: {
+    organisations: [],
+    organisation: {
       activeId: null,
       activeKey: null,
       sapeurs: {},
-      liste: [],
       permissions: [],
       available: [],
       allPermissions: {},
@@ -100,8 +100,8 @@ export const useAuthStore = defineStore("auth", {
   getters: {
     isLoggedIn: (state) => !!state.user,
     availableSisListe: (state) => {
-      return state.sis.liste
-        .filter((sis) => state.sis.available.includes(sis.api_key))
+      return state.organisations
+        .filter((sis) => state.organisation.available.includes(sis.org_key))
         .sort((s1, s2) => s1.nom.localeCompare(s2.nom));
     },
   },
@@ -311,23 +311,25 @@ export const useAuthStore = defineStore("auth", {
       this.admin = false;
       this.validated = false;
       this.sapeurId = null;
-      this.sis.activeId = null;
-      this.sis.activeKey = null;
-      this.sis.permissions = [];
-      this.sis.available = [];
-      this.sis.allPermissions = {};
-      this.sis.sapeurs = {};
+      // Dépend du domaine (`aud`) du token : à recharger pour la prochaine session
+      this.organisations = [];
+      this.organisation.activeId = null;
+      this.organisation.activeKey = null;
+      this.organisation.permissions = [];
+      this.organisation.available = [];
+      this.organisation.allPermissions = {};
+      this.organisation.sapeurs = {};
       this.twoFactorChallenge = null;
       this.twoFactorSetupToken = null;
       this.twoFactorNudge = null;
 
       // Clear roles/users/apiTokens and every domain-store cache so the next
       // user on this tab cannot see the previous user's data. The global
-      // `permissions` catalog is user- and SIS-independent, so it is kept.
+      // `permissions` catalog is user- and ORG-independent, so it is kept.
       this.clearCache();
 
       Sentry.setUser(null);
-      Sentry.setTag("sis_key", null);
+      Sentry.setTag("org_key", null);
     },
     async useToken(token) {
       // Success responses no longer carry a `message` field (harmonized envelope,
@@ -390,15 +392,15 @@ export const useAuthStore = defineStore("auth", {
       await nextTick();
       this.clearCache();
     },
-    async selectSis(sis) {
-      this.sis.activeId = sis?.id;
-      this.sis.activeKey = sis?.api_key;
-      this.sis.permissions = this.sis.allPermissions[sis?.api_key] ?? [];
-      this.sapeurId = this.sis.sapeurs[sis?.api_key] ?? null;
+    async selectOrganisation(organisation) {
+      this.organisation.activeId = organisation?.id;
+      this.organisation.activeKey = organisation?.org_key;
+      this.organisation.permissions = this.organisation.allPermissions[organisation?.org_key] ?? [];
+      this.sapeurId = this.organisation.sapeurs[organisation?.org_key] ?? null;
 
-      Sentry.setTag("sis_key", this.sis.activeKey ?? null);
+      Sentry.setTag("org_key", this.organisation.activeKey ?? null);
 
-      Api.setSisKey(sis?.api_key);
+      Api.setSisKey(organisation?.org_key);
 
       // Clear before fetching: the other way around, the freshly fetched
       // localités would be wiped immediately by the reset
@@ -406,11 +408,11 @@ export const useAuthStore = defineStore("auth", {
 
       await this.fetchLocalitesSis();
     },
-    async loadSisListe() {
-      if (this.sis.liste.length <= 0) {
-        const sis = await AuthService.sisListe();
-        this.sis.liste = sis;
-        return sis;
+    async loadOrganisationListe() {
+      if (this.organisations.length <= 0) {
+        const organisations = await AuthService.getOrganisations();
+        this.organisations = organisations;
+        return organisations;
       }
       return Promise.resolve();
     },
@@ -475,10 +477,6 @@ export const useAuthStore = defineStore("auth", {
 
       const callback = async () => {
         try {
-          if (this.sis.liste.length === 0) {
-            const sis = await AuthService.sisListe();
-            this.sis.liste = sis;
-          }
           const data = await AuthService.refreshToken(TokenService.getRefreshToken());
           if (this.impersonating) {
             // Le refresh token est celui de l'admin : le jeton d'usurpation
@@ -514,29 +512,20 @@ export const useAuthStore = defineStore("auth", {
       const refreshToken = TokenService.getRefreshToken();
 
       if (refreshToken === null) {
-        // Pas de session à restaurer : un échec ici (service auth indisponible,
-        // erreur réseau) ne doit pas bloquer toutes les navigations, /login compris.
-        try {
-          await this.loadSisListe();
-        } catch (e) {
-          console.error(
-            "Échec de l'initialisation de l'authentification, navigation sans session",
-            e,
-          );
-        }
+        // Pas de session à restaurer
         return;
       }
 
       const accessToken = TokenService.getAccessToken();
       if (accessToken !== null) {
-        await this.setAuthSuccessful({
-          user: TokenService.getUser(),
-          accessToken,
-          refreshToken,
-        });
         try {
+          await this.setAuthSuccessful({
+            user: TokenService.getUser(),
+            accessToken,
+            refreshToken,
+          });
           await AuthService.me();
-          return; // Token encore valide côté serveur
+          return;
         } catch (e) {
           // Access token périmé ou révoqué : on retente via le refresh token ci-dessous
         }
@@ -608,27 +597,30 @@ export const useAuthStore = defineStore("auth", {
         this.twoFactorNudge = TokenService.getTwoFactorNudge();
       }
 
-      this.sis.sapeurs = sapeurParSis;
-      this.sis.available = availableSis;
+      this.organisation.sapeurs = sapeurParSis;
+      this.organisation.available = availableSis;
+
+      // Toujours chargée (même sans organisation disponible) : le guard de main.js
+      // relance verifySession() tant que la liste est vide.
+      await this.loadOrganisationListe();
 
       if (availableSis.length > 0) {
         let sisKey = availableSis[0];
-        if (availableSis.find((v) => v === this.sis.activeKey)) {
-          sisKey = this.sis.activeKey;
+        if (availableSis.find((v) => v === this.organisation.activeKey)) {
+          sisKey = this.organisation.activeKey;
         } else if (Object.keys(sapeurParSis).length) {
           sisKey = Object.keys(sapeurParSis)[0];
         }
 
-        await this.loadSisListe();
-        const sis = this.sis.liste.find((s) => s.api_key === sisKey);
+        const sis = this.organisations.find((s) => s.org_key === sisKey);
         if (!sis) return;
-        this.sis.activeId = sis.id;
-        this.sis.activeKey = sis.api_key;
-        this.sis.permissions = permissionsParSis[sis.api_key] ?? [];
-        this.sis.allPermissions = permissionsParSis;
-        this.sapeurId = sapeurParSis[sis.api_key] ?? null;
-        Sentry.setTag("sis_key", this.sis.activeKey);
-        Api.setSisKey(sis.api_key);
+        this.organisation.activeId = sis.id;
+        this.organisation.activeKey = sis.org_key;
+        this.organisation.permissions = permissionsParSis[sis.org_key] ?? [];
+        this.organisation.allPermissions = permissionsParSis;
+        this.sapeurId = sapeurParSis[sis.org_key] ?? null;
+        Sentry.setTag("org_key", this.organisation.activeKey);
+        Api.setSisKey(sis.org_key);
       }
     },
     clearCache() {

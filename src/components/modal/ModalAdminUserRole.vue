@@ -24,7 +24,7 @@ const form = reactive({
 });
 
 const users = computed(() => adminStore.users);
-const sis = computed(() => adminStore.sis);
+const organisations = computed(() => adminStore.organisations);
 const roles = computed(() => {
   const selectedUser = users.value.find((u) => u.id === form.user_id);
   const existingRoleIds = new Set((selectedUser?.user_roles || []).map((ur) => ur.role_id));
@@ -33,7 +33,8 @@ const roles = computed(() => {
     .filter((r) => !existingRoleIds.has(r.id))
     .map((r) => ({
       id: r.id,
-      designation: sis.value.find((s) => s.id === r.sis_id)?.api_key + " - " + r.nom,
+      designation:
+        organisations.value.find((o) => o.id === r.organisation_id)?.org_key + " - " + r.nom,
     }));
 });
 
