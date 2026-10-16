@@ -124,7 +124,7 @@ const fields = [
   <div class="card card-primary card-outline mb-3 col-12 col-lg-12">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Organisations</h3>
-      <button class="btn btn-outline-primary" @click="ajoutSis">Ajouter</button>
+      <button class="btn btn-outline-primary" @click="ajoutOrganisation">Ajouter</button>
     </div>
     <div class="card-body table-responsive p-0">
       <base-table
@@ -148,7 +148,11 @@ const fields = [
           >
             <font-awesome-icon :icon="['far', 'eye']" />
           </router-link>
-          <button type="button" class="btn btn-outline-primary border-0" @click="editSis(rowData)">
+          <button
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="editOrganisation(rowData)"
+          >
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
         </template>
