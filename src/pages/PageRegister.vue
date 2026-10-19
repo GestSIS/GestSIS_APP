@@ -55,6 +55,7 @@ const register = async () => {
       password: password.value,
       password_confirmation: password_confirmation.value,
       token: token.value?.trim() || null,
+      domaine_code: "sis",
     })
     .then(() => {
       errors.value = {};
