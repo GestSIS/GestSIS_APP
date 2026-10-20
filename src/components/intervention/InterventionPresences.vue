@@ -203,11 +203,34 @@ const sortedPresences = (id) => {
     .sort((p1, p2) => new Date(p1.debut) > new Date(p2.debut));
 };
 
-const totalHeures = computed(() => {
-  const total = presences.value.reduce((acc, p) => {
+const sommeHeures = (liste) => {
+  const total = liste.reduce((acc, p) => {
     return acc + (new Date(p.fin) - new Date(p.debut)) / 3600000;
   }, 0);
   return Math.round(total * 100) / 100;
+};
+
+const totalHeures = computed(() => sommeHeures(presences.value));
+
+// Totaux par type (1 Intervention, 2 Entretien, 3 Piquet), à partir des quarts d'heure de la grille
+const heuresParType = computed(() => {
+  const res = { 1: 0, 2: 0, 3: 0 };
+  Object.values(computedPresences.value).forEach((quarts) => {
+    Object.values(quarts).forEach((code) => {
+      if (code in res) {
+        res[code] += 0.25;
+      }
+    });
+  });
+  return res;
+});
+
+const heuresParSapeur = computed(() => {
+  const res = {};
+  sortedSapeurs.value.forEach((s) => {
+    res[s.id] = sommeHeures(presences.value.filter((p) => p.sapeur_id === s.id));
+  });
+  return res;
 });
 </script>
 
@@ -237,6 +260,7 @@ const totalHeures = computed(() => {
               <tr>
                 <th rowspan="2">Sapeurs</th>
                 <th rowspan="2">Quittance</th>
+                <th rowspan="2" class="text-end">Durée</th>
                 <th v-for="(col, i) in columns" :key="i" colspan="4" class="text-center ps-3 pe-3">
                   {{ col }}h
                 </th>
@@ -250,7 +274,7 @@ const totalHeures = computed(() => {
             </thead>
             <tbody v-if="sortedSapeurs.length <= 0">
               <tr>
-                <td :colspan="2 + columns.length * 4">Aucun sapeur présent pour l'instant</td>
+                <td :colspan="3 + columns.length * 4">Aucun sapeur présent pour l'instant</td>
               </tr>
             </tbody>
             <tbody v-for="s in sortedSapeurs" :key="s.id" class="no-wrap">
@@ -284,6 +308,7 @@ const totalHeures = computed(() => {
                   />
                   <label class="form-check-label" :for="s.id"></label>
                 </td>
+                <td class="text-end">{{ heuresParSapeur[s.id] }} h</td>
                 <td
                   v-for="i in Array(columns.length * 4).keys()"
                   :key="s.id + '-' + i"
@@ -303,7 +328,7 @@ const totalHeures = computed(() => {
                     'alert-success': !!p.piquet === true,
                   }"
                 >
-                  <td :colspan="2 + columns.length * 4">
+                  <td :colspan="3 + columns.length * 4">
                     {{ formatDatePresence(p.debut) }} -
                     {{ formatDatePresence(p.fin) }}
                     <button
@@ -332,9 +357,16 @@ const totalHeures = computed(() => {
             </tbody>
             <tfoot>
               <tr>
-                <th :colspan="2 + 4 * columns.length">
+                <th :colspan="3 + 4 * columns.length">
                   Nombre sapeurs : {{ sortedSapeurs.length }} &nbsp;|&nbsp; Total heures :
-                  {{ totalHeures }}h
+                  {{ totalHeures }}h &nbsp;|&nbsp;
+                  <span class="badge bg-secondary me-2">
+                    Intervention {{ heuresParType[1].toFixed(2) }} h
+                  </span>
+                  <span class="badge bg-primary me-2">
+                    Entretien {{ heuresParType[2].toFixed(2) }} h
+                  </span>
+                  <span class="badge bg-success">Piquet {{ heuresParType[3].toFixed(2) }} h</span>
                 </th>
               </tr>
             </tfoot>

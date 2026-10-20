@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "20.10.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Intervention, affichage du total des heures pour chaque sapeur"]
+    },
+    {
       "date": "14.10.2026",
       "version": "1.0",
       "app": "GestSIS APP",
