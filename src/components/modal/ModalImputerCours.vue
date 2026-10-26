@@ -86,7 +86,8 @@ const imputer = () => {
     .then((res) => {
       phase.value = 2;
       ecritures.value = res;
-    });
+    })
+    .catch((err) => awn.alert(err?.message ?? "Impossible d'effectuer cette action"));
 };
 const fields = [
   { title: "Désignation", key: "designation" },

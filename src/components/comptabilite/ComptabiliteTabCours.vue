@@ -41,11 +41,12 @@ compteStore.fetchComptes();
 const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);
 
 const loading = ref(false);
-watchEffect(async () => {
+const init = async () => {
   loading.value = true;
   await coursSapeurStore.fetchCoursSapeurs(activeExerciceComptableId.value);
   loading.value = false;
-});
+};
+watchEffect(init);
 
 const selectedItemId = ref(null);
 const selected = (item) => (selectedItemId.value = item?.id ?? null);
@@ -89,6 +90,7 @@ const imputer = (courSapeur) => {
     component: "ModalImputerCours",
     data: { id: courSapeur?.id },
     size: 2,
+    callback: init,
   });
 };
 const annulerImputer = async (courSapeur) => {
@@ -100,15 +102,7 @@ const annulerImputer = async (courSapeur) => {
   ) {
     imputationStore
       .annulerImputationCours(courSapeur?.id)
-      .then(({ statut }) => {
-        coursSapeurs.value = [
-          ...coursSapeurs.value.filter((e) => e.id != courSapeur?.id),
-          {
-            ...coursSapeurs.value.find((e) => e.id == courSapeur?.id),
-            statut: statut,
-          },
-        ].sort((a, b) => a.date.localeCompare(b.date));
-      })
+      .then(init)
       .catch((err) => {
         awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
       });
