@@ -231,8 +231,8 @@ const dateChange = () => {
             display-key="nom"
             :options="
               sapeurFonctions
-                .map((s) => fonctions.find((f) => f.id == s.fonction_id))
-                .filter((f) => f)
+                .map((s) => ({ id: s.id, nom: fonctions.find((f) => f.id == s.fonction_id)?.nom }))
+                .filter((s) => s.nom)
             "
           />
         </div>
