@@ -120,7 +120,7 @@ const onRowClass = (dataItem, isSelected) => {
   const statutsClass = {
     0: "", // 'A saisir',
     1: "", // 'En attente de validation',
-    2: "", // 'Validée',
+    2: "table-info", // 'Validée',
     3: "table-success", //'Imputée'
   };
   return statutsClass[dataItem.statut];
