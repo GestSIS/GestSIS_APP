@@ -1,7 +1,6 @@
 <script setup>
 import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
-import { useHeureExerciceStore } from "../../stores/exercice/HeureExercice.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
@@ -11,14 +10,12 @@ import { computed } from "vue";
 import useNotification from "../../composables/useNotification.js";
 
 const uniteStore = useUniteStore();
-const heureExerciceStore = useHeureExerciceStore();
 const imputationStore = useImputationStore();
 const compteStore = useCompteStore();
 const ecritureCategorieStore = useEcritureCategorieStore();
 
 const loadComptes = compteStore.fetchComptes();
 const loadUnites = uniteStore.fetchUnites();
-await heureExerciceStore.fetchHeuresExercice();
 
 const fields = [
   {

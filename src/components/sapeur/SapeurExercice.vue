@@ -8,7 +8,7 @@ import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
 import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
-import MesHeuresSuppDetailRow from "../mes_infos/MesHeuresSuppDetailRow.vue";
+import TravauxDetailRow from "../travail/TravauxDetailRow.vue";
 import ExerciceService from "../../services/ExerciceService";
 import useHasPermission from "../../composables/usePermission.js";
 
@@ -104,7 +104,7 @@ const fields = [
         no-data="Aucun exercice"
       >
         <template #detail-row="{ rowData }">
-          <mes-heures-supp-detail-row :options="detailRowOptions" :row-data="rowData" />
+          <travaux-detail-row :row-data="rowData" />
         </template>
         <template #excuse="{ rowData }">
           <div class="text-center">

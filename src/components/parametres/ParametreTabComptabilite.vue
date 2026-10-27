@@ -2,7 +2,6 @@
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useAvsParamStore } from "../../stores/comptabilite/AvsParam.js";
-import { useHeureExerciceStore } from "../../stores/exercice/HeureExercice.js";
 import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
 import { useAmendeStore } from "../../stores/comptabilite/Amende.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
@@ -12,7 +11,6 @@ import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCat
 const uniteStore = useUniteStore();
 const fonctionStore = useFonctionStore();
 const avsParamStore = useAvsParamStore();
-const heureExerciceStore = useHeureExerciceStore();
 const phaseTypeStore = usePhaseTypeStore();
 const amendeStore = useAmendeStore();
 const imputationStore = useImputationStore();
@@ -27,7 +25,6 @@ const loadUnites = uniteStore.fetchUnites();
 const loadCategories = ecritureCategorieStore.fetchEcritureCategories();
 const loadAvsParams = avsParamStore.fetchParams();
 const loadPhases = phaseTypeStore.fetchPhaseTypes();
-const loadHeures = heureExerciceStore.fetchHeuresExercice();
 
 await Promise.all([
   loadAmendes,
@@ -38,7 +35,6 @@ await Promise.all([
   loadCategories,
   loadAvsParams,
   loadPhases,
-  loadHeures,
 ]);
 </script>
 
@@ -81,12 +77,6 @@ await Promise.all([
             active-class="active"
             :to="{ name: 'param-comptabilite-indemnite-cours' }"
             >Imputation cours</router-link
-          >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            :to="{ name: 'param-comptabilite-heure-exercice' }"
-            >Heures additionnelles pour exercice</router-link
           >
           <router-link
             class="nav-link"

@@ -40,7 +40,6 @@ import { useVehiculeStore } from "../intervention/Vehicule";
 import { useExerciceStore } from "../exercice/Exercice";
 import { useExcuseTypeStore } from "../exercice/ExcuseType";
 import { useExerciceCategorieStore } from "../exercice/ExerciceCategorie";
-import { useHeureExerciceStore } from "../exercice/HeureExercice";
 import { useAmendeStore } from "../comptabilite/Amende";
 import { useCompteStore } from "../comptabilite/Compte";
 import { useEcritureCategorieStore } from "../comptabilite/EcritureCategorie";
@@ -666,7 +665,6 @@ export const useAuthStore = defineStore("auth", {
       useExerciceStore().$reset();
       useExcuseTypeStore().$reset();
       useExerciceCategorieStore().$reset();
-      useHeureExerciceStore().$reset();
 
       // Reset comptabilite stores
       useAmendeStore().$reset();

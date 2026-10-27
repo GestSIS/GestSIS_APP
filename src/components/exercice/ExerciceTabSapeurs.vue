@@ -3,12 +3,10 @@ import { computed, ref, watchEffect } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
-import { useUniteStore } from "../../stores/common/Unite.js";
 import { useExerciceStore } from "../../stores/exercice/Exercice.js";
 import TravauxLies from "/src/components/travail/TravauxLies.vue";
 import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
 import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
-import { useHeureExerciceStore } from "../../stores/exercice/HeureExercice.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import ExerciceService from "../../services/ExerciceService";
@@ -18,11 +16,9 @@ import { exerciceStatut } from "../../composables/exerciceStatuts.js";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
-const uniteStore = useUniteStore();
 const exerciceStore = useExerciceStore();
 const exerciceCategorieStore = useExerciceCategorieStore();
 const excuseTypeStore = useExcuseTypeStore();
-const heureExerciceStore = useHeureExerciceStore();
 const exerciceComptableStore = useExerciceComptableStore();
 
 sapeurStore.fetchSapeurs();
@@ -30,8 +26,6 @@ localiteStore.fetchLocalites();
 exerciceCategorieStore.fetchExerciceCategories();
 exerciceComptableStore.fetchExercicesComptables();
 excuseTypeStore.fetchExcuseTypes();
-heureExerciceStore.fetchHeuresExercice();
-uniteStore.fetchUnites();
 
 const { id } = defineProps({
   id: {
@@ -75,8 +69,6 @@ const excusesTypes = computed(() => excuseTypeStore.liste);
 const hasPresencePermission = useHasPermission(permissions.EXERCICE.PRESENCE);
 const hasValidationPermission = useHasPermission(permissions.EXERCICE.VALIDATION);
 const activeExerciceData = computed(() => exerciceStore.active.data);
-const heureTypes = computed(() => heureExerciceStore.liste);
-const unites = computed(() => uniteStore.liste);
 
 const canEditAbsence = computed(() => {
   // Possible de l'éditer si permission de validation ou si pas encore validé
@@ -126,10 +118,10 @@ const { confirm, showModal, closeModal } = useModalStore();
 const awn = useNotification();
 
 // Colonnes du tableau : Nom + Convoqué + Présence (fusionne
-// Présent/Absent/Remplacé) + Excuse + Statut, puis une colonne par type
-// d'heure. `key` sert uniquement de clé de tri/rendu ; les colonnes sans
-// valeur correspondante sur la ligne (présence, heures) ne sont pas
-// triables (tri neutre), le contenu réel étant fourni par leur slot.
+// Présent/Absent/Remplacé) + Excuse + Statut. `key` sert uniquement de clé
+// de tri/rendu ; la colonne présence n'est pas triable (tri neutre), son
+// contenu réel étant fourni par son slot. Le travail en plus (ex-heures
+// supplémentaires) se saisit en fiches de travail, dans la carte ci-dessous.
 const fields = computed(() => [
   { title: "Nom", key: "nom_prenom" },
   {
@@ -160,18 +152,7 @@ const fields = computed(() => [
     titleClass: "text-center",
     columnClass: "text-center",
   },
-  ...heureTypes.value.map((h) => ({
-    title: h.designation,
-    key: "heure_" + h.id,
-    slot: heureSlotName(h),
-    titleClass: "text-center",
-    columnClass: "text-center",
-  })),
 ]);
-
-function heureSlotName(h) {
-  return "heure-" + h.id;
-}
 
 const selectAllConvoque = (status) => {
   presences.value = presences.value.map((p) => ({
@@ -181,43 +162,6 @@ const selectAllConvoque = (status) => {
   Promise.all(presences.value.map((p) => savePresence(p, true))).then(
     awn.success("Modifications enregistrées"),
   );
-};
-const getHeureValue = (sapeur) => {
-  return sapeur?.quantite;
-};
-const updateHeureSapeur = (sap, h, quantite) => {
-  const heure = sap.heures.find(
-    (e) =>
-      e.heure_exercice_type_id == h.id ||
-      (!e.heure_exercice_type_id && e.designation == h.designation),
-  );
-  if (!heure) {
-    // Ajout de l'heure
-    const newHeure = {
-      heure_exercice_type_id: h.id,
-      quantite: parseFloat(quantite) || null,
-      exercice_id: id,
-      sapeur_id: sap.sapeur_id,
-    };
-
-    exerciceStore
-      .addHeure(newHeure)
-      .then(() => awn.success("Heure ajoutée"))
-      .catch((err) => awn.alert(err?.message || "Erreur lors de l'enregistrement"));
-  } else if (!(parseFloat(quantite) || null)) {
-    // Suppression de l'heure
-    exerciceStore
-      .removeHeure(heure)
-      .then(() => awn.success("Heure supprimée"))
-      .catch((err) => awn.alert(err?.message || "Erreur lors de l'enregistrement"));
-  } else {
-    heure.quantite = parseFloat(quantite) || null;
-    // Modification de l'heure
-    exerciceStore
-      .editHeure(heure)
-      .then(() => awn.success("Modifications enregistrées"))
-      .catch((err) => awn.alert(err?.message || "Erreur lors de l'enregistrement"));
-  }
 };
 const validate = async () => {
   if (
@@ -245,13 +189,6 @@ const devalider = async () => {
       .catch((err) => awn.alert(err?.message || "Erreur lors de l'annulation de la validation."));
   }
 };
-const formatUnite = (type_unite_id) => {
-  return unites.value.find((u) => u.id == type_unite_id)?.abreviation;
-};
-const totalHeure = (rows, h) =>
-  rows
-    .map((s) => parseFloat(s.heures.find((e) => e.heure_exercice_type_id == h.id)?.quantite ?? 0))
-    .reduce((acc, a) => acc + a, 0);
 const manageSapeurs = () => {
   let callback = (param) => {
     if (!param) {
@@ -634,27 +571,6 @@ const statuts = [
               ><span v-else></span>
             </template>
 
-            <template v-for="h in heureTypes" :key="h.id" #[heureSlotName(h)]="{ rowData: sap }">
-              <div class="input-group input-group-sm">
-                <input
-                  class="form-control form-control-sm"
-                  type="text"
-                  :readonly="!canEditPresence"
-                  :value="
-                    getHeureValue(
-                      sap.heures.find(
-                        (e) =>
-                          e.heure_exercice_type_id == h.id ||
-                          (!e.heure_exercice_type_id && e.designation == h.designation),
-                      ),
-                    )
-                  "
-                  @change="(e) => updateHeureSapeur(sap, h, e.target.value)"
-                />
-                <span class="input-group-text">{{ formatUnite(h.type_unite_id) }}</span>
-              </div>
-            </template>
-
             <template #foot="{ data }">
               <tr>
                 <th>Nb sapeurs : {{ data.length }}</th>
@@ -672,9 +588,6 @@ const statuts = [
                   {{ data.filter((s) => s.excuse_type_id).length }} excusé(s)
                 </th>
                 <th class="text-center">{{ data.filter((s) => s.amende).length }} amende(s)</th>
-                <th v-for="h in heureTypes" :key="h.id" class="text-center">
-                  {{ totalHeure(data, h) }} {{ formatUnite(h.type_unite_id) }}
-                </th>
               </tr>
             </template>
           </base-table>

@@ -129,43 +129,6 @@ export const useExerciceStore = defineStore("exercice", {
       }
       return data;
     },
-    async addHeure(heure) {
-      const data = await ExerciceService.addHeure(heure);
-      if (this.active.id == data.exercice_id) {
-        this.active.sapeurs = this.active.sapeurs.map((s) =>
-          s.sapeur_id != data.sapeur_id ? s : { ...s, heures: [...(s.heures ?? []), data] },
-        );
-      }
-      return data;
-    },
-    async editHeure(heure) {
-      const data = await ExerciceService.editHeure(heure);
-      if (this.active.id == data.exercice_id) {
-        this.active.sapeurs = this.active.sapeurs.map((s) =>
-          s.sapeur_id != data.sapeur_id
-            ? s
-            : {
-                ...s,
-                heures: (s.heures ?? []).map((h) => (h.id == data.id ? data : h)),
-              },
-        );
-      }
-      return data;
-    },
-    async removeHeure(heure) {
-      const data = await ExerciceService.removeHeure(heure.id);
-      if (this.active.id == heure.exercice_id) {
-        this.active.sapeurs = this.active.sapeurs.map((s) =>
-          s.sapeur_id != heure.sapeur_id
-            ? s
-            : {
-                ...s,
-                heures: (s.heures ?? []).filter((h) => h.id != heure.id),
-              },
-        );
-      }
-      return data;
-    },
     async editPresenceExercice(presenceId, presence) {
       const { statut, sapeur } = await ExerciceService.editPresence(presenceId, presence);
       if (this.active.id == sapeur.exercice_id) {

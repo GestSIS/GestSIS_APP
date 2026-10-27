@@ -889,12 +889,6 @@ const router = createRouter({
               component: () => import("/src/components/parametres/ParametreIndemniteCours.vue"),
             },
             {
-              path: "heure-exercice",
-              name: "param-comptabilite-heure-exercice",
-              beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
-              component: () => import("/src/components/parametres/ParametreHeureExercice.vue"),
-            },
-            {
               path: "indemnite-frais-annuel",
               name: "param-comptabilite-indemnite-frais-annuel",
               beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),

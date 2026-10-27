@@ -55,15 +55,6 @@ export default {
       headers: { "Content-Type": "multipart/form-data" },
     });
   },
-  addHeure(heure) {
-    return Api.api().post("/exercices/heures", heure);
-  },
-  editHeure(heure) {
-    return Api.api().put("/exercices/heures/" + heure.id, heure);
-  },
-  removeHeure(heureId) {
-    return Api.api().delete("/exercices/heures/" + heureId);
-  },
   createMonExcuse(exerciceId, excuse, sisKey = null) {
     const form = new FormData();
     Object.entries(excuse).forEach(([k, v]) => form.append(k, v));
