@@ -5,6 +5,7 @@ import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useExerciceStore } from "../../stores/exercice/Exercice.js";
+import TravauxLies from "/src/components/travail/TravauxLies.vue";
 import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
 import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
 import { useHeureExerciceStore } from "../../stores/exercice/HeureExercice.js";
@@ -519,7 +520,7 @@ const statuts = [
             </span>
             <button
               v-if="showValidateButton"
-              class="btn"
+              class="btn btn-sm"
               :class="canValidate ? 'btn-primary' : 'btn-outline-primary'"
               :disabled="!canValidate"
               :title="
@@ -534,7 +535,7 @@ const statuts = [
             </button>
             <button
               v-if="showDevaliderButton"
-              class="btn btn-outline-warning"
+              class="btn btn-sm btn-outline-warning"
               title="Repasser l'exercice en attente de validation"
               @click="devalider"
             >
@@ -680,6 +681,7 @@ const statuts = [
         </div>
       </div>
     </div>
+    <TravauxLies genre="exercice" :id="id" :evenement="exerciceStore.active.data" />
   </div>
 </template>
 

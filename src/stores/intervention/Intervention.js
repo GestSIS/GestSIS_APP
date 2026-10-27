@@ -73,8 +73,20 @@ export const useInterventionStore = defineStore("intervention", {
     },
     async validerIntervention(id) {
       const data = await InterventionService.validerIntervention(id);
-      this.liste = this.liste.map((i) => (i.id == id ? { ...i, statut: data } : i));
+      this.majStatut(id, data);
       return data;
+    },
+    async devaliderIntervention(id) {
+      const data = await InterventionService.devaliderIntervention(id);
+      this.majStatut(id, data);
+      return data;
+    },
+    majStatut(id, statut) {
+      this.liste = this.liste.map((i) => (i.id == id ? { ...i, statut } : i));
+      // L'intervention ouverte (PageIntervention) lit son statut dans active.data
+      if (this.active.data?.id == id) {
+        this.active.data = { ...this.active.data, statut };
+      }
     },
     // Materiel
     async addInterventionMateriel(materiel) {

@@ -4,18 +4,12 @@ import { watchEffect } from "vue";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useInterventionStore } from "../stores/intervention/Intervention.js";
-import { useModalStore } from "../stores/common/Modal.js";
-import useNotification from "../composables/useNotification.js";
-import permissions from "../composables/permissions.js";
-import useHasPermission from "../composables/usePermission.js";
 import { interventionStatut } from "../composables/interventionStatuts.js";
+import useValidationIntervention from "../composables/useValidationIntervention.js";
 
 const interventionStore = useInterventionStore();
 const route = useRoute();
 const router = useRouter();
-const { confirm } = useModalStore();
-const awn = useNotification();
-const hasValidationPermission = useHasPermission(permissions.INTERVENTION.VALIDATION);
 
 const { id } = defineProps({
   id: {
@@ -45,23 +39,8 @@ const breadcrumbFinal = computed(() =>
       activeInterventionData.value.objet,
 );
 
-const showValiderButton = computed(
-  () =>
-    !newMode.value && hasValidationPermission.value && activeInterventionData.value.statut === 1,
-);
-const validerIntervention = async () => {
-  if (
-    await confirm(
-      "Valider l'intervention ?",
-      "Une fois validée, seule une personne avec la permission de validation pourra encore la modifier. Voulez-vous continuer ?",
-    )
-  ) {
-    interventionStore
-      .validerIntervention(id)
-      .then(() => awn.success("Intervention validée."))
-      .catch((err) => awn.alert(err?.message ?? "Erreur lors de la validation de l'intervention."));
-  }
-};
+const { showValiderButton, showDevaliderButton, validerIntervention, devaliderIntervention } =
+  useValidationIntervention(id);
 </script>
 
 <template>
@@ -83,12 +62,21 @@ const validerIntervention = async () => {
       <div class="col-sm-6 d-flex justify-content-end align-items-center gap-2">
         <status-badge v-if="!newMode" :status="interventionStatut(activeInterventionData.statut)" />
         <button
-          v-if="showValiderButton"
+          v-if="!newMode && showValiderButton"
           class="btn btn-sm btn-primary"
           @click="validerIntervention"
         >
           <font-awesome-icon :icon="['fas', 'check']" class="me-1" />
           Valider
+        </button>
+        <button
+          v-if="!newMode && showDevaliderButton"
+          class="btn btn-sm btn-outline-warning"
+          title="Repasser l'intervention en attente de validation"
+          @click="devaliderIntervention"
+        >
+          <font-awesome-icon :icon="['fas', 'rotate-left']" class="me-1" />
+          Annuler la validation
         </button>
         <exercice-comptable />
       </div>

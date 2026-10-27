@@ -45,6 +45,9 @@ export default {
   validerIntervention(interventionId) {
     return Api.api().post("/interventions/" + interventionId + "/valider");
   },
+  devaliderIntervention(interventionId) {
+    return Api.api().post("/interventions/" + interventionId + "/devalider");
+  },
   saveIntervention(interventionId, interventionData) {
     return Api.api().put("/interventions/" + interventionId, interventionData);
   },

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, watch } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
@@ -24,7 +24,18 @@ const form = reactive({
   actif: true,
   fonctions: [],
   type_unite_id: 6,
+  lien_intervention: false,
+  lien_exercice: false,
+  lien_obligatoire: false,
   ...data,
+});
+
+// Un lien obligatoire n'a de sens que si au moins un événement est autorisé
+const lienDisponible = computed(() => form.lien_intervention || form.lien_exercice);
+watch(lienDisponible, (disponible) => {
+  if (!disponible) {
+    form.lien_obligatoire = false;
+  }
 });
 const base = ref(data?.fonctions?.filter((f) => !f.fonction_id) || []);
 if (!base.value.length) {
@@ -198,6 +209,16 @@ const save = async () => {
         :options="categories"
         label="Catégorie comptable"
       />
+      <fieldset class="mb-3">
+        <legend class="form-label fs-6 mb-1">Lien avec un événement</legend>
+        <base-checkbox v-model="form.lien_intervention" label="Liable à une intervention" />
+        <base-checkbox v-model="form.lien_exercice" label="Liable à un exercice" />
+        <base-checkbox
+          v-model="form.lien_obligatoire"
+          :disabled="!lienDisponible"
+          label="Lien obligatoire"
+        />
+      </fieldset>
       <base-checkbox v-model="form.actif" class="mb-3" label="Actif" />
     </div>
     <div class="modal-footer">

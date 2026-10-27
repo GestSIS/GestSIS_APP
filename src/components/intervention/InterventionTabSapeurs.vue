@@ -5,6 +5,7 @@ import permissions from "/src/composables/permissions.js";
 import InterventionGroupe from "/src/components/intervention/InterventionGroupe.vue";
 import InterventionPhase from "/src/components/intervention/InterventionPhase.vue";
 import InterventionPresences from "/src/components/intervention/InterventionPresences.vue";
+import TravauxLies from "/src/components/travail/TravauxLies.vue";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 
 const interventionStore = useInterventionStore();
@@ -37,5 +38,6 @@ const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION
     <InterventionGroupe :id="id" />
     <InterventionPhase :id="id" />
     <InterventionPresences :id="id" />
+    <TravauxLies genre="intervention" :id="id" :evenement="dataInter" />
   </div>
 </template>

@@ -22,7 +22,11 @@ await Promise.all([loadComptes, loadUnites, loadTravailTypes, loadEcritureCatego
 
 const fields = [
   { title: "Désignation", key: "designation" },
+  { title: "Unité", key: "unite" },
   { title: "Catégorie comptable", key: "categorie" },
+  { title: "Liable à une intervention", key: "lien_intervention", type: Boolean },
+  { title: "Liable à un exercice", key: "lien_exercice", type: Boolean },
+  { title: "Lien obligatoire", key: "lien_obligatoire", type: Boolean },
   { title: "Actif", key: "actif", type: Boolean },
   { title: "Actions", slot: "actions", columnClass: "align-middle text-center" },
 ];
@@ -54,6 +58,7 @@ const computedData = computed(() => {
       ),
     categorie: ecritureCategorieStore.liste.find((e) => e.id == c.ecriture_categorie_id)
       ?.designation,
+    unite: uniteStore.liste.find((u) => u.id == c.type_unite_id)?.unite,
   }));
 });
 

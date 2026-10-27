@@ -128,6 +128,7 @@ const ecritureFields = [
     key: "sapeur_id",
     formatter: (id) => sapeurs.value.find((s) => s.id == id)?.nom_prenom,
   },
+  { title: "Complément", key: "complement" },
   { title: "Quantité", key: "quantite" },
   {
     title: "Unité",

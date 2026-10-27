@@ -6,6 +6,7 @@ import useHasPermission from "../../composables/usePermission.js";
 import permissions from "/src/composables/permissions.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
+import useValidationIntervention from "../../composables/useValidationIntervention.js";
 
 const sapeurStore = useSapeurStore();
 const interventionStore = useInterventionStore();
@@ -20,6 +21,9 @@ const { id } = defineProps({
     required: true,
   },
 });
+
+const { showValiderButton, showDevaliderButton, validerIntervention, devaliderIntervention } =
+  useValidationIntervention(id);
 
 const loading = ref(false);
 watchEffect(async () => {
@@ -239,14 +243,36 @@ const heuresParSapeur = computed(() => {
     <div class="card card-primary card-outline mb-3">
       <div class="card-header d-flex justify-content-between">
         <h3 class="card-title">Présences</h3>
-        <button
-          type="button"
-          class="btn btn-primary"
-          :disabled="dataInter.statut > 2"
-          @click="addPresences"
-        >
-          Ajouter des présences
-        </button>
+        <div class="d-flex align-items-center gap-2">
+          <button
+            v-if="showValiderButton"
+            type="button"
+            class="btn btn-sm btn-primary"
+            title="Valider cette intervention"
+            @click="validerIntervention"
+          >
+            <font-awesome-icon :icon="['fas', 'check']" class="me-1" />
+            Valider
+          </button>
+          <button
+            v-if="showDevaliderButton"
+            type="button"
+            class="btn btn-sm btn-outline-warning"
+            title="Repasser l'intervention en attente de validation"
+            @click="devaliderIntervention"
+          >
+            <font-awesome-icon :icon="['fas', 'rotate-left']" class="me-1" />
+            Annuler la validation
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            :disabled="dataInter.statut > 2"
+            @click="addPresences"
+          >
+            Ajouter des présences
+          </button>
+        </div>
       </div>
       <div class="card-body">
         <div class="mb-2">

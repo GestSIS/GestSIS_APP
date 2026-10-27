@@ -9,6 +9,7 @@ import { useMesInfosStore } from "../../stores/mesinfos/MesInfos.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import useHasPermission from "../../composables/usePermission.js";
 import { travailStatut } from "../../composables/travailStatuts.js";
+import { lienTravail } from "../../composables/travailLien.js";
 
 const uniteStore = useUniteStore();
 const travailTypeStore = useTravailTypeStore();
@@ -34,6 +35,7 @@ const travaux = computed(() =>
     unite: uniteStore.liste.find(
       (u) => u.id == travailTypeStore.liste.find((e) => e.id == t.travail_type_id)?.type_unite_id,
     )?.unite,
+    lien: lienTravail(t)?.libelle ?? "",
   })),
 );
 
@@ -63,6 +65,7 @@ const fields = [
     columnClass: "text-center",
   },
   { title: "Justification", key: "justification" },
+  { title: "Lié à", key: "lien" },
 ];
 </script>
 

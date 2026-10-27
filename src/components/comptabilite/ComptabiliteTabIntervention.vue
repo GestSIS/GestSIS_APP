@@ -134,6 +134,8 @@ const detailRowOptions = {
       key: "sapeur_id",
       formatter: (field) => sapeurs.value.find((s) => s.id == field)?.nom_prenom,
     },
+    // Nature du travail d'une fiche liée (vide pour les présences)
+    { title: "Complément", key: "complement" },
     {
       title: "Tarif",
       key: "tarif",

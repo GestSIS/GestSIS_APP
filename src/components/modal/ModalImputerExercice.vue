@@ -252,8 +252,8 @@ const formatType = ecritureTypeLabel;
         <table class="table table-sm">
           <thead>
             <tr>
-              <th>Designation</th>
               <th>Sapeur</th>
+              <th>Complément</th>
               <th>Quantité</th>
               <th>Tarif</th>
               <th>Total</th>
@@ -262,10 +262,10 @@ const formatType = ecritureTypeLabel;
           </thead>
           <tbody>
             <tr v-for="ecriture in ecritures" :key="ecriture.id">
-              <td>{{ ecriture.designation }}</td>
               <td>
                 {{ sapeurs.find((f) => f.id == ecriture.sapeur_id)?.nom_prenom }}
               </td>
+              <td>{{ ecriture.complement }}</td>
               <td>{{ ecriture.quantite }}</td>
               <td>{{ ecriture.tarif }}</td>
               <td>{{ ecriture.total }}</td>

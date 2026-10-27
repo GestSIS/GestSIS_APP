@@ -4,6 +4,7 @@ import permissions from "../composables/permissions.js";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 import { computed, ref, watch, watchEffect } from "vue";
 import useHasPermission from "../composables/usePermission.js";
+import useValidationIntervention from "../composables/useValidationIntervention.js";
 import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
 import { useLocaliteStore } from "../stores/common/Localite.js";
 import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
@@ -100,6 +101,7 @@ const supprimerIntervention = async (id) => {
   }
 };
 const validerIntervention = (id) => interventionStore.validerIntervention(id);
+const { devaliderInterventionId } = useValidationIntervention();
 
 const rapportIntervention = () => {
   const intervention = interventions.value.find((i) => i.id == selectedId.value);
@@ -312,10 +314,18 @@ const fields = [
                   <button
                     v-if="hasValidationPermission && rowData.statut === 1"
                     title="Valider"
-                    class="btn btn-outline-primary border-0"
+                    class="btn btn-outline-success border-0"
                     @click="validerIntervention(rowData.id)"
                   >
                     <font-awesome-icon :icon="['fas', 'check']" />
+                  </button>
+                  <button
+                    v-if="hasValidationPermission && rowData.statut === 2"
+                    title="Annuler la validation"
+                    class="btn btn-outline-warning border-0"
+                    @click="devaliderInterventionId(rowData.id)"
+                  >
+                    <font-awesome-icon :icon="['fas', 'rotate-left']" />
                   </button>
                   <button
                     v-if="hasEditPermission && rowData.statut < 3"

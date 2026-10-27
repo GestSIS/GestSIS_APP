@@ -11,6 +11,7 @@ import { useAuthStore } from "../stores/auth/Auth.js";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 import useHasPermission from "../composables/usePermission.js";
 import { travailStatut, travailStatutOptions } from "../composables/travailStatuts.js";
+import { evenementVerrouille, lienTravail } from "../composables/travailLien.js";
 
 const authStore = useAuthStore();
 const sapeurStore = useSapeurStore();
@@ -44,6 +45,7 @@ const travaux = computed(() =>
     unite: uniteStore.liste.find(
       (u) => u.id == travailTypeStore.liste.find((e) => e.id == t.travail_type_id)?.type_unite_id,
     )?.unite,
+    lien: lienTravail(t)?.libelle ?? "",
   })),
 );
 const sapeurs = computed(() => sapeurStore.liste);
@@ -65,6 +67,22 @@ const filteredTravailTypes = computed(() => {
 const selectedItem = computed(() => {
   return travaux.value.find((t) => t.id == selectedId.value);
 });
+
+// Boutons de la carte Actions : toujours affichés selon les droits, désactivés selon la fiche sélectionnée
+// Fiche acceptée ou refusée : « Annuler l'examen » remplace « Traiter »
+const estExaminee = computed(
+  () => selectedItem.value?.statut == -1 || selectedItem.value?.statut == 1,
+);
+const peutTraiter = computed(() => selectedItem.value?.statut == 0);
+const peutAnnulerExamen = computed(
+  () => estExaminee.value && !evenementVerrouille(selectedItem.value),
+);
+const peutSupprimer = computed(
+  () =>
+    selectedItem.value?.auteur_id == activeSapeurId.value &&
+    selectedItem.value?.statut == 0 &&
+    !evenementVerrouille(selectedItem.value),
+);
 
 const { confirm, showModal } = useModalStore();
 const select = (row) => (selectedId.value = row?.id);
@@ -128,6 +146,7 @@ const fields = [
     columnClass: "text-center",
   },
   { title: "Justification", key: "justification" },
+  { title: "Lié à", key: "lien", slot: "lien" },
   { title: "Actions", slot: "actions" },
 ];
 </script>
@@ -169,25 +188,24 @@ const fields = [
                 Ajouter un travail
               </button>
               <button
-                v-if="hasValidationPermission && selectedItem?.statut == 0"
+                v-if="hasValidationPermission && !estExaminee"
+                :disabled="!peutTraiter"
                 class="btn btn-outline-success"
                 @click="reviewTravail(selectedItem)"
               >
                 Traiter
               </button>
               <button
-                v-if="
-                  hasValidationPermission &&
-                  (selectedItem?.statut == -1 || selectedItem?.statut == 1)
-                "
+                v-if="hasValidationPermission && estExaminee"
+                :disabled="!peutAnnulerExamen"
                 class="btn btn-outline-warning"
                 @click="cancelReviewTravail(selectedItem)"
               >
                 Annuler l'examen
               </button>
               <button
-                v-if="hasEditPermission && selectedItem?.auteur_id == activeSapeurId"
-                :disabled="selectedItem?.statut !== 0"
+                v-if="hasEditPermission"
+                :disabled="!peutSupprimer"
                 class="btn btn-outline-danger"
                 @click="supprimerTravail(selectedItem)"
               >
@@ -249,13 +267,27 @@ const fields = [
                 <template #statut="{ value }">
                   <status-badge :status="travailStatut(value)" />
                 </template>
+                <template #lien="{ rowData }">
+                  <router-link v-if="lienTravail(rowData)" :to="lienTravail(rowData).route">
+                    {{ lienTravail(rowData).libelle }}
+                  </router-link>
+                </template>
                 <template #actions="{ rowData }">
+                  <router-link
+                    v-if="lienTravail(rowData)"
+                    :to="lienTravail(rowData).route"
+                    title="Voir l'intervention"
+                    class="btn btn-outline-secondary border-0"
+                  >
+                    <font-awesome-icon :icon="['fas', 'up-right-from-square']" />
+                  </router-link>
                   <button
                     v-if="
                       hasEditPermission &&
                       rowData.auteur_id == activeSapeurId &&
                       rowData.statut == 0
                     "
+                    :disabled="evenementVerrouille(rowData)"
                     title="Modifier"
                     class="btn btn-outline-primary border-0"
                     @click="updateTravail(rowData)"
@@ -264,6 +296,7 @@ const fields = [
                   </button>
                   <button
                     v-if="hasValidationPermission && (rowData.statut == -1 || rowData.statut == 1)"
+                    :disabled="evenementVerrouille(rowData)"
                     title="Annuler l'examen"
                     class="btn btn-outline-warning border-0"
                     @click="cancelReviewTravail(rowData)"
@@ -284,6 +317,7 @@ const fields = [
                       rowData.auteur_id == activeSapeurId &&
                       rowData.statut == 0
                     "
+                    :disabled="evenementVerrouille(rowData)"
                     title="Supprimer"
                     class="btn btn-outline-danger border-0"
                     @click="supprimerTravail(rowData)"

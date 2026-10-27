@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "27.10.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Extentions des fiches de travail pour `exercices` et `interventions`",
+        "Annulation de la validation des interventions"
+      ]
+    },
+    {
       "date": "20.10.2026",
       "version": "1.0",
       "app": "GestSIS APP",

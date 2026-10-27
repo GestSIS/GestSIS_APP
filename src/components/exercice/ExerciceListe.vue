@@ -105,6 +105,20 @@ const email = ({ id }) =>
 
 const validerExercice = (id) => exerciceStore.validerExercice(id);
 const annulerExercice = (id) => exerciceStore.annulerExercice(id);
+// Symétrique de "valider" : un exercice validé (pas encore imputé) repasse en saisie
+const devaliderExercice = async (id) => {
+  if (
+    await confirm(
+      "Annuler la validation ?",
+      `L'exercice repassera au statut « ${exerciceStatut(2).label} » et redeviendra modifiable. Voulez-vous continuer ?`,
+    )
+  ) {
+    exerciceStore
+      .devaliderExercice(id)
+      .then(() => awn.success("Validation annulée."))
+      .catch((err) => awn.alert(err?.message || "Erreur lors de l'annulation de la validation."));
+  }
+};
 const reactiverExercice = (id) => exerciceStore.reactiverExercice(id);
 
 const removeExercice = async (id) => {
@@ -370,13 +384,21 @@ const fieldsBase = [
                 <button
                   v-if="hasValidationPermission && rowData.statut == 2"
                   title="valider"
-                  class="btn btn-outline-primary border-0"
+                  class="btn btn-outline-success border-0"
                   @click="validerExercice(rowData.id)"
                 >
                   <font-awesome-icon :icon="['fas', 'check']" />
                 </button>
                 <button
-                  v-if="hasValidationPermission && rowData.statut <= 3 && rowData.statut > 0"
+                  v-if="hasValidationPermission && rowData.statut == 3"
+                  title="Annuler la validation"
+                  class="btn btn-outline-warning border-0"
+                  @click="devaliderExercice(rowData.id)"
+                >
+                  <font-awesome-icon :icon="['fas', 'rotate-left']" />
+                </button>
+                <button
+                  v-if="hasValidationPermission && rowData.statut < 3 && rowData.statut > 0"
                   title="annuler"
                   class="btn btn-outline-warning border-0"
                   @click="annulerExercice(rowData.id)"
