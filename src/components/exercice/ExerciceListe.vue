@@ -164,7 +164,7 @@ const onRowClass = (dataItem, isSelected) => {
     0: "", //'Annulé',
     1: "", //'A saisir',
     2: "", //'Saisie',
-    3: "", //'Validé',
+    3: "table-info", //'Validé',
     4: "table-success", //'Imputée'
   };
   return statutsClass[dataItem.statut];
