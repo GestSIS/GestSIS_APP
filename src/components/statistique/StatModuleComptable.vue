@@ -16,16 +16,20 @@ watchEffect(async () => {
 });
 
 const allModule = ref(false);
+// Les fiches de travail (module 6) sont séparées selon l'événement lié (`lien` de l'API),
+// et placées sous leur domaine
 const modules = [
-  { designation: "Exercice & séance", id: 1 },
-  { designation: "Intervention", id: 2 },
-  { designation: "Frais et indemnité annuel", id: 3 },
-  { designation: "Ecriture divers", id: 0 },
-  { designation: "Amende", id: 5 },
-  { designation: "Fiche de travail", id: 6 },
-  { designation: "Cours", id: 7 },
-  { designation: "Avs", id: 4 },
-  // {designation: 'REMBOURSEMENT', id: 8},
+  { designation: "Exercice & séance", module: 1, lien: null },
+  { designation: "Exercice & séance - Fiches de travail", module: 6, lien: "exercice" },
+  { designation: "Intervention", module: 2, lien: null },
+  { designation: "Intervention - Fiches de travail", module: 6, lien: "intervention" },
+  { designation: "Fiches de travail", module: 6, lien: null },
+  { designation: "Frais et indemnité annuel", module: 3, lien: null },
+  { designation: "Ecriture divers", module: 0, lien: null },
+  { designation: "Amende", module: 5, lien: null },
+  { designation: "Cours", module: 7, lien: null },
+  { designation: "Avs", module: 4, lien: null },
+  // {designation: 'REMBOURSEMENT', module: 8, lien: null},
 ];
 const fields = [
   { title: "Module", key: "designation" },
@@ -45,15 +49,14 @@ const fields = [
 ];
 
 const stats = computed(() => statistiqueStore.modulesComptable);
-const filteredData = computed(() => {
-  const ids = new Set(stats.value.map((c) => c.module));
-  return modules
-    .filter((e) => allModule.value || ids.has(e.id))
-    .map((c) => ({
-      ...c,
-      ...stats.value.find((s) => s.module == c.id),
-    }));
-});
+const statDe = (ligne) =>
+  stats.value.find((s) => s.module == ligne.module && (s.lien ?? null) === ligne.lien);
+const filteredData = computed(() =>
+  modules
+    .filter((ligne) => allModule.value || statDe(ligne))
+    // id unique par ligne (clé de base-table), le module 6 apparaissant trois fois
+    .map((ligne) => ({ ...ligne, ...statDe(ligne), id: ligne.module + "-" + (ligne.lien ?? "") })),
+);
 </script>
 
 <template>
