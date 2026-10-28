@@ -78,6 +78,8 @@ export default defineConfig({
       project: process.env.SENTRY_PROJECT,
       authToken: process.env.SENTRY_AUTH_TOKEN,
       url: process.env.SENTRY_URL,
+      // Telemetry goes to sentry.io, not Bugsink: extra network call on every build.
+      telemetry: false,
       release: {
         name: process.env.SENTRY_RELEASE || process.env.npm_package_version,
         create: false,

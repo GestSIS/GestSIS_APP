@@ -46,6 +46,7 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_URL: ${{ secrets.SENTRY_URL }}
           SENTRY_RELEASE: ${{ github.sha }}
+          SENTRY_DISABLE_UPDATE_CHECK: "1"
 
       - name: Configure SSH
         run: |
