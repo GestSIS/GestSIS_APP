@@ -193,15 +193,6 @@ const linearCategories = (categorieId) => {
           </tag-couleur>
         </template>
 
-        <template #emplacement="{ rowData }">
-          <div v-if="rowData.sapeur_id" class="badge bg-primary">
-            {{ rowData.sapeur }}
-          </div>
-          <div v-for="e in rowData.emplacements" v-else :key="e.id">
-            {{ e }}
-          </div>
-        </template>
-
         <template #actions="{ rowData }">
           <button
             title="Info"

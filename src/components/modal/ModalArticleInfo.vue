@@ -28,10 +28,16 @@ const sapeurStore = useSapeurStore();
 const couleurStore = useCouleurStore();
 const controleStore = useControleStore();
 
+// Les emplacements ne servent qu'à afficher le chemin d'un article rangé : un
+// article attribué à un sapeur affiche ce dernier à la place. Ne pas les charger
+// dans ce cas évite d'exiger l'accès aux emplacements (materiel.lecture) depuis
+// la fiche d'un sapeur.
+const afficheEmplacement = !data.sapeur_id && emplacementIdPourArticle(data) !== null;
+
 const execs = ref([]);
 await Promise.all([
   typeStore.fetchMaterielTypes(),
-  emplacementStore.fetchEmplacements(),
+  afficheEmplacement ? emplacementStore.fetchEmplacements() : null,
   sapeurStore.fetchSapeurs(),
   couleurStore.fetchCouleurs(),
   controleStore.fetchControles(),
@@ -62,7 +68,9 @@ const sapeur = computed(() =>
 
 // emplacementIdPourArticle gère déjà le cas véhicule (emplacement_representee)
 // en plus du cas standard (emplacement_id).
-const emplacements = computed(() => linearEmplacements(emplacementIdPourArticle(data)));
+const emplacements = computed(() =>
+  afficheEmplacement ? linearEmplacements(emplacementIdPourArticle(data)) : [],
+);
 
 const addMonths = (date, months) => {
   const d = new Date(date);

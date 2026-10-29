@@ -117,6 +117,7 @@ const save = async () => {
           v-model="form.quantite"
           required
           min="1"
+          max="50"
           type="number"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['quantite'] }"

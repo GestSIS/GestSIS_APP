@@ -190,8 +190,10 @@ const addEmptyLine = () => {
             v-if="!indexedTypes[item.materiel_type_id]?.est_numerote"
             v-model="item.quantite"
             :required="true"
+            min="1"
+            max="50"
             class="form-control form-control-sm"
-            type="text"
+            type="number"
           />
           <font-awesome-icon
             v-else

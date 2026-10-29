@@ -186,6 +186,7 @@ const save = () => {
                 v-model="item.quantite"
                 :required="true"
                 min="1"
+                max="50"
                 class="form-control form-control-sm"
                 type="number"
               />
