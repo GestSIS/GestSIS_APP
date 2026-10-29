@@ -3,6 +3,8 @@ import { computed, reactive, ref } from "vue";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useConvocationParamStore } from "../../stores/exercice/ConvocationParam.js";
+import permissions from "../../composables/permissions.js";
+import useHasPermission from "../../composables/usePermission.js";
 import ConvocationService from "/src/services/ConvocationService.js";
 
 const { data } = defineProps({
@@ -39,8 +41,14 @@ const convoquer = () => {
     .then(closeModal)
     .catch(closeModal);
 };
+// Les textes saisis sont mémorisés pour les prochaines convocations, mais
+// seulement avec le droit de modification des exercices (sinon ils ne valent que
+// pour cette impression).
+const hasEditPermission = useHasPermission(permissions.EXERCICE.MODIFICATION);
 const saveParam = () => {
-  convocationParamStore.updateConvocationParams(params);
+  if (hasEditPermission.value) {
+    convocationParamStore.updateConvocationParams(params);
+  }
 };
 const select = () => {
   const save = {
