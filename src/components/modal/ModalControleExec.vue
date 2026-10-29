@@ -99,23 +99,55 @@ if (!modeEdition.value) {
   form.date_echeance = dateEcheanceParDefaut(form.executed_at, controle.value);
 }
 
-const buildResultat = (tache) => {
-  const existant = modeEdition.value
-    ? (data.execTaches ?? []).find((t) => t.tache_id === tache.id)
-    : null;
+// Chaque résultat porte la définition de sa tâche (nom, type, unité, plage) :
+// à la création celle de la tâche actuelle du contrôle, en édition celle figée
+// sur la ligne de l'exécution — la configuration actuelle du contrôle (tâche
+// renommée, retypée, supprimée ou ajoutée depuis) ne s'applique pas à une
+// exécution déjà enregistrée.
+const buildResultat = (tache) => ({
+  key: `tache-${tache.id}`,
+  tache_id: tache.id,
+  definition: {
+    nom: tache.nom,
+    description: tache.description,
+    type: tache.type,
+    unit: tache.unit,
+    value_min: tache.value_min,
+    value_max: tache.value_max,
+  },
+  statut: "",
+  value_measured: "",
+  remarque: "",
+});
 
-  return {
-    tache_id: tache.id,
-    statut: existant?.statut ?? "",
-    value_measured:
-      existant?.value_measured !== null && existant?.value_measured !== undefined
-        ? Number(existant.value_measured)
-        : "",
-    remarque: existant?.remarque ?? "",
-  };
+const nombreOuNull = (value) => (value !== null && value !== undefined ? Number(value) : null);
+
+const buildResultatDepuisLigne = (ligne) => ({
+  key: `ligne-${ligne.id}`,
+  id: ligne.id,
+  definition: {
+    nom: ligne.nom_snapshot,
+    description: null,
+    type: ligne.type_snapshot,
+    unit: ligne.unit_snapshot,
+    value_min: nombreOuNull(ligne.value_min_snapshot),
+    value_max: nombreOuNull(ligne.value_max_snapshot),
+  },
+  statut: ligne.statut ?? "",
+  value_measured: nombreOuNull(ligne.value_measured) ?? "",
+  remarque: ligne.remarque ?? "",
+});
+
+const resultatsInitiaux = () => {
+  if (modeEdition.value) {
+    return [...(data.execTaches ?? [])]
+      .sort((a, b) => a.task_order_snapshot - b.task_order_snapshot)
+      .map(buildResultatDepuisLigne);
+  }
+  return controle.value ? controle.value.taches.map(buildResultat) : [];
 };
 
-const resultats = ref(controle.value ? controle.value.taches.map(buildResultat) : []);
+const resultats = ref(resultatsInitiaux());
 const resultatInputs = useTemplateRef("resultat-input");
 const scanInput = useTemplateRef("scan-input");
 
@@ -136,16 +168,20 @@ const focusPremierResultat = () => {
 onMounted(focusPremierResultat);
 
 watch(controle, (c) => {
+  // En édition, le contrôle est fixe et les résultats viennent des lignes de
+  // l'exécution : rien à resynchroniser.
+  if (modeEdition.value) {
+    return;
+  }
+
   resultats.value = c ? c.taches.map(buildResultat) : [];
   focusPremierResultat();
 
   // Changer de contrôle (uniquement possible en mode article fixe, via le
   // select) change aussi la récurrence de référence : on oublie une éventuelle
   // échéance déjà saisie pour resynchroniser sur le nouveau contrôle.
-  if (!modeEdition.value) {
-    dateEcheanceTouchee.value = false;
-    form.date_echeance = dateEcheanceParDefaut(form.executed_at, c);
-  }
+  dateEcheanceTouchee.value = false;
+  form.date_echeance = dateEcheanceParDefaut(form.executed_at, c);
 });
 
 const tacheParId = computed(() =>
@@ -153,8 +189,8 @@ const tacheParId = computed(() =>
 );
 
 const horsPlage = (resultat) => {
-  const tache = tacheParId.value[resultat.tache_id];
-  if (!tache || tache.type !== "NUMERIC" || resultat.value_measured === "") {
+  const tache = resultat.definition;
+  if (tache.type !== "NUMERIC" || resultat.value_measured === "") {
     return false;
   }
   const value = Number(resultat.value_measured);
@@ -305,7 +341,9 @@ const save = async () => {
         remarque_globale: form.remarque_globale || null,
         date_echeance: form.date_echeance || null,
         taches: resultats.value.map((r) => ({
-          tache_id: r.tache_id,
+          // En édition, une ligne s'identifie par son propre id (sa tâche a pu
+          // être supprimée depuis) ; à la création, par la tâche du contrôle.
+          ...(modeEdition.value ? { id: r.id } : { tache_id: r.tache_id }),
           statut: r.statut || null,
           value_measured: r.value_measured !== "" ? Number(r.value_measured) : null,
           remarque: r.remarque || null,
@@ -526,19 +564,19 @@ const save = async () => {
             </div>
             <template v-else>
               <label>Résultat</label>
-              <div v-for="resultat in resultats" :key="resultat.tache_id" class="card mb-2">
+              <div v-for="resultat in resultats" :key="resultat.key" class="card mb-2">
                 <div class="card-body py-2 px-3">
                   <div class="row g-2 align-items-start">
                     <div class="col-4">
-                      <strong>{{ tacheParId[resultat.tache_id].nom }}</strong>
+                      <strong>{{ resultat.definition.nom }}</strong>
                       <div
-                        v-if="resultats.length > 1 && tacheParId[resultat.tache_id].description"
+                        v-if="resultats.length > 1 && resultat.definition.description"
                         class="text-muted small"
                       >
-                        {{ tacheParId[resultat.tache_id].description }}
+                        {{ resultat.definition.description }}
                       </div>
                     </div>
-                    <div v-if="tacheParId[resultat.tache_id].type === 'BOOLEAN'" class="col-3">
+                    <div v-if="resultat.definition.type === 'BOOLEAN'" class="col-3">
                       <select
                         ref="resultat-input"
                         v-model="resultat.statut"
@@ -560,18 +598,18 @@ const save = async () => {
                           required
                           class="form-control form-control-sm"
                           :class="{ 'is-invalid': horsPlage(resultat) }"
-                          :placeholder="tacheParId[resultat.tache_id].unit || ''"
+                          :placeholder="resultat.definition.unit || ''"
                         />
                         <div class="form-text">
                           <template
                             v-if="
-                              tacheParId[resultat.tache_id].value_min !== null ||
-                              tacheParId[resultat.tache_id].value_max !== null
+                              resultat.definition.value_min !== null ||
+                              resultat.definition.value_max !== null
                             "
                           >
-                            Plage : {{ tacheParId[resultat.tache_id].value_min ?? "—" }} à
-                            {{ tacheParId[resultat.tache_id].value_max ?? "—" }}
-                            {{ tacheParId[resultat.tache_id].unit }}
+                            Plage : {{ resultat.definition.value_min ?? "—" }} à
+                            {{ resultat.definition.value_max ?? "—" }}
+                            {{ resultat.definition.unit }}
                           </template>
                         </div>
                       </div>
