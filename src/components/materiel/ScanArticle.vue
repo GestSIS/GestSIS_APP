@@ -12,7 +12,7 @@ const { articles, dejaSelectionnes } = defineProps({
   // Ids des articles déjà dans la liste du parent : un nouveau scan est refusé.
   dejaSelectionnes: { type: Set, default: () => new Set() },
 });
-const emit = defineEmits(["scan"]);
+const emit = defineEmits(["scan", "vide"]);
 
 const awn = useNotification();
 const numeroScanne = ref("");
@@ -21,6 +21,7 @@ const scanner = () => {
   const numero = numeroScanne.value.trim().toLowerCase();
   numeroScanne.value = "";
   if (numero === "") {
+    emit("vide");
     return;
   }
 
@@ -52,6 +53,7 @@ defineExpose({ focus: () => input.value?.focus() });
       v-model="numeroScanne"
       type="text"
       class="form-control"
+      title="Scanner ou saisir un numéro d'article puis Entrée"
       placeholder="Scanner ou saisir un numéro d'article puis Entrée"
       aria-label="Scanner un article"
       @keydown.enter.prevent="scanner"

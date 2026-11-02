@@ -115,7 +115,6 @@ const nouveauControle = () =>
     component: "ModalControleExec",
     data: { controleId: controle.value.id },
     callback: loadArticles,
-    size: 2,
   });
 </script>
 

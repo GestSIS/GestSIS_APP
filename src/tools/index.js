@@ -32,3 +32,21 @@ export const addMonthsIso = (dateStr, months) => {
   const dernierJourDuMoisCible = new Date(year, month + months, 0).getDate();
   return toLocalIsoDate(new Date(year, month - 1 + months, Math.min(day, dernierJourDuMoisCible)));
 };
+
+// Borne d'une plage de mesure pour l'affichage : l'API renvoie des décimales à 4
+// chiffres ("6.0000"), réduites ici à 2 décimales au plus (6, 4.2, 3.46).
+export const formatBorne = (value) =>
+  value === null || value === undefined || value === "" ? "—" : Number(Number(value).toFixed(2));
+
+// Plage admissible d'une mesure : "6 à 9 bar", "max 10 bar/min", "min 5 bar", ou
+// null sans aucune borne.
+export const formatPlage = (min, max, unit) => {
+  const unite = unit ? ` ${unit}` : "";
+  if (min !== null && max !== null) {
+    return `${formatBorne(min)} à ${formatBorne(max)}${unite}`;
+  }
+  if (max !== null) {
+    return `max ${formatBorne(max)}${unite}`;
+  }
+  return min !== null ? `min ${formatBorne(min)}${unite}` : null;
+};

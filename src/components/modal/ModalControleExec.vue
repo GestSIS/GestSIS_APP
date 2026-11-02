@@ -6,8 +6,15 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import useNotification from "../../composables/useNotification.js";
 import ControleExecService from "../../services/materiel/ControleExecService.js";
 import ArticleService from "../../services/materiel/ArticleService.js";
-import { addMonthsIso, indexedData, toDateInputValue, toLocalIsoDate } from "../../tools/index.js";
+import {
+  addMonthsIso,
+  formatPlage,
+  indexedData,
+  toDateInputValue,
+  toLocalIsoDate,
+} from "../../tools/index.js";
 import ScanArticle from "../materiel/ScanArticle.vue";
+import ComposantSelecteur from "../materiel/ComposantSelecteur.vue";
 
 const { data, callback } = defineProps({
   data: { type: Object, default: () => {} },
@@ -15,7 +22,7 @@ const { data, callback } = defineProps({
 });
 
 const awn = useNotification();
-const { closeModal } = useModalStore();
+const { closeModal, resize } = useModalStore();
 
 // Trois points d'entrée : depuis un article (data = l'article, le contrôle est
 // à choisir parmi ceux applicables à son type, ou déjà désigné par
@@ -54,6 +61,12 @@ const controleParDefaut = computed(
     null,
 );
 
+// La saisie multiple a une colonne par tâche : la fenêtre s'adapte à leur nombre.
+if (modeMultiple.value && controleImpose.value) {
+  const nbTaches = controleImpose.value.taches.length;
+  resize(nbTaches <= 2 ? 1 : nbTaches <= 5 ? 2 : 3);
+}
+
 const articlesEligibles = ref([]);
 if (modeMultiple.value && controleImpose.value) {
   const typeIds = controleImpose.value.materiel_types.map((mt) => mt.materiel_type_id);
@@ -87,6 +100,30 @@ const form = reactive({
 
 const controle = computed(() => controlesApplicables.value.find((c) => c.id === form.controle_id));
 
+// --- Articles des tâches composant, chargés seulement si le contrôle en a ---
+const articlesComposants = ref([]);
+const labelArticle = (a) => {
+  const type = materielTypeStore.liste.find((t) => t.id === a.materiel_type_id);
+  return { ...a, label: `${a.numero || a.designation || a.id} — ${type?.designation ?? ""}` };
+};
+const chargerArticlesComposants = async (c) => {
+  const typeIds = [
+    ...new Set(
+      (c?.taches ?? [])
+        .filter((t) => t.type === "COMPOSANT")
+        .flatMap((t) => t.materiel_types.map((mt) => mt.materiel_type_id)),
+    ),
+  ];
+  const parType = await Promise.all(typeIds.map((id) => ArticleService.getParMaterielType(id)));
+  articlesComposants.value = parType.flat().map(labelArticle);
+};
+await chargerArticlesComposants(controle.value);
+
+const articlesActifsPourTypes = (materielTypes) => {
+  const typeIds = materielTypes.map((mt) => mt.materiel_type_id);
+  return articlesComposants.value.filter((a) => a.statut && typeIds.includes(a.materiel_type_id));
+};
+
 // En édition, la valeur enregistrée fait foi : on ne la recalcule jamais
 // automatiquement. À la création, elle reste synchronisée avec la date
 // d'exécution et le contrôle choisi tant que l'utilisateur ne l'a pas modifiée
@@ -114,7 +151,11 @@ const buildResultat = (tache) => ({
     unit: tache.unit,
     value_min: tache.value_min,
     value_max: tache.value_max,
+    obligatoire: tache.obligatoire,
+    materiel_types: tache.materiel_types ?? [],
   },
+  article_id: null,
+  article: null,
   statut: "",
   value_measured: "",
   remarque: "",
@@ -132,7 +173,13 @@ const buildResultatDepuisLigne = (ligne) => ({
     unit: ligne.unit_snapshot,
     value_min: nombreOuNull(ligne.value_min_snapshot),
     value_max: nombreOuNull(ligne.value_max_snapshot),
+    obligatoire: ligne.obligatoire_snapshot,
+    materiel_types:
+      controle.value?.taches.find((t) => t.id === ligne.tache_id && t.type === "COMPOSANT")
+        ?.materiel_types ?? [],
   },
+  article_id: ligne.article_id ?? null,
+  article: ligne.article ?? null,
   statut: ligne.statut ?? "",
   value_measured: nombreOuNull(ligne.value_measured) ?? "",
   remarque: ligne.remarque ?? "",
@@ -148,6 +195,16 @@ const resultatsInitiaux = () => {
 };
 
 const resultats = ref(resultatsInitiaux());
+
+// En édition, l'article enregistré reste proposé même s'il est inactif ou que son
+// type n'est plus accepté ; une ligne dont la tâche n'est plus un composant
+// (materiel_types vide) ne propose donc que lui, ce qui permet de le retirer.
+const articlesPourResultat = (resultat) => {
+  const articles = articlesActifsPourTypes(resultat.definition.materiel_types);
+  return resultat.article && !articles.some((a) => a.id === resultat.article.id)
+    ? [...articles, labelArticle(resultat.article)]
+    : articles;
+};
 const resultatInputs = useTemplateRef("resultat-input");
 const scanInput = useTemplateRef("scan-input");
 
@@ -156,6 +213,34 @@ const focusPremierResultat = () => {
     if (modeMultiple.value) {
       // Prêt à scanner le premier article.
       scanInput.value?.focus();
+    } else {
+      const premier = resultats.value[0];
+      if (premier?.definition.type === "COMPOSANT") {
+        composantRefs.get(premier.key)?.focus();
+      } else {
+        resultatInputs.value?.[0]?.focus();
+      }
+    }
+  });
+};
+
+// Le ref="..." classique ne fonctionne pas dans un slot de base-table (voir
+// setArticleSelectRef) : les sélecteurs de composants sont indexés par clé.
+const composantRefs = new Map();
+const setComposantRef = (key, el) => {
+  if (el) {
+    composantRefs.set(key, el);
+  } else {
+    composantRefs.delete(key);
+  }
+};
+
+const avancerResultat = (resultat) => {
+  const composants = resultats.value.filter((r) => r.definition.type === "COMPOSANT");
+  const suivant = composants[composants.indexOf(resultat) + 1];
+  nextTick(() => {
+    if (suivant) {
+      composantRefs.get(suivant.key)?.focus();
     } else {
       resultatInputs.value?.[0]?.focus();
     }
@@ -175,6 +260,7 @@ watch(controle, (c) => {
   }
 
   resultats.value = c ? c.taches.map(buildResultat) : [];
+  chargerArticlesComposants(c);
   focusPremierResultat();
 
   // Changer de contrôle (uniquement possible en mode article fixe, via le
@@ -187,6 +273,8 @@ watch(controle, (c) => {
 const tacheParId = computed(() =>
   Object.fromEntries((controle.value?.taches ?? []).map((t) => [t.id, t])),
 );
+
+const plage = (tache) => formatPlage(tache.value_min, tache.value_max, tache.unit);
 
 const horsPlage = (resultat) => {
   const tache = resultat.definition;
@@ -207,13 +295,17 @@ const mkLigneKey = () => nextLigneKey++;
 const buildLigneMultiple = () => ({
   _key: mkLigneKey(),
   article_id: null,
+  remarque: "",
   date_echeance: dateEcheanceParDefaut(form.executed_at, controle.value),
   // Comme form.date_echeance en mode simple : figé dès que l'utilisateur
   // modifie l'échéance de cette ligne, sinon resynchronisé avec la date
   // d'exécution partagée (voir le watcher plus bas).
   dateEcheanceTouchee: false,
   resultats: Object.fromEntries(
-    (controle.value?.taches ?? []).map((t) => [t.id, { statut: "", value_measured: "" }]),
+    (controle.value?.taches ?? []).map((t) => [
+      t.id,
+      { statut: "", value_measured: "", article_id: null },
+    ]),
   ),
 });
 
@@ -236,9 +328,20 @@ watch(
   },
 );
 
-// Un même article ne doit pas pouvoir être sélectionné sur deux lignes.
+// Un même article ne doit pas pouvoir être choisi deux fois dans la fenêtre :
+// article contrôlé ou composant, toutes lignes confondues.
 const articlesDejaChoisis = computed(
-  () => new Set(lignesMultiples.value.map((l) => l.article_id).filter((id) => id !== null)),
+  () =>
+    new Set(
+      [
+        form.article_id,
+        ...resultats.value.map((r) => r.article_id),
+        ...lignesMultiples.value.flatMap((l) => [
+          l.article_id,
+          ...Object.values(l.resultats).map((r) => r.article_id),
+        ]),
+      ].filter((id) => id !== null),
+    ),
 );
 const optionsPourLigneMultiple = (ligne) =>
   articlesEligibles.value.filter(
@@ -264,11 +367,32 @@ const addLigneMultiple = () => {
 // Article scanné (voir ScanArticle.vue) : placé dans la première ligne vide,
 // sinon dans une nouvelle ligne.
 const ajouterArticleScanne = (article) => {
-  const ligneVide = lignesMultiples.value.find((l) => l.article_id === null);
-  if (ligneVide) {
-    ligneVide.article_id = article.id;
+  let ligne = lignesMultiples.value.find((l) => l.article_id === null);
+  if (ligne) {
+    ligne.article_id = article.id;
   } else {
-    lignesMultiples.value.push({ ...buildLigneMultiple(), article_id: article.id });
+    ligne = { ...buildLigneMultiple(), article_id: article.id };
+    lignesMultiples.value.push(ligne);
+  }
+  focusComposantMultiple(ligne._key, tachesComposant.value[0]?.id);
+};
+
+const tachesComposant = computed(() =>
+  (controle.value?.taches ?? []).filter((t) => t.type === "COMPOSANT"),
+);
+const focusComposantMultiple = (ligneKey, tacheId) => {
+  if (tacheId === undefined) {
+    return;
+  }
+  nextTick(() => composantRefs.get(`${ligneKey}-${tacheId}`)?.focus());
+};
+const avancerComposantMultiple = (ligneKey, tacheId) => {
+  const index = tachesComposant.value.findIndex((t) => t.id === tacheId);
+  const suivante = tachesComposant.value[index + 1];
+  if (suivante) {
+    focusComposantMultiple(ligneKey, suivante.id);
+  } else {
+    nextTick(() => scanInput.value?.focus());
   }
 };
 
@@ -286,6 +410,7 @@ const colonnesMultiples = computed(() => [
     title: t.nom,
     slot: "tacheCell",
   })),
+  { key: "remarque", title: "Remarque", slot: "remarque-cell" },
   { key: "_actions", title: "", slot: "row-actions" },
 ]);
 
@@ -319,9 +444,9 @@ const save = async () => {
       await ControleExecService.creerExecsMultiple(form.controle_id, {
         executed_at: form.executed_at,
         trigger_type: controle.value.recurrence_type,
-        remarque_globale: form.remarque_globale || null,
         executions: lignesValides.map((ligne) => ({
           article_id: ligne.article_id,
+          remarque_globale: ligne.remarque || null,
           date_echeance: ligne.date_echeance || null,
           taches: (controle.value.taches ?? []).map((t) => {
             const r = ligne.resultats[t.id];
@@ -329,6 +454,7 @@ const save = async () => {
               tache_id: t.id,
               statut: r.statut || null,
               value_measured: r.value_measured !== "" ? Number(r.value_measured) : null,
+              article_id: r.article_id,
               remarque: null,
             };
           }),
@@ -346,7 +472,8 @@ const save = async () => {
           ...(modeEdition.value ? { id: r.id } : { tache_id: r.tache_id }),
           statut: r.statut || null,
           value_measured: r.value_measured !== "" ? Number(r.value_measured) : null,
-          remarque: r.remarque || null,
+          article_id: r.article_id,
+          remarque: r.definition.type === "COMPOSANT" ? null : r.remarque || null,
         })),
       };
 
@@ -466,7 +593,13 @@ const save = async () => {
                   <tr>
                     <th>Article</th>
                     <th v-if="controle.recurrence_type === 'PERIODIQUE'">Échéance</th>
-                    <th v-for="tache in controle.taches" :key="tache.id">{{ tache.nom }}</th>
+                    <th v-for="tache in controle.taches" :key="tache.id">
+                      {{ tache.nom }}
+                      <span v-if="!tache.obligatoire" class="text-muted small fw-normal">
+                        (optionnel)</span
+                      >
+                    </th>
+                    <th>Remarque</th>
                     <th></th>
                   </tr>
                   <tr v-if="controle.taches.length > 0" class="table-light">
@@ -478,11 +611,11 @@ const save = async () => {
                       class="fw-normal small text-muted"
                     >
                       <div v-if="tache.description">{{ tache.description }}</div>
-                      <div v-if="tache.type === 'NUMERIC'">
-                        Plage : {{ tache.value_min ?? "—" }} à {{ tache.value_max ?? "—" }}
-                        {{ tache.unit }}
-                      </div>
+                      <em v-if="tache.type === 'NUMERIC' && plage(tache)">
+                        Plage : {{ plage(tache) }}
+                      </em>
                     </th>
+                    <th></th>
                     <th></th>
                   </tr>
                 </thead>
@@ -506,7 +639,20 @@ const save = async () => {
                 />
               </template>
               <template #tacheCell="{ key, rowData }">
-                <template v-if="tacheParId[tacheIdFromKey(key)].type === 'BOOLEAN'">
+                <template v-if="tacheParId[tacheIdFromKey(key)].type === 'COMPOSANT'">
+                  <composant-selecteur
+                    v-if="rowData.article_id"
+                    :ref="(el) => setComposantRef(`${rowData._key}-${tacheIdFromKey(key)}`, el)"
+                    v-model="rowData.resultats[tacheIdFromKey(key)].article_id"
+                    :articles="
+                      articlesActifsPourTypes(tacheParId[tacheIdFromKey(key)].materiel_types)
+                    "
+                    :deja-selectionnes="articlesDejaChoisis"
+                    :required="tacheParId[tacheIdFromKey(key)].obligatoire"
+                    @avancer="avancerComposantMultiple(rowData._key, tacheIdFromKey(key))"
+                  />
+                </template>
+                <template v-else-if="tacheParId[tacheIdFromKey(key)].type === 'BOOLEAN'">
                   <select
                     v-model="rowData.resultats[tacheIdFromKey(key)].statut"
                     class="form-select form-select-sm"
@@ -526,10 +672,19 @@ const save = async () => {
                     class="form-control form-control-sm"
                     :class="{ 'is-invalid': horsPlageMultiple(rowData, tacheIdFromKey(key)) }"
                     :disabled="!rowData.article_id"
-                    :required="!!rowData.article_id"
+                    :required="!!rowData.article_id && tacheParId[tacheIdFromKey(key)].obligatoire"
                     :placeholder="tacheParId[tacheIdFromKey(key)].unit || ''"
                   />
                 </template>
+              </template>
+              <template #remarque-cell="{ rowData }">
+                <input
+                  v-model="rowData.remarque"
+                  type="text"
+                  class="form-control form-control-sm"
+                  aria-label="Remarque"
+                  :disabled="!rowData.article_id"
+                />
               </template>
               <template #row-actions="{ rowData }">
                 <button
@@ -569,6 +724,9 @@ const save = async () => {
                   <div class="row g-2 align-items-start">
                     <div class="col-4">
                       <strong>{{ resultat.definition.nom }}</strong>
+                      <span v-if="!resultat.definition.obligatoire" class="text-muted small">
+                        (optionnel)</span
+                      >
                       <div
                         v-if="resultats.length > 1 && resultat.definition.description"
                         class="text-muted small"
@@ -576,7 +734,17 @@ const save = async () => {
                         {{ resultat.definition.description }}
                       </div>
                     </div>
-                    <div v-if="resultat.definition.type === 'BOOLEAN'" class="col-3">
+                    <div v-if="resultat.definition.type === 'COMPOSANT'" class="col-3">
+                      <composant-selecteur
+                        :ref="(el) => setComposantRef(resultat.key, el)"
+                        v-model="resultat.article_id"
+                        :articles="articlesPourResultat(resultat)"
+                        :deja-selectionnes="articlesDejaChoisis"
+                        :required="resultat.definition.obligatoire"
+                        @avancer="avancerResultat(resultat)"
+                      />
+                    </div>
+                    <div v-else-if="resultat.definition.type === 'BOOLEAN'" class="col-3">
                       <select
                         ref="resultat-input"
                         v-model="resultat.statut"
@@ -595,26 +763,19 @@ const save = async () => {
                           v-model="resultat.value_measured"
                           type="number"
                           step="any"
-                          required
+                          :required="resultat.definition.obligatoire"
                           class="form-control form-control-sm"
                           :class="{ 'is-invalid': horsPlage(resultat) }"
                           :placeholder="resultat.definition.unit || ''"
                         />
                         <div class="form-text">
-                          <template
-                            v-if="
-                              resultat.definition.value_min !== null ||
-                              resultat.definition.value_max !== null
-                            "
-                          >
-                            Plage : {{ resultat.definition.value_min ?? "—" }} à
-                            {{ resultat.definition.value_max ?? "—" }}
-                            {{ resultat.definition.unit }}
+                          <template v-if="plage(resultat.definition)">
+                            Plage : {{ plage(resultat.definition) }}
                           </template>
                         </div>
                       </div>
                     </template>
-                    <div class="col-5">
+                    <div v-if="resultat.definition.type !== 'COMPOSANT'" class="col-3">
                       <input
                         v-model="resultat.remarque"
                         type="text"
@@ -632,7 +793,7 @@ const save = async () => {
             </template>
           </template>
 
-          <div class="mb-0">
+          <div v-if="!modeMultiple" class="mb-0">
             <label class="form-label">Remarque globale</label>
             <textarea
               v-model="form.remarque_globale"

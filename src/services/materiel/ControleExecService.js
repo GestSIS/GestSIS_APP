@@ -4,6 +4,9 @@ export default {
   getExecsPourArticle(articleId) {
     return Api.api().get(`articles/${articleId}/controle-execs`);
   },
+  getComposantsPourArticle(articleId) {
+    return Api.api().get(`articles/${articleId}/controle-composants`);
+  },
   getDernieresExecutions(controleId) {
     return Api.api().get(`controles/${controleId}/dernieres-executions`);
   },

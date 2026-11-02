@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useControleStore } from "../../stores/materiel/Controle.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import ParametreTachesControle from "../parametres/ParametreTachesControle.vue";
@@ -26,6 +26,32 @@ const recurrenceLabel = (c) => {
   }
   return "";
 };
+
+// Une longue liste de tâches repousserait le reste de la fiche : elle est repliée
+// sur un résumé, sauf pour un contrôle court.
+const NB_TACHES_DEPLIEES = 3;
+const tachesOuvertes = ref(false);
+watch(
+  () => id,
+  () => {
+    tachesOuvertes.value = (controle.value?.taches.length ?? 0) <= NB_TACHES_DEPLIEES;
+  },
+  { immediate: true },
+);
+
+const resumeTaches = computed(() => {
+  const taches = controle.value?.taches ?? [];
+  const nombre = (type) => taches.filter((t) => t.type === type).length;
+  const mesures = nombre("NUMERIC");
+  const composants = nombre("COMPOSANT");
+  return [
+    mesures > 0 && `${mesures} ${mesures > 1 ? "mesures" : "mesure"}`,
+    nombre("BOOLEAN") > 0 && `${nombre("BOOLEAN")} OK / KO`,
+    composants > 0 && `${composants} ${composants > 1 ? "composants" : "composant"}`,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+});
 
 const { showModal } = useModalStore();
 const editControle = () =>
@@ -94,8 +120,24 @@ const editControle = () =>
     </div>
     <div class="col-12">
       <base-card>
-        <template #title>Tâches</template>
-        <template #body-table>
+        <template #title>
+          <button
+            type="button"
+            class="btn btn-link p-0 text-reset text-decoration-none fs-5"
+            :aria-expanded="tachesOuvertes"
+            @click="tachesOuvertes = !tachesOuvertes"
+          >
+            <font-awesome-icon
+              :icon="['fas', tachesOuvertes ? 'angle-down' : 'angle-right']"
+              class="me-2"
+            />
+            Tâches ({{ controle.taches.length }})
+          </button>
+          <span v-if="!tachesOuvertes" class="text-muted small ms-3 fw-normal">
+            {{ resumeTaches }}
+          </span>
+        </template>
+        <template v-if="tachesOuvertes" #body-table>
           <parametre-taches-controle :controle="controle" />
         </template>
       </base-card>

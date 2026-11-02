@@ -35,6 +35,13 @@ const controleStore = useControleStore();
 const afficheEmplacement = !data.sapeur_id && emplacementIdPourArticle(data) !== null;
 
 const execs = ref([]);
+const composants = ref([]);
+const colonnesComposants = [
+  { title: "Date", key: "executed_at", type: "date" },
+  { title: "Contrôle", key: "controle_nom" },
+  { title: "Composant", key: "composant_nom" },
+  { title: "Article contrôlé", slot: "articleControle" },
+];
 await Promise.all([
   typeStore.fetchMaterielTypes(),
   afficheEmplacement ? emplacementStore.fetchEmplacements() : null,
@@ -43,6 +50,9 @@ await Promise.all([
   controleStore.fetchControles(),
   ControleExecService.getExecsPourArticle(articleId).then((r) => {
     execs.value = r;
+  }),
+  ControleExecService.getComposantsPourArticle(articleId).then((r) => {
+    composants.value = r;
   }),
 ]);
 
@@ -287,6 +297,15 @@ const lignesControles = computed(() =>
               {{ data.created_at ? new Date(data.created_at).toLocaleDateString("fr-CH") : "-" }}
             </dd>
           </dl>
+
+          <template v-if="composants.length > 0">
+            <strong class="d-block mt-3 mb-2">Utilisé comme composant</strong>
+            <base-table :data="composants" :fields="colonnesComposants" :hide-download="true">
+              <template #articleControle="{ rowData }">
+                {{ rowData.article_controle.numero || rowData.article_controle.designation }}
+              </template>
+            </base-table>
+          </template>
         </div>
       </div>
     </div>

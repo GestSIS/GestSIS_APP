@@ -90,6 +90,8 @@ const switchMode = (newMode) => {
 let nextKey = 1;
 const mkKey = () => nextKey++;
 
+const nombreOuVide = (value) => (value === null || value === undefined ? "" : Number(value));
+
 const buildTache = (t) => ({
   _key: mkKey(),
   id: t?.id ?? null,
@@ -98,13 +100,23 @@ const buildTache = (t) => ({
   description: t?.description ?? "",
   type: t?.type ?? "BOOLEAN",
   unit: t?.unit ?? "",
-  value_min: t?.value_min ?? "",
-  value_max: t?.value_max ?? "",
+  // L'API renvoie des décimales à 4 chiffres ("6.0000") : sans les zéros inutiles
+  // dans le champ, sans perdre de précision à l'enregistrement.
+  value_min: nombreOuVide(t?.value_min),
+  value_max: nombreOuVide(t?.value_max),
+  obligatoire: t?.obligatoire ?? true,
+  materiel_type_ids: t?.materiel_types?.map((mt) => mt.materiel_type_id) ?? [],
 });
 
 const taches = ref(data?.taches?.length ? data.taches.map(buildTache) : [buildTache()]);
 
 const monoTache = computed(() => taches.value[0]);
+
+// Les articles d'un composant sont désignés par leur numéro au scanner : seuls les
+// types numérotés sont proposés, ainsi que ceux déjà rattachés à la tâche
+// (donnée antérieure à la règle).
+const typesPourComposant = (tache) =>
+  materielTypeStore.liste.filter((t) => t.est_numerote || tache.materiel_type_ids.includes(t.id));
 
 const tacheOrdreInputs = useTemplateRef("tache-ordre");
 
@@ -216,6 +228,8 @@ const save = async () => {
             unit: t.type === "NUMERIC" ? t.unit || null : null,
             value_min: t.type === "NUMERIC" && t.value_min !== "" ? t.value_min : null,
             value_max: t.type === "NUMERIC" && t.value_max !== "" ? t.value_max : null,
+            obligatoire: t.type === "COMPOSANT" || t.type === "NUMERIC" ? t.obligatoire : true,
+            materiel_type_ids: t.type === "COMPOSANT" ? t.materiel_type_ids : [],
           })),
     materiel_type_ids: selectedTypes.value
       .map((r) => r.materiel_type_id)
@@ -436,11 +450,12 @@ const save = async () => {
       <!-- Mode monotâche — UI simplifiée (nom/description du contrôle = ceux de la tâche) -->
       <template v-if="mode === 'mono'">
         <div class="row g-2 align-items-end">
-          <div class="col-auto" style="width: 160px">
+          <div class="col-auto" style="width: 240px">
             <label class="form-label form-label-sm">Type de résultat</label>
             <select v-model="monoTache.type" class="form-select form-select-sm">
               <option value="BOOLEAN">OK / KO</option>
               <option value="NUMERIC">Numérique</option>
+              <option value="COMPOSANT">Composant (article à scanner)</option>
             </select>
           </div>
           <template v-if="monoTache.type === 'NUMERIC'">
@@ -471,7 +486,22 @@ const save = async () => {
                 class="form-control form-control-sm"
               />
             </div>
+            <div class="col-auto d-flex align-items-end pb-1">
+              <base-checkbox v-model="monoTache.obligatoire" label="Obligatoire" />
+            </div>
           </template>
+        </div>
+        <div v-if="monoTache.type === 'COMPOSANT'" class="row g-2 align-items-end mt-1">
+          <div class="col">
+            <base-multi-select
+              v-model="monoTache.materiel_type_ids"
+              label="Types acceptés"
+              :options="typesPourComposant(monoTache)"
+            />
+          </div>
+          <div class="col-auto pb-1">
+            <base-checkbox v-model="monoTache.obligatoire" label="Obligatoire" />
+          </div>
         </div>
       </template>
 
@@ -504,11 +534,12 @@ const save = async () => {
                   placeholder="Nom de la tâche"
                 />
               </div>
-              <div class="col-auto" style="width: 160px">
+              <div class="col-auto" style="width: 240px">
                 <label class="form-label form-label-sm">Type</label>
                 <select v-model="tache.type" class="form-select form-select-sm">
                   <option value="BOOLEAN">OK / KO</option>
                   <option value="NUMERIC">Numérique</option>
+                  <option value="COMPOSANT">Composant (article à scanner)</option>
                 </select>
               </div>
               <template v-if="tache.type === 'NUMERIC'">
@@ -539,6 +570,12 @@ const save = async () => {
                     class="form-control form-control-sm"
                   />
                 </div>
+                <div class="col-auto d-flex align-items-end pb-1">
+                  <base-checkbox
+                    v-model="tache.obligatoire"
+                    :label="`Obligatoire (tâche ${idx + 1})`"
+                  />
+                </div>
               </template>
               <div class="col-auto d-flex align-items-end pb-1">
                 <button
@@ -549,6 +586,21 @@ const save = async () => {
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
+              </div>
+            </div>
+            <div v-if="tache.type === 'COMPOSANT'" class="row g-2 align-items-end mt-1">
+              <div class="col">
+                <base-multi-select
+                  v-model="tache.materiel_type_ids"
+                  :label="`Types acceptés (tâche ${idx + 1})`"
+                  :options="typesPourComposant(tache)"
+                />
+              </div>
+              <div class="col-auto pb-1">
+                <base-checkbox
+                  v-model="tache.obligatoire"
+                  :label="`Obligatoire (tâche ${idx + 1})`"
+                />
               </div>
             </div>
             <div class="row g-2 mt-1">
