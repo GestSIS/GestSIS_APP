@@ -162,3 +162,9 @@ table button.btn {
 .table-responsive {
   overflow: auto clip;
 }
+
+// Taille 3 de la modale (voir AppModal.vue) : pour un contenu trop large pour
+// modal-xl, comme un tableau d'une colonne par tâche.
+.modal-dialog.modal-pleine-largeur {
+  max-width: 95vw;
+}
