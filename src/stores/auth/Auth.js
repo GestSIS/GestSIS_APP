@@ -387,7 +387,7 @@ export const useAuthStore = defineStore("auth", {
       // Comme logout() : quitter la page de l'utilisateur usurpé (admin rétabli,
       // le guard admin passe) et la laisser se démonter avant de vider les stores,
       // sinon elle se re-rend avec des stores vides (ex. type de matériel introuvable).
-      await router.push({ name: "admin-users" });
+      await router.push({ name: "admin-organisations" });
       await nextTick();
       this.clearCache();
     },
