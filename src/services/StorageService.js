@@ -4,6 +4,7 @@ const REFRESH_TOKEN_KEY = "refresh_token";
 const ADMIN_TOKEN_KEY = "admin_access_token";
 const ADMIN_USER_KEY = "admin_logged_user";
 const TWO_FACTOR_NUDGE_KEY = "two_factor_nudge";
+const ACTIVE_ORGANISATION_KEY = "active_organisation";
 
 /**
  * Manage the how Access Tokens are being stored and retreived from storage.
@@ -42,6 +43,39 @@ function safeSetItem(key, value) {
 function safeRemoveItem(key) {
   try {
     localStorage.removeItem(key);
+  } catch (err) {
+    if (!isSecurityError(err)) {
+      throw err;
+    }
+    // Stockage indisponible : rien à supprimer.
+  }
+}
+
+// Organisation active : en sessionStorage pour rester propre à l'onglet (deux onglets
+// peuvent travailler sur deux organisations) tout en survivant à un rechargement.
+function safeSessionGetItem(key) {
+  try {
+    return sessionStorage.getItem(key);
+  } catch (err) {
+    if (!isSecurityError(err)) {
+      throw err;
+    }
+    return null;
+  }
+}
+function safeSessionSetItem(key, value) {
+  try {
+    sessionStorage.setItem(key, value);
+  } catch (err) {
+    if (!isSecurityError(err)) {
+      throw err;
+    }
+    // Stockage indisponible : un rechargement reviendra à l'organisation par défaut.
+  }
+}
+function safeSessionRemoveItem(key) {
+  try {
+    sessionStorage.removeItem(key);
   } catch (err) {
     if (!isSecurityError(err)) {
       throw err;
@@ -121,6 +155,20 @@ const TokenService = {
   },
   removeTwoFactorNudge() {
     safeRemoveItem(TWO_FACTOR_NUDGE_KEY);
+  },
+
+  getActiveOrganisation() {
+    return safeSessionGetItem(ACTIVE_ORGANISATION_KEY);
+  },
+  saveActiveOrganisation(orgKey) {
+    if (orgKey == null) {
+      this.removeActiveOrganisation();
+    } else {
+      safeSessionSetItem(ACTIVE_ORGANISATION_KEY, orgKey);
+    }
+  },
+  removeActiveOrganisation() {
+    safeSessionRemoveItem(ACTIVE_ORGANISATION_KEY);
   },
 };
 

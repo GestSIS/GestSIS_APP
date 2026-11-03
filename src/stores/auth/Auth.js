@@ -296,6 +296,7 @@ export const useAuthStore = defineStore("auth", {
       TokenService.removeAdminAccessToken();
       TokenService.removeAdminUser();
       TokenService.removeTwoFactorNudge();
+      TokenService.removeActiveOrganisation();
       this.impersonating = false;
       Api.setAccessToken("");
       Api.setSisKey(null);
@@ -394,6 +395,7 @@ export const useAuthStore = defineStore("auth", {
     async selectOrganisation(organisation) {
       this.organisation.activeId = organisation?.id;
       this.organisation.activeKey = organisation?.org_key;
+      TokenService.saveActiveOrganisation(organisation?.org_key);
       this.organisation.permissions = this.organisation.allPermissions[organisation?.org_key] ?? [];
       this.sapeurId = this.organisation.sapeurs[organisation?.org_key] ?? null;
 
@@ -605,8 +607,10 @@ export const useAuthStore = defineStore("auth", {
 
       if (availableSis.length > 0) {
         let sisKey = availableSis[0];
-        if (availableSis.find((v) => v === this.organisation.activeKey)) {
-          sisKey = this.organisation.activeKey;
+        // Après un rechargement, l'état est vide : l'organisation choisie est dans le stockage.
+        const preferredKey = this.organisation.activeKey ?? TokenService.getActiveOrganisation();
+        if (availableSis.find((v) => v === preferredKey)) {
+          sisKey = preferredKey;
         } else if (Object.keys(sapeurParSis).length) {
           sisKey = Object.keys(sapeurParSis)[0];
         }
@@ -615,6 +619,7 @@ export const useAuthStore = defineStore("auth", {
         if (!sis) return;
         this.organisation.activeId = sis.id;
         this.organisation.activeKey = sis.org_key;
+        TokenService.saveActiveOrganisation(sis.org_key);
         this.organisation.permissions = permissionsParSis[sis.org_key] ?? [];
         this.organisation.allPermissions = permissionsParSis;
         this.sapeurId = sapeurParSis[sis.org_key] ?? null;
