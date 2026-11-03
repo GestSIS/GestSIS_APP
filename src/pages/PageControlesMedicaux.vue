@@ -342,6 +342,7 @@ const fields = [
                 no-data="Aucun contrôle médical à afficher"
                 :row-class="onRowClass"
                 :data="filteredData"
+                show-count
                 :selectable="true"
                 @selected="selected"
               >

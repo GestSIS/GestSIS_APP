@@ -115,17 +115,13 @@ const fields = [
           :fields="fields"
           no-data="Aucun sapeur à afficher"
           :data="computedData"
+          show-count
           :selectable="true"
         >
           <template #actions="{ rowData }">
             <a class="btn btn-sm btn-outline-primary border-0" :href="'mailto:' + rowData.email">
               <font-awesome-icon :icon="['fas', 'envelope']" />
             </a>
-          </template>
-          <template #foot>
-            <tr>
-              <th colspan="3">Nombre : {{ computedData.length }}</th>
-            </tr>
           </template>
         </base-table>
       </div>

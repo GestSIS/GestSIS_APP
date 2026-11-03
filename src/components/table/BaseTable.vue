@@ -13,6 +13,7 @@ const {
   detailRowColumn,
   detailRowColumnHideButton,
   hideDownload,
+  showCount,
 } = defineProps({
   data: {
     type: Array,
@@ -65,6 +66,11 @@ const {
     type: Boolean,
     default: false,
   },
+  showCount: {
+    // Pour afficher le nombre de lignes dans le pied du tableau
+    type: Boolean,
+    default: false,
+  },
 });
 const emit = defineEmits(["selected"]);
 const slots = useSlots();
@@ -79,6 +85,12 @@ const selected = ref(null);
 // data à plat, que les lignes viennent de `data` ou (si groupée) de `groupedData` :
 // utilisé partout où on doit connaître "toutes les lignes" indépendamment du groupement
 // (bascule tout ouvrir/fermer, export CSV).
+// Nombre de colonnes réellement affichées : comme l'en-tête, la colonne de détail
+// n'apparaît que s'il y a des lignes.
+const colspan = computed(
+  () => fields.length + (detailRowColumn && (data.length || groupedData.length) ? 1 : 0),
+);
+
 const allRows = computed(() =>
   groupedData.length > 0 ? groupedData.flatMap((g) => g.data) : data,
 );
@@ -327,10 +339,7 @@ defineExpose({
       :key="groupe.key"
     >
       <tr v-if="!groupe.data.length">
-        <td
-          :colspan="fields.length + (detailRowColumn ? 1 : 0)"
-          :class="{ 'text-center': loading }"
-        >
+        <td :colspan="colspan" :class="{ 'text-center': loading }">
           <div v-if="loading" class="spinner-border my-2" role="status">
             <span class="visually-hidden">Chargement...</span>
           </div>
@@ -339,7 +348,7 @@ defineExpose({
       </tr>
 
       <tr v-if="sortedGroupedData.length > 0" class="table-secondary">
-        <th :colspan="fields.length + (detailRowColumn ? 1 : 0)">
+        <th :colspan="colspan">
           <slot name="groupeHeader" v-bind="groupe">{{ groupe.label }}</slot>
         </th>
       </tr>
@@ -436,7 +445,7 @@ defineExpose({
           :key="'detail-' + r[selectKey]"
           :class="r.rowClass"
         >
-          <td :colspan="fields.length + (detailRowColumn ? 1 : 0)" class="p-0 detail-row">
+          <td :colspan="colspan" class="p-0 detail-row">
             <div>
               <slot name="detail-row" v-bind="{ rowData: r }"></slot>
             </div>
@@ -445,9 +454,12 @@ defineExpose({
       </template>
     </tbody>
     <tfoot>
-      <slot name="foot" v-bind="{ data }"></slot>
+      <slot name="foot" v-bind="{ data, colspan }"></slot>
+      <tr v-if="showCount">
+        <th :colspan="colspan">Nombre : {{ allRows.length }}</th>
+      </tr>
       <tr v-if="!hideDownload">
-        <td :colspan="fields.length + (detailRowColumn ? 1 : 0)" class="p-0">
+        <td :colspan="colspan" class="p-0">
           <button class="btn m-2" title="Export CSV" @click="toCvs">
             <font-awesome-icon :icon="['fas', 'file-csv']" size="xl" />
           </button>

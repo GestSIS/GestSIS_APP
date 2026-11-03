@@ -134,9 +134,9 @@ const fields = [
             <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>
         </template>
-        <template #foot>
+        <template #foot="{ colspan }">
           <tr>
-            <th :colspan="fields.length">Nb : {{ filteredUsers.length }}</th>
+            <th :colspan="colspan">Nb : {{ filteredUsers.length }}</th>
           </tr>
         </template>
       </base-table>

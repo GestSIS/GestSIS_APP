@@ -261,6 +261,7 @@ const fields = [
                 :row-class="onRowClass"
                 no-data="Aucun travail à afficher"
                 :data="filteredData"
+                show-count
                 :selectable="true"
                 @selected="select"
               >

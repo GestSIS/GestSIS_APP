@@ -420,9 +420,9 @@ const fieldsSapeurs = [
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </template>
-            <template #foot>
+            <template #foot="{ colspan }">
               <tr>
-                <th :colspan="fieldsRoles.length">Nb roles: {{ user.user_roles?.length }}</th>
+                <th :colspan="colspan">Nb roles: {{ user.user_roles?.length }}</th>
               </tr>
             </template>
           </base-table>
@@ -452,9 +452,9 @@ const fieldsSapeurs = [
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </template>
-            <template #foot>
+            <template #foot="{ colspan }">
               <tr>
-                <th :colspan="fieldsSapeurs.length">Nb sapeur: {{ user.sapeur?.length }}</th>
+                <th :colspan="colspan">Nb sapeur: {{ user.sapeur?.length }}</th>
               </tr>
             </template>
           </base-table>

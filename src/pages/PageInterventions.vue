@@ -299,6 +299,7 @@ const fields = [
                 :row-class="onRowClass"
                 no-data="Aucune intervention à afficher"
                 :data="filteredData ?? []"
+                show-count
                 :selectable="true"
                 @selected="select"
               >

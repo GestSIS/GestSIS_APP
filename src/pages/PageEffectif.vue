@@ -180,7 +180,7 @@ const vcard = (sapeurs) => {
   }
 };
 
-const fieldsBase = [
+const fields = [
   { title: "Nom Prénom", key: "nom_prenom" },
   {
     title: "Fonction principale",
@@ -362,14 +362,14 @@ const fieldsBase = [
               <base-table
                 :loading="loading"
                 :selectable="true"
-                :fields="fieldsBase"
+                :fields="fields"
                 no-data="Aucun sapeur à afficher"
                 :data="filteredData"
                 @selected="selectSapeur"
               >
-                <template #foot>
+                <template #foot="{ colspan }">
                   <tr>
-                    <th :colspan="fieldsBase.length">
+                    <th :colspan="colspan">
                       Nombre sapeurs : {{ filteredData.length }} /
                       {{ computedData.length }}
                     </th>

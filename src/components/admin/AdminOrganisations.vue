@@ -156,9 +156,9 @@ const fields = [
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
         </template>
-        <template #foot>
+        <template #foot="{ colspan }">
           <tr>
-            <th :colspan="fields.length">Nb : {{ organisations.length }}</th>
+            <th :colspan="colspan">Nb : {{ organisations.length }}</th>
           </tr>
         </template>
       </base-table>

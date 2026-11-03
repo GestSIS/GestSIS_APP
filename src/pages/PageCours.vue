@@ -172,7 +172,9 @@ const fields = [
                 :fields="fields"
                 no-data="Aucun cours à afficher"
                 :data="filteredData"
-              />
+                show-count
+              >
+              </base-table>
             </div>
           </div>
         </div>

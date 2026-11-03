@@ -696,9 +696,9 @@ const save = async () => {
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
               </template>
-              <template #foot>
+              <template #foot="{ colspan }">
                 <tr>
-                  <td :colspan="colonnesMultiples.length">
+                  <td :colspan="colspan">
                     <button type="button" class="btn btn-outline-primary" @click="addLigneMultiple">
                       Ajouter
                       <font-awesome-icon :icon="['far', 'plus-square']" />

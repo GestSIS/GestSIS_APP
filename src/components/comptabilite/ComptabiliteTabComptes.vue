@@ -200,9 +200,9 @@ const fields = [
               :selectable="true"
               :data="filteredData"
             >
-              <template #foot>
+              <template #foot="{ colspan }">
                 <tr>
-                  <th colspan="4">Total</th>
+                  <th :colspan="colspan - 2">Total</th>
                   <th>
                     {{
                       filteredData

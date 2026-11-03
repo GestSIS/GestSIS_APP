@@ -162,6 +162,7 @@ const fields = [
           :fields="fields"
           no-data="Aucun utilisateur"
           :data="computedData"
+          show-count
           :selectable="true"
           :row-class="onRowClass"
         >
@@ -182,11 +183,6 @@ const fields = [
             >
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>
-          </template>
-          <template #foot>
-            <tr>
-              <th colspan="5">Nombre : {{ computedData.length }}</th>
-            </tr>
           </template>
         </base-table>
       </div>

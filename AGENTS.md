@@ -25,9 +25,9 @@ Une bibliothèque de composants de base est **enregistrée globalement** dans `s
 
 Tableau de données avec tri par colonne (clic sur l'en-tête), états de chargement/vide, sélection de ligne, lignes de détail dépliables et export CSV intégré.
 
-- Props : `:data` (Array), `:fields` (définition des colonnes), `:loading`, `no-data` (texte si vide), `:selectable` (+ événement `@selected="row => …"`), `select-key` (défaut `id`), `:row-class`, `:grouped-data`, `:detail-row-column`, `hide-download`.
+- Props : `:data` (Array), `:fields` (définition des colonnes), `:loading`, `no-data` (texte si vide), `:selectable` (+ événement `@selected="row => …"`), `select-key` (défaut `id`), `:row-class`, `:grouped-data`, `:detail-row-column`, `hide-download`, `show-count` (affiche « Nombre : N » dans le pied).
 - `fields` = tableau d'objets `{ title, key, type?, slot?, formatter?, titleClass?, columnClass?, sortKey?, labelKey? }`. `type` ∈ `Boolean`, `Date`, `Number`, `'datetime'`, `'time'`, `'multiline'` (formatage auto). Une colonne avec `slot: 'nom'` se rend via `<template #nom="{ rowData, value, actions, status }">`.
-- Slots : la colonne personnalisée (`#nom`), `#head`, `#foot="{ data }"`, `#detail-row="{ rowData }"`, `#groupeHeader`.
+- Slots : la colonne personnalisée (`#nom`), `#head`, `#foot="{ data, colspan }"` (`colspan` = nombre de colonnes affichées, colonne de détail comprise), `#detail-row="{ rowData }"`, `#groupeHeader`.
 
 ```vue
 <base-table :loading="loading" :fields="fields" :data="items" no-data="Aucune donnée">

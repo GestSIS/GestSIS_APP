@@ -87,9 +87,9 @@ const fields = computed(() => [
         <font-awesome-icon :icon="['far', 'trash-alt']" />
       </button>
     </template>
-    <template #foot>
+    <template #foot="{ colspan }">
       <tr>
-        <td colspan="2">
+        <td :colspan="colspan">
           <button type="button" class="btn btn-outline-primary" @click="ajouter()">
             Ajouter
             <font-awesome-icon size="1x" :icon="['far', 'plus-square']" />

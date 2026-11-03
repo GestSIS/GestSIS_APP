@@ -184,7 +184,7 @@ const onRowClass = (dataItem, isSelected) => {
   return statutsClass[dataItem.statut];
 };
 
-const fieldsBase = [
+const fields = [
   { title: "Date", key: "date", type: Date },
   { title: "Categorie", key: "categorie" },
   {
@@ -347,10 +347,11 @@ const fieldsBase = [
               ref="basetable_exercices"
               :loading="loading"
               :selectable="true"
-              :fields="fieldsBase"
+              :fields="fields"
               :detail-row-column="true"
               no-data="Aucun exercice/séance à afficher"
               :data="filteredData"
+              show-count
               :row-class="onRowClass"
               @selected="selectExercice"
             >

@@ -236,9 +236,9 @@ const fields = [
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
               </template>
-              <template #foot>
+              <template #foot="{ colspan }">
                 <tr>
-                  <th :colspan="9">Total</th>
+                  <th :colspan="colspan - 2">Total</th>
                   <th>
                     {{
                       filteredData

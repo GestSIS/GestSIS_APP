@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "03.11.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": ["Ajout ligne de totaux pour exercices, interventions, ..."]
+    },
+    {
       "date": "02.11.2026",
       "version": "1.0",
       "app": "GestSIS APP",

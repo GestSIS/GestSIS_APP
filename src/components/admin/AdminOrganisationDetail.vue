@@ -92,7 +92,7 @@ const computedDataUsers = computed(() => {
   return Object.values(usersById);
 });
 
-const fieldsUsers = [
+const fields = [
   { title: "id", key: "id" },
   { title: "name", key: "name" },
   { title: "email", key: "email" },
@@ -181,7 +181,7 @@ const fieldsUsers = [
         <div class="card-body table-responsive p-0">
           <base-table
             ref="table"
-            :fields="fieldsUsers"
+            :fields="fields"
             :data="computedDataUsers"
             :selectable="true"
             :hide-download="true"
@@ -218,11 +218,9 @@ const fieldsUsers = [
                 <font-awesome-icon :icon="['fas', 'user-secret']" />
               </button>
             </template>
-            <template #foot>
+            <template #foot="{ colspan }">
               <tr>
-                <th :colspan="fieldsUsers.length">
-                  Nb utilisateurs: {{ computedDataUsers.length }}
-                </th>
+                <th :colspan="colspan">Nb utilisateurs: {{ computedDataUsers.length }}</th>
               </tr>
             </template>
           </base-table>
