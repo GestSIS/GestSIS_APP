@@ -13,7 +13,7 @@ const types = ref(
 const colonnes = [
   { title: "Type", key: "designation" },
   { title: "Périmés", slot: "nbPerimes" },
-  { title: "Actions", slot: "actionsType" },
+  { title: "Actions", slot: "actions" },
 ];
 
 const colonnesArticles = [
@@ -45,7 +45,7 @@ const colonnesArticles = [
           <span class="badge bg-danger">{{ rowData.articles.length }}</span>
         </template>
 
-        <template #actionsType="{ rowData }">
+        <template #actions="{ rowData }">
           <router-link
             title="Voir le matériel de ce type"
             class="btn btn-outline-primary border-0"

@@ -213,7 +213,7 @@ const webauthnFields = [
   { title: "Nom", key: "name" },
   { title: "Ajoutée le", key: "created_at", type: Date },
   { title: "Dernière utilisation", key: "last_used_at", type: "datetime" },
-  { title: "Actions", key: "id", slot: "actions" },
+  { title: "Actions", slot: "actions" },
 ];
 
 // Sessions actives (refresh tokens) : appareils sur lesquels le compte est
@@ -254,7 +254,7 @@ const sessionFields = [
   // Mise à jour à chaque renouvellement de l'accès (environ toutes les 8 h),
   // pas à chaque requête.
   { title: "Dernier renouvellement", key: "last_used_at", type: "datetime" },
-  { title: "Actions", key: "id", slot: "actions" },
+  { title: "Actions", slot: "actions" },
 ];
 
 const fields = [
@@ -264,7 +264,7 @@ const fields = [
   { title: "Dernière utilisation", key: "last_used_at", type: "datetime" },
   { title: "Expire le", key: "expires_at", type: Date },
   { title: "Statut", key: "revoked_at", slot: "statut" },
-  { title: "Actions", key: "id", slot: "actions" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 

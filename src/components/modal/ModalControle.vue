@@ -4,6 +4,7 @@ import { useControleStore } from "../../stores/materiel/Controle.js";
 import { useMaterielTypeStore } from "../../stores/materiel/Type.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import useNotification from "../../composables/useNotification.js";
+import TableTypesMateriel from "../materiel/TableTypesMateriel.vue";
 
 const { data } = defineProps({
   data: { type: Object, default: () => {} },
@@ -112,12 +113,6 @@ const taches = ref(data?.taches?.length ? data.taches.map(buildTache) : [buildTa
 
 const monoTache = computed(() => taches.value[0]);
 
-// Les articles d'un composant sont désignés par leur numéro au scanner : seuls les
-// types numérotés sont proposés, ainsi que ceux déjà rattachés à la tâche
-// (donnée antérieure à la règle).
-const typesPourComposant = (tache) =>
-  materielTypeStore.liste.filter((t) => t.est_numerote || tache.materiel_type_ids.includes(t.id));
-
 const tacheOrdreInputs = useTemplateRef("tache-ordre");
 
 const addTache = () => {
@@ -132,62 +127,7 @@ const removeTache = (key) => {
 };
 
 // --- Types de matériel ---
-let typeKey = 0;
-const mkTypeKey = () => ++typeKey;
-
-const selectedTypes = ref(
-  data?.materiel_types?.length
-    ? data.materiel_types.map((mt) => ({
-        _key: mkTypeKey(),
-        materiel_type_id: mt.materiel_type_id,
-      }))
-    : [{ _key: mkTypeKey(), materiel_type_id: null }],
-);
-
-// Un même type de matériel ne doit pas pouvoir être sélectionné sur deux
-// lignes : chaque ligne masque les types déjà choisis ailleurs, en gardant
-// le sien propre visible.
-const typesDejaChoisis = computed(
-  () => new Set(selectedTypes.value.map((t) => t.materiel_type_id).filter((id) => id !== null)),
-);
-// Seul un type numéroté peut être contrôlé (règle imposée par l'API) : sans
-// numéro, rien ne distingue les articles d'un même type. Un type déjà rattaché
-// mais non numéroté (donnée antérieure à la règle) reste affiché sur sa ligne.
-const optionsPourLigne = (rowData) =>
-  materielTypeStore.liste.filter(
-    (t) =>
-      t.id === rowData.materiel_type_id || (t.est_numerote && !typesDejaChoisis.value.has(t.id)),
-  );
-
-// Le ref="..." classique ne fonctionne pas ici : ce champ est rendu dans un
-// slot scopé de base-table, dont le v-for vit dans le template de BaseTable.vue
-// et non dans celui-ci. Vue ne peut donc pas détecter à la compilation que ce
-// ref se répète (pas de collecte en tableau) — un ref-fonction, ciblé par clé
-// de ligne, contourne le problème.
-const typeSelectRefs = new Map();
-const setTypeSelectRef = (key, el) => {
-  if (el) {
-    typeSelectRefs.set(key, el);
-  } else {
-    typeSelectRefs.delete(key);
-  }
-};
-
-const addSelectedType = () => {
-  const nouveauType = { _key: mkTypeKey(), materiel_type_id: null };
-  selectedTypes.value.push(nouveauType);
-  nextTick(() => {
-    typeSelectRefs.get(nouveauType._key)?.focus();
-  });
-};
-const removeSelectedType = (key) => {
-  selectedTypes.value = selectedTypes.value.filter((t) => t._key !== key);
-};
-
-const fieldsTypes = [
-  { key: "materiel_type_id", title: "Type de matériel", slot: "type-select" },
-  { key: "_key", title: "", slot: "type-actions" },
-];
+const materielTypeIds = ref(data?.materiel_types?.map((mt) => mt.materiel_type_id) ?? []);
 
 // --- Save ---
 const save = async () => {
@@ -231,9 +171,7 @@ const save = async () => {
             obligatoire: t.type === "COMPOSANT" || t.type === "NUMERIC" ? t.obligatoire : true,
             materiel_type_ids: t.type === "COMPOSANT" ? t.materiel_type_ids : [],
           })),
-    materiel_type_ids: selectedTypes.value
-      .map((r) => r.materiel_type_id)
-      .filter((id) => id !== null),
+    materiel_type_ids: materielTypeIds.value,
   };
 
   try {
@@ -491,13 +429,9 @@ const save = async () => {
             </div>
           </template>
         </div>
-        <div v-if="monoTache.type === 'COMPOSANT'" class="row g-2 align-items-end mt-1">
+        <div v-if="monoTache.type === 'COMPOSANT'" class="row g-2 align-items-start mt-1">
           <div class="col">
-            <base-multi-select
-              v-model="monoTache.materiel_type_ids"
-              label="Types acceptés"
-              :options="typesPourComposant(monoTache)"
-            />
+            <table-types-materiel v-model="monoTache.materiel_type_ids" titre="Types acceptés" />
           </div>
           <div class="col-auto pb-1">
             <base-checkbox v-model="monoTache.obligatoire" label="Obligatoire" />
@@ -588,13 +522,9 @@ const save = async () => {
                 </button>
               </div>
             </div>
-            <div v-if="tache.type === 'COMPOSANT'" class="row g-2 align-items-end mt-1">
+            <div v-if="tache.type === 'COMPOSANT'" class="row g-2 align-items-start mt-1">
               <div class="col">
-                <base-multi-select
-                  v-model="tache.materiel_type_ids"
-                  :label="`Types acceptés (tâche ${idx + 1})`"
-                  :options="typesPourComposant(tache)"
-                />
+                <table-types-materiel v-model="tache.materiel_type_ids" titre="Types acceptés" />
               </div>
               <div class="col-auto pb-1">
                 <base-checkbox
@@ -625,41 +555,7 @@ const save = async () => {
 
       <!-- Types de matériel -->
       <h6 class="mb-2">Matériels concernés</h6>
-      <base-table
-        :fields="fieldsTypes"
-        :data="selectedTypes"
-        select-key="_key"
-        :hide-download="true"
-        no-data="Aucun type associé"
-      >
-        <template #type-select="{ rowData }">
-          <base-select
-            :ref="(el) => setTypeSelectRef(rowData._key, el)"
-            v-model="rowData.materiel_type_id"
-            :options="optionsPourLigne(rowData)"
-            display-key="designation"
-          />
-        </template>
-        <template #type-actions="{ rowData }">
-          <button
-            type="button"
-            class="btn btn-outline-danger border-0"
-            @click="removeSelectedType(rowData._key)"
-          >
-            <font-awesome-icon :icon="['far', 'trash-alt']" />
-          </button>
-        </template>
-        <template #foot>
-          <tr>
-            <td colspan="2">
-              <button type="button" class="btn btn-outline-primary" @click="addSelectedType()">
-                Ajouter
-                <font-awesome-icon size="1x" :icon="['far', 'plus-square']" />
-              </button>
-            </td>
-          </tr>
-        </template>
-      </base-table>
+      <table-types-materiel v-model="materielTypeIds" />
     </div>
 
     <div class="modal-footer">

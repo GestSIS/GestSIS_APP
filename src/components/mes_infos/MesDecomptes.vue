@@ -104,7 +104,7 @@ const fields = [
   { title: "Retenue AVS/AC", key: "avs_ac" },
   { title: "Autre", key: "autre" },
   { title: "Total", key: "total" },
-  { title: "Actions", slot: "actions", key: "id" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 

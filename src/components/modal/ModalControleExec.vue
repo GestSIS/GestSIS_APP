@@ -411,7 +411,7 @@ const colonnesMultiples = computed(() => [
     slot: "tacheCell",
   })),
   { key: "remarque", title: "Remarque", slot: "remarque-cell" },
-  { key: "_actions", title: "", slot: "row-actions" },
+  { title: "", slot: "actions" },
 ]);
 
 const tacheIdFromKey = (key) => Number(key.replace("tache_", ""));
@@ -686,7 +686,7 @@ const save = async () => {
                   :disabled="!rowData.article_id"
                 />
               </template>
-              <template #row-actions="{ rowData }">
+              <template #actions="{ rowData }">
                 <button
                   type="button"
                   class="btn btn-outline-danger border-0"

@@ -197,7 +197,7 @@ const fieldsRoles = [
   { title: "id", key: "id" },
   { title: "organisation", key: "organisation" },
   { title: "role", key: "role" },
-  { title: "Actions", key: "id", slot: "actions" },
+  { title: "Actions", slot: "actions" },
 ];
 const fieldsSapeurs = [
   { title: "id", key: "id" },
@@ -205,7 +205,7 @@ const fieldsSapeurs = [
   { title: "sapeur_id", key: "sapeur_id" },
   { title: "pending_deactivation_at", key: "pending_deactivation_at", type: Date },
   { title: "deactivated_at", key: "deactivated_at", type: Date },
-  { title: "Actions", key: "id", slot: "actions" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 

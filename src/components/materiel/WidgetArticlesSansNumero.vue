@@ -43,7 +43,7 @@ const cheminEmplacement = (emplacementId) => {
 const colonnes = [
   { title: "Type", key: "designation" },
   { title: "Sans numéro", slot: "nbSansNumero" },
-  { title: "Actions", slot: "actionsType" },
+  { title: "Actions", slot: "actions" },
 ];
 
 // Colonnes du détail selon le type : la taille pour un type taillé, la
@@ -52,7 +52,7 @@ const colonnesArticles = (type) => [
   ...(type.est_emplacement ? [{ title: "Désignation", key: "designation" }] : []),
   { title: "Emplacement / Sapeur", slot: "localisation" },
   ...(type.est_taillee ? [{ title: "Taille", key: "taille" }] : []),
-  { title: "Actions", slot: "actionsArticle" },
+  { title: "Actions", slot: "actions" },
 ];
 
 const { showModal } = useModalStore();
@@ -84,7 +84,7 @@ const modifierArticle = (article) =>
           <span class="badge bg-warning text-dark">{{ rowData.articles.length }}</span>
         </template>
 
-        <template #actionsType="{ rowData }">
+        <template #actions="{ rowData }">
           <router-link
             title="Voir le matériel de ce type"
             class="btn btn-outline-primary border-0"
@@ -115,7 +115,7 @@ const modifierArticle = (article) =>
               </div>
             </template>
 
-            <template #actionsArticle="{ rowData: article }">
+            <template #actions="{ rowData: article }">
               <button
                 v-if="hasEditPermission"
                 type="button"

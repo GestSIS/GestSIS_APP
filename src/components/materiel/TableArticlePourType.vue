@@ -119,7 +119,7 @@ const colonnes = computed(() => [
   { title: "Ajouté", key: "created_at", type: "date" },
   // { title: 'Inventaire', key: 'inventaire' },
   // { title: 'Maintenance', key: 'maintenance' },
-  { title: "Actions", key: "id", slot: "actions" },
+  { title: "Actions", slot: "actions" },
 ]);
 
 const { showModal, confirm } = useModalStore();

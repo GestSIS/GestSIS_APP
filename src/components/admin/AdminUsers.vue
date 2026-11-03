@@ -60,7 +60,7 @@ const fields = [
   { title: "email_verified_at", key: "email_verified_at", type: Date },
   { title: "pending_deactivation_at", key: "pending_deactivation_at", type: Date },
   { title: "disabled_at", key: "disabled_at", type: Date },
-  { title: "Actions", key: "id", slot: "actions" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 

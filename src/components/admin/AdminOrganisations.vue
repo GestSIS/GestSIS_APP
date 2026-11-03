@@ -57,7 +57,7 @@ const fields = [
   { title: "Mobile", key: "mobile", type: Boolean },
   { title: "Newsletter", key: "news", slot: "badges" },
   { title: "Facturation", key: "facturation", slot: "badges" },
-  { title: "Actions", key: "id", slot: "actions" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 

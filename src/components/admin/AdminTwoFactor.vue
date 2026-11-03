@@ -45,7 +45,7 @@ const exemptionFields = [
   { title: "Email", key: "email" },
   { title: "Raison", key: "two_factor_exempt_reason" },
   { title: "Jusqu'au", key: "two_factor_exempt_until", type: Date },
-  { title: "Actions", key: "id", slot: "actions" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 

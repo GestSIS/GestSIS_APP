@@ -223,7 +223,7 @@ const fields = [
   { title: "Cotisations AVS", key: "avs_total" },
   { title: "Cotisations AC", key: "ac_total" },
   { title: "Total", key: "total" },
-  { title: "Actions", key: "id", slot: "actions" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 

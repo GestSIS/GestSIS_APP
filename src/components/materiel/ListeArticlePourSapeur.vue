@@ -49,7 +49,7 @@ const piecesColonnes = [
   { title: "Taille", key: "taille" },
   { title: "Remarque", key: "remarque" },
   { title: "Attribué", key: "attribution", type: "date" },
-  { title: "Actions", key: "id", slot: "actions" },
+  { title: "Actions", slot: "actions" },
 ];
 
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));

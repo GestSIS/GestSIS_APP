@@ -41,7 +41,7 @@ const colonnes = [
   { title: "Nom", key: "nom" },
   { title: "Prénom", key: "prenom" },
   { title: "Articles", slot: "nbArticles" },
-  { title: "Actions", slot: "actionsSapeur" },
+  { title: "Actions", slot: "actions" },
 ];
 
 const colonnesArticles = [
@@ -101,7 +101,7 @@ const pdfArticles = (sapeur) => {
         <template #nbArticles="{ rowData }">
           <span class="badge bg-secondary">{{ rowData.articles.length }}</span>
         </template>
-        <template #actionsSapeur="{ rowData }">
+        <template #actions="{ rowData }">
           <button
             type="button"
             title="Liste matériel"

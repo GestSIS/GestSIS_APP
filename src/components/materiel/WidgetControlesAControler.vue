@@ -40,7 +40,7 @@ await loadArticles();
 const colonnes = [
   { title: "Contrôle", key: "nom" },
   { title: "Statut", slot: "statutGlobal" },
-  { title: "Actions", slot: "actionsControle" },
+  { title: "Actions", slot: "actions" },
 ];
 
 const colonnesArticles = [
@@ -94,7 +94,7 @@ const controler = (article, controleId) =>
           </span>
         </template>
 
-        <template #actionsControle="{ rowData }">
+        <template #actions="{ rowData }">
           <router-link
             title="Ouvrir le contrôle"
             class="btn btn-outline-primary border-0"

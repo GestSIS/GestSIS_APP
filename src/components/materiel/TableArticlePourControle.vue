@@ -49,7 +49,7 @@ const colonnes = computed(() => [
     : []),
   { title: "Remarque", key: "remarque" },
   { title: "Ajouté", key: "created_at", type: "date" },
-  { title: "Actions", key: "id", slot: "actions" },
+  { title: "Actions", slot: "actions" },
 ]);
 
 const derniereExecution = (article) =>

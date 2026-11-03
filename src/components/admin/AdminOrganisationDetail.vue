@@ -98,7 +98,7 @@ const fieldsUsers = [
   { title: "email", key: "email" },
   { title: "role", key: "roles", slot: "badges" },
   { title: "sapeur", key: "sapeurs", slot: "sapeurBadges" },
-  { title: "Actions", key: "id", slot: "actions" },
+  { title: "Actions", slot: "actions" },
 ];
 </script>
 
