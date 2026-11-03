@@ -142,7 +142,7 @@ const ajouter = () =>
 </script>
 
 <template>
-  <base-card>
+  <base-card v-if="materielType">
     <template #title>Pièces ({{ articles.length }})</template>
     <template #header>
       <base-radio

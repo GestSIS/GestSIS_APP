@@ -63,7 +63,7 @@ const editMateriel = () =>
 </script>
 
 <template>
-  <div class="row">
+  <div v-if="materielType" class="row">
     <div class="col">
       <base-card>
         <template #title>Description du matériel</template>
@@ -172,7 +172,7 @@ const editMateriel = () =>
       </base-card>
     </div>
   </div>
-  <div class="row">
+  <div v-if="materielType" class="row">
     <div class="col">
       <base-card>
         <template #title>Contrôles applicables</template>
@@ -206,6 +206,12 @@ const editMateriel = () =>
         </template>
       </base-card>
     </div>
+  </div>
+  <div v-else class="card">
+    <div class="card-header">
+      <h5 class="m-0">Type de matériel introuvable</h5>
+    </div>
+    <div class="card-body">Ce type n'existe pas dans cette organisation ou a été supprimé.</div>
   </div>
 </template>
 
