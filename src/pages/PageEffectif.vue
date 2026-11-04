@@ -14,6 +14,7 @@ import { downloadVcard } from "../tools/exportSapeurs";
 import { computed, ref } from "vue";
 import useNotification from "../composables/useNotification.js";
 import useHasPermission from "../composables/usePermission.js";
+import { formatPhoneNumber } from "../composables/usePhoneFormatter";
 
 const localiteStore = useLocaliteStore();
 const baseDataStore = useBaseDataStore();
@@ -180,6 +181,19 @@ const vcard = (sapeurs) => {
   }
 };
 
+const telHref = (numero) => "tel:" + formatPhoneNumber(numero).replaceAll(" ", "");
+
+// Slot instead of type Boolean, which BaseTable renders before any slot; the formatter
+// keeps the column in the CSV export with the same vrai/faux values
+const telField = (n) => ({
+  title: `Tel n°${n}`,
+  key: `rta_${n}`,
+  slot: `tel_${n}`,
+  formatter: (rta) => (rta ? "vrai" : "faux"),
+  titleClass: "text-center",
+  columnClass: "text-center",
+});
+
 const fields = [
   { title: "Nom Prénom", key: "nom_prenom" },
   {
@@ -195,24 +209,9 @@ const fields = [
   { title: "C1 118", key: "c1_118", type: Boolean },
   { title: "Grade", key: "grade", sortKey: "grade_tri" },
   { title: "Groupes", key: "formatedGroupes" },
-  {
-    title: "Tel n°1",
-    key: "rta_1",
-    labelKey: "tel_1",
-    type: Boolean,
-  },
-  {
-    title: "Tel n°2",
-    key: "rta_2",
-    labelKey: "tel_2",
-    type: Boolean,
-  },
-  {
-    title: "Tel n°3",
-    key: "rta_3",
-    labelKey: "tel_3",
-    type: Boolean,
-  },
+  telField(1),
+  telField(2),
+  telField(3),
   { title: "Naissance", key: "date_naissance", type: Date },
   {
     title: "Actions",
@@ -374,6 +373,12 @@ const fields = [
                       {{ computedData.length }}
                     </th>
                   </tr>
+                </template>
+                <template v-for="n in 3" :key="n" #[`tel_${n}`]="{ value, rowData }">
+                  <input type="checkbox" class="form-check-input" :checked="value" disabled />
+                  <a v-if="rowData[`tel_${n}`]" :href="telHref(rowData[`tel_${n}`])">{{
+                    rowData[`tel_${n}`]
+                  }}</a>
                 </template>
                 <template #actions="{ rowData }">
                   <router-link

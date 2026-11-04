@@ -119,7 +119,7 @@ const backToCredentials = () => {
         placeholder="Email"
         required
         autofocus
-        autocomplete="off"
+        autocomplete="username"
         :class="{ 'is-invalid': errors }"
       />
       <label for="inputPassword" class="visually-hidden">Mot de passe</label>
@@ -130,7 +130,7 @@ const backToCredentials = () => {
         class="form-control form-control-sm"
         placeholder="Mot de passe"
         required
-        autocomplete="off"
+        autocomplete="current-password"
         :class="{ 'is-invalid': errors }"
       />
       <div v-if="errors" class="invalid-feedback">Informations de connexion invalides</div>

@@ -84,7 +84,7 @@ const reset = async () => {
           placeholder="Mot de passe"
           required
           :minlength="PASSWORD_MIN_LENGTH"
-          autocomplete="off"
+          autocomplete="new-password"
           :class="{ 'is-invalid': errors.password }"
         />
         <div v-if="errors.password" class="invalid-feedback">
@@ -99,7 +99,7 @@ const reset = async () => {
           class="form-control form-control-sm"
           placeholder="Confirmation"
           required
-          autocomplete="off"
+          autocomplete="new-password"
           :class="{
             'is-invalid': errors.password_confirmation || password !== password_confirmation,
           }"

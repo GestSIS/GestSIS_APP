@@ -124,7 +124,7 @@ if (route.query?.confirm) {
         placeholder="Nom Prénom"
         required
         autofocus
-        autocomplete="off"
+        autocomplete="given-name family-name"
         :class="{ 'is-invalid': errors.name }"
       />
       <div v-if="errors.name" class="invalid-feedback">{{ errors.name.join(" ") }}</div>
@@ -136,7 +136,7 @@ if (route.query?.confirm) {
         class="form-control"
         placeholder="Email"
         required
-        autocomplete="off"
+        autocomplete="username"
         :class="{ 'is-invalid': errors.email }"
       />
       <div v-if="errors.email" class="invalid-feedback">{{ errors.email.join(" ") }}</div>
@@ -149,7 +149,7 @@ if (route.query?.confirm) {
         placeholder="Mot de passe"
         :minlength="PASSWORD_MIN_LENGTH"
         required
-        autocomplete="off"
+        autocomplete="new-password"
         :class="{ 'is-invalid': errors.password }"
       />
       <div v-if="errors.password" class="invalid-feedback">{{ errors.password.join(" ") }}</div>
@@ -162,7 +162,7 @@ if (route.query?.confirm) {
         class="form-control"
         placeholder="Confirmation"
         required
-        autocomplete="off"
+        autocomplete="new-password"
         :class="{
           'is-invalid': errors.password_confirmation || password !== password_confirmation,
         }"

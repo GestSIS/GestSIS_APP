@@ -232,19 +232,22 @@ const loadSessions = async () => {
 };
 loadSessions();
 
-const deleteSession = (session) =>
-  confirm(
+const deleteSession = async (session) => {
+  const confirmed = await confirm(
     "Voulez-vous vraiment déconnecter cette session ?",
     "L'appareil devra se reconnecter avec son mot de passe (et le 2FA si actif).",
-  ).then(() =>
-    authStore
-      .deleteSession(session.id)
-      .then(() => {
-        awn.success("Session déconnectée");
-        return loadSessions();
-      })
-      .catch((e) => awn.alert(e?.message || "Erreur lors de la déconnexion")),
   );
+  if (!confirmed) {
+    return;
+  }
+  return authStore
+    .deleteSession(session.id)
+    .then(() => {
+      awn.success("Session déconnectée");
+      return loadSessions();
+    })
+    .catch((e) => awn.alert(e?.message || "Erreur lors de la déconnexion"));
+};
 
 const sessionFields = [
   { title: "Appareil", key: "user_agent", slot: "appareil" },
@@ -333,7 +336,16 @@ const fields = [
         </div>
       </div>
       <div class="col-sm-12 col-xl-9">
-        <form v-if="tab == 'password'" @submit="changerMotDePasse">
+        <form v-if="tab == 'password'" @submit.prevent="changerMotDePasse">
+          <!-- Tells password managers which saved account this password belongs to -->
+          <input
+            type="email"
+            class="d-none"
+            autocomplete="username"
+            :value="authStore.email"
+            readonly
+            tabindex="-1"
+          />
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h3>Changer mon mot de passe</h3>
@@ -347,20 +359,20 @@ const fields = [
                   type="password"
                   placeholder="mot de passe"
                   required
-                  autocomplete="off"
+                  autocomplete="current-password"
                   class="form-control form-control-sm"
                 />
               </div>
               <div class="mb-3">
                 <label for="new-password">Nouveau mot de passe</label>
                 <input
-                  id="newPassword"
+                  id="new-password"
                   v-model="newPassword"
                   type="password"
                   placeholder="mot de passe"
                   :minlength="PASSWORD_MIN_LENGTH"
                   required
-                  autocomplete="off"
+                  autocomplete="new-password"
                   class="form-control form-control-sm"
                   :class="{ 'is-invalid': errors.password }"
                 />
@@ -379,7 +391,7 @@ const fields = [
                   minlength="12"
                   placeholder="répéter mot de passe"
                   required
-                  autocomplete="off"
+                  autocomplete="new-password"
                   class="form-control form-control-sm"
                   :class="{ 'is-invalid': !isPasswordIdentical }"
                 />
@@ -402,12 +414,12 @@ const fields = [
                   class="form-control form-control-sm"
                 />
               </div>
-              <button class="btn btn-primary" @click="submit">Changer</button>
+              <button type="submit" class="btn btn-primary">Changer</button>
             </div>
           </div>
         </form>
 
-        <form v-if="tab == 'permissions'" @submit="utiliserJeton">
+        <form v-if="tab == 'permissions'" @submit.prevent="utiliserJeton">
           <div class="card card-primary card-outline mb-2">
             <div class="card-header d-flex justify-content-between">
               <h3>Utiliser un jeton de permissions</h3>
@@ -426,7 +438,7 @@ const fields = [
                   placeholder="jeton"
                 />
               </div>
-              <button class="btn btn-primary" submit>Utiliser</button>
+              <button type="submit" class="btn btn-primary">Utiliser</button>
             </div>
           </div>
         </form>
