@@ -160,7 +160,7 @@ const computedData = computed(() => {
       ),
       stats: computeStats(sapeurIndexedPresence[s.id] || []),
       temp: sapeurIndexedPresence[s.id] || [],
-      localite: localites.value.find((l) => l.id == s.localiteId)?.designation,
+      localite: localites.value.find((l) => l.id == s.localite_id)?.designation,
       fonction: fonctions.value.find((f) => f.id == s.fonction_id)?.nom || "-",
     }));
 });
@@ -238,10 +238,17 @@ const formatPresenceClass = (presence) => {
     return "text-bg-success";
   }
 };
+// Same escaping as BaseTable: neutralizes spreadsheet formulas and quotes values
+// containing the delimiter, otherwise a ";" shifts the columns of the export
+const isPlainNumber = (s) => /^[-+]?\d+([.,]\d+)?$/.test(s);
+const neutralizeFormula = (s) => (/^[=+\-@\t\r]/.test(s) && !isPlainNumber(s) ? "'" + s : s);
+const csvEscape = (value) => {
+  const s = neutralizeFormula(String(value ?? ""));
+  return /[";\n\r]/.test(s) ? '"' + s.replaceAll('"', '""') + '"' : s;
+};
 const toCvs = () => {
   // TODO: Migrate to BaseTable and remove duplicates
-  const data =
-    "data:text/csv;charset=utf-8,\ufeff" +
+  const rows = [
     [
       "Sapeur",
       "Localité",
@@ -249,12 +256,11 @@ const toCvs = () => {
       ...displayExercice.value.map((e) => e.designation),
       "Nombre convoqué",
       "Nombre présent",
+      "Nombre absent",
       "Nombre remplacé",
       "Nombre excusé",
-      "Nombre absent",
       "Nombre amende",
-    ].join(";") +
-    "\n" +
+    ],
     [
       "",
       "",
@@ -266,27 +272,21 @@ const toCvs = () => {
       "",
       "",
       "",
-    ].join(";") +
-    "\n" +
-    computedData.value
-      .map((s) =>
-        [
-          s.nom_prenom,
-          s.localite,
-          s.fonction,
-          ...s.presences.map((p) => formatPresenceExport(p)),
-          s.stats.convoque,
-          s.stats.present,
-          s.stats.absent,
-          s.stats.remplace,
-          s.stats.excuse,
-          s.stats.amende,
-        ].join(";"),
-      )
-      .join("\n") +
-    "\n" +
+    ],
+    ...computedData.value.map((s) => [
+      s.nom_prenom,
+      s.localite,
+      s.fonction,
+      ...s.presences.map((p) => formatPresenceExport(p)),
+      s.stats.convoque,
+      s.stats.present,
+      s.stats.absent,
+      s.stats.remplace,
+      s.stats.excuse,
+      s.stats.amende,
+    ]),
     [
-      `Total : ${exercices.value.length}`,
+      `Total : ${displayExercice.value.length}`,
       "",
       "",
       ...displayExercice.value.map(() => ""),
@@ -296,16 +296,20 @@ const toCvs = () => {
       computedStats.value.remplace,
       computedStats.value.excuse,
       computedStats.value.amende,
-    ].join(";");
+    ],
+  ];
+  const csv = "\ufeff" + rows.map((row) => row.map(csvEscape).join(";")).join("\n");
 
-  // V2
-  var encodedUri = encodeURI(data);
+  // Blob instead of an encodeURI data: URI, which truncated the file at the
+  // first "#" (fragment separator) found in a value
+  const url = window.URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
   var link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
+  link.setAttribute("href", url);
   link.setAttribute("download", "statistiques_presences.csv");
   document.body.appendChild(link); // Required for FF
-
   link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
 };
 </script>
 
@@ -454,10 +458,8 @@ const toCvs = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td v-if="!computedData.length" :colspan="displayExercice.length + 9">
-                  Aucun sapeur à afficher
-                </td>
+              <tr v-if="!computedData.length">
+                <td :colspan="displayExercice.length + 9">Aucun sapeur à afficher</td>
               </tr>
               <tr
                 v-for="s in computedData"
@@ -476,9 +478,11 @@ const toCvs = () => {
                     'bg-danger-subtle': displayExercice[index].statut === 0,
                   }"
                 >
-                  <span class="badge rouded-pill" :class="formatPresenceClass(p)"
+                  <span class="badge rouded-pill presence-badge" :class="formatPresenceClass(p)"
                     ><font-awesome-icon
                       v-if="p && !p.convoque"
+                      aria-label="Pour information"
+                      aria-hidden="false"
                       v-tooltip.bottom="'Pour information'"
                       class="me-1"
                       :icon="['fas', 'info-circle']"
@@ -495,7 +499,7 @@ const toCvs = () => {
             </tbody>
             <thead>
               <tr>
-                <th colspan="3">Total : {{ exercices.length }}</th>
+                <th colspan="3">Total : {{ displayExercice.length }}</th>
                 <th v-if="displayExercice.length" :colspan="displayExercice.length"></th>
                 <th class="text-center">{{ computedStats.convoque }}</th>
                 <th class="text-center">{{ computedStats.present }}</th>
@@ -547,6 +551,10 @@ const toCvs = () => {
 
 .table-border {
   border-width: 1px;
+}
+
+.presence-badge {
+  cursor: default;
 }
 
 .table-header-rotated th.rotate > div {

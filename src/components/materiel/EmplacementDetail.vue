@@ -115,7 +115,7 @@ const editEmplacement = () => {
       <div class="card mb-2 h-100">
         <div class="card-header">
           <h5 class="m-0">
-            <font-awesome-icon title="Véhicule" :icon="['fas', 'car']" class="me-1" />
+            <font-awesome-icon :icon="['fas', 'car']" class="me-1" />
             Véhicule
           </h5>
         </div>
@@ -151,7 +151,7 @@ const editEmplacement = () => {
       <div class="card mb-2 h-100">
         <div class="card-header">
           <h5 class="m-0">
-            <font-awesome-icon title="Hangar" :icon="['far', 'house']" class="me-1" />
+            <font-awesome-icon :icon="['far', 'house']" class="me-1" />
             Hangar
           </h5>
         </div>
