@@ -365,6 +365,7 @@ const fields = [
                 no-data="Aucun sapeur à afficher"
                 :data="filteredData"
                 @selected="selectSapeur"
+                rowClass="align-middle"
               >
                 <template #foot="{ colspan }">
                   <tr>
@@ -376,9 +377,12 @@ const fields = [
                 </template>
                 <template v-for="n in 3" :key="n" #[`tel_${n}`]="{ value, rowData }">
                   <input type="checkbox" class="form-check-input" :checked="value" disabled />
-                  <a v-if="rowData[`tel_${n}`]" :href="telHref(rowData[`tel_${n}`])">{{
-                    rowData[`tel_${n}`]
-                  }}</a>
+                  <a
+                    v-if="rowData[`tel_${n}`]"
+                    class="d-inline-block text-reset text-decoration-none"
+                    :href="telHref(rowData[`tel_${n}`])"
+                    >{{ rowData[`tel_${n}`] }}</a
+                  >
                 </template>
                 <template #actions="{ rowData }">
                   <router-link
