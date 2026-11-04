@@ -354,22 +354,22 @@ const toCvs = () => {
             <table class="table table-sm">
               <tr>
                 <td>
-                  <span class="badge rouded-pill text-bg-danger">Amendée</span>
+                  <span class="badge rounded-pill text-bg-danger">Amendée</span>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <span class="badge rouded-pill text-bg-warning">Refusée</span>
+                  <span class="badge rounded-pill text-bg-warning">Refusée</span>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <span class="badge rouded-pill text-bg-secondary">A traiter</span>
+                  <span class="badge rounded-pill text-bg-secondary">A traiter</span>
                 </td>
               </tr>
               <tr>
                 <td>
-                  <span class="badge rouded-pill text-bg-success">Acceptée</span>
+                  <span class="badge rounded-pill text-bg-success">Acceptée</span>
                 </td>
               </tr>
             </table>
@@ -478,7 +478,7 @@ const toCvs = () => {
                     'bg-danger-subtle': displayExercice[index].statut === 0,
                   }"
                 >
-                  <span class="badge rouded-pill presence-badge" :class="formatPresenceClass(p)"
+                  <span class="badge rounded-pill presence-badge" :class="formatPresenceClass(p)"
                     ><font-awesome-icon
                       v-if="p && !p.convoque"
                       aria-label="Pour information"

@@ -75,7 +75,7 @@ const fields = [
         :fields="fields"
         :data="absences"
         :selectable="true"
-        no-data="Aucun absence de saisie"
+        no-data="Aucun absence saisie"
         @selected="(elem) => (activeItemId = elem?.id)"
       >
         <template #actions="{ rowData }">
