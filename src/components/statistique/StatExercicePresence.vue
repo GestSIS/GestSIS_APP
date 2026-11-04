@@ -247,11 +247,12 @@ const toCvs = () => {
       "Localité",
       "Fonction",
       ...displayExercice.value.map((e) => e.designation),
-      "Nombre Convoqué",
-      "Nombre Présent",
-      "Nombre Remplacé",
+      "Nombre convoqué",
+      "Nombre présent",
+      "Nombre remplacé",
       "Nombre excusé",
       "Nombre absent",
+      "Nombre amende",
     ].join(";") +
     "\n" +
     [
@@ -259,6 +260,7 @@ const toCvs = () => {
       "",
       "",
       ...displayExercice.value.map((e) => new Date(e.date).toLocaleDateString("fr-CH")),
+      "",
       "",
       "",
       "",
@@ -427,6 +429,7 @@ const toCvs = () => {
                 <th></th>
                 <th></th>
                 <th></th>
+                <th></th>
               </tr>
             </thead>
             <thead class="table-bordered">
@@ -447,11 +450,12 @@ const toCvs = () => {
                 <th class="text-center">Nb Abs</th>
                 <th class="text-center">Nb Rpl</th>
                 <th class="text-center">Nb Exc</th>
+                <th class="text-center">Nb Ame</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td v-if="!computedData.length" :colspan="displayExercice.length + 8">
+                <td v-if="!computedData.length" :colspan="displayExercice.length + 9">
                   Aucun sapeur à afficher
                 </td>
               </tr>
