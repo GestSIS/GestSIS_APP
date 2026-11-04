@@ -159,9 +159,9 @@ const selectAllConvoque = (status) => {
     ...p,
     convoque: status ? 1 : 0,
   }));
-  Promise.all(presences.value.map((p) => savePresence(p, true))).then(
-    awn.success("Modifications enregistrées"),
-  );
+  Promise.all(presences.value.map((p) => savePresence(p, true)))
+    .then(() => notifySuccess(presences.value.length))
+    .catch((err) => awn.alert(err?.message || "Erreur lors de l'enregistrement"));
 };
 const validate = async () => {
   if (
@@ -245,12 +245,32 @@ const manageSapeurs = () => {
     data: { ids: presences.value.map((s) => s.sapeur_id) },
   });
 };
+// Pendant un appel, un seul message à la fois : le premier succès s'affiche tout de suite,
+// les suivants sont regroupés en un message à la fin de la période (durée d'affichage AWN).
+const SUCCESS_NOTIFICATION_WINDOW_MS = 5500;
+let successNotificationTimer = null;
+let pendingSuccessCount = 0;
+const notifySuccess = (count = 1) => {
+  if (successNotificationTimer) {
+    pendingSuccessCount += count;
+    return;
+  }
+  awn.success(count > 1 ? `${count} Modifications enregistrées` : "Modification enregistrée");
+  successNotificationTimer = setTimeout(() => {
+    successNotificationTimer = null;
+    if (pendingSuccessCount > 0) {
+      const groupedCount = pendingSuccessCount;
+      pendingSuccessCount = 0;
+      notifySuccess(groupedCount);
+    }
+  }, SUCCESS_NOTIFICATION_WINDOW_MS);
+};
 const savePresence = async (sapeur, hideNotification) => {
   const promise = exerciceStore.editPresenceExercice(sapeur.id, sapeur);
   if (!hideNotification) {
     try {
-      const res = await promise;
-      return awn.success(res?.message || "Modifications enregistrées");
+      await promise;
+      return notifySuccess();
     } catch (err) {
       return awn.alert(err?.message || "Erreur lors de l'enregistrement");
     }
