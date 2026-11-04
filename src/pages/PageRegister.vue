@@ -60,6 +60,8 @@ const register = async () => {
     .then(() => {
       errors.value = {};
       step.value = "confirm-email";
+      // Un rechargement doit revenir à la saisie du code, sans renvoi (voir plus haut).
+      router.replace({ query: { ...route.query, email: email.value?.trim() } });
     })
     .catch((error) => {
       // 422 : erreurs par champ ; sinon (jeton invalide, trop de tentatives,

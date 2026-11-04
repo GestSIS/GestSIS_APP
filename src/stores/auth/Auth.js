@@ -1,7 +1,11 @@
 import { defineStore } from "pinia";
 import { nextTick } from "vue";
 import * as Sentry from "@sentry/vue";
-import { startAuthentication, startRegistration } from "@simplewebauthn/browser";
+import {
+  startAuthentication,
+  startRegistration,
+  WebAuthnAbortService,
+} from "@simplewebauthn/browser";
 import { translateWebauthnError } from "../../tools/webauthnErrors.js";
 import AuthService from "../../services/AuthService";
 import AdminService from "../../services/AdminService";
@@ -132,6 +136,7 @@ export const useAuthStore = defineStore("auth", {
       return data;
     },
     cancelTwoFactorChallenge() {
+      WebAuthnAbortService.cancelCeremony();
       this.twoFactorChallenge = null;
       this.twoFactorSetupToken = null;
     },
@@ -226,14 +231,25 @@ export const useAuthStore = defineStore("auth", {
     },
     // WebAuthn — login. Le pre-auth token joue le même rôle que pour verifyTwoFactor.
     async verifyWebauthnLogin() {
-      const options = await AuthService.getWebauthnLoginChallenge(this.twoFactorChallenge);
+      // Le challenge peut être annulé (« Retour ») pendant chaque étape asynchrone :
+      // ne pas ouvrir l'invite du navigateur ni créer de session dans ce cas.
+      const challenge = this.twoFactorChallenge;
+      const throwIfCancelled = () => {
+        if (this.twoFactorChallenge !== challenge) {
+          throw new Error("Vérification WebAuthn annulée");
+        }
+      };
+      const options = await AuthService.getWebauthnLoginChallenge(challenge);
+      throwIfCancelled();
       let response;
       try {
         response = await startAuthentication({ optionsJSON: options });
       } catch (err) {
         throw new Error(translateWebauthnError(err));
       }
-      const data = await AuthService.verifyWebauthnLogin(this.twoFactorChallenge, response);
+      throwIfCancelled();
+      const data = await AuthService.verifyWebauthnLogin(challenge, response);
+      throwIfCancelled();
       this.twoFactorChallenge = null;
       await this.setAuthSuccessful(data);
       return data;

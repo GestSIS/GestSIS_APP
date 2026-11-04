@@ -385,10 +385,10 @@ const fields = [
               <div class="mb-3">
                 <label for="new-password-repeated">Répéter le nouveau mot de passe</label>
                 <input
-                  id="newPasswordRepeated"
+                  id="new-password-repeated"
                   v-model="newPasswordRepeated"
                   type="password"
-                  minlength="12"
+                  :minlength="PASSWORD_MIN_LENGTH"
                   placeholder="répéter mot de passe"
                   required
                   autocomplete="new-password"

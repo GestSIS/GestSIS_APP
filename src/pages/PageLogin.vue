@@ -8,6 +8,7 @@ const email = ref(null);
 const password = ref(null);
 const rememberMe = ref(true);
 const errors = ref(null);
+const submitting = ref(false);
 
 const router = useRouter();
 const route = useRoute();
@@ -24,10 +25,18 @@ const codeError = ref(null);
 const twoFactorMethod = ref(null);
 const webauthnError = ref(null);
 const webauthnLoading = ref(false);
+// Incrémenté à chaque tentative et par « Retour » : une tentative dépassée n'a plus
+// le droit de naviguer ni d'afficher une erreur.
+let webauthnAttempt = 0;
 
 const goToDestination = () => router.push(route.query.redirect ? route.query.redirect : "accueil");
 
 const login = async () => {
+  // Chaque requête est comptée par le throttling d'Auth, et deux réponses
+  // lanceraient deux vérifications WebAuthn en parallèle.
+  if (submitting.value) {
+    return;
+  }
   if (
     email.value?.trim()?.toLowerCase()?.endsWith("@gestsis.ch") &&
     email.value?.trim()?.toLowerCase() !== "admin@gestsis.ch" &&
@@ -39,19 +48,20 @@ const login = async () => {
     return;
   }
 
+  submitting.value = true;
   authStore
     .login({
       email: email.value?.trim(),
       password: password.value,
       rememberMe: rememberMe.value,
     })
-    .then(async (result) => {
+    .then((result) => {
       errors.value = null;
       if (result?.requiresTwoFactor) {
         step.value = "challenge";
         const methods = authStore.twoFactorAvailableMethods;
         if (methods.length === 1 && methods[0] === "webauthn") {
-          await useWebauthnLogin();
+          useWebauthnLogin();
         } else {
           twoFactorMethod.value = methods.length === 1 ? methods[0] : null;
         }
@@ -65,10 +75,16 @@ const login = async () => {
     })
     .catch((err) => {
       if (err?.requiresEmailConfirmation) {
-        router.push({ name: "register", query: { confirm: email.value?.trim() } });
+        router.push({
+          name: "register",
+          query: { confirm: email.value?.trim(), redirect: route.query.redirect },
+        });
         return;
       }
       errors.value = err;
+    })
+    .finally(() => {
+      submitting.value = false;
     });
 };
 
@@ -83,20 +99,29 @@ const verifyChallenge = async () => {
 };
 
 const useWebauthnLogin = async () => {
+  const attempt = ++webauthnAttempt;
   twoFactorMethod.value = "webauthn";
   webauthnError.value = null;
   webauthnLoading.value = true;
   try {
     await authStore.verifyWebauthnLogin();
-    goToDestination();
+    if (attempt === webauthnAttempt) {
+      goToDestination();
+    }
   } catch (err) {
-    webauthnError.value = err?.message || "Échec de la vérification WebAuthn";
+    if (attempt === webauthnAttempt) {
+      webauthnError.value = err?.message || "Échec de la vérification WebAuthn";
+    }
   } finally {
-    webauthnLoading.value = false;
+    if (attempt === webauthnAttempt) {
+      webauthnLoading.value = false;
+    }
   }
 };
 
 const backToCredentials = () => {
+  webauthnAttempt++;
+  webauthnLoading.value = false;
   authStore.cancelTwoFactorChallenge();
   step.value = "credentials";
   code.value = "";
@@ -137,7 +162,9 @@ const backToCredentials = () => {
       <div class="text-start mb-3 mt-2">
         <base-checkbox v-model="rememberMe" label="Se souvenir de moi sur cet appareil" />
       </div>
-      <button class="btn btn-lg btn-primary w-100" type="submit">Se connecter</button>
+      <button class="btn btn-lg btn-primary w-100" type="submit" :disabled="submitting">
+        Se connecter
+      </button>
       <p class="mt-5 mb-3 text-body-secondary">© GestSIS {{ new Date().getFullYear() }}</p>
 
       <router-link :to="{ name: 'forgotten-password' }" class="btn btn-link"
