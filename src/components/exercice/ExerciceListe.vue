@@ -16,6 +16,7 @@ import ExerciceDetails from "/src/components/exercice/ExerciceDetails.vue";
 import ExerciceService from "/src/services/ExerciceService.js";
 
 import { exercicesToIcs } from "../../tools/exportExercices";
+import { exportFileName } from "../../tools/index.js";
 import useHasPermission from "../../composables/usePermission.js";
 
 const authStore = useAuthStore();
@@ -138,9 +139,13 @@ const importExerciceComptable = () =>
     size: 2,
   });
 
+const exerciceFileName = (sujet, id) => {
+  const exercice = exercices.value.find((e) => e.id == id);
+  return exportFileName([sujet, exercice?.designation, exercice?.date], "pdf");
+};
 const listePresences = ({ id }) => {
   showModal({ component: "ModalChargement" });
-  ExerciceService.downloadListPresence(id, "liste-presence.pdf")
+  ExerciceService.downloadListPresence(id, exerciceFileName("liste-presence", id))
     .catch((err) => {
       awn.alert(
         err?.message ||
@@ -151,7 +156,7 @@ const listePresences = ({ id }) => {
 };
 const listeAppel = ({ id }) => {
   showModal({ component: "ModalChargement" });
-  ExerciceService.downloadListAppel(id, "liste-appel.pdf")
+  ExerciceService.downloadListAppel(id, exerciceFileName("liste-appel", id))
     .catch((err) => {
       awn.alert(
         err?.message ||

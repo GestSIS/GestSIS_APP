@@ -17,6 +17,24 @@ export const groupedByData = (data, key = "id") =>
 export const toLocalIsoDate = (date = new Date()) =>
   new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 
+const fileNamePart = (part) =>
+  (part instanceof Date ? toLocalIsoDate(part) : String(part))
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60);
+
+// Nom de fichier de téléchargement : sujet_détail_date.ext, sans accent ni espace.
+// Les valeurs vides sont ignorées, ex. ["liste-appel", "Été 1", date] => liste-appel_ete-1_2026-11-04.pdf
+export const exportFileName = (parts, extension) =>
+  `${parts
+    .filter((part) => part !== null && part !== undefined)
+    .map(fileNamePart)
+    .filter(Boolean)
+    .join("_")}.${extension}`;
+
 // Valeur d'un <input type="date"> à partir d'une date renvoyée par l'API
 // (chaîne ISO complète ou déjà "YYYY-MM-DD"). On tronque la chaîne plutôt que
 // de passer par un objet Date : ces colonnes sont des dates pures, les

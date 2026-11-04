@@ -13,6 +13,7 @@ import DecompteService from "../../services/DecompteService";
 import ImputationService from "/src/services/ImputationService.js";
 import permissions from "../../composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
+import { exportFileName } from "../../tools/index.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -95,13 +96,16 @@ const filteredSapeurs = computed(() => {
 const awn = useNotification();
 const { closeModal, showModal } = useModalStore();
 
+const anneeActive = () =>
+  exerciceComptableStore.liste.find((e) => e.id == activeExerciceComptableId.value)?.annee;
 const printPourSapeur = (sapeurId) => {
+  const sapeur = sapeurs.value.find((s) => s.id == sapeurId);
   showModal({ component: "ModalChargement" });
 
   DecompteService.downloadResumePourSapeur(
     activeExerciceComptableId.value,
     sapeurId,
-    `resume_pour_sapeur.pdf`,
+    exportFileName(["resume", sapeur?.nom_prenom, anneeActive()], "pdf"),
   )
     .then(closeModal)
     .catch((err) => {
@@ -112,7 +116,10 @@ const printPourSapeur = (sapeurId) => {
 const printParSapeur = () => {
   showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadResumeParSapeur(activeExerciceComptableId.value, `resume_par_sapeur.pdf`)
+  DecompteService.downloadResumeParSapeur(
+    activeExerciceComptableId.value,
+    exportFileName(["resume-par-sapeur", anneeActive()], "pdf"),
+  )
     .then(closeModal)
     .catch((err) => {
       closeModal();

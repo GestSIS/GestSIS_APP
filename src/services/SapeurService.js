@@ -1,16 +1,17 @@
 import Api from "/src/http/Request";
+import { exportFileName } from "/src/tools/index.js";
 
 export default {
   getEffectif() {
     return Api.api().get("/effectif");
   },
   listeFssp(date) {
-    return Api.apiFileDownload("liste_fssp.xlsx").get("/liste-fssp", {
+    return Api.apiFileDownload(exportFileName(["liste-fssp", date], "xlsx")).get("/liste-fssp", {
       params: { date },
     });
   },
   listeFoad(date) {
-    return Api.apiFileDownload("liste_foad.xlsx").get("/liste-foad", {
+    return Api.apiFileDownload(exportFileName(["liste-foad", date], "xlsx")).get("/liste-foad", {
       params: { date },
     });
   },

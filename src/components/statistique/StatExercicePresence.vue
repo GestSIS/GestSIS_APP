@@ -8,6 +8,7 @@ import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategor
 import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useStatistiqueStore } from "../../stores/statistique/Statistique.js";
+import { exportFileName } from "../../tools/index.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -305,7 +306,10 @@ const toCvs = () => {
   const url = window.URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
   var link = document.createElement("a");
   link.setAttribute("href", url);
-  link.setAttribute("download", "statistiques_presences.csv");
+  const annee = exerciceComptableStore.liste.find(
+    (e) => e.id == exerciceComptableStore.activeId,
+  )?.annee;
+  link.setAttribute("download", exportFileName(["statistiques-presences", annee], "csv"));
   document.body.appendChild(link); // Required for FF
   link.click();
   link.remove();

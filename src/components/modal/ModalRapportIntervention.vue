@@ -4,6 +4,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import InterventionService from "/src/services/InterventionService.js";
 import useHasPermission from "../../composables/usePermission.js";
+import { exportFileName } from "../../tools/index.js";
 
 const { data } = defineProps({
   data: {
@@ -35,7 +36,11 @@ const { closeModal, showModal } = useModalStore();
 
 const generer = () => {
   showModal({ component: "ModalChargement" });
-  InterventionService.downloadRapport(data.interventionId, form, `${data.date}_intervention.pdf`)
+  InterventionService.downloadRapport(
+    data.interventionId,
+    form,
+    exportFileName(["rapport-intervention", data.date?.slice(0, 10)], "pdf"),
+  )
     .then(() => closeModal())
     .catch(() => closeModal());
 };

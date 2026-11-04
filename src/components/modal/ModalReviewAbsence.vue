@@ -10,6 +10,7 @@ import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import ExerciceService from "../../services/ExerciceService";
 import SapeurService from "../../services/SapeurService";
+import { exportFileName } from "../../tools/index.js";
 
 const { data } = defineProps({
   data: {
@@ -139,10 +140,12 @@ const previousAbsence = () => {
   }
 };
 const downloadJustificatif = (exercice) => {
+  const sapeur = sapeurStore.liste.find((s) => s.id == exercice.sapeur_id);
+  const date = exercices.value.find((e) => e.id == exercice.exercice_id)?.date;
   ExerciceService.downloadExcuseJustificatif(
     exercice.exercice_id,
     exercice.sapeur_id,
-    "justificatif.pdf",
+    exportFileName(["justificatif", sapeur?.nom_prenom, date], "pdf"),
   ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
 };
 const rowClass = (rowData) => {

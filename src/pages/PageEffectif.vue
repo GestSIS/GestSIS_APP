@@ -15,6 +15,7 @@ import { computed, ref } from "vue";
 import useNotification from "../composables/useNotification.js";
 import useHasPermission from "../composables/usePermission.js";
 import { formatPhoneNumber } from "../composables/usePhoneFormatter";
+import { exportFileName, toLocalIsoDate } from "../tools/index.js";
 
 const localiteStore = useLocaliteStore();
 const baseDataStore = useBaseDataStore();
@@ -147,7 +148,7 @@ const selectSapeur = (id) => (selectedId.value = id);
 const trombinoscope = () => {
   showModal({ component: "ModalChargement" });
 
-  SapeurService.downloadTrombinoscope("trombinoscope.pdf")
+  SapeurService.downloadTrombinoscope(exportFileName(["trombinoscope", toLocalIsoDate()], "pdf"))
     .then(closeModal)
     .catch((err) => {
       closeModal();

@@ -1,5 +1,7 @@
 <script setup>
 import { computed, ref, useSlots, watch } from "vue";
+import { useRoute } from "vue-router";
+import { exportFileName, toLocalIsoDate } from "../../tools/index.js";
 
 const {
   data,
@@ -179,6 +181,8 @@ const exportRows = computed(() =>
   groupedData.length > 0 ? groupedData.flatMap((g) => g.data) : sortedData.value,
 );
 
+const route = useRoute();
+
 const toCvs = () => {
   // "\ufeff" = BOM UTF-8 : sans lui Excel ouvre le CSV en Latin-1 et casse les accents
   const csv =
@@ -213,7 +217,7 @@ const toCvs = () => {
   const url = window.URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
   var link = document.createElement("a");
   link.setAttribute("href", url);
-  link.setAttribute("download", "export_gestsis.csv");
+  link.setAttribute("download", exportFileName([route.name ?? "export", toLocalIsoDate()], "csv"));
   document.body.appendChild(link); // Required for FF
   link.click();
   link.remove();

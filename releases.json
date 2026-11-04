@@ -4,6 +4,18 @@
       "date": "03.11.2026",
       "version": "1.0",
       "app": "GestSIS APP",
+      "changes": [
+        "Statistiques de présences aux exercices, ajout du nombre d'amendes et corrections de l'export CSV",
+        "Effectif, numéros de téléphone cliquables",
+        "Connexion, meilleure prise en charge des gestionnaires de mots de passe",
+        "Présences aux exercices, notifications regroupées lors de la saisie",
+        "Noms de fichiers plus parlants pour les téléchargements"
+      ]
+    },
+    {
+      "date": "03.11.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
       "changes": ["Ajout ligne de totaux pour exercices, interventions, ..."]
     },
     {

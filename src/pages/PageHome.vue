@@ -9,6 +9,7 @@ import MesInfosService from "../services/MesInfosService.js";
 import ExcuseTypeService from "../services/ExcuseTypeService.js";
 import ExcuseParamService from "../services/ExcuseParamService.js";
 import ExerciceService from "../services/ExerciceService.js";
+import { exportFileName } from "../tools/index.js";
 
 const authStore = useAuthStore();
 const infosStore = useMesInfosStore();
@@ -214,7 +215,7 @@ const removeExcuse = async (rowData) => {
 const downloadJustificatif = (rowData) => {
   ExerciceService.downloadMonExcuseJustificatif(
     rowData.exercice_id,
-    "justificatif.pdf",
+    exportFileName(["justificatif", rowData.designation, rowData.date], "pdf"),
     rowData.sis_key,
   ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
 };

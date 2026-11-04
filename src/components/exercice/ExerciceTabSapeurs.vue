@@ -13,6 +13,7 @@ import ExerciceService from "../../services/ExerciceService";
 import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
 import { exerciceStatut } from "../../composables/exerciceStatuts.js";
+import { exportFileName } from "../../tools/index.js";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -380,9 +381,14 @@ const downloadJustificatif = (sapeur) => {
   ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
 };
 
+const exerciceFileName = (sujet) =>
+  exportFileName(
+    [sujet, activeExerciceData.value?.designation, activeExerciceData.value?.date],
+    "pdf",
+  );
 const listePresences = () => {
   showModal({ component: "ModalChargement" });
-  ExerciceService.downloadListPresence(id, "liste-presence.pdf")
+  ExerciceService.downloadListPresence(id, exerciceFileName("liste-presence"))
     .catch((err) => {
       awn.alert(
         err?.message ||
@@ -393,7 +399,7 @@ const listePresences = () => {
 };
 const listeAppel = () => {
   showModal({ component: "ModalChargement" });
-  ExerciceService.downloadListAppel(id, "liste-appel.pdf")
+  ExerciceService.downloadListAppel(id, exerciceFileName("liste-appel"))
     .catch((err) => {
       awn.alert(
         err?.message ||

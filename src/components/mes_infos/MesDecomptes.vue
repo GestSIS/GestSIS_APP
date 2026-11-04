@@ -5,6 +5,7 @@ import { useMesInfosStore } from "../../stores/mesinfos/MesInfos.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { computed, ref, watchEffect } from "vue";
 import useNotification from "../../composables/useNotification.js";
+import { exportFileName } from "../../tools/index.js";
 
 const infosStore = useMesInfosStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -35,7 +36,7 @@ const { showModal, closeModal } = useModalStore();
 const awn = useNotification();
 
 const downloadDecompte = (paiement) => {
-  const filename = `${paiement.date}_decompte.pdf`;
+  const filename = exportFileName(["decompte", paiement.date], "pdf");
 
   showModal({ component: "ModalChargement" });
   MesInfosService.printMonDecompte(paiement.decompte_id, filename)
@@ -58,7 +59,7 @@ const resumeAnnuel = () => {
       "Attention, ce résumé n'est pas définitif et peut encore évoluer car l'année comptable n'est pas encore terminée !",
     );
   }
-  const filename = `${exerciceComptable.value?.annee}_resume.pdf`;
+  const filename = exportFileName(["resume-annuel", exerciceComptable.value?.annee], "pdf");
 
   showModal({ component: "ModalChargement" });
 
@@ -82,7 +83,7 @@ const certificatSalaire = () => {
       "Attention, ce certificat de salaire n'est pas définitif et peut encore évoluer car l'année comptable n'est pas encore terminée !",
     );
   }
-  const filename = `${exerciceComptable.value?.annee}_certificat_salaire.pdf`;
+  const filename = exportFileName(["certificat-salaire", exerciceComptable.value?.annee], "pdf");
 
   showModal({ component: "ModalChargement" });
 

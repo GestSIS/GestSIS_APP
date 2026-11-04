@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import { groupedByData, indexedData } from "../../tools/index.js";
+import { exportFileName, groupedByData, indexedData } from "../../tools/index.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
@@ -122,7 +122,7 @@ const awn = useNotification();
 const pdfArticles = () => {
   const nom = indexedSapeurs.value[id]?.nom_prenom ?? id;
   showModal({ component: "ModalChargement" });
-  ArticleService.downloadListeArticles(id, `liste-articles-${nom}.pdf`)
+  ArticleService.downloadListeArticles(id, exportFileName(["liste-articles", nom], "pdf"))
     .then(closeModal)
     .catch((err) => {
       closeModal();

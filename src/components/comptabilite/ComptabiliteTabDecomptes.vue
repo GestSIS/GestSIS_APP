@@ -12,6 +12,7 @@ import DecompteService from "/src/services/DecompteService.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 import permissions from "../../composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
+import { exportFileName } from "../../tools/index.js";
 
 const sapeurStore = useSapeurStore();
 const uniteStore = useUniteStore();
@@ -63,9 +64,15 @@ const supprimer = async (decompteId) => {
   }
 };
 const impressionResumeParSapeur = () => {
+  const annee = exercicesComptables.value.find(
+    (e) => e.id == activeExerciceComptableId.value,
+  )?.annee;
   showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadResumeParSapeur(activeExerciceComptableId.value, `resume_par_sapeur.pdf`)
+  DecompteService.downloadResumeParSapeur(
+    activeExerciceComptableId.value,
+    exportFileName(["resume-par-sapeur", annee], "pdf"),
+  )
     .then(closeModal)
     .catch((err) => {
       closeModal();
@@ -77,7 +84,7 @@ const impressionStandard = (decompteId) => {
 
   showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadDecompte(decompteId, `decompte_${decompte?.date}.pdf`)
+  DecompteService.downloadDecompte(decompteId, exportFileName(["decompte", decompte?.date], "pdf"))
     .then(closeModal)
     .catch((err) => {
       closeModal();
@@ -92,7 +99,10 @@ const impressionParSapeur = (decompteId) => {
 
   showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadDecompteParSapeur(decompteId, `decompte_${decompte?.date}.pdf`)
+  DecompteService.downloadDecompteParSapeur(
+    decompteId,
+    exportFileName(["decompte-par-sapeur", decompte?.date], "pdf"),
+  )
     .then(closeModal)
     .catch((err) => {
       closeModal();
@@ -107,7 +117,10 @@ const impressionParCompte = (decompteId) => {
 
   showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadDecompteParCompte(decompteId, `decompte_${decompte?.date}.pdf`)
+  DecompteService.downloadDecompteParCompte(
+    decompteId,
+    exportFileName(["decompte-par-compte", decompte?.date], "pdf"),
+  )
     .then(closeModal)
     .catch((err) => {
       closeModal();
@@ -122,7 +135,10 @@ const iso20022Decompte = (decompteId) => {
 
   showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadIso20022PourDecompte(decompteId, `decompte_${decompte?.date}.xml`)
+  DecompteService.downloadIso20022PourDecompte(
+    decompteId,
+    exportFileName(["decompte-iso20022", decompte?.date], "xml"),
+  )
     .then(closeModal)
     .catch((err) => {
       closeModal();
@@ -137,7 +153,10 @@ const excelAFacturer = (decompteId) => {
 
   showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadExcelAFacturer(decompteId, `decompte_${decompte?.date}_a_facturer.xlsx`)
+  DecompteService.downloadExcelAFacturer(
+    decompteId,
+    exportFileName(["decompte-a-facturer", decompte?.date], "xlsx"),
+  )
     .then(closeModal)
     .catch((err) => {
       closeModal();
@@ -152,7 +171,10 @@ const exportEcritures = (decompteId) => {
 
   showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadExcelEcritures(decompteId, `decompte_${decompte?.date}_ecritures.xlsx`)
+  DecompteService.downloadExcelEcritures(
+    decompteId,
+    exportFileName(["decompte-ecritures", decompte?.date], "xlsx"),
+  )
     .then(closeModal)
     .catch((err) => {
       closeModal();
@@ -175,7 +197,7 @@ const certificatsDeSalaire = () => {
 
   DecompteService.downloadCertificatSalaires(
     activeExerciceComptableId.value,
-    `certificats_salaire_${annee}.pdf`,
+    exportFileName(["certificats-salaire", annee], "pdf"),
   )
     .then(closeModal)
     .catch((err) => {

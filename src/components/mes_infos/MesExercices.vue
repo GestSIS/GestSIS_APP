@@ -12,6 +12,7 @@ import { useExcuseParamStore } from "../../stores/exercice/ExcuseParam.js";
 import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
 import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
+import { exportFileName } from "../../tools/index.js";
 
 const authStore = useAuthStore();
 const uniteStore = useUniteStore();
@@ -94,9 +95,10 @@ const removeExcuse = async (exercice) => {
 };
 
 const downloadJustificatif = (exercice) => {
-  ExerciceService.downloadMonExcuseJustificatif(exercice.exercice_id, "justificatif.pdf").catch(
-    (err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"),
-  );
+  ExerciceService.downloadMonExcuseJustificatif(
+    exercice.exercice_id,
+    exportFileName(["justificatif", exercice.designation, exercice.date], "pdf"),
+  ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
 };
 const onRowClass = (dataItem) => (dataItem.statut == 0 ? "table-danger" : "");
 

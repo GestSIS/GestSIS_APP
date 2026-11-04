@@ -10,6 +10,7 @@ import ExerciceService from "../../services/ExerciceService";
 import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
 import { useExerciceStore } from "../../stores/exercice/Exercice.js";
+import { exportFileName } from "../../tools/index.js";
 
 const localiteStore = useLocaliteStore();
 const sapeurStore = useSapeurStore();
@@ -156,11 +157,11 @@ const removeExcuse = async (sapeur) => {
     callback,
   });
 };
-const downloadJustificatif = (sapeur) => {
+const downloadJustificatif = (presence) => {
   ExerciceService.downloadExcuseJustificatif(
-    sapeur.exercice_id,
-    sapeur.sapeur_id,
-    "justificatif.pdf",
+    presence.exercice_id,
+    presence.sapeur_id,
+    exportFileName(["justificatif", sapeur.value?.nom_prenom, presence.date], "pdf"),
   ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
 };
 const close = async () => {

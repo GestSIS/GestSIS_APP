@@ -13,6 +13,7 @@ import { useRoute, useRouter } from "vue-router";
 import useHasPermission from "../composables/usePermission.js";
 import { computed, onMounted, ref, useTemplateRef, watch, watchEffect } from "vue";
 import useNotification from "../composables/useNotification.js";
+import { exportFileName } from "../tools/index.js";
 
 const TYPE_SAPEUR = 0;
 const TYPE_CIVIL = 1;
@@ -166,7 +167,11 @@ const awn = useNotification();
 
 const ficheSapeur = () => {
   showModal({ component: "ModalChargement" });
-  SapeurService.downloadFicheSapeur(activeSapeurId.value, "fiche-sapeur.pdf").then(closeModal);
+  const sapeur = sapeurs.value.find((s) => s.id == activeSapeurId.value);
+  SapeurService.downloadFicheSapeur(
+    activeSapeurId.value,
+    exportFileName(["fiche-sapeur", sapeur?.nom_prenom], "pdf"),
+  ).then(closeModal);
 };
 const lienInscription = () => showModal({ component: "ModalRecrutementToken" });
 const validerRecrue = () =>

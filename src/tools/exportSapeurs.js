@@ -1,3 +1,5 @@
+import { exportFileName, toLocalIsoDate } from "./index.js";
+
 export const downloadVcard = (sapeurs, localites, orgName, sisKey) => {
   if (sapeurs.length <= 0) {
     throw new Error("Aucun sapeur à exporter");
@@ -83,7 +85,7 @@ export const downloadVcard = (sapeurs, localites, orgName, sisKey) => {
           .normalize("NFD")
           .replace(/\p{Diacritic}/gu, "")
           .toLowerCase() + ".vcf"
-      : "sis_vcard.vcf";
+      : exportFileName(["contacts", sisKey, toLocalIsoDate()], "vcf");
 
   document.body.appendChild(a);
 

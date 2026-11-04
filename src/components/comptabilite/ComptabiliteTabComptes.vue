@@ -8,6 +8,7 @@ import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import CompteService from "/src/services/CompteService.js";
+import { exportFileName, toLocalIsoDate } from "../../tools/index.js";
 
 const sapeurStore = useSapeurStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -60,13 +61,9 @@ const formatCompte = (compte) => {
   if (!compte) return "";
   return compte?.numero + " - " + compte?.designation;
 };
-const formatedDate = () => {
-  var today = new Date();
-  return new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().split("T")[0];
-};
 const justificatifIndividuel = (compteId) => {
   const compte = comptes.value.find((f) => f.id == activeCompteId.value);
-  const filename = `${formatedDate()}_justificatif-compte-${compte?.numero}.pdf`;
+  const filename = exportFileName(["justificatif-compte", compte?.numero, toLocalIsoDate()], "pdf");
 
   showModal({ component: "ModalChargement" });
 
@@ -78,7 +75,7 @@ const justificatifIndividuel = (compteId) => {
     });
 };
 const justificatifComplet = () => {
-  const filename = `${formatedDate()}_justificatif-complet.pdf`;
+  const filename = exportFileName(["justificatif-comptes-complet", toLocalIsoDate()], "pdf");
   showModal({ component: "ModalChargement" });
 
   CompteService.downloadJustificatifComplet(filename, activeExerciceComptableId.value)

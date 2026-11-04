@@ -5,6 +5,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import useHasPermission from "../../composables/usePermission.js";
 import permissions from "../../composables/permissions.js";
 import useNotification from "../../composables/useNotification.js";
+import { exportFileName } from "../../tools/index.js";
 
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
@@ -69,7 +70,7 @@ const pdfArticles = (sapeur) => {
   showModal({ component: "ModalChargement" });
   ArticleService.downloadListeArticles(
     sapeur.sapeur_id,
-    `liste-articles-${sapeur.nom} ${sapeur.prenom}.pdf`,
+    exportFileName(["liste-articles", `${sapeur.nom} ${sapeur.prenom}`], "pdf"),
   )
     .then(closeModal)
     .catch((err) => {
