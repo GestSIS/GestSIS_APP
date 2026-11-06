@@ -135,17 +135,24 @@ const typeFilterOptions = computed(() => [
   {
     value: "sapeur",
     label: "Sapeurs",
-    badge: sapeurs.value.filter(typeFilters.value.sapeur).length,
   },
-  { value: "civil", label: "Civils", badge: sapeurs.value.filter(typeFilters.value.civil).length },
+  {
+    value: "civil",
+    label: "Civils",
+  },
   { value: "recrue", label: "Recrues", badge: nbRecrues.value },
 ]);
 
-const actifFilterOptions = [
-  { value: "actif", label: "Actif" },
-  { value: "inactif", label: "Inactif" },
+const sapeursDuType = computed(() => sapeurs.value.filter(typeFilters.value[typeFilter.value]));
+const actifFilterOptions = computed(() => [
+  { value: "actif", label: "Actif", badge: sapeursDuType.value.filter(filters.value.actif).length },
+  {
+    value: "inactif",
+    label: "Inactif",
+    badge: sapeursDuType.value.filter(filters.value.inactif).length,
+  },
   { value: "all", label: "Tous" },
-];
+]);
 
 const filteredSapeurs = computed(() => {
   const statutPredicate =
