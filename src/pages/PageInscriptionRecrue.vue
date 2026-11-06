@@ -3,6 +3,7 @@ import { onMounted, reactive, ref, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 import RecrutementService from "/src/services/RecrutementService.js";
 import Api from "/src/http/Request";
+import { formatAvs } from "../composables/useAvsFormatter.js";
 import { useModalStore } from "../stores/common/Modal.js";
 
 const { confirm } = useModalStore();
@@ -338,6 +339,7 @@ const soumettre = async () => {
               <input
                 id="r-avs"
                 v-model="form.no_avs"
+                @blur="form.no_avs = formatAvs(form.no_avs)"
                 required
                 maxlength="255"
                 type="text"
