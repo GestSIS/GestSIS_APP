@@ -6,6 +6,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
 import useNotification from "../../composables/useNotification.js";
+import { formatPhoneNumber } from "../../composables/usePhoneFormatter.js";
 
 const baseDataStore = useBaseDataStore();
 const sapeurStore = useSapeurStore();
@@ -164,6 +165,7 @@ const fields = computed(() => [
         <template #numero="{ rowData }">
           <input
             v-model="rowData.numero"
+            @blur="rowData.numero = formatPhoneNumber(rowData.numero)"
             class="form-control form-control-sm"
             type="text"
             :readonly="!hasEditPermission"

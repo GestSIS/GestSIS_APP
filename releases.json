@@ -1,6 +1,16 @@
 {
   "releases": [
     {
+      "date": "06.11.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Amélioration des messages d'erreur du formulaire d'inscription des recrues",
+        "Validation des numéros IBAN",
+        "Formatage automatique des numéros AVS et de téléphone"
+      ]
+    },
+    {
       "date": "04.11.2026",
       "version": "1.0",
       "app": "GestSIS APP",

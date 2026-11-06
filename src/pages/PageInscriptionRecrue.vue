@@ -4,6 +4,7 @@ import { useRoute } from "vue-router";
 import RecrutementService from "/src/services/RecrutementService.js";
 import Api from "/src/http/Request";
 import { formatAvs } from "../composables/useAvsFormatter.js";
+import { formatPhoneNumber } from "../composables/usePhoneFormatter.js";
 import { useModalStore } from "../stores/common/Modal.js";
 
 const { confirm } = useModalStore();
@@ -431,6 +432,7 @@ const soumettre = async () => {
                     <td>
                       <input
                         v-model="telephone.numero"
+                        @blur="telephone.numero = formatPhoneNumber(telephone.numero)"
                         required
                         type="text"
                         class="form-control form-control-sm"
