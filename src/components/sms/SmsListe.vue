@@ -56,7 +56,13 @@ const fields = computed(() => [
 </script>
 
 <template>
-  <base-table :loading="loading" :fields="fields" no-data="Aucun sms" :data="sms">
+  <base-table
+    :loading="loading"
+    :selectable="true"
+    :fields="fields"
+    no-data="Aucun sms"
+    :data="sms"
+  >
     <template #exercice="{ rowData }">
       <router-link
         v-if="rowData.exercice_id"
