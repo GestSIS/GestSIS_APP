@@ -132,10 +132,15 @@ const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 const isRecrue = computed(() => activeSapeur.value?.type === TYPE_RECRUE);
 const nbRecrues = computed(() => sapeurs.value.filter(typeFilters.value.recrue).length);
 const typeFilterOptions = computed(() => [
-  { value: "sapeur", label: "Sapeurs" },
-  { value: "civil", label: "Civils" },
-  { value: "recrue", label: `Recrues (${nbRecrues.value})` },
+  {
+    value: "sapeur",
+    label: "Sapeurs",
+    badge: sapeurs.value.filter(typeFilters.value.sapeur).length,
+  },
+  { value: "civil", label: "Civils", badge: sapeurs.value.filter(typeFilters.value.civil).length },
+  { value: "recrue", label: "Recrues", badge: nbRecrues.value },
 ]);
+
 const actifFilterOptions = [
   { value: "actif", label: "Actif" },
   { value: "inactif", label: "Inactif" },

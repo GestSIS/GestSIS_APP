@@ -60,9 +60,10 @@ const splittedLabel = (label) => (label ?? "").split("\n");
         :value="option.value"
         :disabled="option.disabled"
       />
-      <label v-if="!advancedLabel" class="form-check-label" :for="optionId(option.value)">{{
-        option.label
-      }}</label>
+      <label v-if="!advancedLabel" class="form-check-label" :for="optionId(option.value)">
+        {{ option.label }}
+        <span class="badge pill-rounded bg-danger" v-if="option.badge">{{ option.badge }}</span>
+      </label>
       <label v-else class="form-check-label" :for="optionId(option.value)">
         <template v-for="(l, i) in splittedLabel(option.label)" :key="i">
           {{ l }}<br v-if="i != splittedLabel(option.label).length - 1" />
@@ -92,8 +93,10 @@ const splittedLabel = (label) => (label ?? "").split("\n");
         class="btn"
         :class="`btn-outline-${option.color || 'primary'}`"
         :for="optionId(option.value)"
-        >{{ option.label }}</label
       >
+        {{ option.label }}
+        <span class="badge pill-rounded bg-danger" v-if="option.badge">{{ option.badge }}</span>
+      </label>
     </template>
   </div>
 </template>
