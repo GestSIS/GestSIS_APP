@@ -5,8 +5,8 @@ export default {
   getToken() {
     return Api.api().get("/recrutement/token");
   },
-  genererToken(dureeHeures) {
-    return Api.api().post("/recrutement/token", { duree_heures: dureeHeures });
+  genererToken(expireAt) {
+    return Api.api().post("/recrutement/token", { expire_at: expireAt });
   },
   invaliderToken() {
     return Api.api().delete("/recrutement/token");

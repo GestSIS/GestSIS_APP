@@ -15,7 +15,22 @@ const awn = useNotification();
 const sisKey = computed(() => authStore.organisation.activeKey);
 
 const chargement = ref(true);
-const dureeHeures = ref(24);
+const DUREE_MAX_JOURS = 7;
+
+// Format attendu par <input type="datetime-local"> (heure locale, sans fuseau)
+const versDatetimeLocal = (date) => {
+  const pad = (n) => String(n).padStart(2, "0");
+  return (
+    `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
+    `T${pad(date.getHours())}:${pad(date.getMinutes())}`
+  );
+};
+
+const dansHeures = (heures) => new Date(Date.now() + heures * 3600 * 1000);
+
+const finValidite = ref(versDatetimeLocal(dansHeures(24)));
+const finValiditeMin = versDatetimeLocal(new Date());
+const finValiditeMax = versDatetimeLocal(dansHeures(DUREE_MAX_JOURS * 24));
 const errors = ref({});
 const lien = ref("");
 const qrCodeDataUrl = ref("");
@@ -49,7 +64,7 @@ onMounted(async () => {
 const generer = async () => {
   errors.value = {};
   try {
-    const data = await RecrutementService.genererToken(dureeHeures.value);
+    const data = await RecrutementService.genererToken(new Date(finValidite.value).toISOString());
     await afficherToken(data.token, data.expire_at);
   } catch (err) {
     errors.value = err.errors ?? {};
@@ -88,15 +103,16 @@ const copyToClipboard = (value) => {
           peut être ré-affiché — générez-en un nouveau si besoin.
         </div>
         <div v-if="!lien" class="mb-3">
-          <label for="duree-heures">Durée de validité (heures, max 24)</label>
+          <label for="fin-validite">Valide jusqu'au (max {{ DUREE_MAX_JOURS }} jours)</label>
           <input
-            id="duree-heures"
-            v-model.number="dureeHeures"
-            type="number"
-            min="1"
-            max="24"
+            id="fin-validite"
+            v-model="finValidite"
+            type="datetime-local"
+            :min="finValiditeMin"
+            :max="finValiditeMax"
+            required
             class="form-control form-control-sm"
-            :class="{ 'is-invalid': errors['duree_heures'] }"
+            :class="{ 'is-invalid': errors['expire_at'] }"
           />
         </div>
         <div v-if="lien" class="text-center mb-3">

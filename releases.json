@@ -7,7 +7,8 @@
       "changes": [
         "Amélioration des messages d'erreur du formulaire d'inscription des recrues",
         "Validation des numéros IBAN",
-        "Formatage automatique des numéros AVS et de téléphone"
+        "Formatage automatique des numéros AVS et de téléphone",
+        "Durée de validité du formulaire de recrutement augmenté à 7 jours"
       ]
     },
     {
