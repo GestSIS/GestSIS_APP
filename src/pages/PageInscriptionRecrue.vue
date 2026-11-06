@@ -20,8 +20,23 @@ const valide = ref(false);
 const envoye = ref(false);
 const submitting = ref(false);
 const errors = ref({});
+const erreurGenerale = ref(null);
 const step = ref(1);
 const formRef = useTemplateRef("form");
+// Date locale au format AAAA-MM-JJ (toISOString() serait en UTC, décalé d'un jour autour de minuit)
+const aujourdhui = new Date().toLocaleDateString("sv-SE");
+
+// Champs affichés à l'étape 1 : si l'API en refuse un, il faut y revenir pour que l'erreur soit visible.
+const CHAMPS_ETAPE_1 = [
+  "civilite_id",
+  "nom",
+  "prenom",
+  "date_naissance",
+  "localite_id",
+  "rue",
+  "no_rue",
+  "email",
+];
 
 const civilites = ref([]);
 const localites = ref([]);
@@ -114,15 +129,37 @@ const soumettre = async () => {
   ) {
     submitting.value = true;
     try {
-      await RecrutementService.soumettreFormulaire(sisKey, token, {
-        ...form,
-        telephones: form.telephones.filter((t) => t.numero && t.telephone_type_id),
-        permis: form.permis.filter((p) => p.permis_type_id && p.date),
-      });
+      // Lignes envoyées telles quelles (toutes requises) : les erreurs `telephones.N.*` / `permis.N.*`
+      // renvoyées par l'API doivent pointer sur la ligne affichée à l'index N.
+      await RecrutementService.soumettreFormulaire(sisKey, token, form);
       errors.value = {};
+      erreurGenerale.value = null;
       envoye.value = true;
     } catch (err) {
-      errors.value = err.errors ?? {};
+      // Les erreurs Laravel sont des tableaux de messages, celles levées côté métier de simples
+      // chaînes : on ne garde que le premier message pour l'afficher sous le champ.
+      errors.value = Object.fromEntries(
+        Object.entries(err?.errors ?? {}).map(([champ, message]) => [
+          champ,
+          Array.isArray(message) ? message[0] : message,
+        ]),
+      );
+      const champsEnErreur = Object.keys(errors.value);
+      if (champsEnErreur.length > 0) {
+        // Un champ obligatoire manquant revient sans message : il est seulement mis en rouge.
+        erreurGenerale.value = Object.values(errors.value).every((message) => !message)
+          ? "Merci de compléter les champs obligatoires indiqués en rouge."
+          : "Certaines informations sont invalides, merci de vérifier les champs indiqués en rouge.";
+        if (champsEnErreur.some((champ) => CHAMPS_ETAPE_1.includes(champ))) {
+          step.value = 1;
+        }
+      } else if (err?.response?.status === 404 || err?.message === "Page introuvable") {
+        erreurGenerale.value =
+          "Ce lien d'inscription n'est plus valide. Merci de contacter votre SIS pour en obtenir un nouveau.";
+      } else {
+        erreurGenerale.value =
+          "L'envoi de votre inscription a échoué. Merci de réessayer dans quelques instants.";
+      }
     } finally {
       submitting.value = false;
     }
@@ -159,15 +196,23 @@ const soumettre = async () => {
         <form v-else ref="form" @submit.prevent="soumettre">
           <h4 class="mb-3">Inscription recrue — Étape {{ step }}/2</h4>
 
+          <div v-if="erreurGenerale" class="alert alert-danger py-2" role="alert">
+            {{ erreurGenerale }}
+          </div>
+
           <div v-if="step === 1">
-            <base-select
-              v-model="form.civilite_id"
-              :required="true"
-              class="mb-3"
-              :class="{ 'is-invalid': errors['civilite_id'] }"
-              label="Civilité"
-              :options="civilites"
-            />
+            <div class="mb-3">
+              <base-select
+                v-model="form.civilite_id"
+                :required="true"
+                :select-class="{ 'is-invalid': 'civilite_id' in errors }"
+                label="Civilité"
+                :options="civilites"
+              />
+              <div v-if="errors['civilite_id']" class="invalid-feedback d-block">
+                {{ errors["civilite_id"] }}
+              </div>
+            </div>
 
             <div class="mb-3 row">
               <div class="col-6">
@@ -176,10 +221,15 @@ const soumettre = async () => {
                   id="r-nom"
                   v-model="form.nom"
                   required
+                  minlength="2"
+                  maxlength="255"
                   type="text"
                   class="form-control form-control-sm"
-                  :class="{ 'is-invalid': errors['nom'] }"
+                  :class="{ 'is-invalid': 'nom' in errors }"
                 />
+                <div v-if="errors['nom']" class="invalid-feedback d-block">
+                  {{ errors["nom"] }}
+                </div>
               </div>
               <div class="col-6">
                 <label for="r-prenom">Prénom</label>
@@ -187,10 +237,15 @@ const soumettre = async () => {
                   id="r-prenom"
                   v-model="form.prenom"
                   required
+                  minlength="2"
+                  maxlength="255"
                   type="text"
                   class="form-control form-control-sm"
-                  :class="{ 'is-invalid': errors['prenom'] }"
+                  :class="{ 'is-invalid': 'prenom' in errors }"
                 />
+                <div v-if="errors['prenom']" class="invalid-feedback d-block">
+                  {{ errors["prenom"] }}
+                </div>
               </div>
             </div>
 
@@ -200,31 +255,44 @@ const soumettre = async () => {
                 id="r-date-naissance"
                 v-model="form.date_naissance"
                 required
+                :max="aujourdhui"
                 type="date"
                 class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['date_naissance'] }"
+                :class="{ 'is-invalid': 'date_naissance' in errors }"
               />
+              <div v-if="errors['date_naissance']" class="invalid-feedback d-block">
+                {{ errors["date_naissance"] }}
+              </div>
             </div>
 
             <div class="mb-3 row">
-              <base-select
-                v-model="form.localite_id"
-                :required="true"
-                class="col-4"
-                :class="{ 'is-invalid': errors['localite_id'] }"
-                label="Localité"
-                :options="localites"
-              />
+              <div class="col-4">
+                <base-select
+                  v-model="form.localite_id"
+                  :required="true"
+                  :select-class="{ 'is-invalid': 'localite_id' in errors }"
+                  label="Localité"
+                  :options="localites"
+                />
+                <div v-if="errors['localite_id']" class="invalid-feedback d-block">
+                  {{ errors["localite_id"] }}
+                </div>
+              </div>
               <div class="col-6">
                 <label for="r-rue">Rue</label>
                 <input
                   id="r-rue"
                   v-model="form.rue"
                   required
+                  minlength="3"
+                  maxlength="255"
                   type="text"
                   class="form-control form-control-sm"
-                  :class="{ 'is-invalid': errors['rue'] }"
+                  :class="{ 'is-invalid': 'rue' in errors }"
                 />
+                <div v-if="errors['rue']" class="invalid-feedback d-block">
+                  {{ errors["rue"] }}
+                </div>
               </div>
               <div class="col-2">
                 <label for="r-no-rue">N°</label>
@@ -232,10 +300,14 @@ const soumettre = async () => {
                   id="r-no-rue"
                   v-model="form.no_rue"
                   required
+                  maxlength="255"
                   type="text"
                   class="form-control form-control-sm"
-                  :class="{ 'is-invalid': errors['no_rue'] }"
+                  :class="{ 'is-invalid': 'no_rue' in errors }"
                 />
+                <div v-if="errors['no_rue']" class="invalid-feedback d-block">
+                  {{ errors["no_rue"] }}
+                </div>
               </div>
             </div>
 
@@ -245,10 +317,14 @@ const soumettre = async () => {
                 id="r-email"
                 v-model="form.email"
                 required
+                maxlength="255"
                 type="email"
                 class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['email'] }"
+                :class="{ 'is-invalid': 'email' in errors }"
               />
+              <div v-if="errors['email']" class="invalid-feedback d-block">
+                {{ errors["email"] }}
+              </div>
             </div>
 
             <button type="button" class="btn btn-primary w-100 mt-3" @click="etapeSuivante">
@@ -263,10 +339,11 @@ const soumettre = async () => {
                 id="r-avs"
                 v-model="form.no_avs"
                 required
+                maxlength="255"
                 type="text"
                 placeholder="756.XXXX.XXXX.XX"
                 class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['no_avs'] }"
+                :class="{ 'is-invalid': 'no_avs' in errors }"
               />
               <div v-if="errors['no_avs']" class="invalid-feedback d-block">
                 {{ errors["no_avs"] }}
@@ -280,10 +357,14 @@ const soumettre = async () => {
                   id="r-profession"
                   v-model="form.profession"
                   required
+                  maxlength="80"
                   type="text"
                   class="form-control form-control-sm"
-                  :class="{ 'is-invalid': errors['profession'] }"
+                  :class="{ 'is-invalid': 'profession' in errors }"
                 />
+                <div v-if="errors['profession']" class="invalid-feedback d-block">
+                  {{ errors["profession"] }}
+                </div>
               </div>
               <div class="col-4">
                 <label for="r-employeur">Employeur</label>
@@ -291,10 +372,14 @@ const soumettre = async () => {
                   id="r-employeur"
                   v-model="form.employeur"
                   required
+                  maxlength="150"
                   type="text"
                   class="form-control form-control-sm"
-                  :class="{ 'is-invalid': errors['employeur'] }"
+                  :class="{ 'is-invalid': 'employeur' in errors }"
                 />
+                <div v-if="errors['employeur']" class="invalid-feedback d-block">
+                  {{ errors["employeur"] }}
+                </div>
               </div>
               <div class="col-4">
                 <label for="r-lieu-travail">Lieu de travail</label>
@@ -302,10 +387,14 @@ const soumettre = async () => {
                   id="r-lieu-travail"
                   v-model="form.lieu_de_travail"
                   required
+                  maxlength="100"
                   type="text"
                   class="form-control form-control-sm"
-                  :class="{ 'is-invalid': errors['lieu_de_travail'] }"
+                  :class="{ 'is-invalid': 'lieu_de_travail' in errors }"
                 />
+                <div v-if="errors['lieu_de_travail']" class="invalid-feedback d-block">
+                  {{ errors["lieu_de_travail"] }}
+                </div>
               </div>
             </div>
 
@@ -315,10 +404,14 @@ const soumettre = async () => {
                 id="r-iban"
                 v-model="form.iban"
                 required
+                maxlength="100"
                 type="text"
                 class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['iban'] }"
+                :class="{ 'is-invalid': 'iban' in errors }"
               />
+              <div v-if="errors['iban']" class="invalid-feedback d-block">
+                {{ errors["iban"] }}
+              </div>
             </div>
 
             <div class="mb-3">
@@ -339,20 +432,35 @@ const soumettre = async () => {
                         required
                         type="text"
                         class="form-control form-control-sm"
+                        maxlength="255"
                         placeholder="+41 ..."
+                        :class="{ 'is-invalid': `telephones.${index}.numero` in errors }"
                       />
+                      <div
+                        v-if="errors[`telephones.${index}.numero`]"
+                        class="invalid-feedback d-block"
+                      >
+                        {{ errors[`telephones.${index}.numero`] }}
+                      </div>
                     </td>
                     <td>
                       <select
                         v-model="telephone.telephone_type_id"
                         required
                         class="form-select form-select-sm"
+                        :class="{ 'is-invalid': `telephones.${index}.telephone_type_id` in errors }"
                       >
                         <option :value="null" disabled>Choisir…</option>
                         <option v-for="type in telephoneTypes" :key="type.id" :value="type.id">
                           {{ type.type }}
                         </option>
                       </select>
+                      <div
+                        v-if="errors[`telephones.${index}.telephone_type_id`]"
+                        class="invalid-feedback d-block"
+                      >
+                        {{ errors[`telephones.${index}.telephone_type_id`] }}
+                      </div>
                     </td>
                     <td v-if="form.telephones.length > 1" class="align-middle text-center">
                       <button
@@ -366,6 +474,9 @@ const soumettre = async () => {
                   </tr>
                 </tbody>
               </table>
+              <div v-if="errors['telephones']" class="invalid-feedback d-block mb-2">
+                {{ errors["telephones"] }}
+              </div>
               <button
                 v-if="form.telephones.length < 3"
                 type="button"
@@ -393,6 +504,7 @@ const soumettre = async () => {
                         v-model="permis.permis_type_id"
                         required
                         class="form-select form-select-sm"
+                        :class="{ 'is-invalid': `permis.${index}.permis_type_id` in errors }"
                       >
                         <option :value="null" disabled>Choisir…</option>
                         <option
@@ -403,14 +515,25 @@ const soumettre = async () => {
                           {{ type.type }}
                         </option>
                       </select>
+                      <div
+                        v-if="errors[`permis.${index}.permis_type_id`]"
+                        class="invalid-feedback d-block"
+                      >
+                        {{ errors[`permis.${index}.permis_type_id`] }}
+                      </div>
                     </td>
                     <td>
                       <input
                         v-model="permis.date"
                         required
+                        :max="aujourdhui"
                         type="date"
                         class="form-control form-control-sm"
+                        :class="{ 'is-invalid': `permis.${index}.date` in errors }"
                       />
+                      <div v-if="errors[`permis.${index}.date`]" class="invalid-feedback d-block">
+                        {{ errors[`permis.${index}.date`] }}
+                      </div>
                     </td>
                     <td class="align-middle text-center">
                       <button
