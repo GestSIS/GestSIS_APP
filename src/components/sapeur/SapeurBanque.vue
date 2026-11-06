@@ -1,5 +1,5 @@
 <script setup>
-import { computed, watchEffect } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import permissions from "/src/composables/permissions.js";
@@ -10,6 +10,7 @@ const awn = useNotification();
 
 const activeSapeur = computed(() => sapeurStore.active.data);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
+const errors = ref({});
 
 watchEffect(() => sapeurStore.fetchSapeur(sapeurStore.active.id));
 
@@ -18,8 +19,14 @@ const save = async () => {
     .saveActiveSapeur({
       iban: activeSapeur.value.iban,
     })
-    .then(() => awn.success("Modification enregistrée"))
-    .catch((err) => awn.alert(err?.message ?? "Erreur lors la sauvegarde"));
+    .then(() => {
+      errors.value = {};
+      awn.success("Modification enregistrée");
+    })
+    .catch((err) => {
+      errors.value = err?.errors ?? {};
+      awn.alert(err?.message || "Erreur lors la sauvegarde");
+    });
 };
 </script>
 
@@ -41,9 +48,13 @@ const save = async () => {
               v-model="activeSapeur.iban"
               type="text"
               class="form-control form-control-sm"
+              :class="{ 'is-invalid': errors['iban'] }"
               name="nom"
               :readonly="!hasEditPermission"
             />
+            <div v-if="errors['iban']" class="invalid-feedback d-block">
+              {{ errors["iban"] }}
+            </div>
           </div>
         </div>
       </div>
