@@ -118,8 +118,36 @@ const permisTypesDisponibles = (index) => {
   return permisTypes.value.filter((type) => !dejaChoisis.has(type.id));
 };
 
+// N° AVS et IBAN sont facultatifs (une recrue peut ne pas les avoir sous la main), mais le SIS en a
+// besoin : s'ils sont vides, on invite la recrue à les saisir avant de la laisser envoyer sans.
+// Résout `false` si elle choisit de compléter (le curseur est alors placé sur le premier champ vide).
+const confirmerChampsFacultatifsVides = async () => {
+  const manquants = [
+    { id: "r-avs", vide: !form.no_avs.trim(), libelle: "votre n° AVS" },
+    { id: "r-iban", vide: !form.iban.trim(), libelle: "votre IBAN" },
+  ].filter((champ) => champ.vide);
+  if (manquants.length === 0) {
+    return true;
+  }
+
+  const libelles = manquants.map((champ) => champ.libelle).join(" et ");
+  const continuer = await confirm(
+    "Informations manquantes",
+    `Vous n'avez pas saisi ${libelles}. Ces informations sont nécessaires au SIS pour le versement de votre solde et le décompte AVS : merci de les saisir si vous les avez. Si vous ne les avez pas sous la main, vous pouvez envoyer votre inscription sans.`,
+    { annuler: "Compléter", confirmer: "Je n'ai pas ces informations" },
+  );
+  if (!continuer) {
+    document.getElementById(manquants[0].id)?.focus();
+  }
+  return continuer;
+};
+
 const soumettre = async () => {
   if (submitting.value) {
+    return;
+  }
+
+  if (!(await confirmerChampsFacultatifsVides())) {
     return;
   }
 
@@ -341,7 +369,6 @@ const soumettre = async () => {
                 id="r-avs"
                 v-model="form.no_avs"
                 @blur="form.no_avs = formatAvs(form.no_avs)"
-                required
                 maxlength="255"
                 type="text"
                 placeholder="756.XXXX.XXXX.XX"
@@ -406,7 +433,6 @@ const soumettre = async () => {
               <input
                 id="r-iban"
                 v-model="form.iban"
-                required
                 maxlength="100"
                 type="text"
                 class="form-control form-control-sm"

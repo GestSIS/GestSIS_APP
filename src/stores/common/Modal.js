@@ -31,15 +31,24 @@ export const useModalStore = defineStore("Modal", {
     },
     // Résout `true` si l'utilisateur confirme, `false` s'il annule (ou ferme la fenêtre).
     // Ne rejette jamais : usage `if (await confirm(...)) { ... }`
-    confirm(title, question) {
+    // `boutons` (optionnel) : libellés { confirmer, annuler } à la place de « Confirmer » / « Annuler ».
+    confirm(title, question, boutons = {}) {
       return new Promise((resolve) =>
         this.showModal({
           component: "ModalConfirmation",
           data: {
             title: title,
             question: question,
+            confirmer: boutons.confirmer,
+            annuler: boutons.annuler,
           },
-          callback: (confirmed) => resolve(!!confirmed),
+          // Fermée avant de résoudre (et `false` pour que la modale ne se referme pas ensuite) :
+          // l'appelant peut ainsi enchaîner sur un autre confirm() sans qu'il soit fermé aussitôt.
+          callback: (confirmed) => {
+            this.closeModal();
+            resolve(!!confirmed);
+            return false;
+          },
         }),
       );
     },

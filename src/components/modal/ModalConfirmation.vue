@@ -33,9 +33,11 @@ const submit = async (confirm) => {
     </div>
     <div class="modal-footer">
       <button autofocus type="button" class="btn btn-secondary" @click="submit(false)">
-        Annuler
+        {{ data.annuler ?? "Annuler" }}
       </button>
-      <button type="button" class="btn btn-primary" @click="submit(true)">Confirmer</button>
+      <button type="button" class="btn btn-primary" @click="submit(true)">
+        {{ data.confirmer ?? "Confirmer" }}
+      </button>
     </div>
   </div>
 </template>
