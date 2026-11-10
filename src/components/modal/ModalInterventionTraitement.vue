@@ -1,7 +1,8 @@
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive } from "vue";
 import { useInterventionTraitementStore } from "../../stores/intervention/InterventionTraitement.js";
 import { useModalStore } from "../../stores/common/Modal.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -10,7 +11,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   ...data,
 });
@@ -19,15 +20,15 @@ const traitementStore = useInterventionTraitementStore();
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  try {
+  const { ok } = await submit(async () => {
     if (form.id) {
       await traitementStore.updateTraitement(form);
     } else {
       await traitementStore.addTraitement(form);
     }
+  });
+  if (ok) {
     closeModal();
-  } catch (err) {
-    errors.value = err.errors ?? {};
   }
 };
 </script>
@@ -62,7 +63,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

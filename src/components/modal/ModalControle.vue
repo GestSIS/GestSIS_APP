@@ -3,8 +3,8 @@ import { ref, reactive, watch, computed, nextTick, useTemplateRef } from "vue";
 import { useControleStore } from "../../stores/materiel/Controle.js";
 import { useMaterielTypeStore } from "../../stores/materiel/Type.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useNotification from "../../composables/useNotification.js";
 import TableTypesMateriel from "../materiel/TableTypesMateriel.vue";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: { type: Object, default: () => {} },
@@ -15,10 +15,8 @@ await materielTypeStore.fetchMaterielTypes();
 
 const store = useControleStore();
 const { closeModal } = useModalStore();
-const awn = useNotification();
 
-const errors = ref({});
-const saving = ref(false);
+const { errors, isSubmitting, submit } = useSubmit();
 
 const form = reactive({
   id: data?.id ?? null,
@@ -131,9 +129,6 @@ const materielTypeIds = ref(data?.materiel_types?.map((mt) => mt.materiel_type_i
 
 // --- Save ---
 const save = async () => {
-  errors.value = {};
-  saving.value = true;
-
   const payload = {
     nom: form.nom,
     description: form.description || null,
@@ -174,18 +169,13 @@ const save = async () => {
     materiel_type_ids: materielTypeIds.value,
   };
 
-  try {
-    if (form.id) {
-      await store.updateControle({ id: form.id, ...payload });
-    } else {
-      await store.addControle(payload);
-    }
+  const { ok } = await submit(
+    () =>
+      form.id ? store.updateControle({ id: form.id, ...payload }) : store.addControle(payload),
+    "Erreur lors de l'enregistrement du contrôle",
+  );
+  if (ok) {
     closeModal();
-  } catch (err) {
-    errors.value = err.errors ?? {};
-    awn.alert(err?.message ?? "Erreur lors de l'enregistrement du contrôle");
-  } finally {
-    saving.value = false;
   }
 };
 </script>
@@ -560,7 +550,7 @@ const save = async () => {
 
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="submit" class="btn btn-primary" :disabled="saving">
+      <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

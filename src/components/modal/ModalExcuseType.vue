@@ -1,7 +1,8 @@
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive } from "vue";
 import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
 import { useModalStore } from "../../stores/common/Modal.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -10,7 +11,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   statut: 1,
   amende: false,
@@ -23,9 +24,10 @@ const { closeModal } = useModalStore();
 const save = async () => {
   const action =
     (form.id || 0) === 0 ? excuseTypeStore.addExcuseType : excuseTypeStore.updateExcuseType;
-  action(form)
-    .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+  const { ok } = await submit(() => action(form));
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -95,7 +97,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

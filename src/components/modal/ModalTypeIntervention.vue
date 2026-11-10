@@ -1,9 +1,9 @@
 <script setup>
-import { reactive, ref, computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { reactive, computed } from "vue";
 import { useTypeInterventionStore } from "../../stores/intervention/TypeIntervention.js";
 import { useStatInterventionStore } from "../../stores/intervention/StatIntervention.js";
 import { useModalStore } from "../../stores/common/Modal.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { callback, data } = defineProps({
   callback: {
@@ -16,7 +16,7 @@ const { callback, data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   name: "",
   email: "",
@@ -29,19 +29,15 @@ const statInterventionStore = useStatInterventionStore();
 const listeStatIntervention = computed(() => statInterventionStore.liste);
 
 const { closeModal } = useModalStore();
-const awn = useNotification();
 
 const save = async () => {
-  try {
-    if (form.id) {
-      await typeInterventionStore.updateTypeIntervention(form);
-    } else {
-      await typeInterventionStore.addTypeIntervention(form);
-    }
+  const { ok } = await submit(() =>
+    form.id
+      ? typeInterventionStore.updateTypeIntervention(form)
+      : typeInterventionStore.addTypeIntervention(form),
+  );
+  if (ok) {
     closeModal();
-  } catch (err) {
-    errors.value = err.errors ?? {};
-    awn.alert(err?.message ?? "Erreur lors de l'enregistrement");
   }
 };
 </script>
@@ -86,7 +82,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

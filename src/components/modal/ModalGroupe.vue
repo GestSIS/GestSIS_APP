@@ -1,7 +1,8 @@
 <script setup>
-import { computed, reactive, ref } from "vue";
+import { computed, reactive } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useGroupeStore } from "../../stores/groupe/Groupe.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -10,7 +11,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   parent_id: null,
   ...data,
@@ -39,11 +40,14 @@ const filteredGroupes = computed(() => {
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  errors.value = {};
-  const action = form.id
-    ? groupeStore.updateGroupe({ groupeId: form.id, data: form })
-    : groupeStore.createGroupe(form);
-  action.then(closeModal).catch((err) => (errors.value = err.errors ?? {}));
+  const { ok } = await submit(() =>
+    form.id
+      ? groupeStore.updateGroupe({ groupeId: form.id, data: form })
+      : groupeStore.createGroupe(form),
+  );
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -101,7 +105,9 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">{{ form.id ? "Modifier" : "Ajouter" }}</button>
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
+        {{ form.id ? "Modifier" : "Ajouter" }}
+      </button>
     </div>
   </form>
 </template>

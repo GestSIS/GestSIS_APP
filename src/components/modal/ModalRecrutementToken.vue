@@ -6,6 +6,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import RecrutementService from "/src/services/RecrutementService.js";
 import useNotification from "../../composables/useNotification.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -31,7 +32,7 @@ const dansHeures = (heures) => new Date(Date.now() + heures * 3600 * 1000);
 const finValidite = ref(versDatetimeLocal(dansHeures(24)));
 const finValiditeMin = versDatetimeLocal(new Date());
 const finValiditeMax = versDatetimeLocal(dansHeures(DUREE_MAX_JOURS * 24));
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const lien = ref("");
 const qrCodeDataUrl = ref("");
 const expireAt = ref(null);
@@ -62,13 +63,10 @@ onMounted(async () => {
 });
 
 const generer = async () => {
-  errors.value = {};
-  try {
+  await submit(async () => {
     const data = await RecrutementService.genererToken(new Date(finValidite.value).toISOString());
     await afficherToken(data.token, data.expire_at);
-  } catch (err) {
-    errors.value = err.errors ?? {};
-  }
+  });
 };
 
 const invalider = () => {
@@ -153,7 +151,7 @@ const copyToClipboard = (value) => {
         Invalider le lien actif
       </button>
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="generer">
+      <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="generer">
         {{ lien || expireAt ? "Regénérer" : "Générer" }}
       </button>
     </div>

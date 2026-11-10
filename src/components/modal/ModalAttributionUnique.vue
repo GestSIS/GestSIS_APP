@@ -1,12 +1,11 @@
 <script setup>
 import { toLocalIsoDate } from "../../tools/index.js";
 import { computed, ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import ArticleService from "../../services/materiel/ArticleService";
 import { useModalStore } from "../../stores/common/Modal.js";
+import useSubmit from "../../composables/useSubmit.js";
 
-const awn = useNotification();
 const { data, callback } = defineProps({
   data: {
     type: Object,
@@ -22,7 +21,7 @@ const sapeurStore = useSapeurStore();
 await sapeurStore.fetchSapeurs();
 const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = ref({
   date: toLocalIsoDate(),
   sapeur_id: null,
@@ -31,18 +30,18 @@ const form = ref({
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  ArticleService.attribuerArticles(form.value.sapeur_id, {
-    date: form.value.date,
-    articleIds: [form.value.id],
-  })
-    .then(() => {
-      closeModal();
-      callback();
-    })
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      awn.warning(err.message ?? "Erreur lors de l'attribution du matériel");
-    });
+  const { ok } = await submit(
+    () =>
+      ArticleService.attribuerArticles(form.value.sapeur_id, {
+        date: form.value.date,
+        articleIds: [form.value.id],
+      }),
+    "Erreur lors de l'attribution du matériel",
+  );
+  if (ok) {
+    closeModal();
+    callback();
+  }
 };
 </script>
 
@@ -74,7 +73,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="submit" class="btn btn-primary">Attribuer</button>
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">Attribuer</button>
     </div>
   </form>
 </template>

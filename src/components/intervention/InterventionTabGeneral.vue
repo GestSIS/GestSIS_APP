@@ -11,6 +11,7 @@ import { useInterventionStore } from "../../stores/intervention/Intervention.js"
 import { useInterventionTraitementStore } from "../../stores/intervention/InterventionTraitement.js";
 import { useStatFederalStore } from "../../stores/intervention/StatFederal.js";
 import { useTypeInterventionStore } from "../../stores/intervention/TypeIntervention.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const router = useRouter();
 const sapeurStore = useSapeurStore();
@@ -36,7 +37,7 @@ const { id } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const newMode = ref(false);
 const form = ref({});
 
@@ -85,29 +86,17 @@ const dateFinMax = computed(() => {
 });
 
 const awn = useNotification();
-const save = () => {
+const save = async () => {
   if (newMode.value) {
-    interventionStore
-      .createIntervention(form.value)
-      .then((data) => {
-        router.push("/interventions/" + data.id);
-        errors.value = {};
-      })
-      .catch((err) => {
-        errors.value = err.errors ?? {};
-        awn.alert(err?.message || "Erreur lors de l'enregistrement");
-      });
+    const { ok, data } = await submit(() => interventionStore.createIntervention(form.value));
+    if (ok) {
+      router.push("/interventions/" + data.id);
+    }
   } else {
-    interventionStore
-      .saveActiveIntervention(form.value)
-      .then((res) => {
-        errors.value = {};
-        awn.success(res?.message || "Modifications enregistrées");
-      })
-      .catch((err) => {
-        errors.value = err.errors ?? {};
-        awn.alert(err?.message || "Erreur lors de l'enregistrement");
-      });
+    const { ok, data } = await submit(() => interventionStore.saveActiveIntervention(form.value));
+    if (ok) {
+      awn.success(data?.message || "Modifications enregistrées");
+    }
   }
 };
 
@@ -125,7 +114,12 @@ const degre = [
       <div class="row mb-2">
         <div class="col-auto me-auto"></div>
         <div class="col-auto">
-          <button v-if="hasEditPermission" type="submit" class="btn btn-primary">
+          <button
+            :disabled="isSubmitting"
+            v-if="hasEditPermission"
+            type="submit"
+            class="btn btn-primary"
+          >
             Enregistrer
           </button>
         </div>

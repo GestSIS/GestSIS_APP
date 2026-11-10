@@ -3,7 +3,8 @@ import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { DateTime } from "luxon";
-import { computed, reactive, ref } from "vue";
+import { computed, reactive } from "vue";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -15,7 +16,7 @@ const { data } = defineProps({
 const phaseTypeStore = usePhaseTypeStore();
 const interventionStore = useInterventionStore();
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   date: null,
   heure: null,
@@ -59,7 +60,7 @@ const save = async () => {
   }
   form.debut = form.date + " " + form.heure.slice(0, 5);
 
-  try {
+  const { ok } = await submit(async () => {
     if (form.id) {
       await interventionStore.editPhase({
         ...form,
@@ -71,9 +72,9 @@ const save = async () => {
         debut2: undefined,
       });
     }
+  });
+  if (ok) {
     closeModal();
-  } catch (err) {
-    errors.value = err.errors ?? {};
   }
 };
 </script>
@@ -141,7 +142,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

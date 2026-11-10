@@ -12,13 +12,14 @@ import permissions from "/src/composables/permissions.js";
 import SapeurService from "../../services/SapeurService.js";
 import SapeurTelephones from "/src/components/sapeur/SapeurTelephones.vue";
 import useHasPermission from "../../composables/usePermission.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
 const gradeStore = useGradeStore();
 const localiteStore = useLocaliteStore();
 const baseDataStore = useBaseDataStore();
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const defaultPhoto = ref("");
 const photo = ref(null); //'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=128',
 
@@ -84,32 +85,26 @@ const saveSapeur = async () => {
       delete saveSapeur[key];
     }
   }
-  sapeurStore
-    .saveActiveSapeur(saveSapeur)
-    .then((res) => {
-      errors.value = {};
-      awn.success(res.message || "Modifications sauvegardées");
-    })
-    .catch((err) => {
-      awn.alert(err.message || "Erreur lors de l'enregistrement des données");
-      errors.value = err.errors ?? {};
-    });
+  const { ok, data } = await submit(
+    () => sapeurStore.saveActiveSapeur(saveSapeur),
+    "Erreur lors de l'enregistrement des données",
+  );
+  if (ok) {
+    awn.success(data?.message || "Modifications sauvegardées");
+  }
 };
 const saveNonSapeurStatut = async () => {
   let saveSapeur = {
     id: activeSapeur.value.id,
     actif: activeSapeur.value.actif,
   };
-  sapeurStore
-    .saveNonSapeurStatut(saveSapeur)
-    .then((res) => {
-      errors.value = {};
-      awn.success(res.message || "Modifications sauvegardées");
-    })
-    .catch((err) => {
-      awn.alert(err.message || "Erreur lors de l'enregistrement des données");
-      errors.value = err.errors ?? {};
-    });
+  const { ok, data } = await submit(
+    () => sapeurStore.saveNonSapeurStatut(saveSapeur),
+    "Erreur lors de l'enregistrement des données",
+  );
+  if (ok) {
+    awn.success(data?.message || "Modifications sauvegardées");
+  }
 };
 const saveSapeurRefPro = () =>
   sapeurStore
@@ -160,7 +155,12 @@ const editPhoto = () =>
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Données personnelles</h3>
-          <button v-if="hasEditPermission" class="btn btn-primary" @click.prevent="saveSapeur">
+          <button
+            :disabled="isSubmitting"
+            v-if="hasEditPermission"
+            class="btn btn-primary"
+            @click.prevent="saveSapeur"
+          >
             Enregistrer
           </button>
         </div>
@@ -389,6 +389,7 @@ const editPhoto = () =>
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Civil</h3>
           <button
+            :disabled="isSubmitting"
             v-if="hasEditPermission"
             class="btn btn-primary"
             @click.prevent="saveNonSapeurStatut"

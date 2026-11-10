@@ -1,7 +1,8 @@
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -10,7 +11,6 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
 const form = reactive({
   groupe: 1,
   ...data,
@@ -18,11 +18,14 @@ const form = reactive({
 
 const gradeStore = useGradeStore();
 const { closeModal } = useModalStore();
+const { errors, isSubmitting, submit } = useSubmit();
 
 const save = async () => {
-  ((form.id || 0) === 0 ? gradeStore.addGrade : gradeStore.updateGrade)(form)
-    .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+  const action = (form.id || 0) === 0 ? gradeStore.addGrade : gradeStore.updateGrade;
+  const { ok } = await submit(() => action(form));
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -81,7 +84,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

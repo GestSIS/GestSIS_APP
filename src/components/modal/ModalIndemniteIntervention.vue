@@ -18,7 +18,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   phase_id: 0,
   par_fonction: 0,
@@ -33,6 +33,7 @@ const form = reactive({
 
 const imputationType = ref(form.taux_nuit || form.taux_weekend ? "taux" : "tarif-min");
 import { useUniteStore } from "../../stores/common/Unite.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const compteStore = useCompteStore();
 const ecritureCategorieStore = useEcritureCategorieStore();
@@ -47,7 +48,7 @@ const phases = computed(() => phaseTypeStore.liste);
 
 const { closeModal } = useModalStore();
 
-const save = () => {
+const save = async () => {
   if (imputationType.value == "taux") {
     form.type_unite_id = 2; // Par heure
     form.tarif_pro_rata = null;
@@ -69,11 +70,14 @@ const save = () => {
     form.fin = null;
   }
 
-  ((form.id || 0) === 0
-    ? imputationStore.addIndemniteIntervention
-    : imputationStore.updateIndemniteIntervention)(form)
-    .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+  const { ok } = await submit(() =>
+    ((form.id || 0) === 0
+      ? imputationStore.addIndemniteIntervention
+      : imputationStore.updateIndemniteIntervention)(form),
+  );
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -271,7 +275,7 @@ const save = () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save()">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

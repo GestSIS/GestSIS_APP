@@ -1,7 +1,8 @@
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -10,7 +11,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   ...data,
 });
@@ -20,9 +21,10 @@ const { closeModal } = useModalStore();
 
 const save = async () => {
   const action = form?.id ? "updateCompte" : "addCompte";
-  compteStore[action](form)
-    .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+  const { ok } = await submit(() => compteStore[action](form));
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -68,7 +70,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

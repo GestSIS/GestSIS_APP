@@ -225,8 +225,9 @@ const save = () => {
         closeModal();
       }
     })
-    .catch((errorMessage) => {
-      awn.warning(errorMessage);
+    // Le callback peut rejeter un message (string) ou une erreur de l'API ({ message })
+    .catch((err) => {
+      awn.warning(err?.message ?? err ?? "Erreur lors de l'enregistrement");
     });
 };
 const select = (id, leaf = true) => {

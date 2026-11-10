@@ -15,6 +15,7 @@ import {
 } from "../../tools/index.js";
 import ScanArticle from "../materiel/ScanArticle.vue";
 import ComposantSelecteur from "../materiel/ComposantSelecteur.vue";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: { type: Object, default: () => {} },
@@ -83,8 +84,7 @@ if (modeMultiple.value && controleImpose.value) {
     }));
 }
 
-const errors = ref({});
-const saving = ref(false);
+const { errors, isSubmitting, submit } = useSubmit();
 
 const form = reactive({
   controle_id: modeEdition.value ? data.controleId : controleParDefaut.value,
@@ -436,10 +436,7 @@ const save = async () => {
     return;
   }
 
-  errors.value = {};
-  saving.value = true;
-
-  try {
+  const { ok } = await submit(async () => {
     if (modeMultiple.value) {
       await ControleExecService.creerExecsMultiple(form.controle_id, {
         executed_at: form.executed_at,
@@ -488,13 +485,10 @@ const save = async () => {
         awn.success("Contrôle enregistré");
       }
     }
+  }, "Erreur lors de l'enregistrement du contrôle");
+  if (ok) {
     closeModal();
     callback();
-  } catch (err) {
-    errors.value = err.errors ?? {};
-    awn.alert(err?.message ?? "Erreur lors de l'enregistrement du contrôle");
-  } finally {
-    saving.value = false;
   }
 };
 </script>
@@ -807,7 +801,7 @@ const save = async () => {
 
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button v-if="controle" type="submit" class="btn btn-primary" :disabled="saving">
+      <button v-if="controle" type="submit" class="btn btn-primary" :disabled="isSubmitting">
         Enregistrer
       </button>
     </div>

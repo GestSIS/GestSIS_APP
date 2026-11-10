@@ -1,11 +1,12 @@
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import SelectCouleur from "../materiel/SelectCouleur.vue";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -17,7 +18,7 @@ const { data } = defineProps({
 const localiteStore = useLocaliteStore();
 await localiteStore.fetchLocalites();
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   statut: true,
   est_etiquete: false,
@@ -41,11 +42,14 @@ const save = async () => {
     return;
   }
 
-  ((form.id || 0) === 0 ? emplacementStore.addEmplacement : emplacementStore.updateEmplacement)(
-    form,
-  )
-    .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+  const { ok } = await submit(() =>
+    ((form.id || 0) === 0 ? emplacementStore.addEmplacement : emplacementStore.updateEmplacement)(
+      form,
+    ),
+  );
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -131,7 +135,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

@@ -1,7 +1,8 @@
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useControleMedicalTypeStore } from "../../stores/controleMedical/ControleMedicalType.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -10,7 +11,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   expirable: false,
   actif: 1,
@@ -21,15 +22,15 @@ const controleMedicalTypeStore = useControleMedicalTypeStore();
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  try {
+  const { ok } = await submit(async () => {
     if (form?.id) {
       await controleMedicalTypeStore.updateType(form);
     } else {
       await controleMedicalTypeStore.addType(form);
     }
+  });
+  if (ok) {
     closeModal();
-  } catch (err) {
-    errors.value = err.errors ?? {};
   }
 };
 </script>
@@ -97,7 +98,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

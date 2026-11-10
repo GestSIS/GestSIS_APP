@@ -1,8 +1,8 @@
 <script setup>
-import { reactive, ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { reactive } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAdminStore } from "../../stores/admin/Admin.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { callback, data } = defineProps({
   data: {
@@ -15,7 +15,7 @@ const { callback, data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   nom: "",
   abreviation: "",
@@ -26,7 +26,6 @@ const form = reactive({
 
 const adminStore = useAdminStore();
 const { closeModal } = useModalStore();
-const awn = useNotification();
 
 const close = () => {
   (callback(null) ?? Promise.resolve()).then((close) => {
@@ -37,13 +36,14 @@ const close = () => {
 };
 
 const save = async () => {
-  (form?.id ? adminStore.editOrganisation : adminStore.addOrganisation)(form)
-    .then(callback)
-    .then(closeModal)
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      awn.alert(err?.message ?? "Erreur lors de l'ajout de l'organisation");
-    });
+  const action = form?.id ? adminStore.editOrganisation : adminStore.addOrganisation;
+  const { ok } = await submit(
+    () => action(form).then(callback),
+    "Erreur lors de l'ajout de l'organisation",
+  );
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -104,7 +104,7 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
       <button type="button" class="btn btn-outline-secondary" @click="close">Annuler</button>

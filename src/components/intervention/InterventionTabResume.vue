@@ -4,6 +4,7 @@ import useHasPermission from "../../composables/usePermission.js";
 import { reactive, ref, watchEffect } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const interventionStore = useInterventionStore();
 
@@ -29,17 +30,16 @@ watchEffect(async () => {
 const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
 const awn = useNotification();
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const save = async () => {
-  try {
-    const res = await interventionStore.saveActiveIntervention({
+  const { ok, data } = await submit(() =>
+    interventionStore.saveActiveIntervention({
       id,
       ...form,
-    });
-    awn.success(res?.message || "Modifications enregistrées");
-  } catch (err) {
-    errors.value = err.errors ?? {};
-    awn.alert(err?.message || "Erreur lors de l'enregistrement");
+    }),
+  );
+  if (ok) {
+    awn.success(data?.message || "Modifications enregistrées");
   }
 };
 </script>
@@ -50,7 +50,12 @@ const save = async () => {
       <div class="card card-primary card-outline mb-3">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Résumé</h3>
-          <button v-if="hasEditPermission" class="btn btn-primary" @click.prevent="save">
+          <button
+            :disabled="isSubmitting"
+            v-if="hasEditPermission"
+            class="btn btn-primary"
+            @click.prevent="save"
+          >
             Enregistrer
           </button>
         </div>

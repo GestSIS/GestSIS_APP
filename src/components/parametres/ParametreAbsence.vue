@@ -2,11 +2,12 @@
 import { ref } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useAbsenceParamStore } from "../../stores/absence/AbsenceParam.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const absenceParamStore = useAbsenceParamStore();
 await absenceParamStore.fetchParams();
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const params = ref({
   actif: false,
   ...absenceParamStore.params,
@@ -14,13 +15,9 @@ const params = ref({
 
 const awn = useNotification();
 const save = async () => {
-  try {
-    const res = await absenceParamStore.updateAbsenceParams(params.value);
-    errors.value = {};
-    awn.success(res?.message || "Modifications enregistrées");
-  } catch (err) {
-    errors.value = err.errors ?? {};
-    awn.alert(err?.message || "Erreur lors de l'enregistrement");
+  const { ok, data } = await submit(() => absenceParamStore.updateAbsenceParams(params.value));
+  if (ok) {
+    awn.success(data?.message || "Modifications enregistrées");
   }
 };
 </script>
@@ -31,7 +28,9 @@ const save = async () => {
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Paramètres pour absences</h3>
-          <button type="button" class="btn btn-primary" @click="save">Enregistrer</button>
+          <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save">
+            Enregistrer
+          </button>
         </div>
         <div class="card-body">
           <div class="mb-3">

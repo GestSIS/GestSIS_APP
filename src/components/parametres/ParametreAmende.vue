@@ -6,6 +6,7 @@ import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useAmendeStore } from "../../stores/comptabilite/Amende.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const uniteStore = useUniteStore();
 const fonctionStore = useFonctionStore();
@@ -20,7 +21,7 @@ const loadUnites = uniteStore.fetchUnites();
 
 await Promise.all([loadAmendes, loadFonctions, loadComptes, loadUnites]);
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const params = ref({
   compte_id: null,
   ecriture_categorie_id: null,
@@ -65,16 +66,10 @@ const addAmende = () => {
 
 const awn = useNotification();
 const save = async () => {
-  amendeStore
-    .updateAmendes(params.value)
-    .then((res) => {
-      errors.value = {};
-      awn.success(res?.message || "Modifications enregistrées");
-    })
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      awn.alert(err?.message || "Erreur lors de l'enregistrement");
-    });
+  const { ok, data } = await submit(() => amendeStore.updateAmendes(params.value));
+  if (ok) {
+    awn.success(data?.message || "Modifications enregistrées");
+  }
 };
 </script>
 
@@ -82,7 +77,9 @@ const save = async () => {
   <div class="card card-primary card-outline">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Amendes</h3>
-      <button type="button" class="btn btn-primary" @click="save()">Enregistrer</button>
+      <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save()">
+        Enregistrer
+      </button>
     </div>
     <div class="card-body">
       <div class="row">

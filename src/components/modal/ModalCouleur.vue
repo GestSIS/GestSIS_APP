@@ -3,6 +3,7 @@ import { ref } from "vue";
 import TagCouleur from "../materiel/TagCouleur.vue";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
 import { useModalStore } from "../../stores/common/Modal.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -11,7 +12,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const activeItem = ref({
   ...data,
   fond: data?.fond?.slice(0, 7) ?? "#ffffff",
@@ -22,11 +23,14 @@ const couleurStore = useCouleurStore();
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  ((activeItem.value.id || 0) === 0 ? couleurStore.addCouleur : couleurStore.updateCouleur)(
-    activeItem.value,
-  )
-    .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+  const { ok } = await submit(() =>
+    ((activeItem.value.id || 0) === 0 ? couleurStore.addCouleur : couleurStore.updateCouleur)(
+      activeItem.value,
+    ),
+  );
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -76,7 +80,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="save">
+      <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save">
         {{ activeItem.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

@@ -2,10 +2,11 @@
 import { computed, ref, watch } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useAspsmsParamStore } from "../../stores/sms/AspsmsParam.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const aspsmsParamStore = useAspsmsParamStore();
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const params = ref({
   username: null,
   password: null,
@@ -28,13 +29,9 @@ const save = async () => {
     awn.success("Modifications enregistrées");
     return;
   }
-  try {
-    const res = await aspsmsParamStore.updateAspsmsParams({ ...params.value });
-    errors.value = {};
-    awn.success(res?.message || "Modifications enregistrées");
-  } catch (err) {
-    errors.value = err.errors ?? {};
-    awn.alert(errors.value?.message || "Erreur lors de l'enregistrement");
+  const { ok, data } = await submit(() => aspsmsParamStore.updateAspsmsParams({ ...params.value }));
+  if (ok) {
+    awn.success(data?.message || "Modifications enregistrées");
   }
 };
 </script>
@@ -45,7 +42,9 @@ const save = async () => {
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">ASPSMS</h3>
-          <button type="button" class="btn btn-primary" @click="save">Enregistrer</button>
+          <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save">
+            Enregistrer
+          </button>
         </div>
         <div class="card-body">
           <div class="mb-3">

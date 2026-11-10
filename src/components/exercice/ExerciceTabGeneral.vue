@@ -9,6 +9,7 @@ import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { id } = defineProps({
   id: {
@@ -28,7 +29,7 @@ localiteStore.fetchLocalites();
 exerciceCategorieStore.fetchExerciceCategories();
 exerciceComptableStore.fetchExercicesComptables();
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = ref({
   exercice_comptable_id: exerciceComptableStore.activeId,
   lieu: "",
@@ -68,20 +69,16 @@ watchEffect(() => {
 const router = useRouter();
 const awn = useNotification();
 
-const save = () => {
+const save = async () => {
   const action = (form.value.id || 0) === 0 ? "createExercice" : "saveExercice";
-  return exerciceStore[action](form.value)
-    .then((data) => {
-      if (id === "new") {
-        router.push("/exercices/" + data.id);
-      }
-      errors.value = {};
-      awn.success(data?.message || "Exercice créé");
-    })
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      awn.alert(err?.message || "Erreur lors de l'enregistrement");
-    });
+  const { ok, data } = await submit(() => exerciceStore[action](form.value));
+  if (!ok) {
+    return;
+  }
+  if (id === "new") {
+    router.push("/exercices/" + data.id);
+  }
+  awn.success(data?.message || "Exercice créé");
 };
 </script>
 
@@ -89,7 +86,12 @@ const save = () => {
   <form class="card card-primary card-outline" @submit.prevent="save">
     <div class="card-header d-flex justify-content-between">
       <span></span>
-      <button v-if="hasEditPermission" type="submit" class="btn btn-outline-primary">
+      <button
+        :disabled="isSubmitting"
+        v-if="hasEditPermission"
+        type="submit"
+        class="btn btn-outline-primary"
+      >
         {{ (form.id || 0) === 0 ? "Ajouter" : "Sauvegarder" }}
       </button>
     </div>

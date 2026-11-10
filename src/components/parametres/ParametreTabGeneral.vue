@@ -82,14 +82,11 @@ const updateLocalitesSis = () => {
       return;
     }
     const { ajoute, supprime } = res;
-    if (ajoute.length) {
-      localiteStore.addLocalitesSis(ajoute);
-    }
-    if (supprime.length) {
-      localiteStore.removeLocalitesSis(supprime);
-    }
-
-    return Promise.resolve();
+    // Retournée à la modale : elle reste ouverte et affiche l'erreur en cas d'échec
+    return Promise.all([
+      ajoute.length ? localiteStore.addLocalitesSis(ajoute) : null,
+      supprime.length ? localiteStore.removeLocalitesSis(supprime) : null,
+    ]);
   };
 
   showModal({

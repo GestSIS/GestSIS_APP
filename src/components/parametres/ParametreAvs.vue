@@ -5,6 +5,7 @@ import { useAvsParamStore } from "../../stores/comptabilite/AvsParam.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const avsParamStore = useAvsParamStore();
 const compteStore = useCompteStore();
@@ -16,7 +17,7 @@ const listeCompte = computed(() => compteStore.liste);
 const listeCategorie = computed(() => ecritureCategorieStore.liste);
 const avsParams = computed(() => avsParamStore.params);
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const params = ref({
   taux_avs: null,
   taux_ac: null,
@@ -31,13 +32,9 @@ params.value = avsParams.value ? avsParams.value : params.value;
 const awn = useNotification();
 
 const save = async () => {
-  try {
-    const res = await avsParamStore.updateAvsParams(params.value);
-    errors.value = {};
-    awn.success(res?.message || "Modifications enregistrées");
-  } catch (err) {
-    errors.value = err.errors ?? {};
-    awn.alert(err?.message || "Erreur lors de l'enregistrement");
+  const { ok, data } = await submit(() => avsParamStore.updateAvsParams(params.value));
+  if (ok) {
+    awn.success(data?.message || "Modifications enregistrées");
   }
 };
 </script>
@@ -48,7 +45,9 @@ const save = async () => {
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Côtisations sociales</h3>
-          <button type="button" class="btn btn-primary" @click="save">Enregistrer</button>
+          <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save">
+            Enregistrer
+          </button>
         </div>
         <div class="card-body">
           <div class="mb-3">

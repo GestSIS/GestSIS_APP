@@ -10,6 +10,7 @@ import { DateTime } from "luxon";
 import SapeurService from "../../services/SapeurService";
 import ExerciceService from "../../services/ExerciceService";
 import AspsmsParamService from "../../services/AspsmsParamService";
+import useSubmit from "../../composables/useSubmit.js";
 
 const localiteStore = useLocaliteStore();
 const exerciceCategorieStore = useExerciceCategorieStore();
@@ -22,8 +23,7 @@ const { data } = defineProps({
     default: () => {},
   },
 });
-const sending = ref(false);
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 
 const loadingSapeurs = ref(true);
 const sapeurs = ref([]);
@@ -86,7 +86,7 @@ const computedSapeurs = computed(() => {
 const { closeModal } = useModalStore();
 const awn = useNotification();
 
-const send = () => {
+const send = async () => {
   if (params.value.differe && new Date(params.value.date) < new Date()) {
     return awn.alert("Date invalide");
   }
@@ -107,18 +107,15 @@ const send = () => {
     return awn.alert("Aucun numéro disponible");
   }
 
-  sending.value = true;
-  AspsmsParamService.sendSms(clonedParams)
-    .then(() => {
-      aspsmsParamStore.fetchCredit();
-      awn.success("Message envoyé avec succès");
-      closeModal();
-    })
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      sending.value = false;
-      awn.alert(err?.message ?? "Erreur lors de l'envoie des SMS");
-    });
+  const { ok } = await submit(
+    () => AspsmsParamService.sendSms(clonedParams),
+    "Erreur lors de l'envoi des SMS",
+  );
+  if (ok) {
+    aspsmsParamStore.fetchCredit();
+    awn.success("Message envoyé avec succès");
+    closeModal();
+  }
 };
 
 const fields = [
@@ -194,7 +191,7 @@ const fields = [
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary" :disabled="sending">Envoyer</button>
+      <button type="submit" class="btn btn-primary" :disabled="isSubmitting">Envoyer</button>
     </div>
   </form>
 </template>

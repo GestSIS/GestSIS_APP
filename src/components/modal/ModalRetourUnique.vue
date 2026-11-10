@@ -4,6 +4,7 @@ import { ref } from "vue";
 import ArticleService from "../../services/materiel/ArticleService";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
 import { useModalStore } from "../../stores/common/Modal.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -16,7 +17,7 @@ const { data, callback } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const date = ref(toLocalIsoDate());
 const emplacement_id = ref(null);
 
@@ -26,15 +27,16 @@ const save = async () => {
     errors.value = { emplacement: ["Veuillez sélectionner un emplacement"] };
     return;
   }
-  return ArticleService.retourArticles(emplacement_id.value, {
-    date: date.value,
-    articleIds: [data.id],
-  })
-    .then(() => {
-      callback();
-      closeModal();
-    })
-    .catch((err) => (errors.value = err.errors ?? {}));
+  const { ok } = await submit(() =>
+    ArticleService.retourArticles(emplacement_id.value, {
+      date: date.value,
+      articleIds: [data.id],
+    }),
+  );
+  if (ok) {
+    callback();
+    closeModal();
+  }
 };
 </script>
 
@@ -67,7 +69,9 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="save">Valider</button>
+      <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save">
+        Valider
+      </button>
     </div>
   </div>
 </template>

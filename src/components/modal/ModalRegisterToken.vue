@@ -3,6 +3,7 @@ import { computed, ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { toLocalIsoDate } from "../../tools/index.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const authStore = useAuthStore();
 
@@ -10,7 +11,7 @@ const d = new Date();
 d.setMonth(d.getMonth() + 1);
 
 const step = ref(1);
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const token = ref({
   description: "",
   validite: toLocalIsoDate(d),
@@ -26,7 +27,7 @@ const { closeModal } = useModalStore();
 const copyToClipboard = (value) => {
   navigator.clipboard.writeText(value);
 };
-const save = () => {
+const save = async () => {
   if (token.value.roles.length <= 0) {
     errors.value = { roles: "Sélectionnez au minimum 1 rôle" };
   } else {
@@ -46,16 +47,11 @@ const save = () => {
     return;
   }
 
-  authStore
-    .newRegisterToken(token.value)
-    .then((res) => {
-      errors.value = {};
-      step.value = 2;
-      token.value.token = res;
-    })
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-    });
+  const { ok, data } = await submit(() => authStore.newRegisterToken(token.value));
+  if (ok) {
+    step.value = 2;
+    token.value.token = data;
+  }
 };
 </script>
 
@@ -140,7 +136,9 @@ const save = () => {
       <button type="button" class="btn btn-secondary" @click="closeModal()">
         {{ step == 1 ? "Annuler" : "Fermer" }}
       </button>
-      <button v-if="step === 1" type="submit" class="btn btn-primary">Créer</button>
+      <button :disabled="isSubmitting" v-if="step === 1" type="submit" class="btn btn-primary">
+        Créer
+      </button>
     </div>
   </form>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, ref } from "vue";
+import { computed, reactive } from "vue";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useModalStore } from "../../stores/common/Modal.js";
@@ -11,11 +11,12 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   ...data,
 });
 import { useUniteStore } from "../../stores/common/Unite.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const fonctionStore = useFonctionStore();
 const imputationStore = useImputationStore();
@@ -26,12 +27,15 @@ const unites = computed(() => uniteStore.liste);
 
 const { closeModal } = useModalStore();
 
-const save = () =>
-  (form?.id ? imputationStore.updateFraisIndemniteAnnuel : imputationStore.addFraisIndemniteAnnuel)(
-    form,
-  )
-    .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+const save = async () => {
+  const action = form?.id
+    ? imputationStore.updateFraisIndemniteAnnuel
+    : imputationStore.addFraisIndemniteAnnuel;
+  const { ok } = await submit(() => action(form));
+  if (ok) {
+    closeModal();
+  }
+};
 </script>
 
 <template>
@@ -88,7 +92,7 @@ const save = () =>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

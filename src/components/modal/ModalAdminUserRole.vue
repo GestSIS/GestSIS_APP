@@ -1,7 +1,8 @@
 <script setup>
-import { reactive, ref, computed, watch } from "vue";
+import { reactive, computed, watch } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAdminStore } from "../../stores/admin/Admin.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const adminStore = useAdminStore();
 
@@ -16,7 +17,7 @@ const { callback, data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   user_id: null,
   role_id: null,
@@ -49,12 +50,13 @@ watch(
 
 const { closeModal } = useModalStore();
 
-const save = () =>
-  adminStore
-    .addUserRole(form.user_id, form.role_id)
-    .then(closeModal)
-    .then(() => callback(true))
-    .catch((err) => (errors.value = err.errors ?? {}));
+const save = async () => {
+  const { ok } = await submit(() => adminStore.addUserRole(form.user_id, form.role_id));
+  if (ok) {
+    closeModal();
+    callback(true);
+  }
+};
 </script>
 
 <template>
@@ -83,7 +85,7 @@ const save = () =>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Annuler</button>
-      <button type="submit" class="btn btn-primary">Enregistrer</button>
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">Enregistrer</button>
     </div>
   </form>
 </template>

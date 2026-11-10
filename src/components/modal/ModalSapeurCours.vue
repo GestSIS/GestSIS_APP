@@ -1,12 +1,12 @@
 <script setup>
-import { computed, reactive, ref, watch } from "vue";
+import { computed, reactive, watch } from "vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useCoursStore } from "../../stores/sapeur/Cours.js";
-import useNotification from "../../composables/useNotification.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -15,7 +15,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   precedent_id: 0,
   ...data,
@@ -77,20 +77,18 @@ if ((data.id || 0) === 0) {
 }
 
 const { closeModal } = useModalStore();
-const awn = useNotification();
 
-const save = () => {
+const save = async () => {
   let saveData = Object.assign({}, form);
   Object.keys(saveData).map((key) => {
     saveData[key] = saveData[key] === 0 || saveData[key] === "0" ? null : saveData[key];
   });
 
-  (addMode.value ? sapeurStore.addSapeurCours : sapeurStore.editSapeurCours)(saveData)
-    .then(closeModal)
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      awn.alert(err?.message || "Erreur lors de l'enregistrement");
-    });
+  const action = addMode.value ? sapeurStore.addSapeurCours : sapeurStore.editSapeurCours;
+  const { ok } = await submit(() => action(saveData));
+  if (ok) {
+    closeModal();
+  }
 };
 const dateChange = () => {
   if (!form.date_grade) {
@@ -240,7 +238,7 @@ const dateChange = () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ addMode ? "Ajouter" : "Modifier" }}
       </button>
     </div>

@@ -1,9 +1,10 @@
 <script setup>
-import { computed, reactive, ref } from "vue";
+import { computed, reactive } from "vue";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useBaseDataStore } from "../../stores/common/BaseData.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { callback } = defineProps({
   callback: {
@@ -12,7 +13,7 @@ const { callback } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   type: 0,
   nom: "",
@@ -38,15 +39,13 @@ const civilites = computed(() => baseDataStore.civilites);
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  try {
-    const data = await sapeurStore.createSapeur(form);
-
-    const close = await (callback(data.id) ?? Promise.resolve());
-    if (close ?? true) {
-      closeModal();
-    }
-  } catch (err) {
-    errors.value = err.errors ?? {};
+  const { ok, data } = await submit(async () => {
+    const sapeur = await sapeurStore.createSapeur(form);
+    return callback(sapeur.id) ?? Promise.resolve();
+  });
+  // Le callback peut renvoyer false pour garder la modale ouverte
+  if (ok && (data ?? true)) {
+    closeModal();
   }
 };
 </script>
@@ -256,7 +255,7 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-primary">Ajouter</button>
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">Ajouter</button>
       <button type="button" class="btn btn-outline-secondary" @click="closeModal()">Annuler</button>
     </div>
   </form>

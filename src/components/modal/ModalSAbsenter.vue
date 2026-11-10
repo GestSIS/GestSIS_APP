@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -12,21 +12,21 @@ const { data } = defineProps({
 });
 
 const infosStore = useMesInfosStore();
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const activeAbsence = ref({ ...data });
 
 const { closeModal } = useModalStore();
-const awn = useNotification();
 
 const save = async () => {
   const action = activeAbsence.value?.id ? infosStore.editMonAbsence : infosStore.addMonAbsence;
 
-  action(activeAbsence.value)
-    .then(closeModal)
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      awn.alert(err?.message ?? "Impossible d'ajouter cette absence");
-    });
+  const { ok } = await submit(
+    () => action(activeAbsence.value),
+    "Impossible d'ajouter cette absence",
+  );
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -65,7 +65,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ activeAbsence?.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

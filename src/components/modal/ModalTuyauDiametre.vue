@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useTuyauDiametreStore } from "../../stores/materiel/TuyauDiametre.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -10,7 +11,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const activeItem = ref({
   ...data,
 });
@@ -19,11 +20,14 @@ const diametreStore = useTuyauDiametreStore();
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  ((activeItem.value.id || 0) === 0
-    ? diametreStore.addTuyauDiametre
-    : diametreStore.updateTuyauDiametre)(activeItem.value)
-    .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+  const { ok } = await submit(() =>
+    ((activeItem.value.id || 0) === 0
+      ? diametreStore.addTuyauDiametre
+      : diametreStore.updateTuyauDiametre)(activeItem.value),
+  );
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -47,7 +51,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save()">
         {{ activeItem.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

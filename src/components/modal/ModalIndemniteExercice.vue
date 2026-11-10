@@ -7,6 +7,7 @@ import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCat
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const fonctionStore = useFonctionStore();
 const compteStore = useCompteStore();
@@ -21,7 +22,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   type_unite_id: 6,
   fonctions: [],
@@ -118,7 +119,7 @@ const ajoutTypePourFonction = () => {
 const supprimerTypePourFonction = (i) => {
   delete columns.value[i];
 };
-const save = () => {
+const save = async () => {
   errors.value = {};
 
   // Contrôle qu'aucune colonne n'est dupliquée
@@ -184,11 +185,14 @@ const save = () => {
     fonctions: foncs,
   };
 
-  ((indemnite.id || 0) === 0
-    ? imputationStore.addIndemniteExercice
-    : imputationStore.updateIndemniteExercice)(indemnite)
-    .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+  const { ok } = await submit(() =>
+    ((indemnite.id || 0) === 0
+      ? imputationStore.addIndemniteExercice
+      : imputationStore.updateIndemniteExercice)(indemnite),
+  );
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -394,7 +398,7 @@ const save = () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

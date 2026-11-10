@@ -1,9 +1,10 @@
 <script setup>
-import { computed, reactive, ref } from "vue";
+import { computed, reactive } from "vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -12,7 +13,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   ...data,
 });
@@ -59,17 +60,11 @@ const onSaved = () => {
   }
 };
 
-const save = () => {
-  if ((form.id || 0) === 0) {
-    sapeurStore
-      .addMutation(form)
-      .then(onSaved)
-      .catch((err) => (errors.value = err.errors ?? {}));
-  } else {
-    sapeurStore
-      .editMutation(form)
-      .then(onSaved)
-      .catch((err) => (errors.value = err.errors ?? {}));
+const save = async () => {
+  const action = (form.id || 0) === 0 ? sapeurStore.addMutation : sapeurStore.editMutation;
+  const { ok } = await submit(() => action(form));
+  if (ok) {
+    onSaved();
   }
 };
 </script>
@@ -124,7 +119,7 @@ const save = () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

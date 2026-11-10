@@ -1,8 +1,8 @@
 <script setup>
-import { reactive, ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { reactive } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useSisParamStore } from "../../stores/params/SisParam.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { callback, data } = defineProps({
   data: {
@@ -15,14 +15,13 @@ const { callback, data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   email: "",
   ...data,
 });
 
 const { closeModal } = useModalStore();
-const awn = useNotification();
 const sisParamStore = useSisParamStore();
 
 const close = () => {
@@ -41,13 +40,13 @@ const save = async () => {
     return;
   }
 
-  sisParamStore
-    .addSisContact({ ...form, liste: data.id })
-    .then(closeModal)
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      awn.alert(err?.message ?? "Erreur lors de l'ajout du contact");
-    });
+  const { ok } = await submit(
+    () => sisParamStore.addSisContact({ ...form, liste: data.id }),
+    "Erreur lors de l'ajout du contact",
+  );
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -79,7 +78,7 @@ const save = async () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
       <button type="button" class="btn btn-outline-secondary" @click="close">Annuler</button>

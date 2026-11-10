@@ -1,9 +1,10 @@
 <script setup>
-import { computed, reactive, ref } from "vue";
+import { computed, reactive } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useCoursStore } from "../../stores/sapeur/Cours.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -12,7 +13,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   actif: 1,
   abreviation: "",
@@ -31,9 +32,12 @@ const cours = computed(() => coursStore.liste);
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  (form?.id ? coursStore.updateCours : coursStore.addCours)(form)
-    .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+  const { ok } = await submit(() =>
+    (form?.id ? coursStore.updateCours : coursStore.addCours)(form),
+  );
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -142,7 +146,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

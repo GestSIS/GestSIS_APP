@@ -1,8 +1,9 @@
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAdminStore } from "../../stores/admin/Admin.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { callback, data } = defineProps({
   callback: {
@@ -15,7 +16,7 @@ const { callback, data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   name: "",
   email: "",
@@ -30,17 +31,14 @@ const { closeModal } = useModalStore();
 const awn = useNotification();
 const adminStore = useAdminStore();
 
-const save = () => {
+const save = async () => {
   if (!form?.id) {
     return awn.alert("Impossible d'ajouter un utilisateur pour le moment");
   }
-  adminStore
-    .editUser(form)
-    .then(closeModal)
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      awn.alert(err?.message ?? "Erreur lors de l'enregistrement");
-    });
+  const { ok } = await submit(() => adminStore.editUser(form));
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -112,7 +110,7 @@ const save = () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
       <button type="button" class="btn btn-outline-secondary" @click="closeModal">Annuler</button>

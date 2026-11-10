@@ -5,6 +5,7 @@ import { useUniteStore } from "../../stores/common/Unite.js";
 import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useTravailStore } from "../../stores/travail/Travail.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -17,7 +18,7 @@ const uniteStore = useUniteStore();
 const travailTypeStore = useTravailTypeStore();
 const sapeurStore = useSapeurStore();
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   exercice_comptable_id: null,
   ...data,
@@ -31,11 +32,11 @@ const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
 
 const { closeModal } = useModalStore();
 
-const review = (accepte) => {
-  useTravailStore()
-    .reviewTravail({ ...form, accepte })
-    .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+const review = async (accepte) => {
+  const { ok } = await submit(() => useTravailStore().reviewTravail({ ...form, accepte }));
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -147,10 +148,17 @@ const review = (accepte) => {
 
       <div class="row">
         <div class="col-6">
-          <button type="submit" class="btn btn-primary col-12">Accepter</button>
+          <button :disabled="isSubmitting" type="submit" class="btn btn-primary col-12">
+            Accepter
+          </button>
         </div>
         <div class="col-6">
-          <button type="button" class="btn btn-danger col-12" @click="review(false)">
+          <button
+            :disabled="isSubmitting"
+            type="button"
+            class="btn btn-danger col-12"
+            @click="review(false)"
+          >
             Refuser
           </button>
         </div>

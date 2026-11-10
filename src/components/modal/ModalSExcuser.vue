@@ -6,6 +6,7 @@ import { useAuthStore } from "../../stores/auth/Auth.js";
 import { computed, ref, watch } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { callback, data } = defineProps({
   callback: {
@@ -39,7 +40,7 @@ const initialExcuse = excuses.value.find(
   (e) => e.exercice_id === data.exerciceId && (data.sisKey == null || e.sis_key === data.sisKey),
 );
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const selectedUid = ref(initialExcuse?.uid ?? "");
 const activeExcuse = ref({
   excuse_statut: 0,
@@ -90,7 +91,7 @@ const onFileChange = (event) => {
   if (!files.length) return;
   activeExcuse.value.justificatif_file = files[0];
 };
-const validate = () => {
+const validate = async () => {
   if (
     !activeExcuse.value.exercice_id ||
     !activeExercice.value ||
@@ -105,17 +106,15 @@ const validate = () => {
     return;
   }
 
-  infosStore
-    .addMonExcuse(activeExcuse.value, sisKey.value)
-    .then(() => {
-      awn.success("Excuse enregistrée");
-      callback();
-      closeModal();
-    })
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      awn.alert(err?.message ?? "Erreur lors de la création de l'excuse");
-    });
+  const { ok } = await submit(
+    () => infosStore.addMonExcuse(activeExcuse.value, sisKey.value),
+    "Erreur lors de la création de l'excuse",
+  );
+  if (ok) {
+    awn.success("Excuse enregistrée");
+    callback();
+    closeModal();
+  }
 };
 const close = () => {
   closeModal();
@@ -205,7 +204,9 @@ const close = () => {
       </template>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-outline-primary">Valider</button>
+      <button :disabled="isSubmitting" type="submit" class="btn btn-outline-primary">
+        Valider
+      </button>
       <button type="button" class="btn btn-outline-secondary" @click="close">Annuler</button>
     </div>
   </form>

@@ -6,6 +6,7 @@ import { useTuyauDiametreStore } from "../../stores/materiel/TuyauDiametre.js";
 import { useBatterieTypeStore } from "../../stores/materiel/BatterieType.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import SelectCategorie from "../materiel/SelectCategorie.vue";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -14,7 +15,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const activeItem = ref({
   type: 0,
   est_attribuable: false,
@@ -43,14 +44,15 @@ const save = async () => {
     awn.alert("Veuillez sélectionnez une catégorie");
     return;
   }
-  ((activeItem.value.id || 0) === 0 ? typeStore.addMaterielType : typeStore.updateMaterielType)(
-    activeItem.value,
-  )
-    .then(closeModal)
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      awn.warning(err.message ?? "Erreur lors de la sauvegarde du matériel type");
-    });
+  const action =
+    (activeItem.value.id || 0) === 0 ? typeStore.addMaterielType : typeStore.updateMaterielType;
+  const { ok } = await submit(
+    () => action(activeItem.value),
+    "Erreur lors de la sauvegarde du matériel type",
+  );
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -239,7 +241,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ activeItem.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

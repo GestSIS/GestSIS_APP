@@ -6,6 +6,7 @@ import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useGroupeStore } from "../../stores/groupe/Groupe.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const authStore = useAuthStore();
 const rtaStore = useRtaStore();
@@ -31,7 +32,7 @@ rtaStore
 
 const maxNbNumero = 3;
 const unselected = ref({});
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 
 const reference = computed(() =>
   rtaStore.reference.map((f) => ({
@@ -216,7 +217,7 @@ const switchAll = (valeur) => {
   mutations.value.forEach((m) => (unselected.value[m.sapeur_id] = !valeur.target.checked));
 };
 
-const mutate = () => {
+const mutate = async () => {
   const sis = activeSisData.value.nom;
 
   if (mutations.value.length === 0) {
@@ -238,15 +239,13 @@ const mutate = () => {
     ],
   };
 
-  rtaStore
-    .updateReferenceRta(data)
-    .then(() => {
-      awn.success("Mutation transmise avec succès");
-    })
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      awn.alert(err.message ?? "Une erreur s'est produite lors du transfert");
-    });
+  const { ok } = await submit(
+    () => rtaStore.updateReferenceRta(data),
+    "Une erreur s'est produite lors du transfert",
+  );
+  if (ok) {
+    awn.success("Mutation transmise avec succès");
+  }
 };
 </script>
 
@@ -280,7 +279,12 @@ const mutate = () => {
             </li>
           </ul>
         </div>
-        <button type="button" class="col-auto btn btn-primary" @click="mutate">
+        <button
+          :disabled="isSubmitting"
+          type="button"
+          class="col-auto btn btn-primary"
+          @click="mutate"
+        >
           Transfert RTA
         </button>
         <a

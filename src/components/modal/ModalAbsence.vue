@@ -1,9 +1,9 @@
 <script setup>
-import { computed, reactive, ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { computed, reactive } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAbsenceStore } from "../../stores/absence/Absence.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -12,7 +12,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   sapeur_id: null,
   ...data,
@@ -23,16 +23,16 @@ const absenceStore = useAbsenceStore();
 const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
 
 const { closeModal } = useModalStore();
-const awn = useNotification();
 
 const save = async () => {
   const action = form?.id ? "updateAbsence" : "addAbsence";
-  absenceStore[action](form)
-    .then(closeModal)
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      awn.alert(err?.message ?? "Impossible d'ajouter cette absence");
-    });
+  const { ok } = await submit(
+    () => absenceStore[action](form),
+    "Impossible d'ajouter cette absence",
+  );
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -82,7 +82,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form?.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

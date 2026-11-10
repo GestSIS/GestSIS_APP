@@ -333,7 +333,14 @@ const detailExcuse = (sapeur) => {
       if (presence !== null && presence !== undefined) {
         presence.present = 0;
         presence.remplace = 0;
-        await savePresence(presence);
+        try {
+          await savePresence(presence, true);
+        } catch (err) {
+          // La modale reste ouverte : la liste n'affiche pas une excuse non enregistrée
+          awn.alert(err?.message || "Erreur lors de l'enregistrement de l'excuse.");
+          return false;
+        }
+        notifySuccess();
         presences.value = presences.value.map((p) =>
           parseInt(p.id) == parseInt(presence.id) ? presence : p,
         );
@@ -350,7 +357,14 @@ const addExcuse = (sapeur) =>
         presence.present = 0;
         presence.absent = 1;
         presence.remplace = 0;
-        await savePresence(presence);
+        try {
+          await savePresence(presence, true);
+        } catch (err) {
+          // La modale reste ouverte : la liste n'affiche pas une excuse non enregistrée
+          awn.alert(err?.message || "Erreur lors de l'enregistrement de l'excuse.");
+          return false;
+        }
+        notifySuccess();
         presences.value = presences.value.map((p) =>
           parseInt(p.id) == parseInt(presence.id) ? presence : p,
         );

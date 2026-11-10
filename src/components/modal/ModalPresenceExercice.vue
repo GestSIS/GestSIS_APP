@@ -147,8 +147,10 @@ const removeExcuse = async (sapeur) => {
     )
   ) {
     try {
-      await exerciceStore.removeExcuse(sapeur?.presence);
-    } catch {}
+      await exerciceStore.removeExcuse(sapeur?.presence?.exercice_id, sapeur?.presence?.sapeur_id);
+    } catch (err) {
+      awn.alert(err?.message || "Erreur lors de la suppression de l'excuse.");
+    }
   }
 
   showModal({

@@ -1,8 +1,9 @@
 <script setup>
-import { computed, reactive, ref } from "vue";
+import { computed, reactive } from "vue";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -11,7 +12,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   remarque: "",
   ...data,
@@ -25,11 +26,15 @@ const fonctions = computed(() =>
 
 const { closeModal } = useModalStore();
 
-const save = async () =>
-  // TODO: Empêcher fonctions à double
-  ((form.id || 0) === 0 ? sapeurStore.addSapeurFonction : sapeurStore.editSapeurFonction)(form)
-    .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+// TODO: Empêcher fonctions à double
+const save = async () => {
+  const action =
+    (form.id || 0) === 0 ? sapeurStore.addSapeurFonction : sapeurStore.editSapeurFonction;
+  const { ok } = await submit(() => action(form));
+  if (ok) {
+    closeModal();
+  }
+};
 </script>
 
 <template>
@@ -82,7 +87,7 @@ const save = async () =>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

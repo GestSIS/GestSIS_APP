@@ -5,6 +5,7 @@ import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
 import { useModalStore } from "../../stores/common/Modal.js";
 import SelectCategorie from "../materiel/SelectCategorie.vue";
 import SelectCouleur from "../materiel/SelectCouleur.vue";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -13,7 +14,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const activeItem = ref({
   couleur_id: null,
   parent_id: null,
@@ -30,11 +31,14 @@ const save = async () => {
     awn.alert("Veuillez sélectionnez une couleur");
     return;
   }
-  ((activeItem.value.id || 0) === 0
-    ? categorieStore.addMaterielCategorie
-    : categorieStore.updateMaterielCategorie)(activeItem.value)
-    .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+  const action =
+    (activeItem.value.id || 0) === 0
+      ? categorieStore.addMaterielCategorie
+      : categorieStore.updateMaterielCategorie;
+  const { ok } = await submit(() => action(activeItem.value));
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -67,7 +71,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ activeItem.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

@@ -6,6 +6,7 @@ import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import ArticleService from "../../services/materiel/ArticleService";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
 import useNotification from "../../composables/useNotification.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -19,7 +20,7 @@ const { data, callback } = defineProps({
 });
 
 const awn = useNotification();
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const emplacement_id = ref(null);
 const emplacementsMultiples = ref(false);
 const form = reactive({
@@ -49,7 +50,7 @@ watch(emplacementsMultiples, (multiple) => {
 });
 
 const { closeModal } = useModalStore();
-const save = () => {
+const save = async () => {
   const articleIds = Object.entries(selected.value)
     .filter(([, isSelected]) => isSelected)
     .map(([id]) => id);
@@ -65,15 +66,17 @@ const save = () => {
       return;
     }
 
-    return ArticleService.retourArticles(emplacement_id.value, {
-      date: form.date,
-      articleIds,
-    })
-      .then(() => {
-        callback();
-        closeModal();
-      })
-      .catch((err) => (errors.value = err.errors ?? {}));
+    const { ok } = await submit(() =>
+      ArticleService.retourArticles(emplacement_id.value, {
+        date: form.date,
+        articleIds,
+      }),
+    );
+    if (ok) {
+      callback();
+      closeModal();
+    }
+    return;
   }
 
   const articleIdsParEmplacement = Object.entries(
@@ -88,19 +91,20 @@ const save = () => {
     return;
   }
 
-  return Promise.all(
-    articleIdsParEmplacement.map(([emplacementId, articles]) =>
-      ArticleService.retourArticles(emplacementId, {
-        date: form.date,
-        articleIds: articles.map((a) => a.id),
-      }),
+  const { ok } = await submit(() =>
+    Promise.all(
+      articleIdsParEmplacement.map(([emplacementId, articles]) =>
+        ArticleService.retourArticles(emplacementId, {
+          date: form.date,
+          articleIds: articles.map((a) => a.id),
+        }),
+      ),
     ),
-  )
-    .then(() => {
-      callback();
-      closeModal();
-    })
-    .catch((err) => (errors.value = err.errors ?? {}));
+  );
+  if (ok) {
+    callback();
+    closeModal();
+  }
 };
 </script>
 
@@ -194,7 +198,7 @@ const save = () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="submit" class="btn btn-primary">Valider</button>
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">Valider</button>
     </div>
   </form>
 </template>

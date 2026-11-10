@@ -1,7 +1,8 @@
 <script setup>
-import { reactive, ref, computed } from "vue";
+import { reactive, computed } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -12,7 +13,7 @@ const { data } = defineProps({
 
 const authStore = useAuthStore();
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   name: "",
   roles: [],
@@ -23,11 +24,12 @@ const roles = computed(() => authStore.roles);
 
 const { closeModal } = useModalStore();
 
-const save = () =>
-  authStore
-    .updateUserRoles(form)
-    .then(closeModal)
-    .catch((err) => (errors.value = err.errors ?? {}));
+const save = async () => {
+  const { ok } = await submit(() => authStore.updateUserRoles(form));
+  if (ok) {
+    closeModal();
+  }
+};
 </script>
 
 <template>
@@ -58,7 +60,7 @@ const save = () =>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Annuler</button>
-      <button type="submit" class="btn btn-primary">Enregistrer</button>
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">Enregistrer</button>
     </div>
   </form>
 </template>

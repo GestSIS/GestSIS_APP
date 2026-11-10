@@ -12,6 +12,7 @@ import permissions from "../../composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
 import { useTravailStore } from "../../stores/travail/Travail.js";
 import TravailService from "../../services/TravailService.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { callback, data } = defineProps({
   callback: {
@@ -38,7 +39,7 @@ const interventionLiee = lienVerrouille ? intervention : null;
 const exerciceLie = lienVerrouille ? exercice : null;
 const lienFixe = interventionLiee ?? exerciceLie;
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   exercice_comptable_id: lienFixe?.exercice_comptable_id ?? exerciceComptableStore.activeId,
   intervention_id: interventionLiee?.id ?? null,
@@ -215,14 +216,14 @@ const save = async () => {
     }));
   }
 
-  let promise = null;
+  let action = null;
   if ((form.id ?? 0) === 0) {
     const travaux = form.sapeurs.map((s) => ({
       ...form,
       sapeurs: undefined,
       ...s,
     }));
-    promise = travailStore.addTravaux(travaux);
+    action = () => travailStore.addTravaux(travaux);
   } else {
     if (!form.sapeurs[0]) return;
     const travail = {
@@ -230,17 +231,13 @@ const save = async () => {
       sapeur_id: form.sapeurs[0].sapeur_id,
       quantite: form.sapeurs[0].quantite,
     };
-    promise = travailStore.updateTravail(travail);
+    action = () => travailStore.updateTravail(travail);
   }
-  promise
-    .then(() => {
-      callback(true);
-      closeModal();
-    })
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      awn.alert(err?.message ?? "Erreur lors de l'enregistrement");
-    });
+  const { ok } = await submit(action);
+  if (ok) {
+    callback(true);
+    closeModal();
+  }
 };
 </script>
 
@@ -424,7 +421,11 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary" :disabled="evenementValideRefuse">
+      <button
+        type="submit"
+        class="btn btn-primary"
+        :disabled="evenementValideRefuse || isSubmitting"
+      >
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, reactive, ref, watchEffect } from "vue";
+import { computed, reactive, watchEffect } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import ArticleService from "../../services/materiel/ArticleService";
@@ -7,6 +7,7 @@ import SelectEmplacement from "../materiel/SelectEmplacement.vue";
 import SelectCouleur from "../materiel/SelectCouleur.vue";
 import useNotification from "../../composables/useNotification.js";
 import { toDateInputValue } from "../../tools/index.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -23,7 +24,7 @@ const awn = useNotification();
 
 const { vehiculeUniquement, ...articleData } = data ?? {};
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   statut: true,
   quantite: 1,
@@ -80,15 +81,12 @@ const save = async () => {
     ? { ...form, emplacement_id: null, sapeur_id: null, emplacement: form.emplacementRepresentee }
     : form;
 
-  (isCreation ? ArticleService.creerArticles : ArticleService.updateArticles)([payload])
-    .then(() => {
-      closeModal();
-      callback();
-    })
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      awn.warning(err.message ?? "Erreur lors de la sauvegarde de l'article");
-    });
+  const action = isCreation ? ArticleService.creerArticles : ArticleService.updateArticles;
+  const { ok } = await submit(() => action([payload]), "Erreur lors de la sauvegarde de l'article");
+  if (ok) {
+    closeModal();
+    callback();
+  }
 };
 </script>
 
@@ -311,7 +309,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>
