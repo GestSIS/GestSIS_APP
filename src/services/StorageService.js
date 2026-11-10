@@ -1,3 +1,5 @@
+import { safeLocalStorage, safeSessionStorage } from "../tools/storage.js";
+
 const TOKEN_KEY = "access_token";
 const USER_KEY = "logged_user";
 const REFRESH_TOKEN_KEY = "refresh_token";
@@ -9,166 +11,97 @@ const ACTIVE_ORGANISATION_KEY = "active_organisation";
 /**
  * Manage the how Access Tokens are being stored and retreived from storage.
  *
- * Current implementation stores to localStorage. Local Storage should always be
- * accessed through this instace.
+ * Relit le stockage à chaque appel : localStorage est partagé entre onglets, un jeton
+ * rafraîchi dans un autre onglet doit être vu immédiatement (pas de valeur en cache).
  **/
-
-// Certains navigateurs (stockage bloqué par les préférences de vie privée,
-// contexte partitionné, ...) font lever une SecurityError sur tout accès à
-// localStorage. On isole ces accès pour ne pas planter l'app au chargement,
-// mais on laisse remonter toute autre erreur (ex. QuotaExceededError).
-function isSecurityError(err) {
-  return err instanceof DOMException && err.name === "SecurityError";
-}
-function safeGetItem(key) {
-  try {
-    return localStorage.getItem(key);
-  } catch (err) {
-    if (!isSecurityError(err)) {
-      throw err;
-    }
-    return null;
-  }
-}
-function safeSetItem(key, value) {
-  try {
-    localStorage.setItem(key, value);
-  } catch (err) {
-    if (!isSecurityError(err)) {
-      throw err;
-    }
-    // Stockage indisponible : on ignore, l'utilisateur devra se reconnecter.
-  }
-}
-function safeRemoveItem(key) {
-  try {
-    localStorage.removeItem(key);
-  } catch (err) {
-    if (!isSecurityError(err)) {
-      throw err;
-    }
-    // Stockage indisponible : rien à supprimer.
-  }
-}
-
-// Organisation active : en sessionStorage pour rester propre à l'onglet (deux onglets
-// peuvent travailler sur deux organisations) tout en survivant à un rechargement.
-function safeSessionGetItem(key) {
-  try {
-    return sessionStorage.getItem(key);
-  } catch (err) {
-    if (!isSecurityError(err)) {
-      throw err;
-    }
-    return null;
-  }
-}
-function safeSessionSetItem(key, value) {
-  try {
-    sessionStorage.setItem(key, value);
-  } catch (err) {
-    if (!isSecurityError(err)) {
-      throw err;
-    }
-    // Stockage indisponible : un rechargement reviendra à l'organisation par défaut.
-  }
-}
-function safeSessionRemoveItem(key) {
-  try {
-    sessionStorage.removeItem(key);
-  } catch (err) {
-    if (!isSecurityError(err)) {
-      throw err;
-    }
-    // Stockage indisponible : rien à supprimer.
-  }
-}
 
 const TokenService = {
   getUser() {
-    return JSON.parse(safeGetItem(USER_KEY));
+    return safeLocalStorage.getJson(USER_KEY);
   },
   saveUser(accessToken) {
-    safeSetItem(USER_KEY, JSON.stringify(accessToken));
+    safeLocalStorage.setJson(USER_KEY, accessToken);
   },
   removeUser() {
-    safeRemoveItem(USER_KEY);
+    safeLocalStorage.remove(USER_KEY);
   },
 
   getAccessToken() {
-    return safeGetItem(TOKEN_KEY);
+    return safeLocalStorage.get(TOKEN_KEY);
   },
   saveAccessToken(accessToken) {
     if (accessToken === null || accessToken === "null") {
       this.removeAccessToken();
     } else {
-      safeSetItem(TOKEN_KEY, accessToken);
+      safeLocalStorage.set(TOKEN_KEY, accessToken);
     }
   },
   removeAccessToken() {
-    safeRemoveItem(TOKEN_KEY);
+    safeLocalStorage.remove(TOKEN_KEY);
   },
 
   getRefreshToken() {
-    return safeGetItem(REFRESH_TOKEN_KEY);
+    return safeLocalStorage.get(REFRESH_TOKEN_KEY);
   },
   saveRefreshToken(refreshToken) {
     if (refreshToken === null || refreshToken === "null") {
       this.removeRefreshToken();
     } else {
-      safeSetItem(REFRESH_TOKEN_KEY, refreshToken);
+      safeLocalStorage.set(REFRESH_TOKEN_KEY, refreshToken);
     }
   },
   removeRefreshToken() {
-    safeRemoveItem(REFRESH_TOKEN_KEY);
+    safeLocalStorage.remove(REFRESH_TOKEN_KEY);
   },
 
   // Session admin mise de côté pendant une usurpation d'identité, pour
   // pouvoir la restaurer via stopImpersonation() même après un F5.
   getAdminAccessToken() {
-    return safeGetItem(ADMIN_TOKEN_KEY);
+    return safeLocalStorage.get(ADMIN_TOKEN_KEY);
   },
   saveAdminAccessToken(accessToken) {
-    safeSetItem(ADMIN_TOKEN_KEY, accessToken);
+    safeLocalStorage.set(ADMIN_TOKEN_KEY, accessToken);
   },
   removeAdminAccessToken() {
-    safeRemoveItem(ADMIN_TOKEN_KEY);
+    safeLocalStorage.remove(ADMIN_TOKEN_KEY);
   },
 
   getAdminUser() {
-    return JSON.parse(safeGetItem(ADMIN_USER_KEY));
+    return safeLocalStorage.getJson(ADMIN_USER_KEY);
   },
   saveAdminUser(user) {
-    safeSetItem(ADMIN_USER_KEY, JSON.stringify(user));
+    safeLocalStorage.setJson(ADMIN_USER_KEY, user);
   },
   removeAdminUser() {
-    safeRemoveItem(ADMIN_USER_KEY);
+    safeLocalStorage.remove(ADMIN_USER_KEY);
   },
 
   // Bandeau d'incitation 2FA : conservé pour survivre à un rechargement de
   // page (qui restaure la session sans repasser par login/refresh).
   getTwoFactorNudge() {
-    return JSON.parse(safeGetItem(TWO_FACTOR_NUDGE_KEY));
+    return safeLocalStorage.getJson(TWO_FACTOR_NUDGE_KEY);
   },
   saveTwoFactorNudge(nudge) {
-    safeSetItem(TWO_FACTOR_NUDGE_KEY, JSON.stringify(nudge));
+    safeLocalStorage.setJson(TWO_FACTOR_NUDGE_KEY, nudge);
   },
   removeTwoFactorNudge() {
-    safeRemoveItem(TWO_FACTOR_NUDGE_KEY);
+    safeLocalStorage.remove(TWO_FACTOR_NUDGE_KEY);
   },
 
+  // Organisation active : en sessionStorage pour rester propre à l'onglet (deux onglets
+  // peuvent travailler sur deux organisations) tout en survivant à un rechargement.
   getActiveOrganisation() {
-    return safeSessionGetItem(ACTIVE_ORGANISATION_KEY);
+    return safeSessionStorage.get(ACTIVE_ORGANISATION_KEY);
   },
   saveActiveOrganisation(orgKey) {
     if (orgKey == null) {
       this.removeActiveOrganisation();
     } else {
-      safeSessionSetItem(ACTIVE_ORGANISATION_KEY, orgKey);
+      safeSessionStorage.set(ACTIVE_ORGANISATION_KEY, orgKey);
     }
   },
   removeActiveOrganisation() {
-    safeSessionRemoveItem(ACTIVE_ORGANISATION_KEY);
+    safeSessionStorage.remove(ACTIVE_ORGANISATION_KEY);
   },
 };
 

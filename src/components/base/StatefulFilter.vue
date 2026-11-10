@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch, onBeforeMount } from "vue";
 import { useAuthStore } from "../../stores/auth/Auth";
+import { useLocalStorage } from "../../composables/useStorage.js";
 
 const authStore = useAuthStore();
 
@@ -22,6 +23,8 @@ const { id, data } = defineProps({
 const sisKey = computed(() => authStore.organisation.activeKey);
 
 const filters = ref({});
+// Filtres enregistrés par SIS : relus automatiquement au changement de SIS
+const savedFilters = useLocalStorage(() => `${sisKey.value}-${id}`, {});
 
 const filteredData = computed(() => {
   return data.filter(
@@ -45,9 +48,7 @@ const canReset = computed(() => {
 });
 
 const init = () => {
-  filters.value = {
-    ...JSON.parse(localStorage.getItem(`${sisKey.value}-${id}`) ?? "{}"),
-  };
+  filters.value = { ...savedFilters.value };
 };
 
 const setFilter = (key, value) => {
@@ -56,21 +57,15 @@ const setFilter = (key, value) => {
     ...filters.value,
     [key]: types.has(typeof value) ? value : parseInt(value, 10),
   };
-  localStorage.setItem(
-    `${sisKey.value}-${id}`,
-    JSON.stringify(
-      Object.fromEntries(
-        Object.entries(filters.value).filter(
-          ([, value]) => !types.has(typeof value) && value != null,
-        ),
-      ),
-    ),
+  // Les filtres de type fonction ne sont pas enregistrables
+  savedFilters.value = Object.fromEntries(
+    Object.entries(filters.value).filter(([, value]) => !types.has(typeof value) && value != null),
   );
 };
 
 const reset = () => {
   filters.value = {};
-  localStorage.removeItem(`${sisKey.value}-${id}`);
+  savedFilters.value = null;
 };
 
 onBeforeMount(init);

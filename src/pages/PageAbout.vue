@@ -1,5 +1,6 @@
 <script setup>
 import { TokenService } from "../services/StorageService.js";
+import { safeLocalStorage } from "../tools/storage.js";
 import * as data from "../../releases.json";
 import { computed, ref } from "vue";
 import { useAuthStore } from "../stores/auth/Auth.js";
@@ -14,10 +15,10 @@ const refreshToken = ref(TokenService.getRefreshToken());
 
 const isAdmin = computed(() => authStore.admin);
 
-const date = localStorage.getItem("latestReleaseDate") ?? releases.value[0].date;
-const version = localStorage.getItem("latestSeenVersion") ?? releases.value[0].version;
-localStorage.setItem("latestReleaseDate", releases.value[0].date);
-localStorage.setItem("latestSeenVersion", releases.value[0].version);
+const date = safeLocalStorage.get("latestReleaseDate") ?? releases.value[0].date;
+const version = safeLocalStorage.get("latestSeenVersion") ?? releases.value[0].version;
+safeLocalStorage.set("latestReleaseDate", releases.value[0].date);
+safeLocalStorage.set("latestSeenVersion", releases.value[0].version);
 
 const latestReadIndex = releases.value.findIndex((r) => r.date == date);
 if (latestReadIndex < 0) {

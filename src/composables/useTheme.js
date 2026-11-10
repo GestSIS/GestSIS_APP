@@ -1,28 +1,25 @@
-import { ref } from "vue";
+import { computed, ref, watchEffect } from "vue";
+import { useLocalStorage } from "./useStorage.js";
 
-const STORAGE_KEY = "theme";
 const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
-
-const theme = ref(localStorage.getItem(STORAGE_KEY) ?? (prefersDark.matches ? "dark" : "light"));
-
-const applyTheme = () => {
-  document.documentElement.setAttribute("data-bs-theme", theme.value);
-};
-applyTheme();
-
-// Suit le thème du système tant que l'utilisateur n'a pas choisi explicitement.
+const systemTheme = ref(prefersDark.matches ? "dark" : "light");
 prefersDark.addEventListener("change", (e) => {
-  if (localStorage.getItem(STORAGE_KEY) === null) {
-    theme.value = e.matches ? "dark" : "light";
-    applyTheme();
-  }
+  systemTheme.value = e.matches ? "dark" : "light";
+});
+
+// Choix explicite de l'utilisateur, null tant qu'il n'a pas choisi : on suit alors le système.
+// Texte brut (pas JSON) pour relire les valeurs déjà enregistrées ; suivi entre onglets.
+const choice = useLocalStorage("theme", null, { raw: true, syncTabs: true });
+
+const theme = computed(() => choice.value ?? systemTheme.value);
+
+watchEffect(() => {
+  document.documentElement.setAttribute("data-bs-theme", theme.value);
 });
 
 export function useTheme() {
   const toggleTheme = () => {
-    theme.value = theme.value === "dark" ? "light" : "dark";
-    localStorage.setItem(STORAGE_KEY, theme.value);
-    applyTheme();
+    choice.value = theme.value === "dark" ? "light" : "dark";
   };
 
   return { theme, toggleTheme };

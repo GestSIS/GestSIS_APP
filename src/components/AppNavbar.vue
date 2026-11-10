@@ -5,6 +5,7 @@ import { DOC_URL } from "../http/Env.js";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth/Auth.js";
 import { useTheme } from "../composables/useTheme.js";
+import { safeLocalStorage } from "../tools/storage.js";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -22,8 +23,8 @@ const { hideSidebar, noSidebar } = defineProps({
 });
 defineEmits(["toggleSidebar"]);
 const showNotif = ref(
-  localStorage.getItem("latestReleaseDate") != releases.releases[0].date ||
-    localStorage.getItem("latestSeenVersion") != releases.releases[0].version,
+  safeLocalStorage.get("latestReleaseDate") != releases.releases[0].date ||
+    safeLocalStorage.get("latestSeenVersion") != releases.releases[0].version,
 );
 
 const isAdmin = computed(() => authStore.admin);
