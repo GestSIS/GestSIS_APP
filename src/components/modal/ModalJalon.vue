@@ -4,6 +4,7 @@ import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { DateTime } from "luxon";
+import useSubmit from "../../composables/useSubmit.js";
 
 const responsableOptions = [
   { value: "aucun", label: "Aucun" },
@@ -22,7 +23,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   intervention_id: interventionStore.active.id,
   ...data.jalon,
@@ -47,13 +48,13 @@ const save = async () => {
   if (responsableMode.value == "sapeur") {
     delete form.sapeur_id;
     if (!form.sapeur) {
-      errors.value.sapeur = "Manquant";
+      errors.value["jalons.0.sapeur"] = "Manquant";
       return;
     }
   } else if (responsableMode.value == "sapeur_id") {
     delete form.sapeur;
     if (!form.sapeur_id) {
-      errors.value.sapeur_id = "Manquant";
+      errors.value["jalons.0.sapeur_id"] = "Manquant";
       return;
     }
   } else {
@@ -61,23 +62,13 @@ const save = async () => {
     form.sapeur = null;
   }
 
-  try {
-    if (form.id) {
-      await interventionStore.editInterventionJalon(form);
-    } else {
-      await interventionStore.addInterventionJalon(form);
-    }
+  const { ok } = await submit(() =>
+    form.id
+      ? interventionStore.editInterventionJalon(form)
+      : interventionStore.addInterventionJalon(form),
+  );
+  if (ok) {
     closeModal();
-  } catch (err) {
-    const fieldErrors = err.errors ?? {};
-    errors.value = {
-      ...fieldErrors,
-      date_time: fieldErrors["jalons.0.date_time"],
-      titre: fieldErrors["jalons.0.titre"],
-      description: fieldErrors["jalons.0.description"],
-      sapeur_id: fieldErrors["jalons.0.sapeur_id"],
-      sapeur: fieldErrors["jalons.0.sapeur"],
-    };
   }
 };
 </script>
@@ -96,7 +87,7 @@ const save = async () => {
           v-model="form.date_time2"
           type="datetime-local"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['date_time'] }"
+          :class="{ 'is-invalid': errors['jalons.0.date_time'] }"
           :min="min"
           :max="max"
         />
@@ -108,7 +99,7 @@ const save = async () => {
           v-model="form.titre"
           type="text"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['titre'] }"
+          :class="{ 'is-invalid': errors['jalons.0.titre'] }"
         />
       </div>
       <div class="mb-3">
@@ -125,7 +116,7 @@ const save = async () => {
         v-if="responsableMode == 'sapeur_id'"
         v-model="form.sapeur_id"
         class="mb-3"
-        :class="{ 'is-invalid': errors['sapeur_id'] }"
+        :class="{ 'is-invalid': errors['jalons.0.sapeur_id'] }"
         display-key="nom_prenom"
         :options="listeSapeurs"
       />
@@ -134,7 +125,7 @@ const save = async () => {
           v-model="form.sapeur"
           type="text"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['sapeur'] }"
+          :class="{ 'is-invalid': errors['jalons.0.sapeur'] }"
         />
       </div>
       <div class="mb-3">
@@ -143,13 +134,13 @@ const save = async () => {
           id="description"
           v-model="form.description"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['description'] }"
+          :class="{ 'is-invalid': errors['jalons.0.description'] }"
         ></textarea>
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save()">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

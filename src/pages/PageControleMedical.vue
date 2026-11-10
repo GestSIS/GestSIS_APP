@@ -12,6 +12,7 @@ import { useModalStore } from "../stores/common/Modal";
 import { useControleMedicalStore } from "../stores/controleMedical/ControleMedical.js";
 import permissions from "../composables/permissions.js";
 import useHasPermission from "../composables/usePermission.js";
+import useSubmit from "../composables/useSubmit.js";
 
 const sapeurStore = useSapeurStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -40,7 +41,7 @@ const loadControleMedicale =
 
 await Promise.all([loadSapeurs, loadMedecins, loadControlesMedicauxTypes, loadControleMedicale]);
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const pdfData = ref(null);
 const file = ref(null);
 
@@ -118,22 +119,19 @@ const downloadJustificatif = () => {
   ).catch((err) => awn.alert(err?.message || "Erreur lors du téléchargement du justificatif."));
 };
 const save = async () => {
-  if (modeAjout.value) {
-    // Ajout d'un nouveau controle-médical
-    controleMedicalStore
-      .createControleMedical()
-      .then((res) => {
-        router.push({ name: "controle-medical", params: { id: res.id } });
-        awn.success(res?.message || "Modifications enregistrées");
-      })
-      .catch((err) => awn.alert(err?.message || "Erreur lors de l'enregistrement"));
-  } else {
-    // Sauvegarder les changements
-    controleMedicalStore
-      .updateControleMedical()
-      .then((res) => awn.success(res?.message || "Modifications enregistrées"))
-      .catch((err) => awn.alert(err?.message || "Erreur lors de l'enregistrement"));
+  const { ok, data } = await submit(() =>
+    // Ajout d'un nouveau controle-médical, ou sauvegarde des changements
+    modeAjout.value
+      ? controleMedicalStore.createControleMedical()
+      : controleMedicalStore.updateControleMedical(),
+  );
+  if (!ok) {
+    return;
   }
+  if (modeAjout.value) {
+    router.push({ name: "controle-medical", params: { id: data.id } });
+  }
+  awn.success(data?.message || "Modifications enregistrées");
 };
 const fileComponent = useTemplateRef("file-justificatif");
 const ajoutJustificatif = () => {
@@ -193,7 +191,12 @@ const validite = (duree) => {
         <div class="card card-primary card-outline">
           <div class="card-header d-flex justify-content-between">
             <h5>Infos</h5>
-            <button v-if="hasEditPermission" class="btn btn-outline-primary" @click="save">
+            <button
+              :disabled="isSubmitting"
+              v-if="hasEditPermission"
+              class="btn btn-outline-primary"
+              @click="save"
+            >
               {{ modeAjout ? "Ajouter" : "Enregistrer" }}
             </button>
           </div>

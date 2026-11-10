@@ -4,6 +4,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement.js";
 import useNotification from "../../composables/useNotification.js";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -19,20 +20,18 @@ const parentIds = computed(() => new Set(emplacementStore.liste.map((e) => e.par
 const estCibleValide = (e) => e.statut && !parentIds.value.has(e.id);
 
 const cibleId = ref(null);
-const enCours = ref(false);
 
 const { closeModal } = useModalStore();
 const awn = useNotification();
+const { isSubmitting, submit } = useSubmit();
 const dupliquer = async () => {
-  enCours.value = true;
-  try {
-    const crees = await emplacementStore.dupliquerEnfants(data.id, cibleId.value);
+  const { ok, data: crees } = await submit(
+    () => emplacementStore.dupliquerEnfants(data.id, cibleId.value),
+    "Erreur lors de la duplication",
+  );
+  if (ok) {
     awn.success(`${crees.length} emplacement(s) dupliqué(s)`);
     closeModal();
-  } catch (res) {
-    awn.alert(res.message || "Erreur lors de la duplication");
-  } finally {
-    enCours.value = false;
   }
 };
 </script>
@@ -59,7 +58,7 @@ const dupliquer = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="submit" class="btn btn-primary" :disabled="!cibleId || enCours">
+      <button type="submit" class="btn btn-primary" :disabled="!cibleId || isSubmitting">
         Dupliquer
       </button>
     </div>

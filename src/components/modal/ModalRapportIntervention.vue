@@ -5,6 +5,7 @@ import permissions from "/src/composables/permissions.js";
 import InterventionService from "/src/services/InterventionService.js";
 import useHasPermission from "../../composables/usePermission.js";
 import { exportFileName } from "../../tools/index.js";
+import useNotification from "../../composables/useNotification.js";
 
 const { data } = defineProps({
   data: {
@@ -13,6 +14,7 @@ const { data } = defineProps({
   },
 });
 
+const awn = useNotification();
 const errors = ref({});
 const form = reactive({
   infoGeneral: true,
@@ -42,7 +44,10 @@ const generer = () => {
     exportFileName(["rapport-intervention", data.date?.slice(0, 10)], "pdf"),
   )
     .then(() => closeModal())
-    .catch(() => closeModal());
+    .catch((err) => {
+      closeModal();
+      awn.alert(err?.message || "Erreur lors de la génération du rapport d'intervention");
+    });
 };
 </script>
 

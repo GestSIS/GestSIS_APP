@@ -10,6 +10,7 @@ import { indexedData } from "../../tools/index.js";
 import ArticleService from "../../services/materiel/ArticleService";
 import ArticleCreation from "../materiel/ArticleCreation.vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -23,6 +24,7 @@ const { data, callback } = defineProps({
 });
 
 const awn = useNotification();
+const { isSubmitting, submit } = useSubmit();
 
 const activeAttribution = ref({
   emplacement_id: data?.emplacementId ?? null,
@@ -57,12 +59,14 @@ const save = async () => {
       ? { ...a, emplacement, emplacement_id: null, sapeur_id: null }
       : { ...a, emplacement_id: activeAttribution.value.emplacement_id, sapeur_id: null },
   );
-  ArticleService.creerArticles(articles)
-    .then(() => {
-      callback();
-      closeModal();
-    })
-    .catch((error) => awn.alert(error.message ?? "Erreur lors de l'attribution du matériel"));
+  const { ok } = await submit(
+    () => ArticleService.creerArticles(articles),
+    "Erreur lors de l'ajout du matériel",
+  );
+  if (ok) {
+    callback();
+    closeModal();
+  }
 };
 </script>
 
@@ -84,7 +88,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="submit" class="btn btn-primary">Ajouter</button>
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">Ajouter</button>
     </div>
   </form>
 </template>

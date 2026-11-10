@@ -1,6 +1,5 @@
 <script setup>
-import { computed, reactive, ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { computed, reactive } from "vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
@@ -8,6 +7,7 @@ import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCat
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -16,7 +16,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   quantite: 0,
   tarif: 0,
@@ -51,7 +51,6 @@ const activeUnite = computed(() => unites.value.find((u) => u.id == form.type_un
 form.exercice_comptable_id = form.exercice_comptable_id ?? activeExerciceComptableId.value;
 
 const { closeModal } = useModalStore();
-const awn = useNotification();
 
 const save = async () => {
   if (!activeUnite.value?.comptable) {
@@ -59,17 +58,12 @@ const save = async () => {
   }
   form.total = Math.round(form?.tarif * form?.quantite * 20) / 20;
 
-  ((form.id || 0) === 0 ? imputationStore.addEcriture : imputationStore.updateEcriture)(form)
-    .then(closeModal)
-    .catch((err) => {
-      errors.value = {
-        ...err.errors,
-      };
-
-      if (err.message) {
-        awn.alert(err.message);
-      }
-    });
+  const action =
+    (form.id || 0) === 0 ? imputationStore.addEcriture : imputationStore.updateEcriture;
+  const { ok } = await submit(() => action(form));
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -199,7 +193,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

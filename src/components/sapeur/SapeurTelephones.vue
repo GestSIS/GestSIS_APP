@@ -7,10 +7,12 @@ import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
 import useNotification from "../../composables/useNotification.js";
 import { formatPhoneNumber } from "../../composables/usePhoneFormatter.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const baseDataStore = useBaseDataStore();
 const sapeurStore = useSapeurStore();
 const awn = useNotification();
+const { isSubmitting, submit } = useSubmit();
 const loading = ref(true);
 
 watchEffect(async () => {
@@ -48,31 +50,30 @@ const { confirm } = useModalStore();
 
 const saveTelephones = async () => {
   const savedTelephones = [...telephones.value];
+  // Les requêtes ne partent qu'au moment du submit (sinon elles échappent au blocage du double envoi)
   const operations = [];
 
   activeSapeurTelephones.value.forEach((t) => {
     //Suppression des numéros supprimé
     if (telephones.value.filter((t2) => t2.id === t.id).length === 0) {
-      operations.push(sapeurStore.removeTelephoneSapeur(t.id));
+      operations.push(() => sapeurStore.removeTelephoneSapeur(t.id));
     }
   });
 
   savedTelephones.forEach((t) => {
     //Numéros modifiés
     if (t.id !== null) {
-      operations.push(sapeurStore.editTelephoneSapeur(t));
+      operations.push(() => sapeurStore.editTelephoneSapeur(t));
     }
     //Nouveaux numéros
     else {
-      operations.push(sapeurStore.addTelephoneSapeur(t));
+      operations.push(() => sapeurStore.addTelephoneSapeur(t));
     }
   });
 
-  try {
-    await Promise.all(operations);
+  const { ok } = await submit(() => Promise.all(operations.map((operation) => operation())));
+  if (ok) {
     awn.success("Modifications enregistrées");
-  } catch (res) {
-    awn.alert(res?.message || "Erreur lors de l'enregistrement");
   }
 };
 const addTelephone = () => {
@@ -126,7 +127,12 @@ const fields = computed(() => [
   <div class="card card-primary card-outline mb-3">
     <div class="card-header d-flex justify-content-between">
       <h3 class="card-title">Téléphones</h3>
-      <button v-if="hasEditPermission" class="btn btn-primary" @click.prevent="saveTelephones">
+      <button
+        :disabled="isSubmitting"
+        v-if="hasEditPermission"
+        class="btn btn-primary"
+        @click.prevent="saveTelephones"
+      >
         Enregistrer
       </button>
     </div>

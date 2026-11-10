@@ -1,32 +1,28 @@
 <script setup>
-import { computed, ref, watchEffect } from "vue";
+import { computed, watchEffect } from "vue";
 import useNotification from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const sapeurStore = useSapeurStore();
 const awn = useNotification();
 
 const activeSapeur = computed(() => sapeurStore.active.data);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 
 watchEffect(() => sapeurStore.fetchSapeur(sapeurStore.active.id));
 
 const save = async () => {
-  sapeurStore
-    .saveActiveSapeur({
-      iban: activeSapeur.value.iban,
-    })
-    .then(() => {
-      errors.value = {};
-      awn.success("Modification enregistrée");
-    })
-    .catch((err) => {
-      errors.value = err?.errors ?? {};
-      awn.alert(err?.message || "Erreur lors la sauvegarde");
-    });
+  const { ok } = await submit(
+    () => sapeurStore.saveActiveSapeur({ iban: activeSapeur.value.iban }),
+    "Erreur lors de la sauvegarde",
+  );
+  if (ok) {
+    awn.success("Modification enregistrée");
+  }
 };
 </script>
 
@@ -36,7 +32,12 @@ const save = async () => {
       <div class="card card-primary card-outline">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Informations bancaires</h3>
-          <button v-if="hasEditPermission" class="btn btn-primary" @click.prevent="save">
+          <button
+            :disabled="isSubmitting"
+            v-if="hasEditPermission"
+            class="btn btn-primary"
+            @click.prevent="save"
+          >
             Enregistrer
           </button>
         </div>

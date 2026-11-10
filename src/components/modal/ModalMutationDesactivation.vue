@@ -6,6 +6,7 @@ import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import useNotification from "../../composables/useNotification.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -14,7 +15,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const selectedExercices = ref({});
 const selectedGroupes = ref({});
 const selectedFonctions = ref({});
@@ -146,7 +147,7 @@ const save = async () => {
 
   const actions = [];
   if (fonctionsASupprimer.length) {
-    actions.push(
+    actions.push(() =>
       sapeurStore.finFonctions({
         fin: mutationDate.value,
         ids: fonctionsASupprimer.map(mapToId),
@@ -154,20 +155,21 @@ const save = async () => {
     );
   }
   if (exercicesASupprimer.length) {
-    actions.push(sapeurStore.supprimerConvocation(exercicesASupprimer.map(mapToId)));
+    actions.push(() => sapeurStore.supprimerConvocation(exercicesASupprimer.map(mapToId)));
   }
   if (groupesAQuitter.length) {
-    actions.push(sapeurStore.quitterGroupes(groupesAQuitter.map(mapToId)));
+    actions.push(() => sapeurStore.quitterGroupes(groupesAQuitter.map(mapToId)));
   }
 
-  try {
-    await Promise.all(actions);
+  const { ok } = await submit(
+    () => Promise.all(actions.map((action) => action())),
+    "Une erreur est survenue lors du traitement",
+  );
+  if (ok) {
     if (actions.length) {
       awn.success("Traitement effectué");
     }
     closeModal();
-  } catch (err) {
-    awn.alert(err?.message ?? "Une erreur est survenue lors du traitement");
   }
 };
 const selectGroupe = (state, groupeId) => {
@@ -313,7 +315,9 @@ const selectFonction = (state, fonctionId) => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="save()">Traitement</button>
+      <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save()">
+        Traitement
+      </button>
     </div>
   </div>
 </template>

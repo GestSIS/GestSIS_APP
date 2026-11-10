@@ -84,40 +84,63 @@ const supprimerPermis = async (permis) => {
     clearPermisDate(permis.permis_type_id);
   }
 };
-const savePermis = () => {
+const savePermis = async () => {
+  const requetes = [];
   Object.values(permisData.value).forEach((p) => {
     //New one
     if (p.id === null && p.date !== null) {
-      sapeurStore
-        .addPermis({
-          permis_type_id: p.permis_type_id,
-          date: p.date,
-        })
-        .then(() => saveSuccessfull(p.permis_type_id))
-        .catch((err) => saveError(p.permis_type_id, err));
+      requetes.push(
+        sapeurStore
+          .addPermis({
+            permis_type_id: p.permis_type_id,
+            date: p.date,
+          })
+          .then(() => saveSuccessfull(p.permis_type_id))
+          .catch((err) => {
+            saveError(p.permis_type_id, err);
+            throw err;
+          }),
+      );
     }
     //Removed
     else if (p.id !== null && (p.date === null || p.date === "")) {
-      sapeurStore
-        .removePermis(p.id)
-        .then(() => saveSuccessfull(p.permis_type_id))
-        .catch((err) => saveError(p.permis_type_id, err));
+      requetes.push(
+        sapeurStore
+          .removePermis(p.id)
+          .then(() => saveSuccessfull(p.permis_type_id))
+          .catch((err) => {
+            saveError(p.permis_type_id, err);
+            throw err;
+          }),
+      );
     }
     //Edited
     else if (
       p.id !== null &&
       p.date !== activeSapeurPermis.value.find((permis) => permis.id == p.id)?.date
     ) {
-      sapeurStore
-        .editPermis({ id: p.id, date: p.date })
-        .then(() => saveSuccessfull(p.permis_type_id))
-        .catch((err) => saveError(p.permis_type_id, err));
+      requetes.push(
+        sapeurStore
+          .editPermis({ id: p.id, date: p.date })
+          .then(() => saveSuccessfull(p.permis_type_id))
+          .catch((err) => {
+            saveError(p.permis_type_id, err);
+            throw err;
+          }),
+      );
     } else {
       //Remove potential error messages
       saveSuccessfull(p.permis_type_id);
     }
   });
-  awn.success("Modifications enregistrées en avec succès");
+
+  // Succès annoncé seulement une fois toutes les requêtes terminées
+  const echecs = (await Promise.allSettled(requetes)).filter((r) => r.status === "rejected");
+  if (echecs.length === 0) {
+    awn.success("Modifications enregistrées avec succès");
+  } else {
+    awn.alert(echecs[0].reason?.message || "Erreur lors de l'enregistrement des permis");
+  }
 };
 const isInvalid = (key) => {
   return errors.value[key] !== undefined;

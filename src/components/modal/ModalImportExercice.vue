@@ -8,10 +8,10 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import useNotification from "../../composables/useNotification.js";
 import ExerciceService from "../../services/ExerciceService.js";
 import MultiStep from "../base/MultiStep.vue";
+import useSubmit from "../../composables/useSubmit.js";
 
 const phase = ref(1);
 const loading = ref(false);
-const sending = ref(false);
 
 const form = reactive({
   exerciceComptableId: null,
@@ -79,10 +79,10 @@ const supprimerExercice = (i) => form.exercices.splice(i, 1);
 
 const { closeModal } = useModalStore();
 const awn = useNotification();
+const { isSubmitting, submit } = useSubmit();
 
 const importer = async () => {
-  sending.value = true;
-  try {
+  const { ok } = await submit(async () => {
     await Promise.all(
       form.exercices.map((e) =>
         ExerciceService.createExercice({
@@ -99,12 +99,10 @@ const importer = async () => {
       ),
     );
     await exerciceStore.fetchExercices(exerciceComptableStore.activeId);
+  }, "Erreur lors de l'importation des exercices");
+  if (ok) {
     awn.success(`${form.exercices.length} exercice(s) importé(s) avec succès`);
     closeModal();
-  } catch (err) {
-    awn.alert(err?.message ?? "Erreur lors de l'importation des exercices");
-  } finally {
-    sending.value = false;
   }
 };
 
@@ -292,7 +290,9 @@ const fieldsStep2 = [
       >
         Suivant
       </button>
-      <button v-else type="submit" class="btn btn-primary" :disabled="sending">Importer</button>
+      <button v-else type="submit" class="btn btn-primary" :disabled="isSubmitting">
+        Importer
+      </button>
     </div>
   </form>
 </template>

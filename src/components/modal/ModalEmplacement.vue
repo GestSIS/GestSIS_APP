@@ -1,9 +1,10 @@
 <script setup>
-import { ref, reactive } from "vue";
+import { reactive } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement.js";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
 import SelectCouleur from "../materiel/SelectCouleur.vue";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -15,7 +16,7 @@ const { data } = defineProps({
 const emplacementStore = useEmplacementStore();
 await emplacementStore.fetchEmplacements();
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   statut: 1,
   est_etiquete: false,
@@ -25,16 +26,12 @@ const form = reactive({
 
 const { closeModal } = useModalStore();
 const save = async () => {
-  ((form.id || 0) === 0 ? emplacementStore.addEmplacement : emplacementStore.updateEmplacement)(
-    form,
-  )
-    .then(closeModal)
-    .catch(
-      (errors) =>
-        (errors = {
-          ...errors,
-        }),
-    );
+  const action =
+    (form.id || 0) === 0 ? emplacementStore.addEmplacement : emplacementStore.updateEmplacement;
+  const { ok } = await submit(() => action(form));
+  if (ok) {
+    closeModal();
+  }
 };
 </script>
 
@@ -79,7 +76,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="sumit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

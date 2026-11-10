@@ -1,10 +1,11 @@
 <script setup>
-import { computed, reactive, ref, watch } from "vue";
+import { computed, reactive, watch } from "vue";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useTelephoneStore } from "../../stores/sapeur/Telephone.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { DateTime } from "luxon";
 import BaseAutocomplete from "/src/components/base/BaseAutocomplete.vue";
+import useSubmit from "../../composables/useSubmit.js";
 
 const interventionStore = useInterventionStore();
 const telephoneStore = useTelephoneStore();
@@ -17,7 +18,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   intervention_id: interventionStore.active.id,
   ...data.appel,
@@ -46,22 +47,13 @@ const save = async () => {
   // Format back dates to SQL Format
   form.date = DateTime.fromISO(form.date2).toFormat(format);
 
-  try {
-    if (form.id) {
-      await interventionStore.editInterventionAppel(form);
-    } else {
-      await interventionStore.addInterventionAppel(form);
-    }
+  const { ok } = await submit(() =>
+    form.id
+      ? interventionStore.editInterventionAppel(form)
+      : interventionStore.addInterventionAppel(form),
+  );
+  if (ok) {
     closeModal();
-  } catch (err) {
-    const fieldErrors = err.errors ?? {};
-    errors.value = {
-      ...fieldErrors,
-      date: fieldErrors["appels.0.date"],
-      nom: fieldErrors["appels.0.nom"],
-      numero: fieldErrors["appels.0.numero"],
-      commentaire: fieldErrors["appels.0.commentaire"],
-    };
   }
 };
 </script>
@@ -80,7 +72,7 @@ const save = async () => {
           v-model="form.date2"
           type="datetime-local"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['date'] }"
+          :class="{ 'is-invalid': errors['appels.0.date'] }"
           :min="min"
           :max="max"
         />
@@ -89,7 +81,7 @@ const save = async () => {
         <base-autocomplete
           v-model="form.nom"
           :items="listTelephones.map((t) => t.nom)"
-          :error="!!errors['nom']"
+          :error="!!errors['appels.0.nom']"
           title="Correspondant"
         />
       </div>
@@ -100,7 +92,7 @@ const save = async () => {
           v-model="form.numero"
           type="text"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['numero'] }"
+          :class="{ 'is-invalid': errors['appels.0.numero'] }"
         />
       </div>
       <div class="mb-3">
@@ -109,13 +101,13 @@ const save = async () => {
           id="commentaire"
           v-model="form.commentaire"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['commentaire'] }"
+          :class="{ 'is-invalid': errors['appels.0.commentaire'] }"
         ></textarea>
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save()">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

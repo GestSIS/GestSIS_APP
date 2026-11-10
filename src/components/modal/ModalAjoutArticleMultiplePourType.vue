@@ -5,6 +5,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import ArticleService from "../../services/materiel/ArticleService";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -18,6 +19,7 @@ const { data, callback } = defineProps({
 });
 
 const awn = useNotification();
+const { isSubmitting, submit } = useSubmit();
 const { closeModal } = useModalStore();
 
 const materielTypeStore = useMaterielTypeStore();
@@ -77,7 +79,7 @@ const numerosEnDouble = computed(() => {
   return new Set(numeros.filter((n, i) => numeros.indexOf(n) !== i));
 });
 
-const save = () => {
+const save = async () => {
   if (articles.value.length === 0) {
     awn.warning("Veuillez ajouter au moins un article");
     return;
@@ -95,22 +97,27 @@ const save = () => {
     return;
   }
 
-  ArticleService.creerArticles(
-    articles.value.map((a) => ({
-      ...a,
-      materiel_type_id: type.value.id,
-      emplacement_id: plusieursEmplacements.value ? a.emplacement_id : emplacementParDefaut.value,
-      sapeur_id: null,
-      numero: type.value.est_numerote ? a.numero.trim() : null,
-      quantite: type.value.est_numerote ? 1 : Number(a.quantite),
-      date_peremption: a.date_peremption || null,
-    })),
-  )
-    .then(() => {
-      callback();
-      closeModal();
-    })
-    .catch((error) => awn.alert(error.message ?? "Erreur lors de l'ajout du matériel"));
+  const { ok } = await submit(
+    () =>
+      ArticleService.creerArticles(
+        articles.value.map((a) => ({
+          ...a,
+          materiel_type_id: type.value.id,
+          emplacement_id: plusieursEmplacements.value
+            ? a.emplacement_id
+            : emplacementParDefaut.value,
+          sapeur_id: null,
+          numero: type.value.est_numerote ? a.numero.trim() : null,
+          quantite: type.value.est_numerote ? 1 : Number(a.quantite),
+          date_peremption: a.date_peremption || null,
+        })),
+      ),
+    "Erreur lors de l'ajout du matériel",
+  );
+  if (ok) {
+    callback();
+    closeModal();
+  }
 };
 </script>
 
@@ -238,7 +245,7 @@ const save = () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="submit" class="btn btn-primary">Ajouter</button>
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">Ajouter</button>
     </div>
   </form>
 </template>

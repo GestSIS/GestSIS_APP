@@ -1,8 +1,9 @@
 <script setup>
-import { computed, reactive, ref } from "vue";
+import { computed, reactive } from "vue";
 import { useMaterielStore } from "../../stores/intervention/Materiel.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useModalStore } from "../../stores/common/Modal.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -14,7 +15,7 @@ const { data } = defineProps({
 const materielStore = useMaterielStore();
 const interventionStore = useInterventionStore();
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   intervention_id: interventionStore.active.id,
   ...data,
@@ -33,20 +34,13 @@ const listeMateriels = computed(() => {
 const { closeModal } = useModalStore();
 
 const save = async () => {
-  try {
-    if (form.id) {
-      await interventionStore.editInterventionMateriel(form);
-    } else {
-      await interventionStore.addInterventionMateriel(form);
-    }
+  const { ok } = await submit(() =>
+    form.id
+      ? interventionStore.editInterventionMateriel(form)
+      : interventionStore.addInterventionMateriel(form),
+  );
+  if (ok) {
     closeModal();
-  } catch (err) {
-    const fieldErrors = err.errors ?? {};
-    errors.value = {
-      ...fieldErrors,
-      materiel_id: fieldErrors["materiels.0.materiel_id"],
-      quantite: fieldErrors["materiels.0.quantite"],
-    };
   }
 };
 </script>
@@ -61,7 +55,7 @@ const save = async () => {
       <base-select
         v-model="form.materiel_id"
         class="mb-3"
-        :class="{ 'is-invalid': errors['materiel_id'] }"
+        :class="{ 'is-invalid': errors['materiels.0.materiel_id'] }"
         label="Matériel"
         :options="listeMateriels"
         :disabled="form.id"
@@ -76,13 +70,13 @@ const save = async () => {
           required
           type="number"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['quantite'] }"
+          :class="{ 'is-invalid': errors['materiels.0.quantite'] }"
         />
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

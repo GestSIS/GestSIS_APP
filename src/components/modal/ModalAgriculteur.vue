@@ -1,8 +1,8 @@
 <script setup>
-import { computed, reactive, ref } from "vue";
+import { computed, reactive } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import RtaService from "../../services/RtaService.js";
-import useNotification from "../../composables/useNotification.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -15,7 +15,7 @@ const { data, callback } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   ...data.agriculteur,
   capacites: data.agriculteur.capacites?.map((g) => ({ ...g })) ?? [{ numero: "" }],
@@ -36,7 +36,6 @@ const supprimerCapacite = (capacite) => {
 };
 
 const { closeModal } = useModalStore();
-const awn = useNotification();
 const save = async () => {
   const action = form.id ? RtaService.updateAgriculteur : RtaService.createAgriculteur;
   form.moyens_contact = form.moyens_contact
@@ -48,12 +47,13 @@ const save = async () => {
       ...g,
       tri: i + 1,
     }));
-  try {
-    const { data } = await action(form);
-    callback(data);
+  const { ok, data } = await submit(
+    () => action(form),
+    "Erreur lors de l'enregistrement de l'agriculteur",
+  );
+  if (ok) {
+    callback(data.data);
     closeModal();
-  } catch (err) {
-    awn.alert(err?.message ?? "Erreur lors de l'enregistrement de l'agriculteur");
   }
 };
 
@@ -207,7 +207,7 @@ const types = [
       <button autofocus type="button" class="btn btn-secondary" @click="closeModal(false)">
         Annuler
       </button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

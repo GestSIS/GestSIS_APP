@@ -3,6 +3,7 @@ import { computed, reactive, ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import useNotification from "../../composables/useNotification.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {
@@ -19,7 +20,7 @@ const awn = useNotification();
 // autres actions 2FA sensibles).
 const { totpActive = false, ...initialForm } = data ?? {};
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   expires_in_days: 30,
   permission_ids: [],
@@ -51,25 +52,20 @@ const { closeModal } = useModalStore();
 const save = async () => {
   if (token.value) {
     closeModal();
+    return;
   }
 
   if (!form.organisation_ids?.length && !authStore.admin) {
     awn.alert("Veuillez sélectionner au moins un SIS");
     return;
   }
-  authStore[form.id ? "updateApiToken" : "createApiToken"](form)
-    .then((res) => {
-      token.value = res.token;
-    })
-    .catch((err) => {
-      // Le backend renvoie soit { message, errors: { champ: [...] } } (validation),
-      // soit { message } seul (permissions/SIS manquants).
-      if (err?.errors) {
-        errors.value = err.errors;
-      } else {
-        awn.alert(err?.message ?? "Erreur lors de la création du jeton");
-      }
-    });
+  const { ok, data } = await submit(
+    () => authStore[form.id ? "updateApiToken" : "createApiToken"](form),
+    "Erreur lors de la création du jeton",
+  );
+  if (ok) {
+    token.value = data.token;
+  }
 };
 
 const copyToClipboard = (text) => {
@@ -213,7 +209,7 @@ const copyToClipboard = (text) => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

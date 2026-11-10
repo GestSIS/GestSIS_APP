@@ -1,10 +1,10 @@
 <script setup>
 import { computed, ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useDecompteStore } from "../../stores/comptabilite/Decompte.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { callback, data } = defineProps({
   callback: {
@@ -18,7 +18,6 @@ const { callback, data } = defineProps({
 });
 
 const config = ref({
-  errors: {},
   mode: "genererDecompte",
 });
 const params = ref({
@@ -62,29 +61,20 @@ if (data.remount) {
 }
 
 const { closeModal, showModal } = useModalStore();
-const awn = useNotification();
+const { errors, isSubmitting, submit } = useSubmit();
 
-const creer = () => {
-  showModal({ component: "ModalChargement" });
+// Pas de ModalChargement : elle remplacerait cette modale et le formulaire serait perdu en cas d'erreur
+const creer = async () => {
   const action =
     config.value.mode === "sapeur"
       ? decompteStore.genererDecompteSapeur
       : config.value.mode === "exercice"
         ? decompteStore.genererDecompteExercice
         : decompteStore.genererDecompteAnnuel;
-  action(params.value)
-    .then(() => {
-      (callback() ?? Promise.resolve()).then((close) => {
-        if (close ?? true) {
-          closeModal();
-        }
-      });
-    })
-    .catch((err) => {
-      closeModal();
-      config.value.errors = err;
-      awn.alert(err?.message ?? "Erreur lors de la création du décompte");
-    });
+  const { ok } = await submit(() => action(params.value), "Erreur lors de la création du décompte");
+  if (ok && ((await callback()) ?? true)) {
+    closeModal();
+  }
 };
 
 const select = () => {
@@ -136,7 +126,7 @@ const resetSelection = () => {
           required
           type="text"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': config.errors['designation'] }"
+          :class="{ 'is-invalid': errors['designation'] }"
           name="designation"
           :disabled="params.exercice_id || params.sapeur_id"
         />
@@ -146,7 +136,7 @@ const resetSelection = () => {
         v-model="params.exercice_comptable_id"
         :required="true"
         class="mb-3"
-        :class="{ 'is-invalid': config.errors['exercice_comptable_id'] }"
+        :class="{ 'is-invalid': errors['exercice_comptable_id'] }"
         label="Exercice comptable id"
         :options="listeExerciceComptable"
       />
@@ -158,7 +148,7 @@ const resetSelection = () => {
           required
           type="date"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': config.errors['date'] }"
+          :class="{ 'is-invalid': errors['date'] }"
           name="date"
         />
       </div>
@@ -269,7 +259,7 @@ const resetSelection = () => {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-primary">Créer</button>
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">Créer</button>
       <button type="button" class="btn btn-outline-secondary" @click="closeModal">Annuler</button>
     </div>
   </form>

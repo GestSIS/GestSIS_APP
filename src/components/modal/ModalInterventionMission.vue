@@ -6,6 +6,7 @@ import { useInterventionStore } from "../../stores/intervention/Intervention.js"
 import { useModalStore } from "../../stores/common/Modal.js";
 import { DateTime } from "luxon";
 import BaseAutocomplete from "/src/components/base/BaseAutocomplete.vue";
+import useSubmit from "../../composables/useSubmit.js";
 
 const responsableOptions = [
   { value: "sapeur_id", label: "Sapeur" },
@@ -26,7 +27,7 @@ const { data } = defineProps({
   },
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   intervention_id: interventionStore.active.id,
   ...data.mission,
@@ -52,34 +53,24 @@ const save = async () => {
   if (responsableMode.value == "sapeur") {
     delete form.sapeur_id;
     if (!form.sapeur) {
-      errors.value.sapeur = "Manquant";
+      errors.value["missions.0.sapeur"] = "Manquant";
       return;
     }
   } else {
     delete form.sapeur;
     if (!form.sapeur_id) {
-      errors.value.sapeur_id = "Manquant";
+      errors.value["missions.0.sapeur_id"] = "Manquant";
       return;
     }
   }
 
-  try {
-    if (form.id) {
-      await interventionStore.editInterventionMission(form);
-    } else {
-      await interventionStore.addInterventionMission(form);
-    }
+  const { ok } = await submit(() =>
+    form.id
+      ? interventionStore.editInterventionMission(form)
+      : interventionStore.addInterventionMission(form),
+  );
+  if (ok) {
     closeModal();
-  } catch (err) {
-    const fieldErrors = err.errors ?? {};
-    errors.value = {
-      ...fieldErrors,
-      debut: fieldErrors["missions.0.debut"],
-      fin: fieldErrors["missions.0.fin"],
-      sapeur_id: fieldErrors["missions.0.sapeur_id"],
-      sapeur: fieldErrors["missions.0.sapeur"],
-      titre: fieldErrors["missions.0.titre"],
-    };
   }
 };
 </script>
@@ -98,14 +89,14 @@ const save = async () => {
           v-model="form.debut2"
           type="datetime-local"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['debut'] }"
+          :class="{ 'is-invalid': errors['missions.0.debut'] }"
         />
       </div>
       <div class="mb-3">
         <base-autocomplete
           v-model="form.titre"
           :items="listMissions.map((m) => m.titre)"
-          :error="!!errors['titre']"
+          :error="!!errors['missions.0.titre']"
           title="Titre"
         />
       </div>
@@ -123,7 +114,7 @@ const save = async () => {
         v-if="responsableMode == 'sapeur_id'"
         v-model="form.sapeur_id"
         class="mb-3"
-        :class="{ 'is-invalid': errors['sapeur_id'] }"
+        :class="{ 'is-invalid': errors['missions.0.sapeur_id'] }"
         display-key="nom_prenom"
         :options="listeSapeurs"
       />
@@ -132,7 +123,7 @@ const save = async () => {
           v-model="form.sapeur"
           type="text"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['sapeur'] }"
+          :class="{ 'is-invalid': errors['missions.0.sapeur'] }"
         />
       </div>
       <div class="mb-3">
@@ -142,7 +133,7 @@ const save = async () => {
           v-model="form.fin2"
           type="datetime-local"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['fin'] }"
+          :class="{ 'is-invalid': errors['missions.0.fin'] }"
         />
         <!-- :min="form.debut2 || min"
         :max="max"-->
@@ -153,13 +144,13 @@ const save = async () => {
           id="resume"
           v-model="form.resume"
           class="form-control form-control-sm"
-          :class="{ 'is-invalid': errors['resume'] }"
+          :class="{ 'is-invalid': errors['missions.0.resume'] }"
         ></textarea>
       </div>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="button" class="btn btn-primary" @click="save()">
+      <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save()">
         {{ form.id ? "Modifier" : "Ajouter" }}
       </button>
     </div>

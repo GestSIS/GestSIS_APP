@@ -11,6 +11,7 @@ import permissions from "../../composables/permissions.js";
 
 import Api from "/src/http/Request";
 import useHasPermission from "../../composables/usePermission.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const localiteStore = useLocaliteStore();
 const sisParamStore = useSisParamStore();
@@ -26,7 +27,7 @@ await localiteStore.fetchLocalitesSis();
 const logo = ref(null);
 const logoUrl = ref("");
 const loadingLogo = ref(true);
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const fields = [
   { title: "Npa", key: "npa" },
   { title: "Localité", key: "localite" },
@@ -97,15 +98,9 @@ const updateLocalitesSis = () => {
   });
 };
 const save = async () => {
-  try {
-    const res = await sisParamStore.updateSisParams(sisParam.value);
-    errors.value = {};
-    awn.success(res?.message || "Modifications enregistrées");
-  } catch (err) {
-    errors.value = {
-      ...err.errors,
-    };
-    awn.alert(err?.message || "Erreur lors de l'enregistrement");
+  const { ok, data } = await submit(() => sisParamStore.updateSisParams(sisParam.value));
+  if (ok) {
+    awn.success(data?.message || "Modifications enregistrées");
   }
 };
 const loadSisLogo = () => {
@@ -126,18 +121,11 @@ const saveLogo = async () => {
     awn.warning("Veuillez sélectionner un logo");
     return;
   }
-  SisParamService.updateLogo(logo.value)
-    .then((res) => {
-      errors.value = {};
-      awn.success(res?.message || "Modifications enregistrées");
-      loadSisLogo();
-    })
-    .catch((e) => {
-      errors.value = {
-        ...e.errors,
-      };
-      awn.alert(e?.message || "Erreur lors de l'enregistrement");
-    });
+  const { ok, data } = await submit(() => SisParamService.updateLogo(logo.value));
+  if (ok) {
+    awn.success(data?.message || "Modifications enregistrées");
+    loadSisLogo();
+  }
 };
 </script>
 
@@ -148,6 +136,7 @@ const saveLogo = async () => {
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">General</h3>
           <button
+            :disabled="isSubmitting"
             v-if="hasConfigGeneralPermission"
             type="button"
             class="btn btn-primary"
@@ -336,7 +325,7 @@ const saveLogo = async () => {
         <div v-if="hasConfigGeneralPermission" class="card-body">
           <div class="input-group">
             <input type="file" class="form-control" @change="onFileChange" />
-            <button class="btn btn-primary" @click="saveLogo">save</button>
+            <button :disabled="isSubmitting" class="btn btn-primary" @click="saveLogo">save</button>
           </div>
         </div>
         <div class="card-body d-flex justify-content-center">

@@ -11,6 +11,7 @@ import ArticleCreation from "../materiel/ArticleCreation.vue";
 import ArticleSelecteur from "../materiel/ArticleSelecteur.vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import useNotification from "../../composables/useNotification.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -29,7 +30,7 @@ onMounted(() => {
   sapeur.value.focus();
 });
 
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const depuisInventaire = ref(true);
 const form = reactive({
   date: toLocalIsoDate(),
@@ -67,12 +68,14 @@ const save = async () => {
       date: form.date,
       articleIds: form.articlesDepuisInventaire.map((a) => a.id),
     };
-    ArticleService.attribuerArticles(form.sapeur_id, attribution)
-      .then(() => {
-        callback();
-        closeModal();
-      })
-      .catch((error) => awn.alert(error.message ?? "Erreur lors de l'attribution du matériel"));
+    const { ok } = await submit(
+      () => ArticleService.attribuerArticles(form.sapeur_id, attribution),
+      "Erreur lors de l'attribution du matériel",
+    );
+    if (ok) {
+      callback();
+      closeModal();
+    }
   } else {
     // Création du matériel
     const articles = form.articlesHorsInventaire.map((a) => ({
@@ -81,12 +84,14 @@ const save = async () => {
       sapeur_id: form.sapeur_id,
       emplacement_id: null,
     }));
-    ArticleService.creerArticles(articles)
-      .then(() => {
-        callback();
-        closeModal();
-      })
-      .catch((error) => awn.alert(error.message ?? "Erreur lors de l'attribution du matériel"));
+    const { ok } = await submit(
+      () => ArticleService.creerArticles(articles),
+      "Erreur lors de l'attribution du matériel",
+    );
+    if (ok) {
+      callback();
+      closeModal();
+    }
   }
 };
 </script>
@@ -152,7 +157,7 @@ const save = async () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal">Fermer</button>
-      <button type="submit" class="btn btn-primary">Attribuer</button>
+      <button :disabled="isSubmitting" type="submit" class="btn btn-primary">Attribuer</button>
     </div>
   </form>
 </template>

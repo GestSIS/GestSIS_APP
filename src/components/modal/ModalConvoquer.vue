@@ -42,7 +42,10 @@ const convoquer = () => {
   showModal({ component: "ModalChargement" });
   ConvocationService.downloadConvocations(exerciceComptableId.value, form.value)
     .then(closeModal)
-    .catch(closeModal);
+    .catch((err) => {
+      closeModal();
+      awn.alert(err?.message || "Erreur lors de la génération des convocations");
+    });
 };
 // Les textes saisis sont mémorisés pour les prochaines convocations, mais
 // seulement avec le droit de modification des exercices (sinon ils ne valent que

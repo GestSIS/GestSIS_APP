@@ -3,6 +3,7 @@ import { computed, ref } from "vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const { callback, data } = defineProps({
   callback: {
@@ -34,7 +35,7 @@ const date_debut = ref(data.presence?.debut?.slice(0, 10) ?? dateDebutMin);
 const date_fin = ref(data.presence?.fin?.slice(0, 10) ?? dateDebutMin);
 const heure_debut = ref(data.presence?.debut?.slice(11, 16));
 const heure_fin = ref(data.presence?.fin?.slice(11, 16));
-const errors = ref({});
+const { errors, isSubmitting, submit } = useSubmit();
 const selectedSapeurs = ref(Object.fromEntries(data.sapeurs?.map((s) => [s, true]) ?? []));
 const piquet = ref(data.presence?.piquet ?? false);
 
@@ -71,7 +72,7 @@ const roundDebut = () => {
     heure_debut.value = roundTime(heure_debut.value, 15);
   }
 };
-const save = () => {
+const save = async () => {
   const debut = date_debut.value + " " + heure_debut.value;
   const fin = date_fin.value + " " + heure_fin.value;
   if (editMode) {
@@ -81,25 +82,10 @@ const save = () => {
       fin,
       piquet: piquet.value,
     };
-    interventionStore
-      .editPresence(presence)
-      .then(() => {
-        (callback() ?? Promise.resolve()).then((close) => {
-          if (close ?? true) {
-            closeModal();
-          }
-        });
-      })
-      .catch((err) => {
-        const fieldErrors = err.errors ?? {};
-        errors.value = {
-          ...fieldErrors,
-          date_debut: fieldErrors["sapeurs.0.debut"],
-          date_fin: fieldErrors["sapeurs.0.fin"],
-          heure_debut: fieldErrors["sapeurs.0.debut"],
-          heure_fin: fieldErrors["sapeurs.0.fin"],
-        };
-      });
+    const { ok } = await submit(() => interventionStore.editPresence(presence));
+    if (ok && ((await callback()) ?? true)) {
+      closeModal();
+    }
   } else {
     let presences = [];
     Object.keys(selectedSapeurs.value)
@@ -107,25 +93,10 @@ const save = () => {
       .forEach((s) => {
         presences = [...presences, { sapeur_id: s, debut, fin, piquet: piquet.value }];
       });
-    interventionStore
-      .addPresences(presences)
-      .then(() => {
-        (callback() ?? Promise.resolve()).then((close) => {
-          if (close ?? true) {
-            closeModal();
-          }
-        });
-      })
-      .catch((error) => {
-        const fieldErrors = error.errors ?? {};
-        errors.value = {
-          ...fieldErrors,
-          date_debut: fieldErrors["sapeurs.0.debut"],
-          date_fin: fieldErrors["sapeurs.0.fin"],
-          heure_debut: fieldErrors["sapeurs.0.debut"],
-          heure_fin: fieldErrors["sapeurs.0.fin"],
-        };
-      });
+    const { ok } = await submit(() => interventionStore.addPresences(presences));
+    if (ok && ((await callback()) ?? true)) {
+      closeModal();
+    }
   }
 };
 </script>
@@ -158,7 +129,7 @@ const save = () => {
                 v-model="date_debut"
                 required
                 class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['date_debut'] }"
+                :class="{ 'is-invalid': errors['sapeurs.0.debut'] }"
                 type="date"
                 :min="dateDebutMin"
                 :max="dateDebutMax"
@@ -180,7 +151,7 @@ const save = () => {
                 required
                 type="time"
                 class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['heure_debut'] }"
+                :class="{ 'is-invalid': errors['sapeurs.0.debut'] }"
                 name="heure_debut"
                 step="900"
                 @focusout="roundDebut"
@@ -202,7 +173,7 @@ const save = () => {
                 v-model="date_fin"
                 required
                 class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['date_fin'] }"
+                :class="{ 'is-invalid': errors['sapeurs.0.fin'] }"
                 :min="dateFinMin"
                 :max="dateFinMax"
                 type="date"
@@ -225,7 +196,7 @@ const save = () => {
                 type="time"
                 class="form-control form-control-sm"
                 :class="{
-                  'is-invalid': errors['heure_fin'],
+                  'is-invalid': errors['sapeurs.0.fin'],
                 }"
                 name="heure_fin"
                 step="900"
@@ -253,7 +224,7 @@ const save = () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary" :disabled="!nbSelectedSapeurs">
+      <button type="submit" class="btn btn-primary" :disabled="!nbSelectedSapeurs || isSubmitting">
         {{ editMode ? "Enregistrer" : "Ajouter" }}
       </button>
     </div>

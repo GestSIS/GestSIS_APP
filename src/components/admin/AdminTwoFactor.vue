@@ -2,9 +2,11 @@
 import { computed, ref } from "vue";
 import { useAdminStore } from "../../stores/admin/Admin";
 import useNotification from "../../composables/useNotification.js";
+import useSubmit from "../../composables/useSubmit.js";
 
 const adminStore = useAdminStore();
 const awn = useNotification();
+const { isSubmitting, submit } = useSubmit();
 
 const loading = ref(true);
 const enforcedAtInput = ref("");
@@ -20,12 +22,15 @@ loadAll();
 
 const stats = computed(() => adminStore.twoFactorStats);
 
-const saveEnforcedAt = (enforcedAtValue) => {
+const saveEnforcedAt = async (enforcedAtValue) => {
   const enforcedAt = enforcedAtValue ? new Date(enforcedAtValue).toISOString() : null;
-  adminStore
-    .updateTwoFactorPolicy(enforcedAt)
-    .then(() => awn.success("Politique 2FA mise à jour"))
-    .catch((e) => awn.alert(e?.message || "Erreur lors de la mise à jour"));
+  const { ok } = await submit(
+    () => adminStore.updateTwoFactorPolicy(enforcedAt),
+    "Erreur lors de la mise à jour",
+  );
+  if (ok) {
+    awn.success("Politique 2FA mise à jour");
+  }
 };
 
 const clearEnforcedAt = () => {
@@ -70,13 +75,17 @@ const exemptionFields = [
               class="form-control form-control-sm"
             />
           </div>
-          <button class="btn btn-primary w-100 mb-2" @click="saveEnforcedAt(enforcedAtInput)">
+          <button
+            :disabled="isSubmitting"
+            class="btn btn-primary w-100 mb-2"
+            @click="saveEnforcedAt(enforcedAtInput)"
+          >
             Enregistrer
           </button>
           <button
             type="button"
             class="btn btn-outline-secondary w-100"
-            :disabled="!adminStore.twoFactorPolicy.enforcedAt"
+            :disabled="!adminStore.twoFactorPolicy.enforcedAt || isSubmitting"
             @click="clearEnforcedAt"
           >
             Retirer l'échéance
