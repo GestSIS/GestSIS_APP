@@ -2,9 +2,9 @@
 import { computed, ref } from "vue";
 import ArticleService from "../../services/materiel/ArticleService.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { exportFileName } from "../../tools/index.js";
 
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);

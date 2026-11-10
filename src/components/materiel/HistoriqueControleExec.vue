@@ -2,8 +2,8 @@
 import { computed, ref } from "vue";
 import ControleExecService from "../../services/materiel/ControleExecService.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useNotification from "../../composables/useNotification.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useNotification } from "../../composables/useNotification.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
 
 const { articleId, controle } = defineProps({

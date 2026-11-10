@@ -1,8 +1,8 @@
 <script setup>
 import { computed, ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useExcuseParamStore } from "../../stores/exercice/ExcuseParam.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const excuseParamStore = useExcuseParamStore();
 await excuseParamStore.fetchParams();

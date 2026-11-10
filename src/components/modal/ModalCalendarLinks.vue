@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import IcsTokenService from "../../services/IcsTokenService.js";
 import { DOC_URL } from "../../http/Env.js";
 

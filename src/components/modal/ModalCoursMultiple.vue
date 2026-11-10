@@ -1,6 +1,6 @@
 <script setup>
 import { computed, nextTick, reactive, ref, useTemplateRef, watch } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";

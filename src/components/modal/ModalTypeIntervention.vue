@@ -3,7 +3,7 @@ import { reactive, computed } from "vue";
 import { useTypeInterventionStore } from "../../stores/intervention/TypeIntervention.js";
 import { useStatInterventionStore } from "../../stores/intervention/StatIntervention.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { callback, data } = defineProps({
   callback: {

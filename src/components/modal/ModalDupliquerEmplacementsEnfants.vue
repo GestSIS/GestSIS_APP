@@ -2,9 +2,9 @@
 import { computed, ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

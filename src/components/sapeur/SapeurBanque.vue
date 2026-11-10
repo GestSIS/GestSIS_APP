@@ -1,10 +1,10 @@
 <script setup>
 import { computed, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import permissions from "/src/composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const sapeurStore = useSapeurStore();
 const awn = useNotification();

@@ -2,10 +2,10 @@
 import { computed, ref, watchEffect } from "vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const awn = useNotification();
 

@@ -1,7 +1,7 @@
 <script setup>
 import { computed, watchEffect } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import useNotification from "../composables/useNotification.js";
+import { useNotification } from "../composables/useNotification.js";
 import { useExerciceStore } from "../stores/exercice/Exercice.js";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 

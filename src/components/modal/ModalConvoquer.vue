@@ -4,9 +4,9 @@ import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceCom
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useConvocationParamStore } from "../../stores/exercice/ConvocationParam.js";
 import permissions from "../../composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import ConvocationService from "/src/services/ConvocationService.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const awn = useNotification();
 

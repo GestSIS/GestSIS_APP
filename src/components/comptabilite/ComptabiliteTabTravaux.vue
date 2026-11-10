@@ -2,7 +2,7 @@
 import { computed, ref, watchEffect } from "vue";
 import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import { travailStatut, travailStatutOptions } from "../../composables/travailStatuts.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useTravailStore } from "../../stores/travail/Travail.js";
 import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
@@ -15,7 +15,7 @@ import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 import permissions from "../../composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 
 const uniteStore = useUniteStore();
 const travailStore = useTravailStore();

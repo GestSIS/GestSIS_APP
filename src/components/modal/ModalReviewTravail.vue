@@ -5,7 +5,7 @@ import { useUniteStore } from "../../stores/common/Unite.js";
 import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useTravailStore } from "../../stores/travail/Travail.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

@@ -3,7 +3,7 @@ import { useModalStore } from "../stores/common/Modal";
 import permissions from "../composables/permissions.js";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 import { computed, ref, watch, watchEffect } from "vue";
-import useHasPermission from "../composables/usePermission.js";
+import { useHasPermission } from "../composables/useHasPermission.js";
 import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
 import { useLocaliteStore } from "../stores/common/Localite.js";
 import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";

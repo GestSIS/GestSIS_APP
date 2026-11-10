@@ -5,7 +5,7 @@ import { useTelephoneStore } from "../../stores/sapeur/Telephone.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { DateTime } from "luxon";
 import BaseAutocomplete from "/src/components/base/BaseAutocomplete.vue";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const interventionStore = useInterventionStore();
 const telephoneStore = useTelephoneStore();

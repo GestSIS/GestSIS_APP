@@ -1,12 +1,12 @@
 <script setup>
 import { reactive } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import SelectCouleur from "../materiel/SelectCouleur.vue";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

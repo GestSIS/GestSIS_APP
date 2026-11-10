@@ -4,7 +4,7 @@ import { useSapeurStore } from "../stores/sapeur/Sapeur";
 import { useModalStore } from "../stores/common/Modal";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 import PublipostageService from "/src/services/PublipostageService.js";
-import useNotification from "../composables/useNotification.js";
+import { useNotification } from "../composables/useNotification.js";
 
 const awn = useNotification();
 

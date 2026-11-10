@@ -2,7 +2,7 @@
 import { reactive } from "vue";
 import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

@@ -5,7 +5,7 @@ import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useInterventionStore } from "../stores/intervention/Intervention.js";
 import { interventionStatut } from "../composables/interventionStatuts.js";
-import useValidationIntervention from "../composables/useValidationIntervention.js";
+import { useValidationIntervention } from "../composables/useValidationIntervention.js";
 
 const interventionStore = useInterventionStore();
 const route = useRoute();

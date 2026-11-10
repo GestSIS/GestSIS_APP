@@ -5,8 +5,8 @@ import { useRouter } from "vue-router";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import RecrutementService from "/src/services/RecrutementService.js";
-import useNotification from "../../composables/useNotification.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const authStore = useAuthStore();
 const router = useRouter();

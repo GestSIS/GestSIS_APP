@@ -7,7 +7,7 @@ import permissions from "../../composables/permissions.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import { travailStatut } from "../../composables/travailStatuts.js";
 import { lienTravail } from "../../composables/travailLien.js";
 

@@ -4,7 +4,7 @@ import MesInfosService from "../../services/MesInfosService";
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { computed, ref, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { exportFileName } from "../../tools/index.js";
 
 const infosStore = useMesInfosStore();

@@ -2,7 +2,7 @@
 import { reactive } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useControleMedicalTypeStore } from "../../stores/controleMedical/ControleMedicalType.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

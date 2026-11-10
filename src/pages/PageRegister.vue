@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth/Auth";
 import TwoFactorForcedSetup from "../components/TwoFactorForcedSetup.vue";
-import useNotification from "../composables/useNotification.js";
+import { useNotification } from "../composables/useNotification.js";
 import { PASSWORD_HINT, PASSWORD_MIN_LENGTH, passwordErrors } from "../tools/passwordPolicy.js";
 
 const route = useRoute();

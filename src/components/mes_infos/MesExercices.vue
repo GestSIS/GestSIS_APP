@@ -4,7 +4,7 @@ import { useUniteStore } from "../../stores/common/Unite.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { computed, ref, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { exercicesToIcs } from "../../tools/exportExercices";
 import ExerciceService from "../../services/ExerciceService";
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos.js";

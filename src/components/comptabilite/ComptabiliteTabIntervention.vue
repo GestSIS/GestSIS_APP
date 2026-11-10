@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
@@ -13,7 +13,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 import ImputationService from "/src/services/ImputationService.js";
 import permissions from "../../composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { interventionStatut } from "../../composables/interventionStatuts.js";
 

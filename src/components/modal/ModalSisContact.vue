@@ -2,7 +2,7 @@
 import { reactive } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useSisParamStore } from "../../stores/params/SisParam.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { callback, data } = defineProps({
   data: {

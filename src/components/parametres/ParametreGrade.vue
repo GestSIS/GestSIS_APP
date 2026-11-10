@@ -2,7 +2,7 @@
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
 import { computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const gradeStore = useGradeStore();
 await gradeStore.fetchGrades();

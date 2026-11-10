@@ -9,7 +9,7 @@ import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategor
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useExcuseParamStore } from "../../stores/exercice/ExcuseParam.js";
 import permissions from "../../composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import { indexedData } from "../../tools/index.js";
 
 const sapeurStore = useSapeurStore();

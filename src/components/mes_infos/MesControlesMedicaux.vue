@@ -4,7 +4,7 @@ import { useMedecinStore } from "../../stores/controleMedical/Medecin.js";
 import { useControleMedicalTypeStore } from "../../stores/controleMedical/ControleMedicalType.js";
 import MesInfosService from "../../services/MesInfosService";
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const awn = useNotification();
 

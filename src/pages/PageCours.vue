@@ -10,7 +10,7 @@ import { useModalStore } from "../stores/common/Modal.js";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 import { computed, ref, watchEffect } from "vue";
 import permissions from "../composables/permissions.js";
-import useHasPermission from "../composables/usePermission.js";
+import { useHasPermission } from "../composables/useHasPermission.js";
 
 const sapeurStore = useSapeurStore();
 const coursStore = useCoursStore();

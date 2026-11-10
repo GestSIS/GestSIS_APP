@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceStore } from "../../stores/exercice/Exercice.js";
 import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
@@ -17,7 +17,7 @@ import ExerciceService from "/src/services/ExerciceService.js";
 
 import { exercicesToIcs } from "../../tools/exportExercices";
 import { exportFileName } from "../../tools/index.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 
 const authStore = useAuthStore();
 const sapeurStore = useSapeurStore();

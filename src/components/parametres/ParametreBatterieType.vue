@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useBatterieTypeStore } from "../../stores/materiel/BatterieType";
 

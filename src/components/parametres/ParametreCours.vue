@@ -4,7 +4,7 @@ import { useCoursStore } from "../../stores/sapeur/Cours.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
 import { computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const coursStore = useCoursStore();
 const fonctionStore = useFonctionStore();

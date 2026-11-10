@@ -4,7 +4,7 @@ import { ref } from "vue";
 import ArticleService from "../../services/materiel/ArticleService";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: {

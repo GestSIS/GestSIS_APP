@@ -1,9 +1,9 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useGroupeStore } from "../../stores/groupe/Groupe.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "/src/composables/permissions.js";
 
 const interventionStore = useInterventionStore();

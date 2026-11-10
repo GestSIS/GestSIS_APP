@@ -7,7 +7,7 @@ import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import MultiStep from "../base/MultiStep.vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();

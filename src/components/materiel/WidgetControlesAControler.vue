@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import ControleService from "../../services/materiel/ControleService.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
 
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);

@@ -3,7 +3,7 @@ import { computed, ref, useTemplateRef } from "vue";
 import EditableTree from "/src/components/editable_tree/EditableTree.vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useGroupeStore } from "../../stores/groupe/Groupe.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const awn = useNotification();
 

@@ -3,7 +3,7 @@ import { ref } from "vue";
 import TagCouleur from "../materiel/TagCouleur.vue";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

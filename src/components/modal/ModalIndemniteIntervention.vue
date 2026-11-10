@@ -33,7 +33,7 @@ const form = reactive({
 
 const imputationType = ref(form.taux_nuit || form.taux_weekend ? "taux" : "tarif-min");
 import { useUniteStore } from "../../stores/common/Unite.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const compteStore = useCompteStore();
 const ecritureCategorieStore = useEcritureCategorieStore();

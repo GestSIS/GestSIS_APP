@@ -3,7 +3,7 @@ import { computed, nextTick, onMounted, reactive, ref, useTemplateRef, watch } f
 import { useControleStore } from "../../stores/materiel/Controle.js";
 import { useMaterielTypeStore } from "../../stores/materiel/Type.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import ControleExecService from "../../services/materiel/ControleExecService.js";
 import ArticleService from "../../services/materiel/ArticleService.js";
 import {
@@ -15,7 +15,7 @@ import {
 } from "../../tools/index.js";
 import ScanArticle from "../materiel/ScanArticle.vue";
 import ComposantSelecteur from "../materiel/ComposantSelecteur.vue";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: { type: Object, default: () => {} },

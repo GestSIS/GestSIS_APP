@@ -1,12 +1,12 @@
 <script setup>
 import { ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useMaterielTypeStore } from "../../stores/materiel/Type.js";
 import { useTuyauDiametreStore } from "../../stores/materiel/TuyauDiametre.js";
 import { useBatterieTypeStore } from "../../stores/materiel/BatterieType.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import SelectCategorie from "../materiel/SelectCategorie.vue";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

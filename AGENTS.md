@@ -14,7 +14,7 @@ Vue 3 (Composition API) · Vite · Pinia · Vue Router · Bootstrap · Axios · 
 - `components/` — composants réutilisables (dont `components/modal/`)
 - `stores/` — stores Pinia (`defineStore`), organisés par domaine
 - `services/` — accès API (axios), un service par ressource
-- `http/` — client axios et intercepteurs ; `composables/` — logique réutilisable (ex. `useNotification`, `usePermission`)
+- `http/` — client axios et intercepteurs ; `composables/` — logique réutilisable (ex. `useNotification`, `useHasPermission`, `useSubmit`) — toujours en export nommé : `export function useXxx`, importé avec `import { useXxx } from …`
 - `assets/`, `icons.js`, `tools/`
 
 ## Composants de base (globaux)

@@ -2,7 +2,7 @@
 import { reactive } from "vue";
 import { useMissionStore } from "../../stores/intervention/Mission.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

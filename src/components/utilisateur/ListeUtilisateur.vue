@@ -3,7 +3,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { computed, ref } from "vue";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
 
 const sapeurStore = useSapeurStore();

@@ -1,10 +1,10 @@
 <script setup>
 import permissions from "/src/composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import { reactive, ref, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const interventionStore = useInterventionStore();
 

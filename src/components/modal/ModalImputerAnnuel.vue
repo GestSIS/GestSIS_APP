@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";

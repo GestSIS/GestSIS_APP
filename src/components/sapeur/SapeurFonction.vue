@@ -4,8 +4,8 @@ import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
-import useNotification from "../../composables/useNotification.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const awn = useNotification();
 

@@ -2,8 +2,8 @@
 // et intervention/InterventionPresences.vue), sur le modèle de l'exercice.
 import { computed } from "vue";
 import permissions from "./permissions.js";
-import useHasPermission from "./usePermission.js";
-import useNotification from "./useNotification.js";
+import { useHasPermission } from "./useHasPermission.js";
+import { useNotification } from "./useNotification.js";
 import { interventionStatut } from "./interventionStatuts.js";
 import { useInterventionStore } from "../stores/intervention/Intervention.js";
 import { useModalStore } from "../stores/common/Modal.js";
@@ -13,7 +13,7 @@ const INTERVENTION_SAISIE = 1;
 const INTERVENTION_VALIDEE = 2;
 
 // `id` : intervention ouverte ; sans id (liste), utiliser devaliderInterventionId(id)
-export default function useValidationIntervention(id = null) {
+export function useValidationIntervention(id = null) {
   const interventionStore = useInterventionStore();
   const modalStore = useModalStore();
   const awn = useNotification();

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { indexedData } from "../../tools/index.js";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement";

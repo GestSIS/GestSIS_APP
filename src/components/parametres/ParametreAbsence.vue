@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useAbsenceParamStore } from "../../stores/absence/AbsenceParam.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const absenceParamStore = useAbsenceParamStore();
 await absenceParamStore.fetchParams();

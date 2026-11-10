@@ -11,6 +11,6 @@ const state = reactive({
   }),
 });
 
-export default function useNotification() {
+export function useNotification() {
   return state.awn;
 }

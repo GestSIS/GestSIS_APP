@@ -3,11 +3,11 @@ import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import permissions from "../../composables/permissions.js";
 import { computed, ref, watchEffect } from "vue";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useAbsenceStore } from "../../stores/absence/Absence.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const awn = useNotification();
 

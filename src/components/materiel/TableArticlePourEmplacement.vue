@@ -1,13 +1,13 @@
 <script setup>
 import { computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import ArticleService from "../../services/materiel/ArticleService";
 import TagCouleur from "./TagCouleur.vue";
 import { indexedData } from "../../tools/index.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
 import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
 
 const { loading, articles, hideDownload, emplacement, refresh } = defineProps({

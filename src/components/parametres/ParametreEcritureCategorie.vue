@@ -2,7 +2,7 @@
 import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const ecritureCategorieStore = useEcritureCategorieStore();
 await ecritureCategorieStore.fetchEcritureCategories();

@@ -1,17 +1,17 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import permissions from "/src/composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useRouter } from "vue-router";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useInterventionTraitementStore } from "../../stores/intervention/InterventionTraitement.js";
 import { useStatFederalStore } from "../../stores/intervention/StatFederal.js";
 import { useTypeInterventionStore } from "../../stores/intervention/TypeIntervention.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const router = useRouter();
 const sapeurStore = useSapeurStore();

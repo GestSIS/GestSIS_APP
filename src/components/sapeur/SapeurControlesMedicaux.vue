@@ -4,7 +4,7 @@ import { useMedecinStore } from "../../stores/controleMedical/Medecin.js";
 import { useControleMedicalTypeStore } from "../../stores/controleMedical/ControleMedicalType.js";
 import ControlesMedicauxService from "/src/services/ControlesMedicauxService.js";
 import { computed, ref, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const awn = useNotification();
 

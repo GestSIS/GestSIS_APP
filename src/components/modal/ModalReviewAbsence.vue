@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";

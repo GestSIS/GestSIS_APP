@@ -2,7 +2,7 @@
 import { computed, useTemplateRef } from "vue";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import permissions from "/src/composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 
 const exerciceComptableStore = useExerciceComptableStore();
 

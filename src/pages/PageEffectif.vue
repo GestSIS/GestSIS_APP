@@ -12,8 +12,8 @@ import { useAuthStore } from "../stores/auth/Auth.js";
 import { DateTime } from "luxon";
 import { downloadVcard } from "../tools/exportSapeurs";
 import { computed, ref } from "vue";
-import useNotification from "../composables/useNotification.js";
-import useHasPermission from "../composables/usePermission.js";
+import { useNotification } from "../composables/useNotification.js";
+import { useHasPermission } from "../composables/useHasPermission.js";
 import { formatPhoneNumber } from "../composables/usePhoneFormatter";
 import { exportFileName, toLocalIsoDate } from "../tools/index.js";
 

@@ -2,7 +2,7 @@
 import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const excuseTypeStore = useExcuseTypeStore();
 await excuseTypeStore.fetchExcuseTypes();

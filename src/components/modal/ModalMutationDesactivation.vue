@@ -5,8 +5,8 @@ import { useGroupeStore } from "../../stores/groupe/Groupe.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
-import useNotification from "../../composables/useNotification.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

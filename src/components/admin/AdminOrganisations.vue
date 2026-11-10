@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import useNotification from "../../composables/useNotification";
+import { useNotification } from "../../composables/useNotification";
 import { useModalStore } from "../../stores/common/Modal";
 import { useAdminStore } from "../../stores/admin/Admin";
 

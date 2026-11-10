@@ -4,7 +4,7 @@ import RtaService from "../../services/RtaService.js";
 import { useRtaStore } from "../../stores/rta/Rta.js";
 import PdfViewer from "../pdf/PdfViewer.vue";
 import EditableTree from "../editable_tree/EditableTree.vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import {
   SelectRoot,
   SelectTrigger,

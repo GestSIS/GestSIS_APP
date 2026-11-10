@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
 import { useModalStore } from "../../stores/common/Modal.js";
@@ -10,7 +10,7 @@ import { DateTime } from "luxon";
 import SapeurService from "../../services/SapeurService";
 import ExerciceService from "../../services/ExerciceService";
 import AspsmsParamService from "../../services/AspsmsParamService";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const localiteStore = useLocaliteStore();
 const exerciceCategorieStore = useExerciceCategorieStore();

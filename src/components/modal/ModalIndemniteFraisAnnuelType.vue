@@ -4,7 +4,7 @@ import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

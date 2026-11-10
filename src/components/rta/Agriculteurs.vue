@@ -2,10 +2,10 @@
 import { computed, ref } from "vue";
 import { groupedByData } from "../../tools/index.js";
 import RtaService from "../../services/RtaService.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import MoyenContact from "./MoyenContact.vue";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
 
 const loading = ref(true);

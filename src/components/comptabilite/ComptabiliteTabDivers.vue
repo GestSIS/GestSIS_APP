@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
 import { ecritureTypeLabel, ecritureTypeOptions } from "../../composables/ecritureTypes.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
@@ -10,7 +10,7 @@ import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "../../composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 
 const uniteStore = useUniteStore();
 const sapeurStore = useSapeurStore();

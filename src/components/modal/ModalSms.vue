@@ -1,11 +1,11 @@
 <script setup>
 import { computed, ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAspsmsParamStore } from "../../stores/sms/AspsmsParam.js";
 
 import AspsmsParamService from "../../services/AspsmsParamService";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useRouter } from "vue-router";
 import { useExerciceStore } from "../../stores/exercice/Exercice.js";
 import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
@@ -8,8 +8,8 @@ import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceCom
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import permissions from "/src/composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { id } = defineProps({
   id: {

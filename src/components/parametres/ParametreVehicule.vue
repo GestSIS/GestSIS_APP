@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { useVehiculeStore } from "../../stores/intervention/Vehicule.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
 
 const vehiculeStore = useVehiculeStore();

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, useTemplateRef } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 // Champ de saisie au scanner : le numéro scanné (suivi d'un « return »)
 // désigne l'article correspondant parmi `articles` (numéro exact, sans tenir

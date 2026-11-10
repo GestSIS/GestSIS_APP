@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useAuthStore } from "../stores/auth/Auth";
-import useNotification from "../composables/useNotification";
+import { useNotification } from "../composables/useNotification";
 
 const email = ref(null);
 const errors = ref({});

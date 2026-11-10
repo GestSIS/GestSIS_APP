@@ -1,8 +1,8 @@
 <script setup>
 import { computed, ref, watch } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useAspsmsParamStore } from "../../stores/sms/AspsmsParam.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const aspsmsParamStore = useAspsmsParamStore();
 

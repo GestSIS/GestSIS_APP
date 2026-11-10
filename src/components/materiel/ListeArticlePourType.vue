@@ -7,7 +7,7 @@ import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import { useControleStore } from "../../stores/materiel/Controle.js";
 import { groupedByData, indexedData } from "../../tools/index.js";
 import { emplacementIdPourArticle } from "../../tools/materiel.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
 import ArticleService from "../../services/materiel/ArticleService";
 import TableArticlePourType from "./TableArticlePourType.vue";

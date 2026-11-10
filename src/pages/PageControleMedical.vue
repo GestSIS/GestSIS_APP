@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, useTemplateRef, watch } from "vue";
-import useNotification from "../composables/useNotification.js";
+import { useNotification } from "../composables/useNotification.js";
 import { useRouter } from "vue-router";
 import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
@@ -11,8 +11,8 @@ import PdfViewer from "/src/components/pdf/PdfViewer.vue";
 import { useModalStore } from "../stores/common/Modal";
 import { useControleMedicalStore } from "../stores/controleMedical/ControleMedical.js";
 import permissions from "../composables/permissions.js";
-import useHasPermission from "../composables/usePermission.js";
-import useSubmit from "../composables/useSubmit.js";
+import { useHasPermission } from "../composables/useHasPermission.js";
+import { useSubmit } from "../composables/useSubmit.js";
 
 const sapeurStore = useSapeurStore();
 const exerciceComptableStore = useExerciceComptableStore();

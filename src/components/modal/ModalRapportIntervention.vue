@@ -3,9 +3,9 @@ import { reactive, ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import InterventionService from "/src/services/InterventionService.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import { exportFileName } from "../../tools/index.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const { data } = defineProps({
   data: {

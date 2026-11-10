@@ -6,11 +6,11 @@ import permissions from "../../composables/permissions.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { computed, ref, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();

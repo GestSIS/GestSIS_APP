@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
 import { useModalStore } from "../../stores/common/Modal.js";
 import SelectCategorie from "../materiel/SelectCategorie.vue";
 import SelectCouleur from "../materiel/SelectCouleur.vue";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

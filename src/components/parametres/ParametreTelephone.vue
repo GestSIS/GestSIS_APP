@@ -2,7 +2,7 @@
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useTelephoneStore } from "../../stores/sapeur/Telephone.js";
 import { computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const awn = useNotification();
 

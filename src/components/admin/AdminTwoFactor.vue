@@ -1,8 +1,8 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useAdminStore } from "../../stores/admin/Admin";
-import useNotification from "../../composables/useNotification.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const adminStore = useAdminStore();
 const awn = useNotification();

@@ -3,7 +3,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useAbsenceParamStore } from "../../stores/absence/AbsenceParam.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { computed, ref, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos.js";
 
 const infosStore = useMesInfosStore();

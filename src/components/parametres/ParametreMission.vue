@@ -2,7 +2,7 @@
 import { useMissionStore } from "../../stores/intervention/Mission.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const awn = useNotification();
 

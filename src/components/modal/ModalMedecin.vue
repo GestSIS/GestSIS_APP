@@ -3,7 +3,7 @@ import { computed, reactive } from "vue";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useMedecinStore } from "../../stores/controleMedical/Medecin.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

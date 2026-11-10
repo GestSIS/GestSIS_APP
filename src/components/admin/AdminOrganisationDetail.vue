@@ -2,7 +2,7 @@
 import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import AdminService from "../../services/AdminService";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal";
 import { useAuthStore } from "../../stores/auth/Auth";
 

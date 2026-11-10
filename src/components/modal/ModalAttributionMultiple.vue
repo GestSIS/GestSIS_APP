@@ -10,8 +10,8 @@ import ArticleService from "../../services/materiel/ArticleService";
 import ArticleCreation from "../materiel/ArticleCreation.vue";
 import ArticleSelecteur from "../materiel/ArticleSelecteur.vue";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useNotification from "../../composables/useNotification.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: {

@@ -1,11 +1,11 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "/src/composables/permissions.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useMaterielStore } from "../../stores/intervention/Materiel.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const awn = useNotification();
 

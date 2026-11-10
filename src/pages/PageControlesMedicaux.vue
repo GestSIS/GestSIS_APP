@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import useNotification from "../composables/useNotification.js";
+import { useNotification } from "../composables/useNotification.js";
 import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
 import { useMedecinStore } from "../stores/controleMedical/Medecin.js";
 import { useControleMedicalTypeStore } from "../stores/controleMedical/ControleMedicalType.js";
@@ -9,7 +9,7 @@ import permissions from "../composables/permissions.js";
 
 import ControlesMedicauxService from "/src/services/ControlesMedicauxService.js";
 import SapeurService from "/src/services/SapeurService.js";
-import useHasPermission from "../composables/usePermission.js";
+import { useHasPermission } from "../composables/useHasPermission.js";
 import { useControleMedicalStore } from "../stores/controleMedical/ControleMedical.js";
 
 const sapeurStore = useSapeurStore();

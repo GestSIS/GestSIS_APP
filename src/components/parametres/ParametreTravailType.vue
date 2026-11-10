@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useTravailTypeStore } from "../../stores/travail/TravailType.js";

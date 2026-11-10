@@ -2,7 +2,7 @@
 import { computed } from "vue";
 import { useControleStore } from "../../stores/materiel/Controle.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import ParametreTachesControle from "./ParametreTachesControle.vue";
 
 const store = useControleStore();

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "/src/composables/permissions.js";
 import InterventionGroupe from "/src/components/intervention/InterventionGroupe.vue";
 import InterventionPhase from "/src/components/intervention/InterventionPhase.vue";

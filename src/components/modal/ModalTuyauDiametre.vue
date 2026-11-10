@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useTuyauDiametreStore } from "../../stores/materiel/TuyauDiametre.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

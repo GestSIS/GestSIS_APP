@@ -4,7 +4,7 @@ import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { DateTime } from "luxon";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const responsableOptions = [
   { value: "aucun", label: "Aucun" },

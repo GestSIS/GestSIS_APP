@@ -2,7 +2,7 @@
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "../stores/auth/Auth";
-import useNotification from "../composables/useNotification.js";
+import { useNotification } from "../composables/useNotification.js";
 import { useModalStore } from "../stores/common/Modal";
 import { PASSWORD_HINT, PASSWORD_MIN_LENGTH, passwordErrors } from "../tools/passwordPolicy.js";
 

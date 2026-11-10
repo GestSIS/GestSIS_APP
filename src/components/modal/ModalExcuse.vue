@@ -3,7 +3,7 @@ import { computed, reactive, ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
 import permissions from "/src/composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 
 const { callback, data } = defineProps({
   callback: {

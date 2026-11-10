@@ -5,9 +5,9 @@ import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import ArticleService from "../../services/materiel/ArticleService";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
 import SelectCouleur from "../materiel/SelectCouleur.vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { toDateInputValue } from "../../tools/index.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: {

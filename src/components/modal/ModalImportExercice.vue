@@ -5,10 +5,10 @@ import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategor
 import { useExerciceStore } from "../../stores/exercice/Exercice.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import ExerciceService from "../../services/ExerciceService.js";
 import MultiStep from "../base/MultiStep.vue";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const phase = ref(1);
 const loading = ref(false);

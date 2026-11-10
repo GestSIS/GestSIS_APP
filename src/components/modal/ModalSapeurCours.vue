@@ -6,7 +6,7 @@ import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useCoursStore } from "../../stores/sapeur/Cours.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

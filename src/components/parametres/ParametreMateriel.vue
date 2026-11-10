@@ -3,7 +3,7 @@ import { useMaterielStore } from "../../stores/intervention/Materiel.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const materielStore = useMaterielStore();
 const uniteStore = useUniteStore();

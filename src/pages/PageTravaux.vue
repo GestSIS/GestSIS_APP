@@ -9,10 +9,10 @@ import { useUniteStore } from "../stores/common/Unite.js";
 import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
 import { useAuthStore } from "../stores/auth/Auth.js";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
-import useHasPermission from "../composables/usePermission.js";
+import { useHasPermission } from "../composables/useHasPermission.js";
 import { travailStatut, travailStatutOptions } from "../composables/travailStatuts.js";
 import { evenementVerrouille, lienTravail } from "../composables/travailLien.js";
-import useNotification from "../composables/useNotification.js";
+import { useNotification } from "../composables/useNotification.js";
 
 const awn = useNotification();
 

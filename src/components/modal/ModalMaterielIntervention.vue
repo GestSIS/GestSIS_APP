@@ -3,7 +3,7 @@ import { computed, reactive } from "vue";
 import { useMaterielStore } from "../../stores/intervention/Materiel.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

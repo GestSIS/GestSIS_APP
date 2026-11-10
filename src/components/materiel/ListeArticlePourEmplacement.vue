@@ -8,7 +8,7 @@ import { useControleStore } from "../../stores/materiel/Controle.js";
 import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
 import TagCouleur from "./TagCouleur.vue";
 import permissions from "../../composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import TableArticlePourEmplacement from "./TableArticlePourEmplacement.vue";
 import TableArticlePourType from "./TableArticlePourType.vue";
 import { useModalStore } from "../../stores/common/Modal";

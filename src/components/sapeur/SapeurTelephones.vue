@@ -4,10 +4,10 @@ import { useBaseDataStore } from "../../stores/common/BaseData.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
-import useNotification from "../../composables/useNotification.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { formatPhoneNumber } from "../../composables/usePhoneFormatter.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const baseDataStore = useBaseDataStore();
 const sapeurStore = useSapeurStore();

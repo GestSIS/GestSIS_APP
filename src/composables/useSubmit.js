@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import useNotification from "./useNotification.js";
+import { useNotification } from "./useNotification.js";
 
 /**
  * Soumission d'un formulaire vers l'API : envoi en cours, blocage du double envoi
@@ -11,7 +11,7 @@ import useNotification from "./useNotification.js";
  *   const { ok, data } = await submit(() => store.save(form));
  *   if (ok) closeModal();
  */
-export default function useSubmit() {
+export function useSubmit() {
   const errors = ref({});
   const isSubmitting = ref(false);
 

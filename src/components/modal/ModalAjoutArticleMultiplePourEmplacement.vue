@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement";
@@ -10,7 +10,7 @@ import { indexedData } from "../../tools/index.js";
 import ArticleService from "../../services/materiel/ArticleService";
 import ArticleCreation from "../materiel/ArticleCreation.vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: {

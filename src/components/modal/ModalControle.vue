@@ -4,7 +4,7 @@ import { useControleStore } from "../../stores/materiel/Controle.js";
 import { useMaterielTypeStore } from "../../stores/materiel/Type.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import TableTypesMateriel from "../materiel/TableTypesMateriel.vue";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: { type: Object, default: () => {} },

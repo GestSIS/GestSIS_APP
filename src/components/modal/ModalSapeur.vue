@@ -4,7 +4,7 @@ import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useBaseDataStore } from "../../stores/common/BaseData.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { callback } = defineProps({
   callback: {

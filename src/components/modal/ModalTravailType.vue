@@ -1,12 +1,12 @@
 <script setup>
 import { computed, reactive, ref, watch } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
 import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const uniteStore = useUniteStore();
 const compteStore = useCompteStore();

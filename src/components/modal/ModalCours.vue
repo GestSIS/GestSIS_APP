@@ -4,7 +4,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useCoursStore } from "../../stores/sapeur/Cours.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

@@ -1,12 +1,12 @@
 <script setup>
 import { computed, ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useAmendeStore } from "../../stores/comptabilite/Amende.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const uniteStore = useUniteStore();
 const fonctionStore = useFonctionStore();

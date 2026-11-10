@@ -10,9 +10,9 @@ import ExerciceComptable from "/src/components/exercice_comptable/ExerciceCompta
 import SapeurService from "/src/services/SapeurService";
 import RecrutementService from "/src/services/RecrutementService.js";
 import { useRoute, useRouter } from "vue-router";
-import useHasPermission from "../composables/usePermission.js";
+import { useHasPermission } from "../composables/useHasPermission.js";
 import { computed, onMounted, ref, useTemplateRef, watch, watchEffect } from "vue";
-import useNotification from "../composables/useNotification.js";
+import { useNotification } from "../composables/useNotification.js";
 import { exportFileName } from "../tools/index.js";
 
 const TYPE_SAPEUR = 0;

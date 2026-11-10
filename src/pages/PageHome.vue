@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onUnmounted, ref } from "vue";
-import useNotification from "../composables/useNotification.js";
+import { useNotification } from "../composables/useNotification.js";
 import { useAuthStore } from "../stores/auth/Auth.js";
 import { useModalStore } from "../stores/common/Modal.js";
 import { useMesInfosStore } from "../stores/mesinfos/MesInfos.js";

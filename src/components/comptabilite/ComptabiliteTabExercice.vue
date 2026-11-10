@@ -2,7 +2,7 @@
 import { computed, ref, watchEffect } from "vue";
 import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import { exerciceStatut } from "../../composables/exerciceStatuts.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
@@ -13,7 +13,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 import ImputationService from "/src/services/ImputationService.js";
 import permissions from "../../composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 
 const localiteStore = useLocaliteStore();
 const sapeurStore = useSapeurStore();

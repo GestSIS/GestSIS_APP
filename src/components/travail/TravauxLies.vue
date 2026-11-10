@@ -1,8 +1,8 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
 import permissions from "/src/composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
-import useNotification from "../../composables/useNotification.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { travailStatut } from "../../composables/travailStatuts.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { useModalStore } from "../../stores/common/Modal.js";

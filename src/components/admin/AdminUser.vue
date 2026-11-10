@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import AdminService from "../../services/AdminService";
 import { useModalStore } from "../../stores/common/Modal";
 import { useAdminStore } from "../../stores/admin/Admin";

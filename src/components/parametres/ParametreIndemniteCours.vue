@@ -7,7 +7,7 @@ import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCat
 import { useModalStore } from "../../stores/common/Modal.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 import { computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const uniteStore = useUniteStore();
 const imputationStore = useImputationStore();

@@ -7,7 +7,7 @@ import { useAuthStore } from "../stores/auth/Auth.js";
 import { TokenService } from "../services/StorageService.js";
 
 import NProgress from "nprogress";
-import useHasPermission from "../composables/usePermission.js";
+import { useHasPermission } from "../composables/useHasPermission.js";
 
 const redirect = async (to, from) => {
   const authStore = useAuthStore();

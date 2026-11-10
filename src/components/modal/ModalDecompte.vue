@@ -4,7 +4,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useDecompteStore } from "../../stores/comptabilite/Decompte.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { callback, data } = defineProps({
   callback: {

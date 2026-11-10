@@ -3,8 +3,8 @@ import { useModalStore } from "../stores/common/Modal";
 import permissions from "../composables/permissions.js";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 import { computed, ref, watch, watchEffect } from "vue";
-import useHasPermission from "../composables/usePermission.js";
-import useValidationIntervention from "../composables/useValidationIntervention.js";
+import { useHasPermission } from "../composables/useHasPermission.js";
+import { useValidationIntervention } from "../composables/useValidationIntervention.js";
 import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
 import { useLocaliteStore } from "../stores/common/Localite.js";
 import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
@@ -13,7 +13,7 @@ import { useInterventionTraitementStore } from "../stores/intervention/Intervent
 import { useStatFederalStore } from "../stores/intervention/StatFederal.js";
 import { useTypeInterventionStore } from "../stores/intervention/TypeIntervention.js";
 import { interventionStatut } from "../composables/interventionStatuts.js";
-import useNotification from "../composables/useNotification.js";
+import { useNotification } from "../composables/useNotification.js";
 
 const awn = useNotification();
 

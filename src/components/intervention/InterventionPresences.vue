@@ -2,12 +2,12 @@
 import { computed, onMounted, ref, useTemplateRef, watchEffect } from "vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "/src/composables/permissions.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
-import useValidationIntervention from "../../composables/useValidationIntervention.js";
-import useNotification from "../../composables/useNotification.js";
+import { useValidationIntervention } from "../../composables/useValidationIntervention.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const awn = useNotification();
 

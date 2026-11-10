@@ -4,7 +4,7 @@ import { computed, ref } from "vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import ArticleService from "../../services/materiel/ArticleService";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: {

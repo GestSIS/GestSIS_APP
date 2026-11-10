@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

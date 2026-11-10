@@ -4,7 +4,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement.js";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
 import SelectCouleur from "../materiel/SelectCouleur.vue";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data } = defineProps({
   data: {

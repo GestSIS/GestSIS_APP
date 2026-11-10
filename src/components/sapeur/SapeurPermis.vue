@@ -1,11 +1,11 @@
 <script setup>
 import { computed, ref, watch, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useBaseDataStore } from "../../stores/common/BaseData.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 
 const sapeurStore = useSapeurStore();
 const baseDataStore = useBaseDataStore();

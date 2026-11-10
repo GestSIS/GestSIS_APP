@@ -5,8 +5,8 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import ArticleService from "../../services/materiel/ArticleService";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
-import useNotification from "../../composables/useNotification.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: {

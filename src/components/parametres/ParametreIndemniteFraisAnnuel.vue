@@ -7,7 +7,7 @@ import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCat
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const awn = useNotification();
 

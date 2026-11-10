@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useSisParamStore } from "../../stores/params/SisParam.js";
@@ -10,8 +10,8 @@ import SisParamService from "../../services/SisParamService";
 import permissions from "../../composables/permissions.js";
 
 import Api from "/src/http/Request";
-import useHasPermission from "../../composables/usePermission.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const localiteStore = useLocaliteStore();
 const sisParamStore = useSisParamStore();

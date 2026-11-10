@@ -1,6 +1,6 @@
 <script setup>
 import { ref, useTemplateRef } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 
 import { Cropper } from "vue-advanced-cropper";

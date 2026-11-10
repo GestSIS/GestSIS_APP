@@ -3,7 +3,7 @@ import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useMedecinStore } from "../../stores/controleMedical/Medecin.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const localiteStore = useLocaliteStore();
 const medecinStore = useMedecinStore();

@@ -1,12 +1,12 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useRtaStore } from "../../stores/rta/Rta.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useGroupeStore } from "../../stores/groupe/Groupe.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const authStore = useAuthStore();
 const rtaStore = useRtaStore();

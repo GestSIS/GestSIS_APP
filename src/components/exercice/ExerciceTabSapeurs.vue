@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useExerciceStore } from "../../stores/exercice/Exercice.js";
@@ -11,7 +11,7 @@ import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceCom
 import { useModalStore } from "../../stores/common/Modal.js";
 import ExerciceService from "../../services/ExerciceService";
 import permissions from "/src/composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import { exerciceStatut } from "../../composables/exerciceStatuts.js";
 import { exportFileName } from "../../tools/index.js";
 

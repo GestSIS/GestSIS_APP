@@ -4,9 +4,9 @@ import { useExcuseParamStore } from "../../stores/exercice/ExcuseParam.js";
 import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { computed, ref, watch } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { callback, data } = defineProps({
   callback: {

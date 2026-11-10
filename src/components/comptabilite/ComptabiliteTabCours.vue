@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
 import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useCoursStore } from "../../stores/sapeur/Cours.js";
 import { useCoursSapeurStore } from "../../stores/sapeur/CoursSapeur.js";
@@ -13,7 +13,7 @@ import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import useHasPermission from "../../composables/usePermission.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 

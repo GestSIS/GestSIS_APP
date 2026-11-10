@@ -16,7 +16,7 @@ const form = reactive({
   ...data,
 });
 import { useUniteStore } from "../../stores/common/Unite.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const fonctionStore = useFonctionStore();
 const imputationStore = useImputationStore();

@@ -2,7 +2,7 @@
 import { useControleMedicalTypeStore } from "../../stores/controleMedical/ControleMedicalType.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
-import useNotification from "../../composables/useNotification.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const controleMedicalTypeStore = useControleMedicalTypeStore();
 await controleMedicalTypeStore.fetchTypes();

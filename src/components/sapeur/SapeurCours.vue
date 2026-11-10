@@ -5,8 +5,8 @@ import { useCoursStore } from "../../stores/sapeur/Cours.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
-import useHasPermission from "../../composables/usePermission.js";
-import useNotification from "../../composables/useNotification.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const awn = useNotification();
 

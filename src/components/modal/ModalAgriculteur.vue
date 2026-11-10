@@ -2,7 +2,7 @@
 import { computed, reactive } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import RtaService from "../../services/RtaService.js";
-import useSubmit from "../../composables/useSubmit.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { data, callback } = defineProps({
   data: {
