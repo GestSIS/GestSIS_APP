@@ -129,7 +129,10 @@ const removeExercice = async (id) => {
       "Attention, la suppression d'un exercice est irréversible ! Toutes les données de cet exercice seront perdues !",
     )
   ) {
-    exerciceStore.removeExercice(id);
+    exerciceStore
+      .removeExercice(id)
+      .then(() => awn.success("Exercice supprimé."))
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de l'exercice."));
   }
 };
 
