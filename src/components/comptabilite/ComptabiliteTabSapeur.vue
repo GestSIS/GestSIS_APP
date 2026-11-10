@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
 import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
-import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
@@ -14,6 +13,7 @@ import ImputationService from "/src/services/ImputationService.js";
 import permissions from "../../composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { exportFileName } from "../../tools/index.js";
+import { useDownload } from "../../composables/useDownload.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -93,38 +93,33 @@ const filteredSapeurs = computed(() => {
   return sapeurs.value.filter((t) => ids.has(t.id));
 });
 
-const awn = useNotification();
-const { closeModal, showModal } = useModalStore();
+const { showModal } = useModalStore();
+const { download } = useDownload();
 
 const anneeActive = () =>
   exerciceComptableStore.liste.find((e) => e.id == activeExerciceComptableId.value)?.annee;
 const printPourSapeur = (sapeurId) => {
   const sapeur = sapeurs.value.find((s) => s.id == sapeurId);
-  showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadResumePourSapeur(
-    activeExerciceComptableId.value,
-    sapeurId,
-    exportFileName(["resume", sapeur?.nom_prenom, anneeActive()], "pdf"),
-  )
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(err?.message || "Erreur lors de la génération du résumé pour sapeur");
-    });
+  download(
+    () =>
+      DecompteService.downloadResumePourSapeur(
+        activeExerciceComptableId.value,
+        sapeurId,
+        exportFileName(["resume", sapeur?.nom_prenom, anneeActive()], "pdf"),
+      ),
+    "Erreur lors de la génération du résumé pour sapeur",
+  );
 };
 const printParSapeur = () => {
-  showModal({ component: "ModalChargement" });
-
-  DecompteService.downloadResumeParSapeur(
-    activeExerciceComptableId.value,
-    exportFileName(["resume-par-sapeur", anneeActive()], "pdf"),
-  )
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(err?.message || "Erreur lors de la génération du résumé par sapeur");
-    });
+  download(
+    () =>
+      DecompteService.downloadResumeParSapeur(
+        activeExerciceComptableId.value,
+        exportFileName(["resume-par-sapeur", anneeActive()], "pdf"),
+      ),
+    "Erreur lors de la génération du résumé par sapeur",
+  );
 };
 const genererDecompteSapeur = (sapeurId, sapeur) => {
   showModal({

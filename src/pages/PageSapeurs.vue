@@ -14,6 +14,7 @@ import { useHasPermission } from "../composables/useHasPermission.js";
 import { computed, onMounted, ref, useTemplateRef, watch, watchEffect } from "vue";
 import { useNotification } from "../composables/useNotification.js";
 import { exportFileName } from "../tools/index.js";
+import { useDownload } from "../composables/useDownload.js";
 
 const TYPE_SAPEUR = 0;
 const TYPE_CIVIL = 1;
@@ -174,23 +175,20 @@ onMounted(() => {
   listeSapeurComponent.value.addEventListener("keyup", navigationEventListener);
 });
 
-const { confirm, showModal, closeModal } = useModalStore();
+const { confirm, showModal } = useModalStore();
+const { download } = useDownload();
 const awn = useNotification();
 
 const ficheSapeur = () => {
-  showModal({ component: "ModalChargement" });
   const sapeur = sapeurs.value.find((s) => s.id == activeSapeurId.value);
-  SapeurService.downloadFicheSapeur(
-    activeSapeurId.value,
-    exportFileName(["fiche-sapeur", sapeur?.nom_prenom], "pdf"),
-  )
-    .catch((err) =>
-      awn.alert(
-        err?.message ||
-          "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
+  download(
+    () =>
+      SapeurService.downloadFicheSapeur(
+        activeSapeurId.value,
+        exportFileName(["fiche-sapeur", sapeur?.nom_prenom], "pdf"),
       ),
-    )
-    .then(closeModal);
+    "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
+  );
 };
 const lienInscription = () => showModal({ component: "ModalRecrutementToken" });
 const validerRecrue = () =>

@@ -1,22 +1,20 @@
 <script setup>
 import { toLocalIsoDate } from "../../tools/index.js";
 import { ref } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import SapeurService from "../../services/SapeurService";
+import { useDownload } from "../../composables/useDownload.js";
 
 const date = ref(toLocalIsoDate());
 
-const { showModal, closeModal } = useModalStore();
-const awn = useNotification();
+const { closeModal } = useModalStore();
+const { download } = useDownload();
 
 const confirmer = () => {
-  showModal({ component: "ModalChargement" });
-  SapeurService.listeFssp(date.value)
-    .catch((error) => {
-      awn.warning(error?.message ?? "Erreur lors de la génération de la liste FSSP");
-    })
-    .then(closeModal);
+  download(
+    () => SapeurService.listeFssp(date.value),
+    "Erreur lors de la génération de la liste FSSP",
+  );
 };
 </script>
 

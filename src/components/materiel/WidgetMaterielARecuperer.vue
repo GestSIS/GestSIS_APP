@@ -4,8 +4,8 @@ import ArticleService from "../../services/materiel/ArticleService.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
-import { useNotification } from "../../composables/useNotification.js";
 import { exportFileName } from "../../tools/index.js";
+import { useDownload } from "../../composables/useDownload.js";
 
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
@@ -52,8 +52,8 @@ const colonnesArticles = [
   { title: "Actions", slot: "actions" },
 ];
 
-const { showModal, closeModal } = useModalStore();
-const awn = useNotification();
+const { showModal } = useModalStore();
+const { download } = useDownload();
 const retourner = (article) =>
   showModal({
     component: "ModalRetourUnique",
@@ -67,18 +67,14 @@ const retournerTout = (sapeur) =>
     callback: loadSapeurs,
   });
 const pdfArticles = (sapeur) => {
-  showModal({ component: "ModalChargement" });
-  ArticleService.downloadListeArticles(
-    sapeur.sapeur_id,
-    exportFileName(["liste-articles", `${sapeur.nom} ${sapeur.prenom}`], "pdf"),
-  )
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(
-        err?.message || "Une erreur a eu lieu durant la génération de la liste des articles",
-      );
-    });
+  download(
+    () =>
+      ArticleService.downloadListeArticles(
+        sapeur.sapeur_id,
+        exportFileName(["liste-articles", `${sapeur.nom} ${sapeur.prenom}`], "pdf"),
+      ),
+    "Une erreur a eu lieu durant la génération de la liste des articles",
+  );
 };
 </script>
 

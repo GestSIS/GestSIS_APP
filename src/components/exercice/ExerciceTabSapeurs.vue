@@ -14,6 +14,7 @@ import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { exerciceStatut } from "../../composables/exerciceStatuts.js";
 import { exportFileName } from "../../tools/index.js";
+import { useDownload } from "../../composables/useDownload.js";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -115,7 +116,8 @@ const nbConvoquesSansPresence = computed(
   () => presences.value.filter((p) => p.convoque && !p.present && !p.absent && !p.remplace).length,
 );
 
-const { confirm, showModal, closeModal } = useModalStore();
+const { confirm, showModal } = useModalStore();
+const { download } = useDownload();
 const awn = useNotification();
 
 // Colonnes du tableau : Nom + Convoqué + Présence (fusionne
@@ -403,26 +405,16 @@ const exerciceFileName = (sujet) =>
     "pdf",
   );
 const listePresences = () => {
-  showModal({ component: "ModalChargement" });
-  ExerciceService.downloadListPresence(id, exerciceFileName("liste-presence"))
-    .catch((err) => {
-      awn.alert(
-        err?.message ||
-          "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
-      );
-    })
-    .then(closeModal);
+  download(
+    () => ExerciceService.downloadListPresence(id, exerciceFileName("liste-presence")),
+    "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
+  );
 };
 const listeAppel = () => {
-  showModal({ component: "ModalChargement" });
-  ExerciceService.downloadListAppel(id, exerciceFileName("liste-appel"))
-    .catch((err) => {
-      awn.alert(
-        err?.message ||
-          "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
-      );
-    })
-    .then(closeModal);
+  download(
+    () => ExerciceService.downloadListAppel(id, exerciceFileName("liste-appel")),
+    "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
+  );
 };
 
 const statuts = [

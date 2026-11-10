@@ -7,10 +7,10 @@ import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
-import { useNotification } from "../../composables/useNotification.js";
 import ArticleService from "../../services/materiel/ArticleService";
 import TagCouleur from "./TagCouleur.vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur";
+import { useDownload } from "../../composables/useDownload.js";
 
 const { id } = defineProps({
   id: {
@@ -80,7 +80,8 @@ const computedData = computed(() =>
   })),
 );
 
-const { showModal, closeModal } = useModalStore();
+const { showModal } = useModalStore();
+const { download } = useDownload();
 const infoMateriel = (materiel) =>
   showModal({
     component: "ModalArticleInfo",
@@ -118,18 +119,12 @@ const retournerMateriel = () =>
     callback: loadArticles,
   });
 
-const awn = useNotification();
 const pdfArticles = () => {
   const nom = indexedSapeurs.value[id]?.nom_prenom ?? id;
-  showModal({ component: "ModalChargement" });
-  ArticleService.downloadListeArticles(id, exportFileName(["liste-articles", nom], "pdf"))
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(
-        err?.message || "Une erreur a eu lieu durant la génération de la liste des articles",
-      );
-    });
+  download(
+    () => ArticleService.downloadListeArticles(id, exportFileName(["liste-articles", nom], "pdf")),
+    "Une erreur a eu lieu durant la génération de la liste des articles",
+  );
 };
 
 const linearCategories = (categorieId) => {

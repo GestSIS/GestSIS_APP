@@ -1,11 +1,11 @@
 <script setup>
-import { useModalStore } from "../../stores/common/Modal.js";
 import MesInfosService from "../../services/MesInfosService";
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { computed, ref, watchEffect } from "vue";
 import { useNotification } from "../../composables/useNotification.js";
 import { exportFileName } from "../../tools/index.js";
+import { useDownload } from "../../composables/useDownload.js";
 
 const infosStore = useMesInfosStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -32,19 +32,16 @@ const exerciceComptable = computed(() =>
   exerciceComptableStore.liste.find((e) => e.id == exerciceComptableStore.activeId),
 );
 
-const { showModal, closeModal } = useModalStore();
+const { download } = useDownload();
 const awn = useNotification();
 
 const downloadDecompte = (paiement) => {
   const filename = exportFileName(["decompte", paiement.date], "pdf");
 
-  showModal({ component: "ModalChargement" });
-  MesInfosService.printMonDecompte(paiement.decompte_id, filename)
-    .then(closeModal)
-    .catch((error) => {
-      awn.warning(error?.message ?? "Erreur lors de la génération de votre décompte");
-      closeModal();
-    });
+  download(
+    () => MesInfosService.printMonDecompte(paiement.decompte_id, filename),
+    "Erreur lors de la génération de votre décompte",
+  );
 };
 
 const resumeAnnuel = () => {
@@ -61,14 +58,10 @@ const resumeAnnuel = () => {
   }
   const filename = exportFileName(["resume-annuel", exerciceComptable.value?.annee], "pdf");
 
-  showModal({ component: "ModalChargement" });
-
-  MesInfosService.downloadMonResumeAnnuel(exerciceComptableId.value, filename)
-    .then(closeModal)
-    .catch((error) => {
-      awn.warning(error?.message ?? "Erreur lors de la génération de votre résumé annuel");
-      closeModal();
-    });
+  download(
+    () => MesInfosService.downloadMonResumeAnnuel(exerciceComptableId.value, filename),
+    "Erreur lors de la génération de votre résumé annuel",
+  );
 };
 
 const certificatSalaire = () => {
@@ -85,14 +78,10 @@ const certificatSalaire = () => {
   }
   const filename = exportFileName(["certificat-salaire", exerciceComptable.value?.annee], "pdf");
 
-  showModal({ component: "ModalChargement" });
-
-  MesInfosService.downloadMonCertificatSalaire(exerciceComptableId.value, filename)
-    .then(closeModal)
-    .catch((error) => {
-      awn.warning(error?.message ?? "Erreur lors de la génération de votre certificat de salaire");
-      closeModal();
-    });
+  download(
+    () => MesInfosService.downloadMonCertificatSalaire(exerciceComptableId.value, filename),
+    "Erreur lors de la génération de votre certificat de salaire",
+  );
 };
 
 const fields = [

@@ -7,6 +7,7 @@ import permissions from "../../composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import ConvocationService from "/src/services/ConvocationService.js";
 import { useNotification } from "../../composables/useNotification.js";
+import { useDownload } from "../../composables/useDownload.js";
 
 const awn = useNotification();
 
@@ -37,15 +38,13 @@ if (data.remount) {
 const exerciceComptableId = computed(() => exerciceComptableStore.activeId);
 
 const { showModal, closeModal } = useModalStore();
+const { download } = useDownload();
 
 const convoquer = () => {
-  showModal({ component: "ModalChargement" });
-  ConvocationService.downloadConvocations(exerciceComptableId.value, form.value)
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(err?.message || "Erreur lors de la génération des convocations");
-    });
+  download(
+    () => ConvocationService.downloadConvocations(exerciceComptableId.value, form.value),
+    "Erreur lors de la génération des convocations",
+  );
 };
 // Les textes saisis sont mémorisés pour les prochaines convocations, mais
 // seulement avec le droit de modification des exercices (sinon ils ne valent que

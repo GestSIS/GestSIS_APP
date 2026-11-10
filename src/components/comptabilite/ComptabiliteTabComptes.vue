@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref, useTemplateRef, watchEffect } from "vue";
 import { ecritureTypeLabel, ecritureTypeOptions } from "../../composables/ecritureTypes.js";
-import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
@@ -9,6 +8,7 @@ import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import CompteService from "/src/services/CompteService.js";
 import { exportFileName, toLocalIsoDate } from "../../tools/index.js";
+import { useDownload } from "../../composables/useDownload.js";
 
 const sapeurStore = useSapeurStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -54,8 +54,7 @@ const filteredSapeurs = computed(() => {
   return sapeurs.value.filter((t) => ids.has(t.id));
 });
 
-const awn = useNotification();
-const { showModal, closeModal } = useModalStore();
+const { download } = useDownload();
 
 const formatCompte = (compte) => {
   if (!compte) return "";
@@ -65,25 +64,23 @@ const justificatifIndividuel = (compteId) => {
   const compte = comptes.value.find((f) => f.id == activeCompteId.value);
   const filename = exportFileName(["justificatif-compte", compte?.numero, toLocalIsoDate()], "pdf");
 
-  showModal({ component: "ModalChargement" });
-
-  CompteService.downloadJustificatifIndividuel(filename, activeExerciceComptableId.value, compteId)
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(err?.message || "Une erreur a eu lieu durant la génération de votre fichier");
-    });
+  download(
+    () =>
+      CompteService.downloadJustificatifIndividuel(
+        filename,
+        activeExerciceComptableId.value,
+        compteId,
+      ),
+    "Une erreur a eu lieu durant la génération de votre fichier",
+  );
 };
 const justificatifComplet = () => {
   const filename = exportFileName(["justificatif-comptes-complet", toLocalIsoDate()], "pdf");
-  showModal({ component: "ModalChargement" });
 
-  CompteService.downloadJustificatifComplet(filename, activeExerciceComptableId.value)
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(err?.message || "Une erreur a eu lieu durant la génération de votre fichier");
-    });
+  download(
+    () => CompteService.downloadJustificatifComplet(filename, activeExerciceComptableId.value),
+    "Une erreur a eu lieu durant la génération de votre fichier",
+  );
 };
 
 const selectCompte = (id) => {

@@ -5,7 +5,7 @@ import permissions from "/src/composables/permissions.js";
 import InterventionService from "/src/services/InterventionService.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { exportFileName } from "../../tools/index.js";
-import { useNotification } from "../../composables/useNotification.js";
+import { useDownload } from "../../composables/useDownload.js";
 
 const { data } = defineProps({
   data: {
@@ -14,7 +14,6 @@ const { data } = defineProps({
   },
 });
 
-const awn = useNotification();
 const errors = ref({});
 const form = reactive({
   infoGeneral: true,
@@ -34,20 +33,19 @@ const form = reactive({
 
 const hasComptabilitePermission = useHasPermission(permissions.COMPTABILITE.LECTURE);
 
-const { closeModal, showModal } = useModalStore();
+const { closeModal } = useModalStore();
+const { download } = useDownload();
 
 const generer = () => {
-  showModal({ component: "ModalChargement" });
-  InterventionService.downloadRapport(
-    data.interventionId,
-    form,
-    exportFileName(["rapport-intervention", data.date?.slice(0, 10)], "pdf"),
-  )
-    .then(() => closeModal())
-    .catch((err) => {
-      closeModal();
-      awn.alert(err?.message || "Erreur lors de la génération du rapport d'intervention");
-    });
+  download(
+    () =>
+      InterventionService.downloadRapport(
+        data.interventionId,
+        form,
+        exportFileName(["rapport-intervention", data.date?.slice(0, 10)], "pdf"),
+      ),
+    "Erreur lors de la génération du rapport d'intervention",
+  );
 };
 </script>
 

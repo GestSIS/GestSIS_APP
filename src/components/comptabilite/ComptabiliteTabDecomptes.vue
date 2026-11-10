@@ -13,6 +13,7 @@ import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 import permissions from "../../composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { exportFileName } from "../../tools/index.js";
+import { useDownload } from "../../composables/useDownload.js";
 
 const sapeurStore = useSapeurStore();
 const uniteStore = useUniteStore();
@@ -49,7 +50,8 @@ const computedData = computed(() =>
 );
 
 const awn = useNotification();
-const { closeModal, confirm, showModal } = useModalStore();
+const { confirm, showModal } = useModalStore();
+const { download } = useDownload();
 
 const supprimer = async (decompteId) => {
   if (
@@ -67,122 +69,87 @@ const impressionResumeParSapeur = () => {
   const annee = exercicesComptables.value.find(
     (e) => e.id == activeExerciceComptableId.value,
   )?.annee;
-  showModal({ component: "ModalChargement" });
 
-  DecompteService.downloadResumeParSapeur(
-    activeExerciceComptableId.value,
-    exportFileName(["resume-par-sapeur", annee], "pdf"),
-  )
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(err?.message || "Erreur lors de la génération du résumé par sapeur");
-    });
+  download(
+    () =>
+      DecompteService.downloadResumeParSapeur(
+        activeExerciceComptableId.value,
+        exportFileName(["resume-par-sapeur", annee], "pdf"),
+      ),
+    "Erreur lors de la génération du résumé par sapeur",
+  );
 };
 const impressionStandard = (decompteId) => {
   const decompte = decomptes.value.find((d) => d.id == decompteId);
 
-  showModal({ component: "ModalChargement" });
-
-  DecompteService.downloadDecompte(decompteId, exportFileName(["decompte", decompte?.date], "pdf"))
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(
-        err?.message ||
-          "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
-      );
-    });
+  download(
+    () =>
+      DecompteService.downloadDecompte(
+        decompteId,
+        exportFileName(["decompte", decompte?.date], "pdf"),
+      ),
+    "Erreur lors de la génération du décompte",
+  );
 };
 const impressionParSapeur = (decompteId) => {
   const decompte = decomptes.value.find((d) => d.id == decompteId);
 
-  showModal({ component: "ModalChargement" });
-
-  DecompteService.downloadDecompteParSapeur(
-    decompteId,
-    exportFileName(["decompte-par-sapeur", decompte?.date], "pdf"),
-  )
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(
-        err?.message ||
-          "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
-      );
-    });
+  download(
+    () =>
+      DecompteService.downloadDecompteParSapeur(
+        decompteId,
+        exportFileName(["decompte-par-sapeur", decompte?.date], "pdf"),
+      ),
+    "Erreur lors de la génération du décompte par sapeur",
+  );
 };
 const impressionParCompte = (decompteId) => {
   const decompte = decomptes.value.find((d) => d.id == decompteId);
 
-  showModal({ component: "ModalChargement" });
-
-  DecompteService.downloadDecompteParCompte(
-    decompteId,
-    exportFileName(["decompte-par-compte", decompte?.date], "pdf"),
-  )
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(
-        err?.message ||
-          "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
-      );
-    });
+  download(
+    () =>
+      DecompteService.downloadDecompteParCompte(
+        decompteId,
+        exportFileName(["decompte-par-compte", decompte?.date], "pdf"),
+      ),
+    "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
+  );
 };
 const iso20022Decompte = (decompteId) => {
   const decompte = decomptes.value.find((d) => d.id == decompteId);
 
-  showModal({ component: "ModalChargement" });
-
-  DecompteService.downloadIso20022PourDecompte(
-    decompteId,
-    exportFileName(["decompte-iso20022", decompte?.date], "xml"),
-  )
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(
-        err?.message ||
-          "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
-      );
-    });
+  download(
+    () =>
+      DecompteService.downloadIso20022PourDecompte(
+        decompteId,
+        exportFileName(["decompte-iso20022", decompte?.date], "xml"),
+      ),
+    "Erreur lors de la génération du fichier ISO20022, contactez l'administrateur système",
+  );
 };
 const excelAFacturer = (decompteId) => {
   const decompte = decomptes.value.find((d) => d.id == decompteId);
 
-  showModal({ component: "ModalChargement" });
-
-  DecompteService.downloadExcelAFacturer(
-    decompteId,
-    exportFileName(["decompte-a-facturer", decompte?.date], "xlsx"),
-  )
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(
-        err?.message ||
-          "Erreur lors de la génération du fichier excel, contactez l'administrateur système",
-      );
-    });
+  download(
+    () =>
+      DecompteService.downloadExcelAFacturer(
+        decompteId,
+        exportFileName(["decompte-a-facturer", decompte?.date], "xlsx"),
+      ),
+    "Erreur lors de la génération du fichier excel, contactez l'administrateur système",
+  );
 };
 const exportEcritures = (decompteId) => {
   const decompte = decomptes.value.find((d) => d.id == decompteId);
 
-  showModal({ component: "ModalChargement" });
-
-  DecompteService.downloadExcelEcritures(
-    decompteId,
-    exportFileName(["decompte-ecritures", decompte?.date], "xlsx"),
-  )
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(
-        err?.message ||
-          "Erreur lors de la génération du fichier excel, contactez l'administrateur système",
-      );
-    });
+  download(
+    () =>
+      DecompteService.downloadExcelEcritures(
+        decompteId,
+        exportFileName(["decompte-ecritures", decompte?.date], "xlsx"),
+      ),
+    "Erreur lors de la génération du fichier excel, contactez l'administrateur système",
+  );
 };
 const certificatsDeSalaire = () => {
   if (decomptes.value.length === 0) {
@@ -193,20 +160,14 @@ const certificatsDeSalaire = () => {
     (e) => e.id == activeExerciceComptableId.value,
   )?.annee;
 
-  showModal({ component: "ModalChargement" });
-
-  DecompteService.downloadCertificatSalaires(
-    activeExerciceComptableId.value,
-    exportFileName(["certificats-salaire", annee], "pdf"),
-  )
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(
-        err?.message ||
-          "Erreur lors de la génération des certificats de salaire, contactez l'administrateur système",
-      );
-    });
+  download(
+    () =>
+      DecompteService.downloadCertificatSalaires(
+        activeExerciceComptableId.value,
+        exportFileName(["certificats-salaire", annee], "pdf"),
+      ),
+    "Erreur lors de la génération des certificats de salaire, contactez l'administrateur système",
+  );
 };
 const generer = () => showModal({ component: "ModalDecompte", data: {} });
 

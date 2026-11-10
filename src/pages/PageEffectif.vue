@@ -16,6 +16,7 @@ import { useNotification } from "../composables/useNotification.js";
 import { useHasPermission } from "../composables/useHasPermission.js";
 import { formatPhoneNumber } from "../composables/usePhoneFormatter";
 import { exportFileName, toLocalIsoDate } from "../tools/index.js";
+import { useDownload } from "../composables/useDownload.js";
 
 const localiteStore = useLocaliteStore();
 const baseDataStore = useBaseDataStore();
@@ -140,20 +141,20 @@ SapeurService.getEffectif().then((effectif) => {
   loading.value = false;
 });
 
-const { showModal, closeModal } = useModalStore();
+const { showModal } = useModalStore();
+const { download } = useDownload();
 const awn = useNotification();
 
 const selectSapeur = (id) => (selectedId.value = id);
 
 const trombinoscope = () => {
-  showModal({ component: "ModalChargement" });
-
-  SapeurService.downloadTrombinoscope(exportFileName(["trombinoscope", toLocalIsoDate()], "pdf"))
-    .then(closeModal)
-    .catch((err) => {
-      closeModal();
-      awn.alert(err?.message || "Une erreur a eu lieu durant la génération du trombinoscope");
-    });
+  download(
+    () =>
+      SapeurService.downloadTrombinoscope(
+        exportFileName(["trombinoscope", toLocalIsoDate()], "pdf"),
+      ),
+    "Une erreur a eu lieu durant la génération du trombinoscope",
+  );
 };
 const listeFssp = () =>
   showModal({

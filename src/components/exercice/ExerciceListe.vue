@@ -18,6 +18,7 @@ import ExerciceService from "/src/services/ExerciceService.js";
 import { exercicesToIcs } from "../../tools/exportExercices";
 import { exportFileName } from "../../tools/index.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useDownload } from "../../composables/useDownload.js";
 
 const authStore = useAuthStore();
 const sapeurStore = useSapeurStore();
@@ -73,7 +74,8 @@ const filteredLocalites = computed(() => {
   return localites.value.filter((t) => ids.has(t.id));
 });
 
-const { closeModal, confirm, showModal } = useModalStore();
+const { confirm, showModal } = useModalStore();
+const { download } = useDownload();
 const awn = useNotification();
 const convoquer = async () => {
   const convocationParamStore = useConvocationParamStore();
@@ -166,26 +168,16 @@ const exerciceFileName = (sujet, id) => {
   return exportFileName([sujet, exercice?.designation, exercice?.date], "pdf");
 };
 const listePresences = ({ id }) => {
-  showModal({ component: "ModalChargement" });
-  ExerciceService.downloadListPresence(id, exerciceFileName("liste-presence", id))
-    .catch((err) => {
-      awn.alert(
-        err?.message ||
-          "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
-      );
-    })
-    .then(closeModal);
+  download(
+    () => ExerciceService.downloadListPresence(id, exerciceFileName("liste-presence", id)),
+    "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
+  );
 };
 const listeAppel = ({ id }) => {
-  showModal({ component: "ModalChargement" });
-  ExerciceService.downloadListAppel(id, exerciceFileName("liste-appel", id))
-    .catch((err) => {
-      awn.alert(
-        err?.message ||
-          "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
-      );
-    })
-    .then(closeModal);
+  download(
+    () => ExerciceService.downloadListAppel(id, exerciceFileName("liste-appel", id)),
+    "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
+  );
 };
 const downloadIcs = (filteredExercices) => {
   if (filteredExercices.length <= 0) {
