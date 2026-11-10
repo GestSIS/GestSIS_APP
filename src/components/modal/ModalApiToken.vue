@@ -4,6 +4,9 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { useNotification } from "../../composables/useNotification.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { useClipboard } from "../../composables/useClipboard.js";
+
+const { copy } = useClipboard();
 
 const { data } = defineProps({
   data: {
@@ -68,10 +71,7 @@ const save = async () => {
   }
 };
 
-const copyToClipboard = (text) => {
-  navigator.clipboard.writeText(text);
-  awn.success("Jeton copié dans le presse-papier");
-};
+const copyToClipboard = (text) => copy(text, "Jeton copié dans le presse-papiers");
 </script>
 
 <template>

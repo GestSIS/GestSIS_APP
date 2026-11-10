@@ -1,8 +1,10 @@
 <script setup>
 import { computed, ref } from "vue";
-import { useNotification } from "../../composables/useNotification";
 import { useModalStore } from "../../stores/common/Modal";
 import { useAdminStore } from "../../stores/admin/Admin";
+import { useClipboard } from "../../composables/useClipboard.js";
+
+const { copy } = useClipboard();
 
 const adminStore = useAdminStore();
 
@@ -31,7 +33,6 @@ const computedOrganisations = computed(() =>
 );
 
 const { showModal } = useModalStore();
-const awn = useNotification();
 const jsonExport = () => {
   const data = JSON.stringify(
     organisations.value.map((organisation) => ({
@@ -41,9 +42,7 @@ const jsonExport = () => {
     })),
   );
 
-  navigator.clipboard.writeText(data);
-
-  awn.success("Données copiées dans le press papier");
+  copy(data, "Données copiées dans le presse-papiers");
 };
 const editOrganisation = (organisation) =>
   showModal({ component: "ModalOrganisation", data: organisation });

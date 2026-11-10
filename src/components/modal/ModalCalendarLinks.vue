@@ -5,6 +5,9 @@ import { useAuthStore } from "../../stores/auth/Auth.js";
 import { useNotification } from "../../composables/useNotification.js";
 import IcsTokenService from "../../services/IcsTokenService.js";
 import { DOC_URL } from "../../http/Env.js";
+import { useClipboard } from "../../composables/useClipboard.js";
+
+const { copy } = useClipboard();
 
 const authStore = useAuthStore();
 const awn = useNotification();
@@ -33,10 +36,7 @@ const load = () => {
 
 onMounted(load);
 
-const copyToClipboard = (text) => {
-  navigator.clipboard.writeText(text);
-  awn.success("Lien copié dans le presse-papier");
-};
+const copyToClipboard = (text) => copy(text, "Lien copié dans le presse-papiers");
 
 // webcal:// déclenche l'abonnement direct dans l'app calendrier native (mobile/desktop) au clic.
 // Le bouton copier, lui, renvoie volontairement la version https:// (Google Calendar "Ajouter par

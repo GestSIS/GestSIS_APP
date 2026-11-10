@@ -7,6 +7,9 @@ import { useModalStore } from "../../stores/common/Modal";
 import { useAdminStore } from "../../stores/admin/Admin";
 import { useAuthStore } from "../../stores/auth/Auth";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { useClipboard } from "../../composables/useClipboard.js";
+
+const { copy } = useClipboard();
 
 const { id } = defineProps({
   id: {
@@ -129,10 +132,9 @@ const revokeAllSessions = () =>
   );
 
 const tokenForUser = (user) =>
-  AdminService.getUserToken(user.id).then((data) => {
-    navigator.clipboard.writeText(data.accessToken);
-    awn.success("Token copié dans le press papier");
-  });
+  AdminService.getUserToken(user.id)
+    .then((data) => copy(data.accessToken, "Jeton copié dans le presse-papiers"))
+    .catch((err) => awn.alert(err?.message || "Erreur lors de la récupération du jeton"));
 const editUser = (user) => showModal({ component: "ModalUser", data: user });
 const impersonateUser = (user) =>
   authStore

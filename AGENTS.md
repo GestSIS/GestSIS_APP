@@ -89,6 +89,7 @@ Ne pas écrire de `.then/.catch` à la main pour une action utilisateur : passer
 - **Action à confirmer** (suppression, validation, annulation) → `confirm()` du store des modales, puis `useSubmit` :
   `if (!(await confirm("Titre ?", "Explication"))) return;` puis `const { ok } = await submit(...)`.
 - **Téléchargement** (PDF, Excel, XML) → `useDownload()` : `download(() => Service.downloadXxx(...), "Message par défaut")` (fenêtre de chargement + message d'erreur).
+- **Copie dans le presse-papiers** → `useClipboard()` : `copy(texte, "Lien copié dans le presse-papiers")` (succès annoncé seulement une fois la copie faite, échec signalé). Jamais `navigator.clipboard` directement.
 - **Stockage navigateur** → jamais `localStorage`/`sessionStorage` directement : `safeLocalStorage` / `safeSessionStorage` (`tools/storage.js`, non réactif) ou `useLocalStorage` / `useSessionStorage` (`composables/useStorage.js`, réactif, pour l'état d'interface). Les jetons passent par `TokenService`.
 
 ### Message de succès (`awn.success`)

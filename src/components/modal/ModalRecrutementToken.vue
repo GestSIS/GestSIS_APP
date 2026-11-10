@@ -7,6 +7,9 @@ import { useAuthStore } from "../../stores/auth/Auth.js";
 import RecrutementService from "/src/services/RecrutementService.js";
 import { useNotification } from "../../composables/useNotification.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { useClipboard } from "../../composables/useClipboard.js";
+
+const { copy } = useClipboard();
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -82,10 +85,7 @@ const invalider = async () => {
   }
 };
 
-const copyToClipboard = (value) => {
-  navigator.clipboard.writeText(value);
-  awn.success("Lien copié dans le presse-papier");
-};
+const copyToClipboard = (value) => copy(value, "Lien copié dans le presse-papiers");
 </script>
 
 <template>

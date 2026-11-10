@@ -4,6 +4,9 @@ import { safeLocalStorage } from "../tools/storage.js";
 import * as data from "../../releases.json";
 import { computed, ref } from "vue";
 import { useAuthStore } from "../stores/auth/Auth.js";
+import { useClipboard } from "../composables/useClipboard.js";
+
+const { copy } = useClipboard();
 
 const authStore = useAuthStore();
 
@@ -36,7 +39,7 @@ const refreshTokens = () =>
     refreshToken.value = TokenService.getRefreshToken();
   });
 
-const copyToClipboard = (text) => navigator.clipboard.writeText(text);
+const copyToClipboard = (text) => copy(text);
 </script>
 
 <template>

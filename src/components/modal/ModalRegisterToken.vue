@@ -4,6 +4,9 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { toLocalIsoDate } from "../../tools/index.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { useClipboard } from "../../composables/useClipboard.js";
+
+const { copy } = useClipboard();
 
 const authStore = useAuthStore();
 
@@ -24,9 +27,7 @@ const roles = computed(() => authStore.roles);
 
 const { closeModal } = useModalStore();
 
-const copyToClipboard = (value) => {
-  navigator.clipboard.writeText(value);
-};
+const copyToClipboard = (value) => copy(value, "Jeton copié dans le presse-papiers");
 const save = async () => {
   if (token.value.roles.length <= 0) {
     errors.value = { roles: "Sélectionnez au minimum 1 rôle" };
