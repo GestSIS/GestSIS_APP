@@ -8,8 +8,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
-import { travailStatut } from "../../composables/travailStatuts.js";
-import { lienTravail } from "../../composables/travailLien.js";
+import { travailStatut, lienTravail } from "../../tools/travail.js";
 
 const uniteStore = useUniteStore();
 const travailTypeStore = useTravailTypeStore();

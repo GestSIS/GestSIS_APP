@@ -6,7 +6,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useNotification } from "../../composables/useNotification.js";
-import { formatPhoneNumber } from "../../composables/usePhoneFormatter.js";
+import { formatPhoneNumber } from "../../tools/formatters.js";
 import { useSubmit } from "../../composables/useSubmit.js";
 
 const baseDataStore = useBaseDataStore();

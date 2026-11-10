@@ -12,7 +12,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import ExerciceService from "../../services/ExerciceService";
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
-import { exerciceStatut } from "../../composables/exerciceStatuts.js";
+import { EXERCICE_STATUT, exerciceStatut } from "../../tools/exercice.js";
 import { exportFileName } from "../../tools/index.js";
 import { useDownload } from "../../composables/useDownload.js";
 import { useSubmit } from "../../composables/useSubmit.js";
@@ -76,20 +76,21 @@ const activeExerciceData = computed(() => exerciceStore.active.data);
 const canEditAbsence = computed(() => {
   // Possible de l'éditer si permission de validation ou si pas encore validé
   return (
-    activeExerciceData.value.statut > 0 &&
+    activeExerciceData.value.statut > EXERCICE_STATUT.ANNULE &&
     (hasValidationPermission.value ||
-      (hasPresencePermission.value && activeExerciceData.value.statut <= 2))
+      (hasPresencePermission.value && activeExerciceData.value.statut <= EXERCICE_STATUT.A_VALIDER))
   );
 });
 const canEditPresence = computed(() => {
   return (
-    activeExerciceData.value.statut > 0 &&
-    ((hasPresencePermission.value && activeExerciceData.value.statut <= 2) ||
-      (hasValidationPermission.value && activeExerciceData.value.statut <= 3))
+    activeExerciceData.value.statut > EXERCICE_STATUT.ANNULE &&
+    ((hasPresencePermission.value &&
+      activeExerciceData.value.statut <= EXERCICE_STATUT.A_VALIDER) ||
+      (hasValidationPermission.value && activeExerciceData.value.statut <= EXERCICE_STATUT.VALIDE))
   );
 });
 const canValidate = computed(() => {
-  return activeExerciceData.value.statut == 2;
+  return activeExerciceData.value.statut == EXERCICE_STATUT.A_VALIDER;
 });
 
 const statutActuel = computed(() => exerciceStatut(activeExerciceData.value.statut));
@@ -98,14 +99,16 @@ const statutActuel = computed(() => exerciceStatut(activeExerciceData.value.stat
 // (1 = A saisir) ou déjà complet (2 = En attente de validation) : une fois
 // annulé, validé ou imputé, il n'y a plus rien à valider.
 const showValidateButton = computed(
-  () => hasValidationPermission.value && [1, 2].includes(activeExerciceData.value.statut),
+  () =>
+    hasValidationPermission.value &&
+    [EXERCICE_STATUT.A_SAISIR, EXERCICE_STATUT.A_VALIDER].includes(activeExerciceData.value.statut),
 );
 
 // Symétrique de "Valider" : permet de revenir en arrière (Validé -> Saisi)
 // sans passer par l'annulation complète de l'exercice, pour corriger une
 // validation faite par erreur.
 const showDevaliderButton = computed(
-  () => hasValidationPermission.value && activeExerciceData.value.statut == 3,
+  () => hasValidationPermission.value && activeExerciceData.value.statut == EXERCICE_STATUT.VALIDE,
 );
 
 // Nombre de sapeurs convoqués dont la présence n'est pas encore renseignée :
@@ -189,7 +192,7 @@ const devalider = async () => {
   if (
     !(await confirm(
       "Annuler la validation ?",
-      `L'exercice repassera au statut « ${exerciceStatut(2).label} » et redeviendra modifiable. Voulez-vous continuer ?`,
+      `L'exercice repassera au statut « ${exerciceStatut(EXERCICE_STATUT.A_VALIDER).label} » et redeviendra modifiable. Voulez-vous continuer ?`,
     ))
   ) {
     return;
@@ -501,7 +504,10 @@ const statuts = [
           />
           <div class="ms-md-auto d-flex flex-wrap align-items-center gap-2">
             <status-badge :status="statutActuel" />
-            <span v-if="activeExerciceData.statut == 1 && nbConvoques > 0" class="text-muted small">
+            <span
+              v-if="activeExerciceData.statut == EXERCICE_STATUT.A_SAISIR && nbConvoques > 0"
+              class="text-muted small"
+            >
               {{ nbConvoques - nbConvoquesSansPresence }}/{{ nbConvoques }} présences saisies
             </span>
             <button

@@ -15,7 +15,8 @@ Vue 3 (Composition API) · Vite · Pinia · Vue Router · Bootstrap · Axios · 
 - `stores/` — stores Pinia (`defineStore`), organisés par domaine
 - `services/` — accès API (axios), un service par ressource
 - `http/` — client axios et intercepteurs ; `composables/` — logique réutilisable (ex. `useNotification`, `useHasPermission`, `useSubmit`) — toujours en export nommé : `export function useXxx`, importé avec `import { useXxx } from …`
-- `assets/`, `icons.js`, `tools/`
+- `tools/` — fonctions pures, sans réactivité ni store (pas de préfixe `use`) : utilitaires techniques (`index.js`, `storage.js`, `formatters.js`, `passwordPolicy.js`…) et règles métier / statuts par domaine (`exercice.js`, `intervention.js`, `travail.js`, `materiel.js`, `comptabilite.js`). `composables/` est réservé aux vrais composables (réactivité, store, cycle de vie).
+- `assets/`, `icons.js`
 
 ## Composants de base (globaux)
 

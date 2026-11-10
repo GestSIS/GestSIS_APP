@@ -7,6 +7,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useNotification } from "../../composables/useNotification.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { EXERCICE_STATUT } from "../../tools/exercice.js";
 
 const { data } = defineProps({
   data: {
@@ -62,7 +63,10 @@ const activeSapeurFonction = computed(() => sapeurStore.active.fonctions.filter(
 const exercices = computed(() => {
   return activeSapeurExercice.value
     .filter(
-      (e) => e.statut <= 2 && e.statut > 0 && e.date > mutationDate.value, // Saisie ou vide et pas annulé
+      (e) =>
+        e.statut <= EXERCICE_STATUT.A_VALIDER &&
+        e.statut > EXERCICE_STATUT.ANNULE &&
+        e.date > mutationDate.value, // Saisie ou vide et pas annulé
     )
     .map((e) => ({
       ...e,

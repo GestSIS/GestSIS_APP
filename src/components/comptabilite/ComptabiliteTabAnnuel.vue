@@ -1,5 +1,5 @@
 <script setup>
-import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
+import { ecritureTypeLabel } from "../../tools/comptabilite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 import permissions from "../../composables/permissions.js";

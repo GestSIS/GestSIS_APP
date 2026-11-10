@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, useTemplateRef, watchEffect } from "vue";
-import { ecritureTypeLabel, ecritureTypeOptions } from "../../composables/ecritureTypes.js";
+import { ecritureTypeLabel, ecritureTypeOptions } from "../../tools/comptabilite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
+import { ecritureTypeLabel } from "../../tools/comptabilite.js";
 import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useUniteStore } from "../../stores/common/Unite.js";

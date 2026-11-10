@@ -3,8 +3,7 @@ import { onMounted, reactive, ref, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 import RecrutementService from "/src/services/RecrutementService.js";
 import Api from "/src/http/Request";
-import { formatAvs } from "../composables/useAvsFormatter.js";
-import { formatPhoneNumber } from "../composables/usePhoneFormatter.js";
+import { formatAvs, formatPhoneNumber } from "../tools/formatters.js";
 import { useModalStore } from "../stores/common/Modal.js";
 
 const { confirm } = useModalStore();

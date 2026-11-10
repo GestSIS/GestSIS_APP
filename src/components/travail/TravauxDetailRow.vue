@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from "vue";
-import { travailStatut } from "../../composables/travailStatuts.js";
+import { travailStatut } from "../../tools/travail.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
 

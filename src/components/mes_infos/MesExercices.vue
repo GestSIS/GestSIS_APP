@@ -14,6 +14,7 @@ import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategor
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { exportFileName } from "../../tools/index.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { EXERCICE_STATUT } from "../../tools/exercice.js";
 
 const authStore = useAuthStore();
 const uniteStore = useUniteStore();
@@ -103,7 +104,7 @@ const downloadJustificatif = (exercice) => {
     exportFileName(["justificatif", exercice.designation, exercice.date], "pdf"),
   ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
 };
-const onRowClass = (dataItem) => (dataItem.statut == 0 ? "table-danger" : "");
+const onRowClass = (dataItem) => (dataItem.statut == EXERCICE_STATUT.ANNULE ? "table-danger" : "");
 
 const fields = [
   { title: "Date", key: "date", type: Date },
@@ -169,7 +170,7 @@ const fields = [
                 excuseParams?.actif &&
                 rowData.convoque &&
                 !rowData.excuse_type_id &&
-                rowData.statut != 0
+                rowData.statut != EXERCICE_STATUT.ANNULE
               "
               class="btn btn-outline-primary border-0"
               @click="addExcuse(rowData)"
@@ -178,7 +179,11 @@ const fields = [
             </button>
             <button
               :disabled="isSubmitting"
-              v-else-if="excuseParams?.actif && rowData.excuse_type_id && rowData.statut != 0"
+              v-else-if="
+                excuseParams?.actif &&
+                rowData.excuse_type_id &&
+                rowData.statut != EXERCICE_STATUT.ANNULE
+              "
               class="btn btn-outline-danger border-0"
               @click="removeExcuse(rowData)"
             >

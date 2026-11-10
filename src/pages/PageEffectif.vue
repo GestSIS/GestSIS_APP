@@ -14,7 +14,7 @@ import { downloadVcard } from "../tools/exportSapeurs";
 import { computed, ref } from "vue";
 import { useNotification } from "../composables/useNotification.js";
 import { useHasPermission } from "../composables/useHasPermission.js";
-import { formatPhoneNumber } from "../composables/usePhoneFormatter";
+import { formatPhoneNumber } from "../tools/formatters.js";
 import { exportFileName, toLocalIsoDate } from "../tools/index.js";
 import { useDownload } from "../composables/useDownload.js";
 

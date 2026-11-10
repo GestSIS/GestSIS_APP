@@ -12,7 +12,7 @@ import { useInterventionStore } from "../stores/intervention/Intervention.js";
 import { useInterventionTraitementStore } from "../stores/intervention/InterventionTraitement.js";
 import { useStatFederalStore } from "../stores/intervention/StatFederal.js";
 import { useTypeInterventionStore } from "../stores/intervention/TypeIntervention.js";
-import { interventionStatut } from "../composables/interventionStatuts.js";
+import { INTERVENTION_STATUT, interventionStatut } from "../tools/intervention.js";
 import { useNotification } from "../composables/useNotification.js";
 import { useSubmit } from "../composables/useSubmit.js";
 
@@ -87,7 +87,9 @@ const filteredStatFederal = computed(() => {
 const canDelete = computed(() => {
   return (
     selectedId.value &&
-    interventions.value.filter((i) => i.id == selectedId.value && i.statut < 3).length > 0
+    interventions.value.filter(
+      (i) => i.id == selectedId.value && i.statut < INTERVENTION_STATUT.IMPUTEE,
+    ).length > 0
   );
 });
 
@@ -329,7 +331,9 @@ const fields = [
                     </button>
                   </router-link>
                   <button
-                    v-if="hasValidationPermission && rowData.statut === 1"
+                    v-if="
+                      hasValidationPermission && rowData.statut === INTERVENTION_STATUT.A_VALIDER
+                    "
                     title="Valider"
                     class="btn btn-outline-success border-0"
                     @click="validerIntervention(rowData.id)"
@@ -337,7 +341,7 @@ const fields = [
                     <font-awesome-icon :icon="['fas', 'check']" />
                   </button>
                   <button
-                    v-if="hasValidationPermission && rowData.statut === 2"
+                    v-if="hasValidationPermission && rowData.statut === INTERVENTION_STATUT.VALIDEE"
                     title="Annuler la validation"
                     class="btn btn-outline-warning border-0"
                     @click="devaliderInterventionId(rowData.id)"
@@ -346,7 +350,7 @@ const fields = [
                   </button>
                   <button
                     :disabled="isSubmitting"
-                    v-if="hasEditPermission && rowData.statut < 3"
+                    v-if="hasEditPermission && rowData.statut < INTERVENTION_STATUT.IMPUTEE"
                     title="supprimer"
                     class="btn btn-outline-danger border-0"
                     @click="supprimerIntervention(rowData.id)"

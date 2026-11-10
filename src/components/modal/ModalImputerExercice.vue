@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
+import { ecritureTypeLabel } from "../../tools/comptabilite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";

@@ -10,8 +10,13 @@ import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceCompta
 import { useAuthStore } from "../stores/auth/Auth.js";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 import { useHasPermission } from "../composables/useHasPermission.js";
-import { travailStatut, travailStatutOptions } from "../composables/travailStatuts.js";
-import { evenementVerrouille, lienTravail } from "../composables/travailLien.js";
+import {
+  TRAVAIL_STATUT,
+  travailStatut,
+  travailStatutOptions,
+  evenementVerrouille,
+  lienTravail,
+} from "../tools/travail.js";
 import { useSubmit } from "../composables/useSubmit.js";
 import { useNotification } from "../composables/useNotification.js";
 
@@ -73,16 +78,18 @@ const selectedItem = computed(() => {
 // Boutons de la carte Actions : toujours affichés selon les droits, désactivés selon la fiche sélectionnée
 // Fiche acceptée ou refusée : « Annuler l'examen » remplace « Traiter »
 const estExaminee = computed(
-  () => selectedItem.value?.statut == -1 || selectedItem.value?.statut == 1,
+  () =>
+    selectedItem.value?.statut == TRAVAIL_STATUT.REFUSE ||
+    selectedItem.value?.statut == TRAVAIL_STATUT.ACCEPTE,
 );
-const peutTraiter = computed(() => selectedItem.value?.statut == 0);
+const peutTraiter = computed(() => selectedItem.value?.statut == TRAVAIL_STATUT.EN_ATTENTE);
 const peutAnnulerExamen = computed(
   () => estExaminee.value && !evenementVerrouille(selectedItem.value),
 );
 const peutSupprimer = computed(
   () =>
     selectedItem.value?.auteur_id == activeSapeurId.value &&
-    selectedItem.value?.statut == 0 &&
+    selectedItem.value?.statut == TRAVAIL_STATUT.EN_ATTENTE &&
     !evenementVerrouille(selectedItem.value),
 );
 
@@ -304,7 +311,7 @@ const fields = [
                     v-if="
                       hasEditPermission &&
                       rowData.auteur_id == activeSapeurId &&
-                      rowData.statut == 0
+                      rowData.statut == TRAVAIL_STATUT.EN_ATTENTE
                     "
                     :disabled="evenementVerrouille(rowData)"
                     title="Modifier"
@@ -314,7 +321,11 @@ const fields = [
                     <font-awesome-icon :icon="['far', 'edit']" />
                   </button>
                   <button
-                    v-if="hasValidationPermission && (rowData.statut == -1 || rowData.statut == 1)"
+                    v-if="
+                      hasValidationPermission &&
+                      (rowData.statut == TRAVAIL_STATUT.REFUSE ||
+                        rowData.statut == TRAVAIL_STATUT.ACCEPTE)
+                    "
                     :disabled="evenementVerrouille(rowData) || isSubmitting"
                     title="Annuler l'examen"
                     class="btn btn-outline-warning border-0"
@@ -323,7 +334,7 @@ const fields = [
                     <font-awesome-icon :icon="['fas', 'cancel']" />
                   </button>
                   <button
-                    v-if="hasValidationPermission && rowData.statut == 0"
+                    v-if="hasValidationPermission && rowData.statut == TRAVAIL_STATUT.EN_ATTENTE"
                     title="Examen"
                     class="btn btn-outline-success border-0"
                     @click="reviewTravail(rowData)"
@@ -334,7 +345,7 @@ const fields = [
                     v-if="
                       hasEditPermission &&
                       rowData.auteur_id == activeSapeurId &&
-                      rowData.statut == 0
+                      rowData.statut == TRAVAIL_STATUT.EN_ATTENTE
                     "
                     :disabled="evenementVerrouille(rowData) || isSubmitting"
                     title="Supprimer"

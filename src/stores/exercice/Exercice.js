@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import ExerciceService from "../../services/ExerciceService.js";
+import { EXERCICE_STATUT } from "../../tools/exercice.js";
 
 export const useExerciceStore = defineStore("exercice", {
   state: () => ({
@@ -52,7 +53,7 @@ export const useExerciceStore = defineStore("exercice", {
         communications: "",
         designation: "",
         duree: null,
-        statut: 0,
+        statut: EXERCICE_STATUT.A_SAISIR,
       };
     },
     async createExercice(exercice) {

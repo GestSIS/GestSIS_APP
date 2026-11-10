@@ -1,5 +1,5 @@
 <script setup>
-import { formatPhoneNumber } from "../../composables/usePhoneFormatter";
+import { formatPhoneNumber } from "../../tools/formatters.js";
 
 const props = defineProps({
   moyenContact: {

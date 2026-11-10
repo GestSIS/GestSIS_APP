@@ -12,6 +12,7 @@ import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useExerciceStore } from "../../stores/exercice/Exercice.js";
 import { exportFileName } from "../../tools/index.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { EXERCICE_STATUT } from "../../tools/exercice.js";
 
 const localiteStore = useLocaliteStore();
 const sapeurStore = useSapeurStore();
@@ -41,7 +42,7 @@ const computeExercices = computed(() => {
   return activeSapeurExercice.value
     .map((exercice) => ({
       ...exercice,
-      canceled: exercice.statut == 0,
+      canceled: exercice.statut == EXERCICE_STATUT.ANNULE,
       date: new Date(exercice.date),
       heure: exercice.heure.substr(0, 5),
       categorie: categories.value.find((e) => e.id == exercice.exercice_categorie_id)?.designation,
@@ -60,15 +61,16 @@ const awn = useNotification();
 const canEditAbsence = (exercice) => {
   // Possible de l'éditer si permission de validation ou si pas encore validé
   return (
-    exercice.statut > 0 &&
-    (hasValidationPermission.value || (hasPresencePermission.value && exercice.statut <= 2))
+    exercice.statut > EXERCICE_STATUT.ANNULE &&
+    (hasValidationPermission.value ||
+      (hasPresencePermission.value && exercice.statut <= EXERCICE_STATUT.A_VALIDER))
   );
 };
 const canEditPresence = (exercice) => {
   return (
-    exercice.statut > 0 &&
-    ((hasPresencePermission.value && exercice.statut <= 2) ||
-      (hasValidationPermission.value && exercice.statut <= 3))
+    exercice.statut > EXERCICE_STATUT.ANNULE &&
+    ((hasPresencePermission.value && exercice.statut <= EXERCICE_STATUT.A_VALIDER) ||
+      (hasValidationPermission.value && exercice.statut <= EXERCICE_STATUT.VALIDE))
   );
 };
 const savePresence = async (sapeur) => {

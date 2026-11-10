@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
-import { exerciceStatut } from "../../composables/exerciceStatuts.js";
+import { ecritureTypeLabel } from "../../tools/comptabilite.js";
+import { EXERCICE_STATUT, exerciceStatut } from "../../tools/exercice.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
@@ -54,8 +54,8 @@ const hasEditPermission = useHasPermission(permissions.COMPTABILITE.MODIFICATION
 
 const computedData = computed(() => {
   return exercices.value.map((e) => {
-    let aPayer = e.statut == 4;
-    if (e.statut == 4) {
+    let aPayer = e.statut == EXERCICE_STATUT.IMPUTE;
+    if (e.statut == EXERCICE_STATUT.IMPUTE) {
       aPayer = e.ecritures.findIndex((i) => i.decompte_id == null) >= 0;
     }
     return {
@@ -128,11 +128,11 @@ const onRowClass = (dataItem, isSelected) => {
   }
 
   const statutsClass = {
-    0: "", //'Annulé',
-    1: "", //'A saisir',
-    2: "", //'En attente de validation',
-    3: "table-warning", //'Validé',
-    4: "table-success", //'Imputé'
+    [EXERCICE_STATUT.ANNULE]: "", //'Annulé',
+    [EXERCICE_STATUT.A_SAISIR]: "", //'A saisir',
+    [EXERCICE_STATUT.A_VALIDER]: "", //'En attente de validation',
+    [EXERCICE_STATUT.VALIDE]: "table-warning", //'Validé',
+    [EXERCICE_STATUT.IMPUTE]: "table-success", //'Imputé'
   };
   return statutsClass[dataItem.statut];
 };
@@ -244,7 +244,7 @@ const fields = [
           </div>
           <div class="card-body d-grid gap-1">
             <button
-              v-if="!selectedItem || selectedItem?.statut == 3"
+              v-if="!selectedItem || selectedItem?.statut == EXERCICE_STATUT.VALIDE"
               class="btn btn-outline-primary"
               :disabled="!selectedItem"
               @click="imputer(selectedItem.id)"
@@ -253,7 +253,7 @@ const fields = [
             </button>
             <button
               :disabled="isSubmitting"
-              v-if="selectedItem?.statut == 4"
+              v-if="selectedItem?.statut == EXERCICE_STATUT.IMPUTE"
               class="btn btn-outline-danger"
               @click="annulerImputer(selectedItem.id)"
             >
@@ -261,7 +261,7 @@ const fields = [
             </button>
             <button
               class="btn btn-outline-primary"
-              :disabled="selectedItem?.statut != 4"
+              :disabled="selectedItem?.statut != EXERCICE_STATUT.IMPUTE"
               @click="genererDecompteExercice(selectedItem.id, selectedItem.designation)"
             >
               Créer un décompte
@@ -319,7 +319,7 @@ const fields = [
               :row-class="onRowClass"
               no-data="Aucune écriture à afficher"
               :detail-row-column="true"
-              :detail-row-column-hide-button="(r) => r.statut !== 4"
+              :detail-row-column-hide-button="(r) => r.statut !== EXERCICE_STATUT.IMPUTE"
               :data="filteredData"
               :selectable="true"
               @selected="selected"
@@ -332,14 +332,14 @@ const fields = [
               </template>
               <template #actions="{ rowData }">
                 <button
-                  v-if="hasEditPermission && rowData.statut === 3"
+                  v-if="hasEditPermission && rowData.statut === EXERCICE_STATUT.VALIDE"
                   class="btn btn-outline-primary border-0"
                   @click="imputer(rowData.id)"
                 >
                   <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
                 </button>
                 <button
-                  v-if="hasEditPermission && rowData.statut === 4"
+                  v-if="hasEditPermission && rowData.statut === EXERCICE_STATUT.IMPUTE"
                   class="btn btn-outline-primary border-0"
                   title="Décompte sapeur"
                   :disabled="!rowData.aPayer"

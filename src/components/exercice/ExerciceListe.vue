@@ -10,7 +10,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { useConvocationParamStore } from "../../stores/exercice/ConvocationParam.js";
 import permissions from "../../composables/permissions.js";
-import { exerciceStatut, exerciceStatutOptions } from "../../composables/exerciceStatuts.js";
+import { EXERCICE_STATUT, exerciceStatut, exerciceStatutOptions } from "../../tools/exercice.js";
 
 import ExerciceDetails from "/src/components/exercice/ExerciceDetails.vue";
 import ExerciceService from "/src/services/ExerciceService.js";
@@ -130,7 +130,7 @@ const devaliderExercice = async (id) => {
   if (
     !(await confirm(
       "Annuler la validation ?",
-      `L'exercice repassera au statut « ${exerciceStatut(2).label} » et redeviendra modifiable. Voulez-vous continuer ?`,
+      `L'exercice repassera au statut « ${exerciceStatut(EXERCICE_STATUT.A_VALIDER).label} » et redeviendra modifiable. Voulez-vous continuer ?`,
     ))
   ) {
     return;
@@ -197,7 +197,7 @@ const downloadIcs = (filteredExercices) => {
   exercicesToIcs(filteredExercices, sisName.value, sisKey.value, annee.value);
 };
 const onRowClass = (dataItem, isSelected) => {
-  if (dataItem.statut == 0) {
+  if (dataItem.statut == EXERCICE_STATUT.ANNULE) {
     return "table-danger";
   }
   if (isSelected) {
@@ -205,11 +205,11 @@ const onRowClass = (dataItem, isSelected) => {
   }
 
   const statutsClass = {
-    0: "", //'Annulé',
-    1: "", //'A saisir',
-    2: "", //'Saisie',
-    3: "table-info", //'Validé',
-    4: "table-success", //'Imputée'
+    [EXERCICE_STATUT.ANNULE]: "", //'Annulé',
+    [EXERCICE_STATUT.A_SAISIR]: "", //'A saisir',
+    [EXERCICE_STATUT.A_VALIDER]: "", //'Saisie',
+    [EXERCICE_STATUT.VALIDE]: "table-info", //'Validé',
+    [EXERCICE_STATUT.IMPUTE]: "table-success", //'Imputée'
   };
   return statutsClass[dataItem.statut];
 };
@@ -413,7 +413,7 @@ const fields = [
                   </button>
                 </router-link>
                 <button
-                  v-if="hasValidationPermission && rowData.statut == 2"
+                  v-if="hasValidationPermission && rowData.statut == EXERCICE_STATUT.A_VALIDER"
                   title="valider"
                   class="btn btn-outline-success border-0"
                   @click="validerExercice(rowData.id)"
@@ -422,7 +422,7 @@ const fields = [
                 </button>
                 <button
                   :disabled="isSubmitting"
-                  v-if="hasValidationPermission && rowData.statut == 3"
+                  v-if="hasValidationPermission && rowData.statut == EXERCICE_STATUT.VALIDE"
                   title="Annuler la validation"
                   class="btn btn-outline-warning border-0"
                   @click="devaliderExercice(rowData.id)"
@@ -430,7 +430,11 @@ const fields = [
                   <font-awesome-icon :icon="['fas', 'rotate-left']" />
                 </button>
                 <button
-                  v-if="hasValidationPermission && rowData.statut < 3 && rowData.statut > 0"
+                  v-if="
+                    hasValidationPermission &&
+                    rowData.statut < EXERCICE_STATUT.VALIDE &&
+                    rowData.statut > EXERCICE_STATUT.ANNULE
+                  "
                   title="annuler"
                   class="btn btn-outline-warning border-0"
                   @click="annulerExercice(rowData.id)"
@@ -438,7 +442,7 @@ const fields = [
                   <font-awesome-icon :icon="['fas', 'ban']" />
                 </button>
                 <button
-                  v-if="hasValidationPermission && rowData.statut == 0"
+                  v-if="hasValidationPermission && rowData.statut == EXERCICE_STATUT.ANNULE"
                   title="réactiver"
                   class="btn btn-outline-success border-0"
                   @click="reactiverExercice(rowData.id)"
@@ -447,7 +451,7 @@ const fields = [
                 </button>
                 <button
                   :disabled="isSubmitting"
-                  v-if="hasValidationPermission && rowData.statut <= 3"
+                  v-if="hasValidationPermission && rowData.statut <= EXERCICE_STATUT.VALIDE"
                   title="supprimer"
                   class="btn btn-outline-danger border-0"
                   @click="removeExercice(rowData.id)"

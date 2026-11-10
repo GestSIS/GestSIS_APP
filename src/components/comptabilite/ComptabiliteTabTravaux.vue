@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
-import { travailStatut, travailStatutOptions } from "../../composables/travailStatuts.js";
+import { ecritureTypeLabel } from "../../tools/comptabilite.js";
+import { TRAVAIL_STATUT, travailStatut, travailStatutOptions } from "../../tools/travail.js";
 import { useNotification } from "../../composables/useNotification.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useTravailStore } from "../../stores/travail/Travail.js";
@@ -50,7 +50,9 @@ const selectedItem = computed(() => {
   return travaux.value.find((c) => c.id == selectedId.value);
 });
 
-const travaux = computed(() => travailStore.liste.filter((t) => t.statut >= 1));
+const travaux = computed(() =>
+  travailStore.liste.filter((t) => t.statut >= TRAVAIL_STATUT.ACCEPTE),
+);
 const sapeurs = computed(() => sapeurStore.liste);
 const travailTypes = computed(() => travailTypeStore.liste);
 const unites = computed(() => uniteStore.liste);
@@ -82,7 +84,9 @@ const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
 
 const imputer = (travailId) => {
-  const ids = travailId ? [travailId] : travaux.value.filter((t) => t.statut == 1).map((t) => t.id);
+  const ids = travailId
+    ? [travailId]
+    : travaux.value.filter((t) => t.statut == TRAVAIL_STATUT.ACCEPTE).map((t) => t.id);
 
   if (!ids.length) {
     awn.warning("Aucun travail à imputer");
@@ -122,7 +126,7 @@ const onRowClass = (dataItem, isSelected) => {
     return;
   }
 
-  return dataItem?.statut == 2 ? "table-success" : "table-warning";
+  return dataItem?.statut == TRAVAIL_STATUT.IMPUTE ? "table-success" : "table-warning";
 };
 
 const detailRowOptions = {
@@ -190,16 +194,16 @@ const fields = [
           </div>
           <div class="card-body d-grid gap-1">
             <button
-              v-if="!selectedItem || selectedItem?.statut == 1"
+              v-if="!selectedItem || selectedItem?.statut == TRAVAIL_STATUT.ACCEPTE"
               class="btn btn-outline-primary"
-              :disabled="selectedItem?.statut != 1"
+              :disabled="selectedItem?.statut != TRAVAIL_STATUT.ACCEPTE"
               @click="imputer(selectedId)"
             >
               Imputer le travail
             </button>
             <button
               :disabled="isSubmitting"
-              v-if="selectedItem?.statut == 2"
+              v-if="selectedItem?.statut == TRAVAIL_STATUT.IMPUTE"
               class="btn btn-outline-danger"
               @click="annulerImputer(selectedId)"
             >
@@ -264,7 +268,7 @@ const fields = [
               :row-class="onRowClass"
               no-data="Aucun travail à afficher"
               :detail-row-column="true"
-              :detail-row-column-hide-button="(r) => r.statut !== 2"
+              :detail-row-column-hide-button="(r) => r.statut !== TRAVAIL_STATUT.IMPUTE"
               :data="filteredData"
               :selectable="true"
               @selected="selected"
@@ -278,7 +282,7 @@ const fields = [
               <template #actions="{ rowData }">
                 <button
                   :disabled="isSubmitting"
-                  v-if="hasEditPermission && rowData.statut == 2"
+                  v-if="hasEditPermission && rowData.statut == TRAVAIL_STATUT.IMPUTE"
                   class="btn btn-outline-primary border-0"
                   title="Annuler imputation"
                   @click="annulerImputer(rowData.id)"
@@ -286,7 +290,7 @@ const fields = [
                   <font-awesome-icon :icon="['fas', 'ban']" />
                 </button>
                 <button
-                  v-if="hasEditPermission && rowData.statut == 1"
+                  v-if="hasEditPermission && rowData.statut == TRAVAIL_STATUT.ACCEPTE"
                   class="btn btn-outline-primary border-0"
                   title="Imputer travail"
                   @click="imputer(rowData.id)"

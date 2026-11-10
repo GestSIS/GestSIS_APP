@@ -7,6 +7,7 @@ import { computed, ref, watch } from "vue";
 import { useNotification } from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { EXERCICE_STATUT } from "../../tools/exercice.js";
 
 const { callback, data } = defineProps({
   callback: {
@@ -81,7 +82,7 @@ const estDejaExcuse = (exercice) => {
   return !!exercice.excuse_type_id;
 };
 const estAnnule = (exercice) => {
-  return exercice.statut === 0;
+  return exercice.statut === EXERCICE_STATUT.ANNULE;
 };
 const estConvoque = (exercice) => {
   return !!exercice.convoque;

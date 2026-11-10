@@ -4,7 +4,7 @@ import { computed } from "vue";
 import permissions from "./permissions.js";
 import { useHasPermission } from "./useHasPermission.js";
 import { useNotification } from "./useNotification.js";
-import { interventionStatut } from "./interventionStatuts.js";
+import { interventionStatut } from "../tools/intervention.js";
 import { useInterventionStore } from "../stores/intervention/Intervention.js";
 import { useModalStore } from "../stores/common/Modal.js";
 

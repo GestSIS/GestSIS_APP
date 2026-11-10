@@ -6,6 +6,7 @@ import InterventionService from "/src/services/InterventionService.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { exportFileName } from "../../tools/index.js";
 import { useDownload } from "../../composables/useDownload.js";
+import { INTERVENTION_STATUT } from "../../tools/intervention.js";
 
 const { data } = defineProps({
   data: {
@@ -122,7 +123,10 @@ const generer = () => {
         <input id="jalons" v-model="form.jalons" type="checkbox" class="form-check-input" />
         <label class="form-check-label" for="jalons">Jalons de l'intervention</label>
       </div>
-      <div v-if="hasComptabilitePermission && data.statut >= 3" class="form-check">
+      <div
+        v-if="hasComptabilitePermission && data.statut >= INTERVENTION_STATUT.IMPUTEE"
+        class="form-check"
+      >
         <input id="montants" v-model="form.montants" type="checkbox" class="form-check-input" />
         <label class="form-check-label" for="montants">Informations financières (montant)</label>
       </div>

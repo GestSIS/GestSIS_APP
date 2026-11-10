@@ -9,6 +9,7 @@ import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useStatistiqueStore } from "../../stores/statistique/Statistique.js";
 import { exportFileName } from "../../tools/index.js";
+import { EXERCICE_STATUT } from "../../tools/exercice.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -425,7 +426,8 @@ const toCvs = () => {
                   <div>
                     <span
                       :class="{
-                        'text-decoration-line-through text-danger': e.statut === 0,
+                        'text-decoration-line-through text-danger':
+                          e.statut === EXERCICE_STATUT.ANNULE,
                       }"
                     >
                       {{ e.designation }}
@@ -449,7 +451,7 @@ const toCvs = () => {
                   v-for="e in displayExercice"
                   :key="e.id"
                   class="fs-6 fw-normal text-center ps-0 pe-0 border border-1"
-                  :class="{ 'bg-danger-subtle': e.statut === 0 }"
+                  :class="{ 'bg-danger-subtle': e.statut === EXERCICE_STATUT.ANNULE }"
                 >
                   {{ new Date(e.date).toLocaleDateString("fr-CH").slice(0, 5) }}
                 </th>
@@ -479,7 +481,7 @@ const toCvs = () => {
                   :key="index"
                   class="text-center table-border"
                   :class="{
-                    'bg-danger-subtle': displayExercice[index].statut === 0,
+                    'bg-danger-subtle': displayExercice[index].statut === EXERCICE_STATUT.ANNULE,
                   }"
                 >
                   <span class="badge rounded-pill presence-badge" :class="formatPresenceClass(p)"

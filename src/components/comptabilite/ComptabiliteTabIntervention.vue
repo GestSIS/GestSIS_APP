@@ -14,7 +14,7 @@ import ImputationService from "/src/services/ImputationService.js";
 import permissions from "../../composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
-import { interventionStatut } from "../../composables/interventionStatuts.js";
+import { INTERVENTION_STATUT, interventionStatut } from "../../tools/intervention.js";
 import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
 
@@ -47,7 +47,7 @@ watchEffect(init);
 const sapeurs = computed(() => sapeurStore.liste);
 const interventions = computed(() =>
   interventionStore.liste
-    .filter((e) => e.statut > 1)
+    .filter((e) => e.statut > INTERVENTION_STATUT.A_VALIDER)
     .sort((a, b) => a.date_debut.localeCompare(b.date_debut)),
 );
 const typesIntervention = computed(() => typeInterventionStore.liste);
@@ -118,10 +118,10 @@ const onRowClass = (dataItem, isSelected) => {
   }
 
   const statutsClass = {
-    0: "", //'A saisir',
-    1: "", //'A valider',
-    2: "table-warning", //'Validée',
-    3: "table-success", //'Imputée'
+    [INTERVENTION_STATUT.A_SAISIR]: "", //'A saisir',
+    [INTERVENTION_STATUT.A_VALIDER]: "", //'A valider',
+    [INTERVENTION_STATUT.VALIDEE]: "table-warning", //'Validée',
+    [INTERVENTION_STATUT.IMPUTEE]: "table-success", //'Imputée'
   };
   return statutsClass[dataItem.statut];
 };
@@ -284,7 +284,7 @@ const fields = [
           </div>
           <div class="card-body d-grid gap-1">
             <button
-              v-if="!selectedItem || selectedItem?.statut == 2"
+              v-if="!selectedItem || selectedItem?.statut == INTERVENTION_STATUT.VALIDEE"
               class="btn btn-outline-primary"
               :disabled="!selectedItem"
               @click="imputer(selectedItem.id)"
@@ -293,7 +293,7 @@ const fields = [
             </button>
             <button
               :disabled="isSubmitting"
-              v-if="selectedItem?.statut == 3"
+              v-if="selectedItem?.statut == INTERVENTION_STATUT.IMPUTEE"
               class="btn btn-outline-danger"
               @click="annulerImputer(selectedItem.id)"
             >
@@ -366,7 +366,7 @@ const fields = [
               :row-class="onRowClass"
               no-data="Aucune écriture à afficher"
               :detail-row-column="true"
-              :detail-row-column-hide-button="(r) => r.statut !== 3"
+              :detail-row-column-hide-button="(r) => r.statut !== INTERVENTION_STATUT.IMPUTEE"
               :data="filteredData"
               :selectable="true"
               @selected="selected"
@@ -379,7 +379,7 @@ const fields = [
               </template>
               <template #actions="{ rowData }">
                 <button
-                  v-if="hasEditPermission && rowData.statut === 2"
+                  v-if="hasEditPermission && rowData.statut === INTERVENTION_STATUT.VALIDEE"
                   class="btn btn-outline-primary border-0"
                   title="Imputer"
                   @click="imputer(rowData.id)"
@@ -388,7 +388,7 @@ const fields = [
                 </button>
                 <button
                   :disabled="isSubmitting"
-                  v-if="hasEditPermission && rowData.statut === 3"
+                  v-if="hasEditPermission && rowData.statut === INTERVENTION_STATUT.IMPUTEE"
                   class="btn btn-outline-primary border-0"
                   title="Annuler imputation"
                   @click="annulerImputer(rowData.id)"

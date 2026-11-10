@@ -4,7 +4,7 @@ import { watchEffect } from "vue";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useInterventionStore } from "../stores/intervention/Intervention.js";
-import { interventionStatut } from "../composables/interventionStatuts.js";
+import { interventionStatut } from "../tools/intervention.js";
 import { useValidationIntervention } from "../composables/useValidationIntervention.js";
 
 const interventionStore = useInterventionStore();

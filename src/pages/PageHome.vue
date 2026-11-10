@@ -11,6 +11,7 @@ import ExcuseParamService from "../services/ExcuseParamService.js";
 import ExerciceService from "../services/ExerciceService.js";
 import { exportFileName } from "../tools/index.js";
 import { useSubmit } from "../composables/useSubmit.js";
+import { EXERCICE_STATUT } from "../tools/exercice.js";
 
 const authStore = useAuthStore();
 const infosStore = useMesInfosStore();
@@ -172,13 +173,13 @@ const peutAjouterExcuse = (exercice) =>
     excuseTypesParSis.value[exercice.sis_key] &&
     exercice.convoque &&
     !exercice.excuse_type_id &&
-    exercice.statut != 0
+    exercice.statut != EXERCICE_STATUT.ANNULE
   );
 const peutRetirerExcuse = (exercice) =>
   !!(
     excuseParamsParSis.value[exercice.sis_key]?.actif &&
     exercice.excuse_type_id &&
-    exercice.statut != 0
+    exercice.statut != EXERCICE_STATUT.ANNULE
   );
 
 const addExcuse = (rowData = {}) => {
@@ -351,7 +352,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                     excuseTypesParSis[rowData.sis_key] &&
                     rowData.convoque &&
                     !rowData.excuse_type_id &&
-                    rowData.statut != 0
+                    rowData.statut != EXERCICE_STATUT.ANNULE
                   "
                   title="Saisir une excuse pour cet exercice"
                   class="btn btn-outline-primary border-0"
@@ -364,7 +365,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                   v-else-if="
                     excuseParamsParSis[rowData.sis_key]?.actif &&
                     rowData.excuse_type_id &&
-                    rowData.statut != 0
+                    rowData.statut != EXERCICE_STATUT.ANNULE
                   "
                   title="Supprimer l'excuse pour cet exercice"
                   class="btn btn-outline-danger border-0"

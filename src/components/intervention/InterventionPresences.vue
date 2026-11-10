@@ -9,6 +9,7 @@ import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
 import { useValidationIntervention } from "../../composables/useValidationIntervention.js";
 import { useNotification } from "../../composables/useNotification.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { INTERVENTION_STATUT } from "../../tools/intervention.js";
 
 const awn = useNotification();
 
@@ -283,7 +284,7 @@ const heuresParSapeur = computed(() => {
           <button
             type="button"
             class="btn btn-primary"
-            :disabled="dataInter.statut > 2"
+            :disabled="dataInter.statut > INTERVENTION_STATUT.VALIDEE"
             @click="addPresences"
           >
             Ajouter des présences
@@ -378,7 +379,7 @@ const heuresParSapeur = computed(() => {
                       type="button"
                       title="Modifier"
                       class="btn btn-outline-primary border-0 ms-2"
-                      :disabled="dataInter.statut > 2"
+                      :disabled="dataInter.statut > INTERVENTION_STATUT.VALIDEE"
                       @click="editPresence(p)"
                     >
                       <font-awesome-icon :icon="['far', 'edit']" />
@@ -388,7 +389,7 @@ const heuresParSapeur = computed(() => {
                       type="button"
                       title="Supprimer"
                       class="btn btn-outline-danger border-0"
-                      :disabled="dataInter.statut > 2 || isSubmitting"
+                      :disabled="dataInter.statut > INTERVENTION_STATUT.VALIDEE || isSubmitting"
                       @click="removePresence(p.id)"
                     >
                       <font-awesome-icon :icon="['far', 'trash-alt']" />

@@ -1,12 +1,21 @@
 // Statuts d'un exercice (GestSIS_API/app/Domaine/Business/ExerciceBusiness.php
 // EXERCICE_STATUT_*), centralisés pour un affichage cohérent (libellé + couleur
 // de badge) dans tous les écrans qui en montrent un (exercice/, comptabilite/).
+// Valeurs des statuts, pour les comparaisons dans le code
+export const EXERCICE_STATUT = {
+  ANNULE: 0,
+  A_SAISIR: 1,
+  A_VALIDER: 2,
+  VALIDE: 3,
+  IMPUTE: 4,
+};
+
 export const exerciceStatuts = {
-  0: { label: "Annulé", badgeClass: "text-bg-danger" },
-  1: { label: "A saisir", badgeClass: "text-bg-secondary" },
-  2: { label: "A valider", badgeClass: "text-bg-warning" },
-  3: { label: "Validé", badgeClass: "text-bg-primary" },
-  4: { label: "Imputé", badgeClass: "text-bg-success" },
+  [EXERCICE_STATUT.ANNULE]: { label: "Annulé", badgeClass: "text-bg-danger" },
+  [EXERCICE_STATUT.A_SAISIR]: { label: "A saisir", badgeClass: "text-bg-secondary" },
+  [EXERCICE_STATUT.A_VALIDER]: { label: "A valider", badgeClass: "text-bg-warning" },
+  [EXERCICE_STATUT.VALIDE]: { label: "Validé", badgeClass: "text-bg-primary" },
+  [EXERCICE_STATUT.IMPUTE]: { label: "Imputé", badgeClass: "text-bg-success" },
 };
 
 export function exerciceStatut(statut) {

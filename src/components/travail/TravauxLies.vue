@@ -2,7 +2,7 @@
 import { computed, ref, watchEffect } from "vue";
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
-import { travailStatut } from "../../composables/travailStatuts.js";
+import { TRAVAIL_STATUT, travailStatut } from "../../tools/travail.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
@@ -11,6 +11,8 @@ import { useTravailStore } from "../../stores/travail/Travail.js";
 import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
 import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
+import { EXERCICE_STATUT } from "../../tools/exercice.js";
+import { INTERVENTION_STATUT } from "../../tools/intervention.js";
 
 // Fiches de travail liées à une intervention ou à un exercice (onglet Présences)
 const { genre, id, evenement } = defineProps({
@@ -33,16 +35,16 @@ const { genre, id, evenement } = defineProps({
 // Statuts de l'événement (InterventionBusiness / ExerciceBusiness) et droits associés
 const configurations = {
   intervention: {
-    valide: 2,
-    ferme: (statut) => statut >= 3,
+    valide: INTERVENTION_STATUT.VALIDEE,
+    ferme: (statut) => statut >= INTERVENTION_STATUT.IMPUTEE,
     validation: permissions.INTERVENTION.VALIDATION,
     titre: "Travaux liés à l'intervention",
     aucun: "Aucune fiche de travail liée à cette intervention",
   },
   exercice: {
-    valide: 3,
+    valide: EXERCICE_STATUT.VALIDE,
     // Imputé ou annulé
-    ferme: (statut) => statut >= 4 || statut === 0,
+    ferme: (statut) => statut >= EXERCICE_STATUT.IMPUTE || statut === EXERCICE_STATUT.ANNULE,
     validation: permissions.EXERCICE.VALIDATION,
     titre: "Travaux liés à l'exercice",
     aucun: "Aucune fiche de travail liée à cet exercice",
@@ -106,19 +108,24 @@ const peutModifier = (travail) => {
     return false;
   }
   if (hasValidationPermission.value) {
-    return travail.statut !== 2;
+    return travail.statut !== TRAVAIL_STATUT.IMPUTE;
   }
-  return !estValide.value && travail.statut === 0 && travail.auteur_id == activeSapeurId.value;
+  return (
+    !estValide.value &&
+    travail.statut === TRAVAIL_STATUT.EN_ATTENTE &&
+    travail.auteur_id == activeSapeurId.value
+  );
 };
 const peutTraiter = (travail) =>
   hasExamenPermission.value &&
   !estFerme.value &&
-  (travail.statut === 0 || (travail.statut === -1 && estValide.value));
+  (travail.statut === TRAVAIL_STATUT.EN_ATTENTE ||
+    (travail.statut === TRAVAIL_STATUT.REFUSE && estValide.value));
 const peutAnnulerExamen = (travail) =>
   hasExamenPermission.value &&
   !estFerme.value &&
   !estValide.value &&
-  (travail.statut === -1 || travail.statut === 1);
+  (travail.statut === TRAVAIL_STATUT.REFUSE || travail.statut === TRAVAIL_STATUT.ACCEPTE);
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();

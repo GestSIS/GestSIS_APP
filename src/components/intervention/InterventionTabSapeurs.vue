@@ -7,6 +7,7 @@ import InterventionPhase from "/src/components/intervention/InterventionPhase.vu
 import InterventionPresences from "/src/components/intervention/InterventionPresences.vue";
 import TravauxLies from "/src/components/travail/TravauxLies.vue";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import { INTERVENTION_STATUT } from "../../tools/intervention.js";
 
 const interventionStore = useInterventionStore();
 
@@ -28,7 +29,9 @@ const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION
   <div class="row">
     <div class="col-xs-12 col-md-12">
       <div
-        v-if="!dismissedWarning && dataInter.statut > 2 && hasEditPermission"
+        v-if="
+          !dismissedWarning && dataInter.statut > INTERVENTION_STATUT.VALIDEE && hasEditPermission
+        "
         class="alert alert-dismissible alert-warning"
       >
         <button type="button" class="btn-close" @click="dismissedWarning = true"></button>
