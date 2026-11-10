@@ -5,6 +5,9 @@ import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const { id } = defineProps({
   id: {
@@ -67,7 +70,9 @@ const removePhase = async (id) => {
       "Attention, la suppression d'une phase est irréversible ! Toutes les données de cette phase seront perdues !",
     )
   ) {
-    interventionStore.removePhase(id);
+    interventionStore
+      .removePhase(id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la phase."));
   }
 };
 

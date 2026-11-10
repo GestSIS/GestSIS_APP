@@ -2,6 +2,9 @@
 import { computed, ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const authStore = useAuthStore();
 
@@ -46,7 +49,9 @@ const remove = async (role) => {
       "Attention, la suppression d'un rôle est irréversible ! Les utilisateurs ayant ce rôle perdront ces permissions.",
     )
   ) {
-    authStore.deleteRole(role.id);
+    authStore
+      .deleteRole(role.id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du rôle."));
   }
 };
 

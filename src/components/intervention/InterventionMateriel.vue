@@ -5,6 +5,9 @@ import useHasPermission from "../../composables/usePermission.js";
 import permissions from "/src/composables/permissions.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useMaterielStore } from "../../stores/intervention/Materiel.js";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const interventionStore = useInterventionStore();
 const materielStore = useMaterielStore();
@@ -39,18 +42,21 @@ const { confirm, showModal } = useModalStore();
 const newMateriel = () => showModal("ModalInterventionMateriel");
 
 const editMateriel = (materielId) =>
-  showModal("ModalInterventionMateriel", {
+  showModal({
+    component: "ModalInterventionMateriel",
     data: activeMateriels.value.find((m) => m.id == materielId),
   });
 
 const supprimerMateriel = async (materielId) => {
   if (
     await confirm(
-      "Voulez-vous vraiment supprimer cette absence ?",
-      "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
+      "Voulez-vous vraiment supprimer ce matériel ?",
+      "Attention, la suppression d'un matériel est irréversible ! Toutes les données de ce matériel seront perdues !",
     )
   ) {
-    interventionStore.removeInterventionMateriel(id, materielId);
+    interventionStore
+      .removeInterventionMateriel(id, materielId)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du matériel."));
   }
 };
 

@@ -4,6 +4,9 @@ import { useMedecinStore } from "../../stores/controleMedical/Medecin.js";
 import { useControleMedicalTypeStore } from "../../stores/controleMedical/ControleMedicalType.js";
 import MesInfosService from "../../services/MesInfosService";
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const infosStore = useMesInfosStore();
 const medecinStore = useMedecinStore();
@@ -28,7 +31,9 @@ const controlesMedicaux = computed(() =>
 );
 
 const downloadJustificatif = ({ id, filename }) => {
-  MesInfosService.downloadMonJustificatif(id, filename);
+  MesInfosService.downloadMonJustificatif(id, filename).catch((err) =>
+    awn.alert(err?.message || "Erreur lors du téléchargement du justificatif."),
+  );
 };
 const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {

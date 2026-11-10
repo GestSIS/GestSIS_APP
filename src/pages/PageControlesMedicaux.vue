@@ -104,7 +104,9 @@ const filteredAnneesExpiration = computed(() => {
 const { showModal, confirm } = useModalStore();
 const selected = (item) => (selectedItem.value = item);
 const downloadJustificatif = ({ id, filename }) =>
-  ControlesMedicauxService.downloadJustificatif(id, filename);
+  ControlesMedicauxService.downloadJustificatif(id, filename).catch((err) =>
+    awn.alert(err?.message || "Erreur lors du téléchargement du justificatif."),
+  );
 
 const awn = useNotification();
 const sms = (controleMedicaux) => {
@@ -113,20 +115,22 @@ const sms = (controleMedicaux) => {
     return;
   }
 
-  SapeurService.getSapeursTelephones().then((telephones) => {
-    const ids = new Set(controleMedicaux.map((c) => c.sapeur_id));
-    const sap = sapeurs.value
-      .filter((e) => ids.has(e.id))
-      .map((s) => ({
-        ...s,
-        telephones: telephones.find((t) => t.id == s.id)?.telephones,
-      }));
-    showModal({
-      component: "ModalSms",
-      size: 1,
-      data: sap,
-    });
-  });
+  SapeurService.getSapeursTelephones()
+    .then((telephones) => {
+      const ids = new Set(controleMedicaux.map((c) => c.sapeur_id));
+      const sap = sapeurs.value
+        .filter((e) => ids.has(e.id))
+        .map((s) => ({
+          ...s,
+          telephones: telephones.find((t) => t.id == s.id)?.telephones,
+        }));
+      showModal({
+        component: "ModalSms",
+        size: 1,
+        data: sap,
+      });
+    })
+    .catch((err) => awn.alert(err?.message || "Erreur lors de la récupération des téléphones."));
 };
 const email = (controleMedicaux) => {
   const ids = new Set(controleMedicaux.map((c) => c.sapeur_id));
@@ -148,7 +152,11 @@ const supprimer = async (controle) => {
       "Attention, la suppression d'un contrôle est irréversible ! Il vous sera cependant possible d'en ajouter un nouveau'.",
     )
   ) {
-    controleMedicalStore.removeControleMedical(controle.id);
+    controleMedicalStore
+      .removeControleMedical(controle.id)
+      .catch((err) =>
+        awn.alert(err?.message || "Erreur lors de la suppression du contrôle médical."),
+      );
   }
 };
 

@@ -72,11 +72,13 @@ const generer = async () => {
 };
 
 const invalider = () => {
-  RecrutementService.invaliderToken().then(() => {
-    lien.value = "";
-    qrCodeDataUrl.value = "";
-    expireAt.value = null;
-  });
+  RecrutementService.invaliderToken()
+    .then(() => {
+      lien.value = "";
+      qrCodeDataUrl.value = "";
+      expireAt.value = null;
+    })
+    .catch((err) => awn.alert(err?.message || "Erreur lors de l'invalidation du lien."));
 };
 
 const copyToClipboard = (value) => {

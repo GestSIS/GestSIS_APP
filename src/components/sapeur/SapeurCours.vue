@@ -6,6 +6,9 @@ import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const sapeurStore = useSapeurStore();
 const coursStore = useCoursStore();
@@ -43,7 +46,9 @@ const supprimerCours = async (cours) => {
       "Attention, la suppression d'un cours est irréversible ! Toutes les données de ce cours seront perdues !",
     )
   ) {
-    sapeurStore.removeSapeurCours(cours?.id);
+    sapeurStore
+      .removeSapeurCours(cours?.id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du cours."));
   }
 };
 

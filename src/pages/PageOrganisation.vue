@@ -75,7 +75,9 @@ const deleteGroupe = async () => {
         "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
       )
     ) {
-      groupeStore.deleteGroupe(active.value.data.id);
+      groupeStore
+        .deleteGroupe(active.value.data.id)
+        .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du groupe."));
     }
   } else {
     awn.warning("Sélectionnez un groupe afin de pouvoir le supprimer.");

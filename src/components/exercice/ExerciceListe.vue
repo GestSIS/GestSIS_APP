@@ -77,7 +77,12 @@ const { closeModal, confirm, showModal } = useModalStore();
 const awn = useNotification();
 const convoquer = async () => {
   const convocationParamStore = useConvocationParamStore();
-  await convocationParamStore.fetchParams();
+  try {
+    await convocationParamStore.fetchParams();
+  } catch (err) {
+    awn.alert(err?.message || "Erreur lors du chargement des paramètres de convocation.");
+    return;
+  }
   showModal({ component: "ModalConvoquer", size: 1 });
 };
 const sms = ({ id }) => {
@@ -93,19 +98,29 @@ const sms = ({ id }) => {
   });
 };
 const email = ({ id }) =>
-  ExerciceService.getSapeurs(id).then((presences) => {
-    const link = document.createElement("a");
-    link.href =
-      "mailto:?bcc=" +
-      presences
-        .map((p) => sapeurs.value.find((s) => s.id == p.sapeur_id)?.email)
-        .filter((s) => s)
-        .join(", ");
-    link.click();
-  });
+  ExerciceService.getSapeurs(id)
+    .then((presences) => {
+      const link = document.createElement("a");
+      link.href =
+        "mailto:?bcc=" +
+        presences
+          .map((p) => sapeurs.value.find((s) => s.id == p.sapeur_id)?.email)
+          .filter((s) => s)
+          .join(", ");
+      link.click();
+    })
+    .catch((err) => awn.alert(err?.message || "Erreur lors de la récupération des convocations."));
 
-const validerExercice = (id) => exerciceStore.validerExercice(id);
-const annulerExercice = (id) => exerciceStore.annulerExercice(id);
+const validerExercice = (id) =>
+  exerciceStore
+    .validerExercice(id)
+    .then(() => awn.success("Exercice validé."))
+    .catch((err) => awn.alert(err?.message || "Erreur lors de la validation de l'exercice."));
+const annulerExercice = (id) =>
+  exerciceStore
+    .annulerExercice(id)
+    .then(() => awn.success("Exercice annulé."))
+    .catch((err) => awn.alert(err?.message || "Erreur lors de l'annulation de l'exercice."));
 // Symétrique de "valider" : un exercice validé (pas encore imputé) repasse en saisie
 const devaliderExercice = async (id) => {
   if (
@@ -120,7 +135,11 @@ const devaliderExercice = async (id) => {
       .catch((err) => awn.alert(err?.message || "Erreur lors de l'annulation de la validation."));
   }
 };
-const reactiverExercice = (id) => exerciceStore.reactiverExercice(id);
+const reactiverExercice = (id) =>
+  exerciceStore
+    .reactiverExercice(id)
+    .then(() => awn.success("Exercice réactivé."))
+    .catch((err) => awn.alert(err?.message || "Erreur lors de la réactivation de l'exercice."));
 
 const removeExercice = async (id) => {
   if (
@@ -171,6 +190,7 @@ const listeAppel = ({ id }) => {
 const downloadIcs = (filteredExercices) => {
   if (filteredExercices.length <= 0) {
     awn.alert("Aucun exercice à exporter");
+    return;
   }
   exercicesToIcs(filteredExercices, sisName.value, sisKey.value, annee.value);
 };

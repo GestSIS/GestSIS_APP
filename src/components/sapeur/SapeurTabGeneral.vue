@@ -131,9 +131,11 @@ const supprimerPhoto = async () => {
       "Attention, cette action est irréversible ! La photo sera perdue.",
     )
   ) {
-    SapeurService.deletePhoto(activeSapeurId.value).then(() => {
-      photo.value = null;
-    });
+    SapeurService.deletePhoto(activeSapeurId.value)
+      .then(() => {
+        photo.value = null;
+      })
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la photo."));
   }
 };
 const editPhoto = () =>

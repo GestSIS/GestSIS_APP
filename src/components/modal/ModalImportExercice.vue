@@ -33,12 +33,17 @@ const exercicesComptables = computed(() =>
 
 const selectExerciceComptable = async () => {
   loading.value = true;
-  form.exercices = (await ExerciceService.getExercices(form.exerciceComptableId)).map((e) => ({
-    ...e,
-    categorie: categories.value.find((c) => c.id === e.exercice_categorie_id)?.designation,
-  }));
-  form.exercices.sort((a, b) => a.date?.localeCompare(b.date ?? "") ?? 0);
-  loading.value = false;
+  try {
+    form.exercices = (await ExerciceService.getExercices(form.exerciceComptableId)).map((e) => ({
+      ...e,
+      categorie: categories.value.find((c) => c.id === e.exercice_categorie_id)?.designation,
+    }));
+    form.exercices.sort((a, b) => a.date?.localeCompare(b.date ?? "") ?? 0);
+  } catch (err) {
+    awn.alert(err?.message ?? "Erreur lors du chargement des exercices");
+  } finally {
+    loading.value = false;
+  }
 };
 
 // Computed (not a watchEffect writing back into form.exercices, which would

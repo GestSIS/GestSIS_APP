@@ -5,6 +5,9 @@ import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
 import { computed, ref, watchEffect } from "vue";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const sapeurStore = useSapeurStore();
 const interventionStore = useInterventionStore();
@@ -154,7 +157,9 @@ const supprimerAppel = async (id) => {
       "Attention, la suppression d'un appel est irréversible ! Toutes les données de cet appel seront perdues !",
     )
   ) {
-    interventionStore.removeInterventionAppel(id);
+    interventionStore
+      .removeInterventionAppel(id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de l'appel."));
   }
 };
 
@@ -198,7 +203,9 @@ const supprimerJalon = async (id) => {
       "Attention, la suppression d'un jalon est irréversible ! Toutes les données de ce jalon seront perdues !",
     )
   ) {
-    interventionStore.removeInterventionJalon(id);
+    interventionStore
+      .removeInterventionJalon(id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du jalon."));
   }
 };
 
@@ -243,7 +250,9 @@ const supprimerMission = async (id) => {
       "Attention, la suppression d'un mission est irréversible ! Toutes les données de cette mission seront perdues !",
     )
   ) {
-    interventionStore.removeInterventionMission(id);
+    interventionStore
+      .removeInterventionMission(id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la mission."));
   }
 };
 

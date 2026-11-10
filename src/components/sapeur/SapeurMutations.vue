@@ -5,6 +5,9 @@ import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -35,7 +38,9 @@ const removeMutation = async (mutation) => {
       "Attention, la suppression d'une mutation est irréversible ! Toutes les données de cette mutation seront perdues !",
     )
   ) {
-    sapeurStore.removeMutation(mutation?.id);
+    sapeurStore
+      .removeMutation(mutation?.id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la mutation."));
   }
 };
 

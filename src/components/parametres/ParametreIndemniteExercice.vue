@@ -8,6 +8,9 @@ import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const imputationStore = useImputationStore();
 const compteStore = useCompteStore();
@@ -86,7 +89,9 @@ const removeIndemnite = async (indemnite) => {
       "Attention, la suppression d'une indemnité est irréversible ! Toutes les données de cette indemnité seront perdues !",
     )
   ) {
-    imputationStore.removeIndemniteExercice(indemnite.id);
+    imputationStore
+      .removeIndemniteExercice(indemnite.id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de l'indemnité."));
   }
 };
 </script>

@@ -6,6 +6,9 @@ import { useConvocationParamStore } from "../../stores/exercice/ConvocationParam
 import permissions from "../../composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
 import ConvocationService from "/src/services/ConvocationService.js";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const { data } = defineProps({
   data: {
@@ -47,7 +50,11 @@ const convoquer = () => {
 const hasEditPermission = useHasPermission(permissions.EXERCICE.MODIFICATION);
 const saveParam = () => {
   if (hasEditPermission.value) {
-    convocationParamStore.updateConvocationParams(params);
+    convocationParamStore
+      .updateConvocationParams(params)
+      .catch((err) =>
+        awn.alert(err?.message || "Erreur lors de l'enregistrement des paramètres de convocation."),
+      );
   }
 };
 const select = () => {

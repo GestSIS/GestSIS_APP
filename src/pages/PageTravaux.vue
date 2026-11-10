@@ -12,6 +12,9 @@ import ExerciceComptable from "/src/components/exercice_comptable/ExerciceCompta
 import useHasPermission from "../composables/usePermission.js";
 import { travailStatut, travailStatutOptions } from "../composables/travailStatuts.js";
 import { evenementVerrouille, lienTravail } from "../composables/travailLien.js";
+import useNotification from "../composables/useNotification.js";
+
+const awn = useNotification();
 
 const authStore = useAuthStore();
 const sapeurStore = useSapeurStore();
@@ -100,7 +103,9 @@ const cancelReviewTravail = async (travail) => {
       "Attention, la justification fournie lors de l'examen sera perdue.",
     )
   ) {
-    travailStore.cancelReviewTravail(travail?.id);
+    travailStore
+      .cancelReviewTravail(travail?.id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de l'annulation de l'examen."));
   }
 };
 
@@ -111,7 +116,9 @@ const supprimerTravail = async (travail) => {
       "Attention, la suppression d'un travail est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
     )
   ) {
-    travailStore.removeTravail(travail?.id);
+    travailStore
+      .removeTravail(travail?.id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du travail."));
   }
 };
 

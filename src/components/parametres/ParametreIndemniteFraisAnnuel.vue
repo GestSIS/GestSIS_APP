@@ -7,6 +7,9 @@ import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCat
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const imputationStore = useImputationStore();
 const compteStore = useCompteStore();
@@ -89,7 +92,9 @@ const deleteType = async (type) => {
       "Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.",
     )
   ) {
-    imputationStore.removeFraisIndemniteAnnuelType(type.id);
+    imputationStore
+      .removeFraisIndemniteAnnuelType(type.id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du type."));
   }
 };
 
@@ -126,7 +131,9 @@ const deleteFonction = async (type, fonction) => {
       "Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.",
     )
   ) {
-    imputationStore.removeFraisIndemniteAnnuel(elem.id);
+    imputationStore
+      .removeFraisIndemniteAnnuel(elem.id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression."));
   }
 };
 </script>

@@ -365,7 +365,9 @@ const removeExcuse = async (presence) => {
       "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
     )
   ) {
-    exerciceStore.removeExcuse(presence.exercice_id, presence.sapeur_id);
+    exerciceStore
+      .removeExcuse(presence.exercice_id, presence.sapeur_id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de l'excuse."));
   }
 };
 

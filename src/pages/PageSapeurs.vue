@@ -183,7 +183,14 @@ const ficheSapeur = () => {
   SapeurService.downloadFicheSapeur(
     activeSapeurId.value,
     exportFileName(["fiche-sapeur", sapeur?.nom_prenom], "pdf"),
-  ).then(closeModal);
+  )
+    .catch((err) =>
+      awn.alert(
+        err?.message ||
+          "Erreur lors de la génération du fichier pdf, contactez l'administrateur système",
+      ),
+    )
+    .then(closeModal);
 };
 const lienInscription = () => showModal({ component: "ModalRecrutementToken" });
 const validerRecrue = () =>

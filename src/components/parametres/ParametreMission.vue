@@ -2,6 +2,9 @@
 import { useMissionStore } from "../../stores/intervention/Mission.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const missionStore = useMissionStore();
 await missionStore.fetchMissions();
@@ -23,7 +26,9 @@ const deleteMission = async (mission) => {
       "Attention, la suppression d'une mission est irréversible ! Toutes les données de cette mission seront perdues !",
     )
   ) {
-    missionStore.removeMission(mission.id);
+    missionStore
+      .removeMission(mission.id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la mission."));
   }
 };
 </script>

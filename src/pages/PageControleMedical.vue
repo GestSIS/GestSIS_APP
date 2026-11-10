@@ -115,7 +115,7 @@ const downloadJustificatif = () => {
   ControlesMedicauxService.downloadJustificatif(
     controleMedical.value.id,
     controleMedical.value.filename,
-  );
+  ).catch((err) => awn.alert(err?.message || "Erreur lors du téléchargement du justificatif."));
 };
 const save = async () => {
   if (modeAjout.value) {
@@ -139,7 +139,9 @@ const fileComponent = useTemplateRef("file-justificatif");
 const ajoutJustificatif = () => {
   if (fileComponent.value.files.length > 0) {
     const file = fileComponent.value.files[0];
-    controleMedicalStore.addJustificatif(file);
+    controleMedicalStore
+      .addJustificatif(file)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de l'ajout du justificatif."));
   }
 };
 const { confirm } = useModalStore();
@@ -150,7 +152,9 @@ const removeJustificatif = async () => {
       "Attention, la suppression d'un justificatif est irréversible ! Toutes les données de ce justificatif seront perdues !",
     )
   ) {
-    controleMedicalStore.removeJustificatif();
+    controleMedicalStore
+      .removeJustificatif()
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du justificatif."));
   }
 };
 

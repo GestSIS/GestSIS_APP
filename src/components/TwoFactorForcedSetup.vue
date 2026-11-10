@@ -30,10 +30,16 @@ const webauthnLoading = ref(false);
 const chooseTotp = async () => {
   webauthnError.value = null;
   step.value = "totp-qr";
-  const data = await authStore.enableTwoFactor();
-  provisioningUri.value = data.provisioningUri;
-  secret.value = data.secret;
-  qrCodeDataUrl.value = await QRCode.toDataURL(data.provisioningUri);
+  try {
+    const data = await authStore.enableTwoFactor();
+    provisioningUri.value = data.provisioningUri;
+    secret.value = data.secret;
+    qrCodeDataUrl.value = await QRCode.toDataURL(data.provisioningUri);
+  } catch (err) {
+    // Même retour que l'échec WebAuthn : message affiché sur l'écran de choix
+    webauthnError.value = err?.message || "Échec de l'activation de la double authentification";
+    step.value = "choose";
+  }
 };
 
 const chooseWebauthn = () => {

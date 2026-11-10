@@ -2,6 +2,9 @@
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useTelephoneStore } from "../../stores/sapeur/Telephone.js";
 import { computed } from "vue";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const telephoneStore = useTelephoneStore();
 await telephoneStore.fetchTelephones();
@@ -27,7 +30,9 @@ const deleteTelephone = async (telephone) => {
       "Attention, la suppression d'un contact est irréversible ! Toutes les données de ce contact seront perdues !",
     )
   ) {
-    telephoneStore.removeTelephone(telephone.id);
+    telephoneStore
+      .removeTelephone(telephone.id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du contact."));
   }
 };
 </script>

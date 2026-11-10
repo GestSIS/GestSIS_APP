@@ -13,6 +13,9 @@ import { useInterventionTraitementStore } from "../stores/intervention/Intervent
 import { useStatFederalStore } from "../stores/intervention/StatFederal.js";
 import { useTypeInterventionStore } from "../stores/intervention/TypeIntervention.js";
 import { interventionStatut } from "../composables/interventionStatuts.js";
+import useNotification from "../composables/useNotification.js";
+
+const awn = useNotification();
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -97,10 +100,19 @@ const supprimerIntervention = async (id) => {
       "Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
     )
   ) {
-    interventionStore.removeIntervention(id);
+    interventionStore
+      .removeIntervention(id)
+      .then(() => awn.success("Intervention supprimée."))
+      .catch((err) =>
+        awn.alert(err?.message || "Erreur lors de la suppression de l'intervention."),
+      );
   }
 };
-const validerIntervention = (id) => interventionStore.validerIntervention(id);
+const validerIntervention = (id) =>
+  interventionStore
+    .validerIntervention(id)
+    .then(() => awn.success("Intervention validée."))
+    .catch((err) => awn.alert(err?.message || "Erreur lors de la validation de l'intervention."));
 const { devaliderInterventionId } = useValidationIntervention();
 
 const rapportIntervention = () => {

@@ -7,6 +7,9 @@ import permissions from "/src/composables/permissions.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
 import useValidationIntervention from "../../composables/useValidationIntervention.js";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const sapeurStore = useSapeurStore();
 const interventionStore = useInterventionStore();
@@ -170,16 +173,22 @@ const removePresence = async (id) => {
       "Attention, la suppression d'une présence est irréversible ! Toutes les données de cette présence seront perdues !",
     )
   ) {
-    interventionStore.removePresence(id);
+    interventionStore
+      .removePresence(id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la présence."));
   }
 };
 
 const editQuittance = (e, id) => {
   const filteredQuittances = quittances.value.filter((q) => q.sapeur_id === parseInt(id));
   if (filteredQuittances.length === 1) {
-    interventionStore.removeQuittance(filteredQuittances[0].id);
+    interventionStore
+      .removeQuittance(filteredQuittances[0].id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la quittance."));
   } else {
-    interventionStore.addQuittance(id);
+    interventionStore
+      .addQuittance(id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de l'ajout de la quittance."));
   }
 };
 

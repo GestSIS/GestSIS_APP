@@ -3,6 +3,9 @@ import { computed, ref, useTemplateRef } from "vue";
 import EditableTree from "/src/components/editable_tree/EditableTree.vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useGroupeStore } from "../../stores/groupe/Groupe.js";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const sapeurStore = useSapeurStore();
 const groupeStore = useGroupeStore();
@@ -79,6 +82,11 @@ const selected = (elem) => {
   emit("selected", elem);
 };
 
+const deplacerGroupe = (payload) =>
+  groupeStore
+    .updateGroupe(payload)
+    .catch((err) => awn.alert(err?.message || "Erreur lors du déplacement du groupe."));
+
 const left = (node) => {
   const groupe = groupes.value.find((g) => g.id == node.data.id);
   if (!groupe) return;
@@ -86,7 +94,7 @@ const left = (node) => {
   // On ne change que parent_id
   const parent = groupes.value.find((g) => g.id == groupe.parent_id);
   if (!parent) return;
-  groupeStore.updateGroupe({
+  deplacerGroupe({
     groupeId: groupe.id,
     data: {
       ...groupe,
@@ -104,7 +112,7 @@ const right = (node) => {
     .filter((g) => g.tri < groupe.tri);
   const previousGroupe = groupesOfSameLevel[groupesOfSameLevel.length - 1];
   if (!previousGroupe) return;
-  groupeStore.updateGroupe({
+  deplacerGroupe({
     groupeId: groupe.id,
     data: {
       ...groupe,
@@ -128,7 +136,7 @@ const up = (node) => {
       .filter((g) => g.tri < parent.tri);
     const previousParentGroupe = groupesOfSameLevelAsParent[groupesOfSameLevelAsParent.length - 1];
     if (!previousParentGroupe) return;
-    groupeStore.updateGroupe({
+    deplacerGroupe({
       groupeId: groupe.id,
       data: {
         ...groupe,
@@ -143,14 +151,14 @@ const up = (node) => {
       .filter((g) => g.tri < groupe.tri);
     const previousGroupe = groupesAvant[groupesAvant.length - 1];
     if (!previousGroupe) return;
-    groupeStore.updateGroupe({
+    deplacerGroupe({
       groupeId: groupe.id,
       data: {
         ...groupe,
         tri: previousGroupe.tri,
       },
     });
-    groupeStore.updateGroupe({
+    deplacerGroupe({
       groupeId: previousGroupe.id,
       data: {
         ...previousGroupe,
@@ -181,7 +189,7 @@ const down = (node) => {
       groupeId = parent.parent_id;
     }
 
-    groupeStore.updateGroupe({
+    deplacerGroupe({
       groupeId: groupe.id,
       data: {
         ...groupe,
@@ -196,14 +204,14 @@ const down = (node) => {
       .filter((g) => g.tri > groupe.tri);
     const nextGroupe = groupesApres[0];
     if (!nextGroupe) return;
-    groupeStore.updateGroupe({
+    deplacerGroupe({
       groupeId: groupe.id,
       data: {
         ...groupe,
         tri: nextGroupe.tri,
       },
     });
-    groupeStore.updateGroupe({
+    deplacerGroupe({
       groupeId: nextGroupe.id,
       data: {
         ...nextGroupe,

@@ -4,6 +4,9 @@ import { useMedecinStore } from "../../stores/controleMedical/Medecin.js";
 import { useControleMedicalTypeStore } from "../../stores/controleMedical/ControleMedicalType.js";
 import ControlesMedicauxService from "/src/services/ControlesMedicauxService.js";
 import { computed, ref, watchEffect } from "vue";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const sapeurStore = useSapeurStore();
 const medecinStore = useMedecinStore();
@@ -29,7 +32,9 @@ const controles = computed(() =>
 );
 
 const downloadJustificatif = ({ id, filename }) => {
-  ControlesMedicauxService.downloadJustificatif(id, filename);
+  ControlesMedicauxService.downloadJustificatif(id, filename).catch((err) =>
+    awn.alert(err?.message || "Erreur lors du téléchargement du justificatif."),
+  );
 };
 
 const fields = [

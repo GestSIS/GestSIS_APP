@@ -7,6 +7,9 @@ import useHasPermission from "../../composables/usePermission.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useAbsenceStore } from "../../stores/absence/Absence.js";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const localiteStore = useLocaliteStore();
 const sapeurStore = useSapeurStore();
@@ -50,7 +53,9 @@ const removeAbsence = async (id) => {
       "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
     )
   ) {
-    absenceStore.removeAbsence(id);
+    absenceStore
+      .removeAbsence(id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de l'absence."));
   }
 };
 

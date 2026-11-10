@@ -5,6 +5,9 @@ import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import useHasPermission from "../../composables/usePermission.js";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -44,7 +47,9 @@ const supprimerFonction = async (fonction) => {
       "Attention, la suppression d'une fonction est irréversible ! Toutes les données de cette fonction seront perdues !",
     )
   ) {
-    sapeurStore.removeSapeurFonction(fonction?.id);
+    sapeurStore
+      .removeSapeurFonction(fonction?.id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la fonction."));
   }
 };
 

@@ -5,6 +5,9 @@ import { useGradeStore } from "../../stores/sapeur/Grade.js";
 import useHasPermission from "../../composables/usePermission.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
+import useNotification from "../../composables/useNotification.js";
+
+const awn = useNotification();
 
 const sapeurStore = useSapeurStore();
 const gradeStore = useGradeStore();
@@ -38,7 +41,9 @@ const supprimerGrade = async (grade) => {
       "Attention, la suppression d'un grade est irréversible ! Toutes les données de ce grade seront perdues !",
     )
   ) {
-    sapeurStore.removeSapeurGrade(grade?.id);
+    sapeurStore
+      .removeSapeurGrade(grade?.id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du grade."));
   }
 };
 

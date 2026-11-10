@@ -70,7 +70,12 @@ const remove = async (agriculteur) => {
       "Attention, la suppression d'un agriculteur est irréversible !",
     )
   ) {
-    await RtaService.deleteAgriculteur(agriculteur.id);
+    try {
+      await RtaService.deleteAgriculteur(agriculteur.id);
+    } catch (err) {
+      awn.alert(err?.message || "Erreur lors de la suppression de l'agriculteur.");
+      return;
+    }
     loadData();
   }
 };

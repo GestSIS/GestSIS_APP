@@ -70,7 +70,9 @@ const removeContact = async (contact) => {
       "Attention, cet email ne recevra plus les emails de cette liste de diffusion !",
     )
   ) {
-    sisParamStore.removeSisContact(contact.id);
+    sisParamStore
+      .removeSisContact(contact.id)
+      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de l'email."));
   }
 };
 
