@@ -66,14 +66,19 @@ const addContact = (liste) =>
   });
 const removeContact = async (contact) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cet email ?",
       "Attention, cet email ne recevra plus les emails de cette liste de diffusion !",
-    )
+    ))
   ) {
-    sisParamStore
-      .removeSisContact(contact.id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de l'email."));
+    return;
+  }
+  const { ok } = await submit(
+    () => sisParamStore.removeSisContact(contact.id),
+    "Erreur lors de la suppression de l'email.",
+  );
+  if (ok) {
+    awn.success("Email supprimé.");
   }
 };
 

@@ -2,6 +2,7 @@
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { computed } from "vue";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
 
 const fonctionStore = useFonctionStore();
@@ -19,20 +20,26 @@ const fields = [
 const listeFonction = computed(() => fonctionStore.liste.slice().sort((a, b) => b.tri - a.tri));
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 const ajoutFonction = () => showModal({ component: "ModalFonction", data: {} });
 const updateFonction = (fonction) =>
   showModal({ component: "ModalFonction", data: { ...fonction } });
 const deleteFonction = async (fonction) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette fonction ?",
       "Attention, la suppression d'une fonction est irréversible !",
-    )
+    ))
   ) {
-    fonctionStore
-      .removeFonction(fonction.id)
-      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+    return;
+  }
+  const { ok } = await submit(
+    () => fonctionStore.removeFonction(fonction.id),
+    "Erreur lors de la suppression",
+  );
+  if (ok) {
+    awn.success("Fonction supprimée.");
   }
 };
 </script>
@@ -61,6 +68,7 @@ const deleteFonction = async (fonction) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteFonction(rowData)"

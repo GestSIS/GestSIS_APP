@@ -2,6 +2,7 @@
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
 import { computed } from "vue";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
 
 const gradeStore = useGradeStore();
@@ -29,19 +30,25 @@ const listeGrade = computed(() =>
 );
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 const ajoutGrade = () => showModal({ component: "ModalGrade", data: {} });
 const updateGrade = (grade) => showModal({ component: "ModalGrade", data: { ...grade } });
 const deleteGrade = async (grade) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer ce grade ?",
       "Attention, la suppression d'un grade est irréversible !",
-    )
+    ))
   ) {
-    gradeStore
-      .removeGrade(grade.id)
-      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+    return;
+  }
+  const { ok } = await submit(
+    () => gradeStore.removeGrade(grade.id),
+    "Erreur lors de la suppression",
+  );
+  if (ok) {
+    awn.success("Grade supprimé.");
   }
 };
 </script>
@@ -63,6 +70,7 @@ const deleteGrade = async (grade) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteGrade(rowData)"

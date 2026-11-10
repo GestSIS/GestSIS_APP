@@ -2,7 +2,6 @@
 import { computed, ref, watchEffect } from "vue";
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
-import { useNotification } from "../../composables/useNotification.js";
 import { travailStatut } from "../../composables/travailStatuts.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { useModalStore } from "../../stores/common/Modal.js";
@@ -10,6 +9,8 @@ import { useUniteStore } from "../../stores/common/Unite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useTravailStore } from "../../stores/travail/Travail.js";
 import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 // Fiches de travail liées à une intervention ou à un exercice (onglet Présences)
 const { genre, id, evenement } = defineProps({
@@ -120,6 +121,7 @@ const peutAnnulerExamen = (travail) =>
   (travail.statut === -1 || travail.statut === 1);
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 
 const ajouterTravail = () =>
@@ -135,26 +137,36 @@ const modifierTravail = (travail) =>
 const traiterTravail = (travail) => showModal({ component: "ModalReviewTravail", data: travail });
 const annulerExamen = async (travail) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment annuler l'examen de ce travail ?",
       "Attention, la justification fournie lors de l'examen sera perdue.",
-    )
+    ))
   ) {
-    travailStore
-      .cancelReviewTravail(travail.id)
-      .catch((err) => awn.alert(err?.message ?? "Erreur lors de l'annulation de l'examen"));
+    return;
+  }
+  const { ok } = await submit(
+    () => travailStore.cancelReviewTravail(travail.id),
+    "Erreur lors de l'annulation de l'examen",
+  );
+  if (ok) {
+    awn.success("Examen annulé.");
   }
 };
 const supprimerTravail = async (travail) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer ce travail ?",
       "Attention, la suppression d'un travail est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-    )
+    ))
   ) {
-    travailStore
-      .removeTravail(travail.id)
-      .catch((err) => awn.alert(err?.message ?? "Erreur lors de la suppression"));
+    return;
+  }
+  const { ok } = await submit(
+    () => travailStore.removeTravail(travail.id),
+    "Erreur lors de la suppression",
+  );
+  if (ok) {
+    awn.success("Travail supprimé.");
   }
 };
 
@@ -204,6 +216,7 @@ const fields = [
               <font-awesome-icon :icon="['far', 'eye']" />
             </button>
             <button
+              :disabled="isSubmitting"
               v-if="peutAnnulerExamen(rowData)"
               type="button"
               title="Annuler l'examen"
@@ -213,6 +226,7 @@ const fields = [
               <font-awesome-icon :icon="['fas', 'cancel']" />
             </button>
             <button
+              :disabled="isSubmitting"
               v-if="peutModifier(rowData)"
               type="button"
               title="Supprimer"

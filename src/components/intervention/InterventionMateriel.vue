@@ -5,9 +5,8 @@ import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "/src/composables/permissions.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useMaterielStore } from "../../stores/intervention/Materiel.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
-
-const awn = useNotification();
 
 const interventionStore = useInterventionStore();
 const materielStore = useMaterielStore();
@@ -38,6 +37,8 @@ const activeMateriels = computed(() =>
 const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 
 const newMateriel = () => showModal("ModalInterventionMateriel");
 
@@ -49,14 +50,19 @@ const editMateriel = (materielId) =>
 
 const supprimerMateriel = async (materielId) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer ce matériel ?",
       "Attention, la suppression d'un matériel est irréversible ! Toutes les données de ce matériel seront perdues !",
-    )
+    ))
   ) {
-    interventionStore
-      .removeInterventionMateriel(id, materielId)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du matériel."));
+    return;
+  }
+  const { ok } = await submit(
+    () => interventionStore.removeInterventionMateriel(id, materielId),
+    "Erreur lors de la suppression du matériel.",
+  );
+  if (ok) {
+    awn.success("Matériel supprimé.");
   }
 };
 
@@ -94,6 +100,7 @@ const fields = [
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <button
+                :disabled="isSubmitting"
                 type="button"
                 class="btn btn-outline-danger border-0"
                 @click="supprimerMateriel(rowData.id)"

@@ -81,6 +81,24 @@ Les erreurs sont envoyées à Bugsink via un tunnel côté API (`main.js` → `$
 - Respecter la config ESLint existante (`eslint.config.js`) ; lancer `yarn lint` avant de commit.
 - Pas de logique métier lourde dans les templates.
 
+## Appels API déclenchés par l'utilisateur
+
+Ne pas écrire de `.then/.catch` à la main pour une action utilisateur : passer par les composables.
+
+- **Formulaire ou action** → `useSubmit()` : `const { errors, isSubmitting, submit } = useSubmit();` puis `const { ok, data } = await submit(() => store.save(form), "Message par défaut");`. Erreurs de champs dans `errors` (clés renvoyées par l'API, ex. `errors['appels.0.date']` directement dans le template), sinon message de l'API en notification. Bouton déclencheur : `:disabled="isSubmitting"` (bloque le double envoi ; un appel ignoré renvoie `{ ok: false, ignored: true }`). L'après-succès (fermer la modale, naviguer, message) reste à l'appelant.
+- **Action à confirmer** (suppression, validation, annulation) → `confirm()` du store des modales, puis `useSubmit` :
+  `if (!(await confirm("Titre ?", "Explication"))) return;` puis `const { ok } = await submit(...)`.
+- **Téléchargement** (PDF, Excel, XML) → `useDownload()` : `download(() => Service.downloadXxx(...), "Message par défaut")` (fenêtre de chargement + message d'erreur).
+- **Stockage navigateur** → jamais `localStorage`/`sessionStorage` directement : `safeLocalStorage` / `safeSessionStorage` (`tools/storage.js`, non réactif) ou `useLocalStorage` / `useSessionStorage` (`composables/useStorage.js`, réactif, pour l'état d'interface). Les jetons passent par `TokenService`.
+
+### Message de succès (`awn.success`)
+
+- **Page ou onglet** (le formulaire reste affiché) : toujours un message (« Modifications enregistrées »).
+- **Modale** : pas de message, sa fermeture suffit — sauf si l'effet n'est pas visible à l'écran (envoi de SMS, import, traitement en lot, duplication).
+- **Action confirmée** (suppression, validation, annulation) : toujours un message (« Grade supprimé. »).
+- **Action directe** (bouton de statut) : un message, sauf pour les cases cochées en série (présences, quittances) où il serait trop bavard.
+- **Téléchargement** : pas de message, le fichier suffit.
+
 <!--VITE PLUS START-->
 
 # Using Vite+, the Unified Toolchain for the Web

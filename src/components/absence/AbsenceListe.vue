@@ -7,9 +7,8 @@ import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useAbsenceStore } from "../../stores/absence/Absence.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
-
-const awn = useNotification();
 
 const localiteStore = useLocaliteStore();
 const sapeurStore = useSapeurStore();
@@ -42,20 +41,27 @@ const computedData = computed(() => {
 });
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 const addAbsence = () => showModal({ component: "ModalAbsence" });
 
 const modifierAbsence = (absence) => showModal({ component: "ModalAbsence", data: absence });
 
 const removeAbsence = async (id) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette absence ?",
       "Attention, la suppression d'un absence est irréversible ! Toutes les données de cette absence seront perdues !",
-    )
+    ))
   ) {
-    absenceStore
-      .removeAbsence(id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de l'absence."));
+    return;
+  }
+  const { ok } = await submit(
+    () => absenceStore.removeAbsence(id),
+    "Erreur lors de la suppression de l'absence.",
+  );
+  if (ok) {
+    awn.success("Absence supprimée.");
   }
 };
 
@@ -142,6 +148,7 @@ const fields = [
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
                 <button
+                  :disabled="isSubmitting"
                   v-if="hasEditPermission"
                   title="supprimer"
                   class="btn btn-outline-danger border-0"

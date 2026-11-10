@@ -2,9 +2,8 @@
 import { useMissionStore } from "../../stores/intervention/Mission.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
-
-const awn = useNotification();
 
 const missionStore = useMissionStore();
 await missionStore.fetchMissions();
@@ -17,18 +16,25 @@ const fields = [
 const listeMission = computed(() => missionStore.liste.slice().sort((a, b) => a.tri - b.tri));
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 const ajoutMission = () => showModal({ component: "ModalMission", data: {} });
 const updateMission = (mission) => showModal({ component: "ModalMission", data: { ...mission } });
 const deleteMission = async (mission) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette mission ?",
       "Attention, la suppression d'une mission est irréversible ! Toutes les données de cette mission seront perdues !",
-    )
+    ))
   ) {
-    missionStore
-      .removeMission(mission.id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la mission."));
+    return;
+  }
+  const { ok } = await submit(
+    () => missionStore.removeMission(mission.id),
+    "Erreur lors de la suppression de la mission.",
+  );
+  if (ok) {
+    awn.success("Mission supprimée.");
   }
 };
 </script>
@@ -52,6 +58,7 @@ const deleteMission = async (mission) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteMission(rowData)"

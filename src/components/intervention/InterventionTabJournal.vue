@@ -5,9 +5,8 @@ import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { computed, ref, watchEffect } from "vue";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
-
-const awn = useNotification();
 
 const sapeurStore = useSapeurStore();
 const interventionStore = useInterventionStore();
@@ -149,17 +148,24 @@ const events = computed(() => {
 });
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 
 const supprimerAppel = async (id) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cet appel ?",
       "Attention, la suppression d'un appel est irréversible ! Toutes les données de cet appel seront perdues !",
-    )
+    ))
   ) {
-    interventionStore
-      .removeInterventionAppel(id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de l'appel."));
+    return;
+  }
+  const { ok } = await submit(
+    () => interventionStore.removeInterventionAppel(id),
+    "Erreur lors de la suppression de l'appel.",
+  );
+  if (ok) {
+    awn.success("Appel supprimé.");
   }
 };
 
@@ -198,14 +204,19 @@ const editAppel = (id) => {
 
 const supprimerJalon = async (id) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer ce jalon ?",
       "Attention, la suppression d'un jalon est irréversible ! Toutes les données de ce jalon seront perdues !",
-    )
+    ))
   ) {
-    interventionStore
-      .removeInterventionJalon(id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du jalon."));
+    return;
+  }
+  const { ok } = await submit(
+    () => interventionStore.removeInterventionJalon(id),
+    "Erreur lors de la suppression du jalon.",
+  );
+  if (ok) {
+    awn.success("Jalon supprimé.");
   }
 };
 
@@ -245,14 +256,19 @@ const editJalon = (id) => {
 
 const supprimerMission = async (id) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette mission ?",
       "Attention, la suppression d'un mission est irréversible ! Toutes les données de cette mission seront perdues !",
-    )
+    ))
   ) {
-    interventionStore
-      .removeInterventionMission(id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la mission."));
+    return;
+  }
+  const { ok } = await submit(
+    () => interventionStore.removeInterventionMission(id),
+    "Erreur lors de la suppression de la mission.",
+  );
+  if (ok) {
+    awn.success("Mission supprimée.");
   }
 };
 
@@ -389,6 +405,7 @@ const fieldsJalons = [
                     <font-awesome-icon :icon="['far', 'edit']" />
                   </button>
                   <button
+                    :disabled="isSubmitting"
                     type="button"
                     class="btn btn-outline-danger border-0"
                     @click="supprimerAppel(rowData.id)"
@@ -430,6 +447,7 @@ const fieldsJalons = [
                     <font-awesome-icon :icon="['far', 'edit']" />
                   </button>
                   <button
+                    :disabled="isSubmitting"
                     type="button"
                     class="btn btn-outline-danger border-0"
                     @click="supprimerMission(rowData.id)"
@@ -471,6 +489,7 @@ const fieldsJalons = [
                     <font-awesome-icon :icon="['far', 'edit']" />
                   </button>
                   <button
+                    :disabled="isSubmitting"
                     type="button"
                     class="btn btn-outline-danger border-0"
                     @click="supprimerJalon(rowData.id)"

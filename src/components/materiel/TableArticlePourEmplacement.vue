@@ -1,6 +1,5 @@
 <script setup>
 import { computed } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import ArticleService from "../../services/materiel/ArticleService";
 import TagCouleur from "./TagCouleur.vue";
 import { indexedData } from "../../tools/index.js";
@@ -9,6 +8,8 @@ import { useCouleurStore } from "../../stores/materiel/Couleur";
 import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const { loading, articles, hideDownload, emplacement, refresh } = defineProps({
   loading: {
@@ -63,6 +64,7 @@ const piecesColonnes = computed(() => [
 ]);
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 const infoMateriel = (materiel) =>
   //TODO: Gérer le cas affichageIndividuel
@@ -88,14 +90,20 @@ const attribuerMateriel = (materiel) =>
 
 const supprimer = async (article) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cet article ?",
       "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-    )
+    ))
   ) {
-    ArticleService.supprimerArticles([article.id])
-      .then(refresh)
-      .catch((e) => awn.alert(e?.message || "Une erreur est survenue"));
+    return;
+  }
+  const { ok } = await submit(
+    () => ArticleService.supprimerArticles([article.id]),
+    "Une erreur est survenue",
+  );
+  if (ok) {
+    awn.success("Article supprimé.");
+    refresh();
   }
 };
 </script>
@@ -152,6 +160,7 @@ const supprimer = async (article) => {
         <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
       </button>
       <button
+        :disabled="isSubmitting"
         v-if="hasEditPermission"
         title="Supprimer"
         class="btn btn-outline-danger border-0"

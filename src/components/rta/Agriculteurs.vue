@@ -7,6 +7,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import MoyenContact from "./MoyenContact.vue";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const loading = ref(true);
 const communes = ref([]);
@@ -33,6 +34,7 @@ const computedAgriculteurs = computed(() => {
 
 const awn = useNotification();
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 
 const computedListes = computed(
   () =>
@@ -65,17 +67,19 @@ const reorder = (agriculteur, priorite) =>
     });
 const remove = async (agriculteur) => {
   if (
-    await confirm(
+    !(await confirm(
       "Êtes-vous sûr de vouloir supprimer cet agriculteur ?",
       "Attention, la suppression d'un agriculteur est irréversible !",
-    )
+    ))
   ) {
-    try {
-      await RtaService.deleteAgriculteur(agriculteur.id);
-    } catch (err) {
-      awn.alert(err?.message || "Erreur lors de la suppression de l'agriculteur.");
-      return;
-    }
+    return;
+  }
+  const { ok } = await submit(
+    () => RtaService.deleteAgriculteur(agriculteur.id),
+    "Erreur lors de la suppression de l'agriculteur.",
+  );
+  if (ok) {
+    awn.success("Agriculteur supprimé.");
     loadData();
   }
 };
@@ -196,6 +200,7 @@ const fields = [
                   type="button"
                   class="btn btn-sm btn-outline-danger border-0"
                   aria-label="Supprimer l'agriculteur"
+                  :disabled="isSubmitting"
                   @click="remove(rowData)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />

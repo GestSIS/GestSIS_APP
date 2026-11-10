@@ -15,6 +15,7 @@ import { useHasPermission } from "../../composables/useHasPermission.js";
 import { exerciceStatut } from "../../composables/exerciceStatuts.js";
 import { exportFileName } from "../../tools/index.js";
 import { useDownload } from "../../composables/useDownload.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -117,6 +118,7 @@ const nbConvoquesSansPresence = computed(
 );
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const { download } = useDownload();
 const awn = useNotification();
 
@@ -168,28 +170,36 @@ const selectAllConvoque = (status) => {
 };
 const validate = async () => {
   if (
-    await confirm(
+    !(await confirm(
       "Valider l'exercice ?",
       "Une fois validé, les présences ne seront plus modifiables sans permission de validation. Voulez-vous continuer ?",
-    )
+    ))
   ) {
-    exerciceStore
-      .validerExercice(id)
-      .then((res) => awn.success(res?.message || "Exercice validé avec succès."))
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la validation de l'exercice."));
+    return;
+  }
+  const { ok, data } = await submit(
+    () => exerciceStore.validerExercice(id),
+    "Erreur lors de la validation de l'exercice.",
+  );
+  if (ok) {
+    awn.success(data?.message || "Exercice validé avec succès.");
   }
 };
 const devalider = async () => {
   if (
-    await confirm(
+    !(await confirm(
       "Annuler la validation ?",
       `L'exercice repassera au statut « ${exerciceStatut(2).label} » et redeviendra modifiable. Voulez-vous continuer ?`,
-    )
+    ))
   ) {
-    exerciceStore
-      .devaliderExercice(id)
-      .then(() => awn.success("Validation annulée."))
-      .catch((err) => awn.alert(err?.message || "Erreur lors de l'annulation de la validation."));
+    return;
+  }
+  await submit(
+    () => exerciceStore.devaliderExercice(id),
+    "Erreur lors de l'annulation de la validation.",
+  );
+  if (ok) {
+    awn.success("Validation annulée.");
   }
 };
 const manageSapeurs = () => {
@@ -376,14 +386,19 @@ const addExcuse = (sapeur) =>
 
 const removeExcuse = async (presence) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette excuse ?",
       "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-    )
+    ))
   ) {
-    exerciceStore
-      .removeExcuse(presence.exercice_id, presence.sapeur_id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de l'excuse."));
+    return;
+  }
+  const { ok } = await submit(
+    () => exerciceStore.removeExcuse(presence.exercice_id, presence.sapeur_id),
+    "Erreur lors de la suppression de l'excuse.",
+  );
+  if (ok) {
+    awn.success("Excuse supprimée.");
   }
 };
 
@@ -493,7 +508,7 @@ const statuts = [
               v-if="showValidateButton"
               class="btn btn-sm"
               :class="canValidate ? 'btn-primary' : 'btn-outline-primary'"
-              :disabled="!canValidate"
+              :disabled="!canValidate || isSubmitting"
               :title="
                 canValidate
                   ? 'Valider cet exercice'
@@ -505,6 +520,7 @@ const statuts = [
               Valider
             </button>
             <button
+              :disabled="isSubmitting"
               v-if="showDevaliderButton"
               class="btn btn-sm btn-outline-warning"
               title="Repasser l'exercice en attente de validation"
@@ -583,7 +599,7 @@ const statuts = [
               <button
                 v-else
                 class="btn btn-outline-danger border-0"
-                :disabled="!hasPresencePermission"
+                :disabled="!hasPresencePermission || isSubmitting"
                 @click="removeExcuse(sap)"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />

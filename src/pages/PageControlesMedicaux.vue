@@ -11,6 +11,7 @@ import ControlesMedicauxService from "/src/services/ControlesMedicauxService.js"
 import SapeurService from "/src/services/SapeurService.js";
 import { useHasPermission } from "../composables/useHasPermission.js";
 import { useControleMedicalStore } from "../stores/controleMedical/ControleMedical.js";
+import { useSubmit } from "../composables/useSubmit.js";
 
 const sapeurStore = useSapeurStore();
 const medecinStore = useMedecinStore();
@@ -102,6 +103,7 @@ const filteredAnneesExpiration = computed(() => {
 });
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const selected = (item) => (selectedItem.value = item);
 const downloadJustificatif = ({ id, filename }) =>
   ControlesMedicauxService.downloadJustificatif(id, filename).catch((err) =>
@@ -147,16 +149,19 @@ const email = (controleMedicaux) => {
 };
 const supprimer = async (controle) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer ce contrôle médical ?",
       "Attention, la suppression d'un contrôle est irréversible ! Il vous sera cependant possible d'en ajouter un nouveau'.",
-    )
+    ))
   ) {
-    controleMedicalStore
-      .removeControleMedical(controle.id)
-      .catch((err) =>
-        awn.alert(err?.message || "Erreur lors de la suppression du contrôle médical."),
-      );
+    return;
+  }
+  const { ok } = await submit(
+    () => controleMedicalStore.removeControleMedical(controle.id),
+    "Erreur lors de la suppression du contrôle médical.",
+  );
+  if (ok) {
+    awn.success("Contrôle médical supprimé.");
   }
 };
 
@@ -377,6 +382,7 @@ const fields = [
                     </button>
                   </router-link>
                   <button
+                    :disabled="isSubmitting"
                     v-if="hasEditPermission"
                     type="button"
                     class="btn btn-outline-danger border-0"

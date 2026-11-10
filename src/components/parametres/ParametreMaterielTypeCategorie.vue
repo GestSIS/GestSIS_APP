@@ -2,11 +2,12 @@
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
 import { computed, ref } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { groupedByData, indexedData } from "../../tools/index.js";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
 import TagCouleur from "../materiel/TagCouleur.vue";
 import { useModalStore } from "../../stores/common/Modal.js";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const couleurStore = useCouleurStore();
 const typeStore = useMaterielTypeStore();
@@ -89,6 +90,7 @@ const ligneVisible = computed(() =>
 const rowClass = (dataItem) => (ligneVisible.value[dataItem.globalId] ? "" : "d-none");
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 
 const ajoutCategorie = () => showModal({ component: "ModalMaterielCategorie", data: {} });
@@ -102,14 +104,22 @@ const update = (elem) =>
 const remove = async (elem) => {
   const designation = elem.estCategorie ? "cette catégorie" : "ce type";
   if (
-    await confirm(
+    !(await confirm(
       `Voulez-vous vraiment supprimer ${designation} ?`,
       "Attention, la suppression de cet élément est irréversible !",
-    )
+    ))
   ) {
-    (elem.estCategorie ? categorieStore.removeMaterielCategorie : typeStore.removeMaterielType)(
-      elem.id,
-    ).catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+    return;
+  }
+  const { ok } = await submit(
+    () =>
+      (elem.estCategorie ? categorieStore.removeMaterielCategorie : typeStore.removeMaterielType)(
+        elem.id,
+      ),
+    "Erreur lors de la suppression",
+  );
+  if (ok) {
+    awn.success(elem.estCategorie ? "Catégorie supprimée." : "Type supprimé.");
   }
 };
 
@@ -179,7 +189,12 @@ const fields = [
           <button type="button" class="btn btn-outline-primary border-0" @click="update(rowData)">
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
-          <button type="button" class="btn btn-outline-danger border-0" @click="remove(rowData)">
+          <button
+            :disabled="isSubmitting"
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="remove(rowData)"
+          >
             <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>
         </template>

@@ -8,6 +8,7 @@ import { useInterventionStore } from "../../stores/intervention/Intervention.js"
 import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
 import { useValidationIntervention } from "../../composables/useValidationIntervention.js";
 import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const awn = useNotification();
 
@@ -130,6 +131,7 @@ onMounted(() => {
 });
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const formatDatePresence = (d) => {
   return d.slice(-8, -3);
 };
@@ -168,14 +170,19 @@ const editPresence = (presence) => {
 };
 const removePresence = async (id) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette présence ?",
       "Attention, la suppression d'une présence est irréversible ! Toutes les données de cette présence seront perdues !",
-    )
+    ))
   ) {
-    interventionStore
-      .removePresence(id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la présence."));
+    return;
+  }
+  const { ok } = await submit(
+    () => interventionStore.removePresence(id),
+    "Erreur lors de la suppression de la présence.",
+  );
+  if (ok) {
+    awn.success("Présence supprimée.");
   }
 };
 
@@ -381,7 +388,7 @@ const heuresParSapeur = computed(() => {
                       type="button"
                       title="Supprimer"
                       class="btn btn-outline-danger border-0"
-                      :disabled="dataInter.statut > 2"
+                      :disabled="dataInter.statut > 2 || isSubmitting"
                       @click="removePresence(p.id)"
                     >
                       <font-awesome-icon :icon="['far', 'trash-alt']" />

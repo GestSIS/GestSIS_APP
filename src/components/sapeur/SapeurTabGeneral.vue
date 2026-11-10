@@ -121,16 +121,20 @@ const saveSapeurRefPro = () =>
     });
 const supprimerPhoto = async () => {
   if (
-    await confirm(
+    !(await confirm(
       `Voulez-vous vraiment supprimer cette photo ?`,
       "Attention, cette action est irréversible ! La photo sera perdue.",
-    )
+    ))
   ) {
-    SapeurService.deletePhoto(activeSapeurId.value)
-      .then(() => {
-        photo.value = null;
-      })
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la photo."));
+    return;
+  }
+  const { ok } = await submit(
+    () => SapeurService.deletePhoto(activeSapeurId.value),
+    "Erreur lors de la suppression de la photo.",
+  );
+  if (ok) {
+    awn.success("Photo supprimée.");
+    photo.value = null;
   }
 };
 const editPhoto = () =>
@@ -421,6 +425,7 @@ const editPhoto = () =>
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">Photo</h3>
           <button
+            :disabled="isSubmitting"
             v-if="photo && hasEditPermission"
             class="ms-auto me-2 btn btn-outline-danger"
             @click="supprimerPhoto"

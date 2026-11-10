@@ -14,6 +14,7 @@ import permissions from "../../composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { exportFileName } from "../../tools/index.js";
 import { useDownload } from "../../composables/useDownload.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const sapeurStore = useSapeurStore();
 const uniteStore = useUniteStore();
@@ -51,18 +52,24 @@ const computedData = computed(() =>
 
 const awn = useNotification();
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const { download } = useDownload();
 
 const supprimer = async (decompteId) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer ce décompte ?",
       "Attention, la suppression d'un décompte est irréversible ! Il vous sera cependant possible de générer un nouveau décompte incluant les écritures de ce décompte.",
-    )
+    ))
   ) {
-    decompteStore
-      .removeDecompte(decompteId)
-      .catch((err) => awn.alert(err?.message ?? "Impossible d'effectuer cette action"));
+    return;
+  }
+  const { ok } = await submit(
+    () => decompteStore.removeDecompte(decompteId),
+    "Impossible d'effectuer cette action",
+  );
+  if (ok) {
+    awn.success("Décompte supprimé.");
   }
 };
 const impressionResumeParSapeur = () => {
@@ -221,7 +228,7 @@ const fields = [
           <button class="btn btn-outline-primary" @click="generer">Nouveau</button>
           <button
             class="btn btn-outline-danger"
-            :disabled="!selectedId"
+            :disabled="!selectedId || isSubmitting"
             @click="supprimer(selectedId)"
           >
             Supprimer
@@ -324,6 +331,7 @@ const fields = [
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>-->
               <button
+                :disabled="isSubmitting"
                 v-if="hasEditPermission"
                 type="button"
                 class="btn btn-outline-danger border-0"

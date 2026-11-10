@@ -69,14 +69,17 @@ const generer = async () => {
   });
 };
 
-const invalider = () => {
-  RecrutementService.invaliderToken()
-    .then(() => {
-      lien.value = "";
-      qrCodeDataUrl.value = "";
-      expireAt.value = null;
-    })
-    .catch((err) => awn.alert(err?.message || "Erreur lors de l'invalidation du lien."));
+const invalider = async () => {
+  const { ok } = await submit(
+    () => RecrutementService.invaliderToken(),
+    "Erreur lors de l'invalidation du lien.",
+  );
+  if (ok) {
+    lien.value = "";
+    qrCodeDataUrl.value = "";
+    expireAt.value = null;
+    awn.success("Lien d'inscription invalidé.");
+  }
 };
 
 const copyToClipboard = (value) => {
@@ -146,6 +149,7 @@ const copyToClipboard = (value) => {
         type="button"
         class="btn btn-outline-danger me-auto"
         :class="{ invisible: !expireAt }"
+        :disabled="isSubmitting"
         @click="invalider"
       >
         Invalider le lien actif

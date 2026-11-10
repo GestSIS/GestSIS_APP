@@ -5,9 +5,8 @@ import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
-
-const awn = useNotification();
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -30,17 +29,24 @@ const finServiceButtonState = computed(
 );
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 
 const removeMutation = async (mutation) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette mutation ?",
       "Attention, la suppression d'une mutation est irréversible ! Toutes les données de cette mutation seront perdues !",
-    )
+    ))
   ) {
-    sapeurStore
-      .removeMutation(mutation?.id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la mutation."));
+    return;
+  }
+  const { ok } = await submit(
+    () => sapeurStore.removeMutation(mutation?.id),
+    "Erreur lors de la suppression de la mutation.",
+  );
+  if (ok) {
+    awn.success("Mutation supprimée.");
   }
 };
 
@@ -82,6 +88,7 @@ const fields = [
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>
             <button
+              :disabled="isSubmitting"
               v-if="hasEditPermission"
               type="button"
               class="btn btn-outline-danger border-0"

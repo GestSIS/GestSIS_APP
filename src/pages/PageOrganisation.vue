@@ -8,6 +8,7 @@ import GroupeEdition from "../components/groupe/GroupeEdition.vue";
 import ExerciceComptable from "../components/exercice_comptable/ExerciceComptable.vue";
 import permissions from "../composables/permissions.js";
 import { useHasPermission } from "../composables/useHasPermission.js";
+import { useSubmit } from "../composables/useSubmit.js";
 
 const active = ref(null);
 const editMode = ref(false);
@@ -53,6 +54,7 @@ const canMoveLeft = computed(() => !!activeGroupe.value && !activeGroupe.value.i
 const canMoveRight = computed(() => !!activeGroupe.value && !activeGroupe.value.isFirstOfLevel);
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 
 const contract = () => {
   groupeEdition.value.contract();
@@ -68,19 +70,24 @@ const down = () => groupeEdition.value.down(active.value);
 const right = () => groupeEdition.value.right(active.value);
 const left = () => groupeEdition.value.left(active.value);
 const deleteGroupe = async () => {
-  if (activeIsGroupe.value) {
-    if (
-      await confirm(
-        "Voulez-vous vraiment supprimer ce groupe ?",
-        "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
-      )
-    ) {
-      groupeStore
-        .deleteGroupe(active.value.data.id)
-        .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du groupe."));
-    }
-  } else {
+  if (!activeIsGroupe.value) {
     awn.warning("Sélectionnez un groupe afin de pouvoir le supprimer.");
+    return;
+  }
+  if (
+    !(await confirm(
+      "Voulez-vous vraiment supprimer ce groupe ?",
+      "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
+    ))
+  ) {
+    return;
+  }
+  const { ok } = await submit(
+    () => groupeStore.deleteGroupe(active.value.data.id),
+    "Erreur lors de la suppression du groupe.",
+  );
+  if (ok) {
+    awn.success("Groupe supprimé.");
   }
 };
 const addGroupe = () => {
@@ -164,7 +171,7 @@ const addSapeurs = (node) => {
               </button>
               <button
                 class="btn btn-outline-danger"
-                :disabled="!activeIsGroupe"
+                :disabled="!activeIsGroupe || isSubmitting"
                 @click="deleteGroupe"
               >
                 Supprimer

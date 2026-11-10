@@ -19,6 +19,7 @@ import { exercicesToIcs } from "../../tools/exportExercices";
 import { exportFileName } from "../../tools/index.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useDownload } from "../../composables/useDownload.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const authStore = useAuthStore();
 const sapeurStore = useSapeurStore();
@@ -75,6 +76,7 @@ const filteredLocalites = computed(() => {
 });
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const { download } = useDownload();
 const awn = useNotification();
 const convoquer = async () => {
@@ -126,15 +128,19 @@ const annulerExercice = (id) =>
 // Symétrique de "valider" : un exercice validé (pas encore imputé) repasse en saisie
 const devaliderExercice = async (id) => {
   if (
-    await confirm(
+    !(await confirm(
       "Annuler la validation ?",
       `L'exercice repassera au statut « ${exerciceStatut(2).label} » et redeviendra modifiable. Voulez-vous continuer ?`,
-    )
+    ))
   ) {
-    exerciceStore
-      .devaliderExercice(id)
-      .then(() => awn.success("Validation annulée."))
-      .catch((err) => awn.alert(err?.message || "Erreur lors de l'annulation de la validation."));
+    return;
+  }
+  await submit(
+    () => exerciceStore.devaliderExercice(id),
+    "Erreur lors de l'annulation de la validation.",
+  );
+  if (ok) {
+    awn.success("Validation annulée.");
   }
 };
 const reactiverExercice = (id) =>
@@ -145,15 +151,19 @@ const reactiverExercice = (id) =>
 
 const removeExercice = async (id) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cet exercice ?",
       "Attention, la suppression d'un exercice est irréversible ! Toutes les données de cet exercice seront perdues !",
-    )
+    ))
   ) {
-    exerciceStore
-      .removeExercice(id)
-      .then(() => awn.success("Exercice supprimé."))
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de l'exercice."));
+    return;
+  }
+  const { ok } = await submit(
+    () => exerciceStore.removeExercice(id),
+    "Erreur lors de la suppression de l'exercice.",
+  );
+  if (ok) {
+    awn.success("Exercice supprimé.");
   }
 };
 
@@ -411,6 +421,7 @@ const fields = [
                   <font-awesome-icon :icon="['fas', 'check']" />
                 </button>
                 <button
+                  :disabled="isSubmitting"
                   v-if="hasValidationPermission && rowData.statut == 3"
                   title="Annuler la validation"
                   class="btn btn-outline-warning border-0"
@@ -435,6 +446,7 @@ const fields = [
                   <font-awesome-icon :icon="['fas', 'check']" />
                 </button>
                 <button
+                  :disabled="isSubmitting"
                   v-if="hasValidationPermission && rowData.statut <= 3"
                   title="supprimer"
                   class="btn btn-outline-danger border-0"

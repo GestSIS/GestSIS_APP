@@ -6,9 +6,8 @@ import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
-
-const awn = useNotification();
 
 const sapeurStore = useSapeurStore();
 const coursStore = useCoursStore();
@@ -35,20 +34,27 @@ const activeSapeurCours = computed(() =>
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 
 const newCours = () => showModal("ModalSapeurCours");
 const editCours = (cours) => showModal({ component: "ModalSapeurCours", data: cours });
 
 const supprimerCours = async (cours) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer ce cours ?",
       "Attention, la suppression d'un cours est irréversible ! Toutes les données de ce cours seront perdues !",
-    )
+    ))
   ) {
-    sapeurStore
-      .removeSapeurCours(cours?.id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du cours."));
+    return;
+  }
+  const { ok } = await submit(
+    () => sapeurStore.removeSapeurCours(cours?.id),
+    "Erreur lors de la suppression du cours.",
+  );
+  if (ok) {
+    awn.success("Cours supprimé.");
   }
 };
 
@@ -86,6 +92,7 @@ const fields = [
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             v-if="hasEditPermission"
             type="button"
             class="btn btn-outline-danger border-0"

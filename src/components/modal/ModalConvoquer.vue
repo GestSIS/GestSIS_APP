@@ -54,6 +54,7 @@ const saveParam = () => {
   if (hasEditPermission.value) {
     convocationParamStore
       .updateConvocationParams(params)
+      .then(() => awn.success("Paramètres de convocation enregistrés."))
       .catch((err) =>
         awn.alert(err?.message || "Erreur lors de l'enregistrement des paramètres de convocation."),
       );

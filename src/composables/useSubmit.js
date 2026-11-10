@@ -18,11 +18,12 @@ export function useSubmit() {
   /**
    * @param {() => Promise<any>} action appel à l'API
    * @param {string} defaultMessage message si l'API n'en fournit pas
-   * @returns {Promise<{ ok: boolean, data?: any }>}
+   * @returns {Promise<{ ok: boolean, data?: any, ignored?: boolean }>}
+   *   ignored : appel ignoré car une soumission est déjà en cours (rien n'a été envoyé)
    */
   const submit = async (action, defaultMessage = "Erreur lors de l'enregistrement") => {
     if (isSubmitting.value) {
-      return { ok: false };
+      return { ok: false, ignored: true };
     }
     isSubmitting.value = true;
     errors.value = {};

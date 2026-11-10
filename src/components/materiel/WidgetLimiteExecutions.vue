@@ -3,12 +3,12 @@ import { ref } from "vue";
 import ControleService from "../../services/materiel/ControleService.js";
 import ArticleService from "../../services/materiel/ArticleService.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import { useNotification } from "../../composables/useNotification.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
-const awn = useNotification();
 
 const controles = ref([]);
 const loading = ref(true);
@@ -46,6 +46,8 @@ const colonnesArticles = [
 ];
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 // L'article est listé sous un contrôle donné : on présélectionne ce contrôle
 // plutôt que de laisser le modal retomber sur le premier applicable au type.
 const controler = (article, controleId) =>
@@ -57,14 +59,20 @@ const controler = (article, controleId) =>
 
 const supprimer = async (article) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cet article ?",
       "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-    )
+    ))
   ) {
-    ArticleService.supprimerArticles([article.id])
-      .then(loadArticles)
-      .catch((e) => awn.alert(e?.message || "Une erreur est survenue"));
+    return;
+  }
+  const { ok } = await submit(
+    () => ArticleService.supprimerArticles([article.id]),
+    "Une erreur est survenue",
+  );
+  if (ok) {
+    awn.success("Article supprimé.");
+    loadArticles();
   }
 };
 </script>
@@ -134,6 +142,7 @@ const supprimer = async (article) => {
                 <font-awesome-icon :icon="['far', 'clipboard']" />
               </button>
               <button
+                :disabled="isSubmitting"
                 v-if="hasEditPermission"
                 title="Supprimer"
                 class="btn btn-outline-danger border-0"

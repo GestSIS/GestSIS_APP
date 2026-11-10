@@ -14,6 +14,7 @@ import { useStatFederalStore } from "../stores/intervention/StatFederal.js";
 import { useTypeInterventionStore } from "../stores/intervention/TypeIntervention.js";
 import { interventionStatut } from "../composables/interventionStatuts.js";
 import { useNotification } from "../composables/useNotification.js";
+import { useSubmit } from "../composables/useSubmit.js";
 
 const awn = useNotification();
 
@@ -91,21 +92,24 @@ const canDelete = computed(() => {
 });
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const select = (row) => (selectedId.value = row?.id);
 
 const supprimerIntervention = async (id) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer l'intervention ?",
       "Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-    )
+    ))
   ) {
-    interventionStore
-      .removeIntervention(id)
-      .then(() => awn.success("Intervention supprimée."))
-      .catch((err) =>
-        awn.alert(err?.message || "Erreur lors de la suppression de l'intervention."),
-      );
+    return;
+  }
+  await submit(
+    () => interventionStore.removeIntervention(id),
+    "Erreur lors de la suppression de l'intervention.",
+  );
+  if (ok) {
+    awn.success("Intervention supprimée.");
   }
 };
 const validerIntervention = (id) =>
@@ -221,7 +225,7 @@ const fields = [
               </router-link>
               <button
                 v-if="hasEditPermission"
-                :disabled="!canDelete"
+                :disabled="!canDelete || isSubmitting"
                 class="btn btn-outline-danger"
                 @click="supprimerIntervention(selectedId)"
               >
@@ -341,6 +345,7 @@ const fields = [
                     <font-awesome-icon :icon="['fas', 'rotate-left']" />
                   </button>
                   <button
+                    :disabled="isSubmitting"
                     v-if="hasEditPermission && rowData.statut < 3"
                     title="supprimer"
                     class="btn btn-outline-danger border-0"

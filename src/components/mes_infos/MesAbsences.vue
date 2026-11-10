@@ -5,6 +5,7 @@ import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceCom
 import { computed, ref, watchEffect } from "vue";
 import { useNotification } from "../../composables/useNotification.js";
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const infosStore = useMesInfosStore();
 const absenceParamStore = useAbsenceParamStore();
@@ -29,6 +30,7 @@ const absences = computed(() =>
 );
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 const addAbsence = () =>
   showModal({
@@ -41,15 +43,19 @@ const modifierAbsence = (absence) =>
   });
 const removeAbsence = async (absence) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer votre absence ?",
       "Attention, la suppression d'une absence est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-    )
+    ))
   ) {
-    infosStore
-      .removeMonAbsence(absence)
-      .then(() => awn.success("Absence supprimée avec succès"))
-      .catch((err) => awn.alert(err?.message ?? "Impossible de supprimer l'absence"));
+    return;
+  }
+  const { ok } = await submit(
+    () => infosStore.removeMonAbsence(absence),
+    "Impossible de supprimer l'absence",
+  );
+  if (ok) {
+    awn.success("Absence supprimée avec succès");
   }
 };
 
@@ -88,6 +94,7 @@ const fields = [
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             v-if="absenceParams?.actif"
             class="btn btn-outline-danger border-0"
             @click="removeAbsence(rowData)"

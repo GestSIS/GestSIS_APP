@@ -2,9 +2,8 @@
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useTelephoneStore } from "../../stores/sapeur/Telephone.js";
 import { computed } from "vue";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
-
-const awn = useNotification();
 
 const telephoneStore = useTelephoneStore();
 await telephoneStore.fetchTelephones();
@@ -18,6 +17,8 @@ const fields = [
 const listeTelephone = computed(() => telephoneStore.liste.slice().sort((a, b) => a.tri - b.tri));
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 const ajoutTelephone = () => showModal({ component: "ModalTelephone", data: {} });
 
 const updateTelephone = (telephone) =>
@@ -25,14 +26,19 @@ const updateTelephone = (telephone) =>
 
 const deleteTelephone = async (telephone) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer ce contact ?",
       "Attention, la suppression d'un contact est irréversible ! Toutes les données de ce contact seront perdues !",
-    )
+    ))
   ) {
-    telephoneStore
-      .removeTelephone(telephone.id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du contact."));
+    return;
+  }
+  const { ok } = await submit(
+    () => telephoneStore.removeTelephone(telephone.id),
+    "Erreur lors de la suppression du contact.",
+  );
+  if (ok) {
+    awn.success("Contact supprimé.");
   }
 };
 </script>
@@ -61,6 +67,7 @@ const deleteTelephone = async (telephone) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteTelephone(rowData)"

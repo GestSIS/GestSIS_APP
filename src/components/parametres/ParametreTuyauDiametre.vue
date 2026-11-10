@@ -1,8 +1,9 @@
 <script setup>
 import { computed } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useTuyauDiametreStore } from "../../stores/materiel/TuyauDiametre";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const diametreStore = useTuyauDiametreStore();
 
@@ -10,8 +11,9 @@ await diametreStore.fetchTuyauDiametres();
 
 const diametres = computed(() => diametreStore.liste);
 
-const awn = useNotification();
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 
 const ajout = () => {
   showModal({ component: "ModalTuyauDiametre", data: {} });
@@ -24,14 +26,19 @@ const update = (elem) => {
 };
 const remove = async (elem) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer ce diamètre ?",
       "Attention, la suppression d'un diamètre est irréversible !",
-    )
+    ))
   ) {
-    diametreStore
-      .removeTuyauDiametre(elem.id)
-      .catch((error) => awn.alert(error.message ?? "Impossible de supprimer ce diamètre"));
+    return;
+  }
+  const { ok } = await submit(
+    () => diametreStore.removeTuyauDiametre(elem.id),
+    "Impossible de supprimer ce diamètre",
+  );
+  if (ok) {
+    awn.success("Diamètre supprimé.");
   }
 };
 
@@ -53,7 +60,12 @@ const fields = [
           <button type="button" class="btn btn-outline-primary border-0" @click="update(rowData)">
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
-          <button type="button" class="btn btn-outline-danger border-0" @click="remove(rowData)">
+          <button
+            :disabled="isSubmitting"
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="remove(rowData)"
+          >
             <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>
         </template>

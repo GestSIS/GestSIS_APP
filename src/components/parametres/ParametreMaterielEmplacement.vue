@@ -1,11 +1,12 @@
 <script setup>
 import { computed, ref } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { groupedByData, indexedData } from "../../tools/index.js";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
 import TagCouleur from "../materiel/TagCouleur.vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const couleurStore = useCouleurStore();
 const emplacementStore = useEmplacementStore();
@@ -29,6 +30,7 @@ const computedData = computed(() => {
 });
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 
 const ajout = () => showModal({ component: "ModalChoixTypeEmplacement", data: {} });
@@ -42,14 +44,19 @@ const dupliquerEnfants = (elem) =>
   showModal({ component: "ModalDupliquerEmplacementsEnfants", data: { ...elem } });
 const remove = async (elem) => {
   if (
-    await confirm(
+    !(await confirm(
       `Voulez-vous vraiment supprimer cet emplacement ?`,
       "Attention, la suppression de cet élément est irréversible !",
-    )
+    ))
   ) {
-    emplacementStore
-      .removeEmplacement(elem.id)
-      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+    return;
+  }
+  const { ok } = await submit(
+    () => emplacementStore.removeEmplacement(elem.id),
+    "Erreur lors de la suppression",
+  );
+  if (ok) {
+    awn.success("Emplacement supprimé.");
   }
 };
 
@@ -121,7 +128,12 @@ const rowClass = (dataItem) => (emplacementVisible.value[dataItem.id] ? "" : "d-
           <button type="button" class="btn btn-outline-primary border-0" @click="update(rowData)">
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
-          <button type="button" class="btn btn-outline-danger border-0" @click="remove(rowData)">
+          <button
+            :disabled="isSubmitting"
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="remove(rowData)"
+          >
             <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>
           <button

@@ -2,9 +2,10 @@
 import { computed, ref } from "vue";
 import ControleExecService from "../../services/materiel/ControleExecService.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import { useNotification } from "../../composables/useNotification.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const { articleId, controle } = defineProps({
   articleId: { type: Number, required: true },
@@ -39,6 +40,7 @@ const colonnes = computed(() => [
 ]);
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 
 const modifier = (exec) =>
@@ -58,14 +60,20 @@ const modifier = (exec) =>
 
 const supprimer = async (exec) => {
   if (
-    await confirm(
+    !(await confirm(
       "Supprimer ce contrôle ?",
       "Voulez-vous vraiment supprimer cette exécution de contrôle ? Cette action est irréversible.",
-    )
+    ))
   ) {
-    ControleExecService.supprimerExec(exec.id)
-      .then(loadExecs)
-      .catch((err) => awn.alert(err?.message ?? "Impossible de supprimer ce contrôle"));
+    return;
+  }
+  const { ok } = await submit(
+    () => ControleExecService.supprimerExec(exec.id),
+    "Impossible de supprimer ce contrôle",
+  );
+  if (ok) {
+    awn.success("Contrôle supprimé.");
+    loadExecs();
   }
 };
 </script>
@@ -100,6 +108,7 @@ const supprimer = async (exec) => {
         <font-awesome-icon :icon="['far', 'edit']" />
       </button>
       <button
+        :disabled="isSubmitting"
         v-if="hasEditPermission"
         title="Supprimer"
         class="btn btn-outline-danger border-0"

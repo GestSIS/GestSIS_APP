@@ -13,6 +13,7 @@ import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
 import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { exportFileName } from "../../tools/index.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const authStore = useAuthStore();
 const uniteStore = useUniteStore();
@@ -63,6 +64,7 @@ const exercices = computed(() =>
 );
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 
 const download = () => {
@@ -82,15 +84,16 @@ const addExcuse = (exercice) => {
 };
 const removeExcuse = async (exercice) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer votre excuse ?",
       "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-    )
+    ))
   ) {
-    infosStore
-      .removeMonExcuse(exercice)
-      .then(() => awn.success("Excuse supprimée avec succès"))
-      .catch((err) => awn.alert(err?.message ?? "Impossible de supprimer l'excuse"));
+    return;
+  }
+  await submit(() => infosStore.removeMonExcuse(exercice), "Impossible de supprimer l'excuse");
+  if (ok) {
+    awn.success("Excuse supprimée avec succès");
   }
 };
 
@@ -174,6 +177,7 @@ const fields = [
               <font-awesome-icon :icon="['fas', 'plus']" />
             </button>
             <button
+              :disabled="isSubmitting"
               v-else-if="excuseParams?.actif && rowData.excuse_type_id && rowData.statut != 0"
               class="btn btn-outline-danger border-0"
               @click="removeExcuse(rowData)"

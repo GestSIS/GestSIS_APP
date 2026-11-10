@@ -1,11 +1,12 @@
 <script setup>
 import { computed } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const compteStore = useCompteStore();
 const imputationStore = useImputationStore();
@@ -32,19 +33,25 @@ const listeCompte = computed(() =>
 );
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 const ajoutCompte = () => showModal({ component: "ModalCompte", data: {} });
 const updateCompte = (compte) => showModal({ component: "ModalCompte", data: { ...compte } });
 const deleteCompte = async (compteId) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer ce compte ?",
       "Attention, la suppression d'un compte est irréversible !",
-    )
+    ))
   ) {
-    compteStore
-      .removeCompte(compteId)
-      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+    return;
+  }
+  const { ok } = await submit(
+    () => compteStore.removeCompte(compteId),
+    "Erreur lors de la suppression",
+  );
+  if (ok) {
+    awn.success("Compte supprimé.");
   }
 };
 </script>
@@ -66,6 +73,7 @@ const deleteCompte = async (compteId) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteCompte(rowData?.id)"

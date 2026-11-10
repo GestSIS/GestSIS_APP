@@ -16,6 +16,7 @@ import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 import permissions from "../../composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const uniteStore = useUniteStore();
 const travailStore = useTravailStore();
@@ -78,6 +79,7 @@ const filteredTravailTypes = computed(() => {
 
 const awn = useNotification();
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 
 const imputer = (travailId) => {
   const ids = travailId ? [travailId] : travaux.value.filter((t) => t.statut == 1).map((t) => t.id);
@@ -99,19 +101,19 @@ const imputer = (travailId) => {
 };
 const annulerImputer = async (travailId) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette imputation ?",
       "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau ce travail.",
-    )
+    ))
   ) {
-    imputationStore
-      .annulerImputationTravail(travailId)
-      .then((res) => {
-        awn.success(res?.message ?? "Travaux imputé avec succès");
-      })
-      .catch((err) => {
-        awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
-      });
+    return;
+  }
+  const { ok, data } = await submit(
+    () => imputationStore.annulerImputationTravail(travailId),
+    "Erreur impossible d'annuler l'imputation",
+  );
+  if (ok) {
+    awn.success(data?.message ?? "Travaux imputé avec succès");
   }
 };
 
@@ -196,6 +198,7 @@ const fields = [
               Imputer le travail
             </button>
             <button
+              :disabled="isSubmitting"
               v-if="selectedItem?.statut == 2"
               class="btn btn-outline-danger"
               @click="annulerImputer(selectedId)"
@@ -203,7 +206,7 @@ const fields = [
               Annuler l'imputation du travail
             </button>
             <button class="btn btn-outline-primary" @click="imputer()">Tout imputer</button>
-            <!-- <button
+            <!-- <button :disabled="isSubmitting"
             v-if="selectedItem?.ecritures?.length"
             class="btn btn-outline-danger"
             @click="annulerImputer()"
@@ -274,6 +277,7 @@ const fields = [
               </template>
               <template #actions="{ rowData }">
                 <button
+                  :disabled="isSubmitting"
                   v-if="hasEditPermission && rowData.statut == 2"
                   class="btn btn-outline-primary border-0"
                   title="Annuler imputation"

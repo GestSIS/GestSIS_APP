@@ -11,6 +11,7 @@ import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCat
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "../../composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const uniteStore = useUniteStore();
 const sapeurStore = useSapeurStore();
@@ -73,6 +74,7 @@ const filteredCategories = computed(() => {
 
 const awn = useNotification();
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 
 const newEcriture = () => {
   showModal({ component: "ModalEcritureDivers", data: {} });
@@ -86,14 +88,19 @@ const editEcriture = (ecriture) => {
 };
 const deleteEcriture = async (ecritureId) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette écriture ?",
       "Attention, la suppression d'une écriture est irréversible ! Toutes les données de cette écriture seront perdues !",
-    )
+    ))
   ) {
-    imputationStore
-      .removeEcriture(ecritureId)
-      .catch((err) => awn.alert(err?.message ?? "Erreur, impossible de supprimer cette écriture"));
+    return;
+  }
+  const { ok } = await submit(
+    () => imputationStore.removeEcriture(ecritureId),
+    "Erreur, impossible de supprimer cette écriture",
+  );
+  if (ok) {
+    awn.success("Écriture supprimée.");
   }
 };
 const onRowClass = (dataItem, isSelected) => {
@@ -152,7 +159,7 @@ const fields = [
             </button>
             <button
               class="btn btn-outline-danger"
-              :disabled="!selectedItem"
+              :disabled="!selectedItem || isSubmitting"
               @click="deleteEcriture(selectedItem?.id)"
             >
               Supprimer
@@ -228,6 +235,7 @@ const fields = [
                   <font-awesome-icon :icon="['far', 'edit']" />
                 </button>
                 <button
+                  :disabled="isSubmitting"
                   v-if="hasEditPermission"
                   type="button"
                   class="btn btn-outline-danger border-0"

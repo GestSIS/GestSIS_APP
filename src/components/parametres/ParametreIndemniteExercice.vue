@@ -8,9 +8,8 @@ import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
-
-const awn = useNotification();
 
 const imputationStore = useImputationStore();
 const compteStore = useCompteStore();
@@ -70,6 +69,8 @@ const computedIndemnites = computed(() =>
 );
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 const ajoutIndemnite = () =>
   showModal({
     component: "ModalIndemniteExercice",
@@ -84,14 +85,19 @@ const updateIndemnite = (indemnite) =>
   });
 const removeIndemnite = async (indemnite) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette indemnité ?",
       "Attention, la suppression d'une indemnité est irréversible ! Toutes les données de cette indemnité seront perdues !",
-    )
+    ))
   ) {
-    imputationStore
-      .removeIndemniteExercice(indemnite.id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de l'indemnité."));
+    return;
+  }
+  const { ok } = await submit(
+    () => imputationStore.removeIndemniteExercice(indemnite.id),
+    "Erreur lors de la suppression de l'indemnité.",
+  );
+  if (ok) {
+    awn.success("Indemnité supprimée.");
   }
 };
 </script>
@@ -123,6 +129,7 @@ const removeIndemnite = async (indemnite) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="removeIndemnite(rowData)"

@@ -5,6 +5,7 @@ import { useNotification } from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal";
 import { useAdminStore } from "../../stores/admin/Admin";
 import { useAuthStore } from "../../stores/auth/Auth";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const router = useRouter();
 const adminStore = useAdminStore();
@@ -27,6 +28,7 @@ const filteredUsers = computed(() =>
 );
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 
 const impersonateUser = (user) =>
@@ -37,15 +39,19 @@ const impersonateUser = (user) =>
 const editUser = (user) => showModal({ component: "ModalUser", data: user });
 const deleteUser = async (user) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cet utilisateur ?",
       "Attention, l'action est irréversible et l'utilisateur devra recréer un compte pour utiliser GestSIS.",
-    )
+    ))
   ) {
-    adminStore
-      .deleteUser(user?.id)
-      .then((res) => awn.success(res?.message || "Utilisateur supprimé"))
-      .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression"));
+    return;
+  }
+  const { ok, data } = await submit(
+    () => adminStore.deleteUser(user?.id),
+    "Erreur lors de la suppression",
+  );
+  if (ok) {
+    awn.success(data?.message || "Utilisateur supprimé");
   }
 };
 
@@ -127,6 +133,7 @@ const fields = [
             <font-awesome-icon :icon="['fas', 'user-secret']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteUser(rowData)"

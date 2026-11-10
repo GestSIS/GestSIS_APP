@@ -1,7 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
 import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
-import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useCoursStore } from "../../stores/sapeur/Cours.js";
 import { useCoursSapeurStore } from "../../stores/sapeur/CoursSapeur.js";
@@ -16,6 +15,8 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const sapeurStore = useSapeurStore();
 const coursStore = useCoursStore();
@@ -82,8 +83,9 @@ const filteredDataTypes = computed(() => {
   return cours.value.filter((t) => ids.has(t.id));
 });
 
-const awn = useNotification();
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 
 const imputer = (courSapeur) => {
   showModal({
@@ -95,17 +97,20 @@ const imputer = (courSapeur) => {
 };
 const annulerImputer = async (courSapeur) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette imputation ?",
       "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cet exercice.",
-    )
+    ))
   ) {
-    imputationStore
-      .annulerImputationCours(courSapeur?.id)
-      .then(init)
-      .catch((err) => {
-        awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
-      });
+    return;
+  }
+  const { ok } = await submit(
+    () => imputationStore.annulerImputationCours(courSapeur?.id),
+    "Erreur impossible d'annuler l'imputation",
+  );
+  if (ok) {
+    awn.success("Imputation annulée.");
+    init();
   }
 };
 
@@ -188,6 +193,7 @@ const fields = [
               Imputer
             </button>
             <button
+              :disabled="isSubmitting"
               v-if="selectedItem?.ecritures?.length"
               class="btn btn-outline-danger"
               @click="annulerImputer(selectedItem)"
@@ -255,6 +261,7 @@ const fields = [
               </template>
               <template #actions="{ rowData }">
                 <button
+                  :disabled="isSubmitting"
                   v-if="hasEditPermission && rowData.ecritures?.length"
                   class="btn btn-outline-primary border-0"
                   title="Annuler imputation"

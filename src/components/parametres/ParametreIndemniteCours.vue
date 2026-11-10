@@ -7,6 +7,7 @@ import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCat
 import { useModalStore } from "../../stores/common/Modal.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 import { computed } from "vue";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
 
 const uniteStore = useUniteStore();
@@ -56,6 +57,7 @@ const computedData = computed(() => {
 });
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 
 const ajoutIndemnite = () =>
@@ -72,14 +74,19 @@ const updateIndemnite = (indemnite) =>
   });
 const deleteIndemnite = async (indemnite) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette indemnité ?",
       "Attention, la suppression d'une indemnité est irréversible ! Toutes les données de cette indemnité seront perdues !",
-    )
+    ))
   ) {
-    imputationStore
-      .removeIndemniteCours(indemnite.id)
-      .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+    return;
+  }
+  const { ok } = await submit(
+    () => imputationStore.removeIndemniteCours(indemnite.id),
+    "Erreur lors de la suppression",
+  );
+  if (ok) {
+    awn.success("Indemnité supprimée.");
   }
 };
 </script>
@@ -111,6 +118,7 @@ const deleteIndemnite = async (indemnite) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteIndemnite(rowData)"

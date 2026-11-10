@@ -12,9 +12,8 @@ import ExerciceComptable from "/src/components/exercice_comptable/ExerciceCompta
 import { useHasPermission } from "../composables/useHasPermission.js";
 import { travailStatut, travailStatutOptions } from "../composables/travailStatuts.js";
 import { evenementVerrouille, lienTravail } from "../composables/travailLien.js";
+import { useSubmit } from "../composables/useSubmit.js";
 import { useNotification } from "../composables/useNotification.js";
-
-const awn = useNotification();
 
 const authStore = useAuthStore();
 const sapeurStore = useSapeurStore();
@@ -88,6 +87,8 @@ const peutSupprimer = computed(
 );
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 const select = (row) => (selectedId.value = row?.id);
 
 const createTravail = () => showModal({ component: "ModalTravail" });
@@ -98,27 +99,37 @@ const reviewTravail = (travail) => showModal({ component: "ModalReviewTravail", 
 
 const cancelReviewTravail = async (travail) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment annuler l'examen de ce travail ?",
       "Attention, la justification fournie lors de l'examen sera perdue.",
-    )
+    ))
   ) {
-    travailStore
-      .cancelReviewTravail(travail?.id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de l'annulation de l'examen."));
+    return;
+  }
+  const { ok } = await submit(
+    () => travailStore.cancelReviewTravail(travail?.id),
+    "Erreur lors de l'annulation de l'examen.",
+  );
+  if (ok) {
+    awn.success("Examen annulé.");
   }
 };
 
 const supprimerTravail = async (travail) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer ce travail ?",
       "Attention, la suppression d'un travail est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-    )
+    ))
   ) {
-    travailStore
-      .removeTravail(travail?.id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du travail."));
+    return;
+  }
+  const { ok } = await submit(
+    () => travailStore.removeTravail(travail?.id),
+    "Erreur lors de la suppression du travail.",
+  );
+  if (ok) {
+    awn.success("Travail supprimé.");
   }
 };
 
@@ -204,7 +215,7 @@ const fields = [
               </button>
               <button
                 v-if="hasValidationPermission && estExaminee"
-                :disabled="!peutAnnulerExamen"
+                :disabled="!peutAnnulerExamen || isSubmitting"
                 class="btn btn-outline-warning"
                 @click="cancelReviewTravail(selectedItem)"
               >
@@ -212,7 +223,7 @@ const fields = [
               </button>
               <button
                 v-if="hasEditPermission"
-                :disabled="!peutSupprimer"
+                :disabled="!peutSupprimer || isSubmitting"
                 class="btn btn-outline-danger"
                 @click="supprimerTravail(selectedItem)"
               >
@@ -304,7 +315,7 @@ const fields = [
                   </button>
                   <button
                     v-if="hasValidationPermission && (rowData.statut == -1 || rowData.statut == 1)"
-                    :disabled="evenementVerrouille(rowData)"
+                    :disabled="evenementVerrouille(rowData) || isSubmitting"
                     title="Annuler l'examen"
                     class="btn btn-outline-warning border-0"
                     @click="cancelReviewTravail(rowData)"
@@ -325,7 +336,7 @@ const fields = [
                       rowData.auteur_id == activeSapeurId &&
                       rowData.statut == 0
                     "
-                    :disabled="evenementVerrouille(rowData)"
+                    :disabled="evenementVerrouille(rowData) || isSubmitting"
                     title="Supprimer"
                     class="btn btn-outline-danger border-0"
                     @click="supprimerTravail(rowData)"

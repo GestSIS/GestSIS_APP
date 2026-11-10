@@ -6,11 +6,12 @@ import permissions from "../../composables/permissions.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { computed, ref, watchEffect } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -81,25 +82,26 @@ const filteredSapeurs = computed(() => {
 });
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 
 const regenererSapeur = () => showModal({ component: "ModalImputerAnnuel", size: 2 });
 
 const annulerImputation = async () => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous annuler l'imputation annuel des frais ?",
       "Attention, les écritures actuelles seront supprimées, mais il vous sera toujours possible de générer ces écritures à nouveau.",
-    )
+    ))
   ) {
-    imputationStore
-      .annulerImputationAnnuel(activeExerciceComptableId.value)
-      .catch((err) =>
-        awn.alert(
-          err?.message ??
-            "Une erreur est survenue durant l'annulation des indemnités/frais annuelles",
-        ),
-      );
+    return;
+  }
+  const { ok } = await submit(
+    () => imputationStore.annulerImputationAnnuel(activeExerciceComptableId.value),
+    "Une erreur est survenue durant l'annulation des indemnités/frais annuelles",
+  );
+  if (ok) {
+    awn.success("Imputation annuelle annulée.");
   }
 };
 const generer = () => showModal({ component: "ModalImputerAnnuel", size: 2 });
@@ -180,6 +182,7 @@ const fields = [
               {{ computedData.length ? "Regénérer" : "Générer" }}
             </button>
             <button
+              :disabled="isSubmitting"
               v-if="computedData.length"
               class="btn btn-outline-danger"
               @click.prevent="annulerImputation"

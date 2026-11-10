@@ -2,9 +2,8 @@
 import { computed, ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
-
-const awn = useNotification();
 
 const authStore = useAuthStore();
 
@@ -38,20 +37,27 @@ const groupedPermissions = computed(() => {
 });
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 const selectRole = (role) => (selectedId.value = role.id);
 
 const edit = (role) => showModal({ component: "ModalRole", data: role });
 const newRole = () => showModal({ component: "ModalRole", data: {} });
 const remove = async (role) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer ce rôle ?",
       "Attention, la suppression d'un rôle est irréversible ! Les utilisateurs ayant ce rôle perdront ces permissions.",
-    )
+    ))
   ) {
-    authStore
-      .deleteRole(role.id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du rôle."));
+    return;
+  }
+  const { ok } = await submit(
+    () => authStore.deleteRole(role.id),
+    "Erreur lors de la suppression du rôle.",
+  );
+  if (ok) {
+    awn.success("Rôle supprimé.");
   }
 };
 
@@ -142,7 +148,12 @@ const permissionMapping = (key) => {
               <button type="button" class="btn btn-outline-primary border-0" @click="edit(r)">
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
-              <button type="button" class="btn btn-outline-danger border-0" @click="remove(r)">
+              <button
+                :disabled="isSubmitting"
+                type="button"
+                class="btn btn-outline-danger border-0"
+                @click="remove(r)"
+              >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
             </td>

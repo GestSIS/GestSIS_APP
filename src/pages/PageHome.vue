@@ -10,11 +10,13 @@ import ExcuseTypeService from "../services/ExcuseTypeService.js";
 import ExcuseParamService from "../services/ExcuseParamService.js";
 import ExerciceService from "../services/ExerciceService.js";
 import { exportFileName } from "../tools/index.js";
+import { useSubmit } from "../composables/useSubmit.js";
 
 const authStore = useAuthStore();
 const infosStore = useMesInfosStore();
 const localiteStore = useLocaliteStore();
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 
 const disableCounter = ref(0);
 const disableInterval = ref(null);
@@ -197,18 +199,20 @@ const addExcuse = (rowData = {}) => {
 
 const removeExcuse = async (rowData) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer votre excuse ?",
       "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-    )
+    ))
   ) {
-    infosStore
-      .removeMonExcuse(rowData, rowData.sis_key)
-      .then(() => {
-        awn.success("Excuse supprimée avec succès");
-        fetchProchainesConvocations();
-      })
-      .catch((err) => awn.alert(err?.message ?? "Impossible de supprimer l'excuse"));
+    return;
+  }
+  await submit(
+    () => infosStore.removeMonExcuse(rowData, rowData.sis_key),
+    "Impossible de supprimer l'excuse",
+  );
+  if (ok) {
+    awn.success("Excuse supprimée avec succès");
+    fetchProchainesConvocations();
   }
 };
 
@@ -356,6 +360,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                   <font-awesome-icon :icon="['fas', 'plus']" />
                 </button>
                 <button
+                  :disabled="isSubmitting"
                   v-else-if="
                     excuseParamsParSis[rowData.sis_key]?.actif &&
                     rowData.excuse_type_id &&
@@ -465,6 +470,7 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                     <font-awesome-icon :icon="['fas', 'plus']" /> S'excuser
                   </button>
                   <button
+                    :disabled="isSubmitting"
                     v-else-if="peutRetirerExcuse(exercice)"
                     title="Supprimer l'excuse pour cet exercice"
                     class="btn btn-sm btn-outline-danger"

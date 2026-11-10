@@ -5,9 +5,8 @@ import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
-
-const awn = useNotification();
 
 const { id } = defineProps({
   id: {
@@ -44,6 +43,8 @@ const phases = computed(() =>
 const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 const newPhase = () =>
   showModal({
     component: "ModalPhase",
@@ -65,14 +66,19 @@ const editPhase = (phase) =>
 
 const removePhase = async (id) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette phase ?",
       "Attention, la suppression d'une phase est irréversible ! Toutes les données de cette phase seront perdues !",
-    )
+    ))
   ) {
-    interventionStore
-      .removePhase(id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la phase."));
+    return;
+  }
+  const { ok } = await submit(
+    () => interventionStore.removePhase(id),
+    "Erreur lors de la suppression de la phase.",
+  );
+  if (ok) {
+    awn.success("Phase supprimée.");
   }
 };
 
@@ -109,6 +115,7 @@ const fields = [
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>
             <button
+              :disabled="isSubmitting"
               v-if="rowData.debut !== null && hasEditPermission"
               type="button"
               class="btn btn-outline-danger border-0"

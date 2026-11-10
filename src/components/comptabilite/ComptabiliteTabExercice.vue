@@ -2,7 +2,6 @@
 import { computed, ref, watchEffect } from "vue";
 import { ecritureTypeLabel } from "../../composables/ecritureTypes.js";
 import { exerciceStatut } from "../../composables/exerciceStatuts.js";
-import { useNotification } from "../../composables/useNotification.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
@@ -14,6 +13,8 @@ import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 import ImputationService from "/src/services/ImputationService.js";
 import permissions from "../../composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const localiteStore = useLocaliteStore();
 const sapeurStore = useSapeurStore();
@@ -75,8 +76,9 @@ const filteredCategories = computed(() => {
   return categories.value.filter((t) => ids.has(t.id));
 });
 
-const awn = useNotification();
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 
 const genererDecompteExercice = (exerciceId, designation) =>
   showModal({
@@ -96,25 +98,27 @@ const imputer = (exerciceId) =>
   });
 const annulerImputer = async (exerciceId) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette imputation ?",
       "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cet exercice.",
-    )
+    ))
   ) {
-    imputationStore
-      .annulerImputationExercice(exerciceId)
-      .then(({ statut }) => {
-        exercices.value = [
-          ...exercices.value.filter((e) => e.id != exerciceId),
-          {
-            ...exercices.value.find((e) => e.id == exerciceId),
-            statut: statut,
-          },
-        ].sort((a, b) => a.date.localeCompare(b.date));
-      })
-      .catch((err) => {
-        awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
-      });
+    return;
+  }
+  const { ok, data } = await submit(
+    () => imputationStore.annulerImputationExercice(exerciceId),
+    "Erreur impossible d'annuler l'imputation",
+  );
+  if (ok) {
+    awn.success("Imputation annulée.");
+    const { statut } = data;
+    exercices.value = [
+      ...exercices.value.filter((e) => e.id != exerciceId),
+      {
+        ...exercices.value.find((e) => e.id == exerciceId),
+        statut: statut,
+      },
+    ].sort((a, b) => a.date.localeCompare(b.date));
   }
 };
 
@@ -248,6 +252,7 @@ const fields = [
               Imputer
             </button>
             <button
+              :disabled="isSubmitting"
               v-if="selectedItem?.statut == 4"
               class="btn btn-outline-danger"
               @click="annulerImputer(selectedItem.id)"

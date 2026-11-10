@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
@@ -16,6 +15,8 @@ import permissions from "../../composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { interventionStatut } from "../../composables/interventionStatuts.js";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const sapeurStore = useSapeurStore();
 const uniteStore = useUniteStore();
@@ -81,8 +82,9 @@ const selectedId = ref(null);
 const selected = (row) => (selectedId.value = row?.id ?? null);
 const selectedItem = computed(() => interventions.value.find((i) => i.id == selectedId.value));
 
-const awn = useNotification();
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 
 const imputer = (interventionId) =>
   showModal({
@@ -94,17 +96,20 @@ const imputer = (interventionId) =>
 
 const annulerImputer = async (interventionId) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette imputation ?",
       "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau cette intervention.",
-    )
+    ))
   ) {
-    imputationStore
-      .annulerImputationIntervention(interventionId)
-      .then(init)
-      .catch((err) => {
-        awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
-      });
+    return;
+  }
+  const { ok } = await submit(
+    () => imputationStore.annulerImputationIntervention(interventionId),
+    "Erreur impossible d'annuler l'imputation",
+  );
+  if (ok) {
+    awn.success("Imputation annulée.");
+    init();
   }
 };
 const onRowClass = (dataItem, isSelected) => {
@@ -287,6 +292,7 @@ const fields = [
               Imputer
             </button>
             <button
+              :disabled="isSubmitting"
               v-if="selectedItem?.statut == 3"
               class="btn btn-outline-danger"
               @click="annulerImputer(selectedItem.id)"
@@ -381,6 +387,7 @@ const fields = [
                   <font-awesome-icon :icon="['fas', 'file-invoice-dollar']" />
                 </button>
                 <button
+                  :disabled="isSubmitting"
                   v-if="hasEditPermission && rowData.statut === 3"
                   class="btn btn-outline-primary border-0"
                   title="Annuler imputation"

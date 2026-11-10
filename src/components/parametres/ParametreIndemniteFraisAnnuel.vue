@@ -7,9 +7,8 @@ import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCat
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
-
-const awn = useNotification();
 
 const imputationStore = useImputationStore();
 const compteStore = useCompteStore();
@@ -58,6 +57,8 @@ const typesAnnuel = computed(() =>
 );
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 const montantAnnuelTypePourFonction = (type, fonction) => {
   const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);
   return elem?.quantite * elem?.montant || "";
@@ -87,14 +88,19 @@ const updateType = (type) =>
 const deleteType = async (type) => {
   const description = type.type == "frais" ? "ce frais type" : "cette indemnité type";
   if (
-    await confirm(
+    !(await confirm(
       `Voulez-vous vraiment supprimer ${description} ?`,
       "Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.",
-    )
+    ))
   ) {
-    imputationStore
-      .removeFraisIndemniteAnnuelType(type.id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression du type."));
+    return;
+  }
+  const { ok } = await submit(
+    () => imputationStore.removeFraisIndemniteAnnuelType(type.id),
+    "Erreur lors de la suppression du type.",
+  );
+  if (ok) {
+    awn.success(type.type == "frais" ? "Frais type supprimé." : "Indemnité type supprimée.");
   }
 };
 
@@ -126,14 +132,19 @@ const deleteFonction = async (type, fonction) => {
   const elem = type.fonctions.find((e) => e.fonction_id == fonction.id);
   const description = type.type == "frais" ? "ce frais" : "cette indemnité";
   if (
-    await confirm(
+    !(await confirm(
       `Voulez-vous vraiment supprimer ${description} ?`,
       "Attention, cette action est irréversible ! Les frais/indemnités générés avec ce type ne seront cependant pas affecté.",
-    )
+    ))
   ) {
-    imputationStore
-      .removeFraisIndemniteAnnuel(elem.id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression."));
+    return;
+  }
+  const { ok } = await submit(
+    () => imputationStore.removeFraisIndemniteAnnuel(elem.id),
+    "Erreur lors de la suppression.",
+  );
+  if (ok) {
+    awn.success(type.type == "frais" ? "Frais supprimé." : "Indemnité supprimée.");
   }
 };
 </script>
@@ -162,6 +173,7 @@ const deleteFonction = async (type, fonction) => {
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <button
+                :disabled="isSubmitting"
                 type="button"
                 class="btn btn-outline-danger border-0"
                 @click="deleteType(type)"
@@ -238,6 +250,7 @@ const deleteFonction = async (type, fonction) => {
                 v-if="type.fonctions.find((f) => f.fonction_id == fonction.id)"
                 type="button"
                 class="btn btn-outline-danger border-0"
+                :disabled="isSubmitting"
                 @click="deleteFonction(type, fonction)"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />

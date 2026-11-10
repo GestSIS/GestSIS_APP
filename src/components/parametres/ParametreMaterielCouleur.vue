@@ -1,9 +1,10 @@
 <script setup>
 import { computed } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
 import TagCouleur from "../materiel/TagCouleur.vue";
 import { useModalStore } from "../../stores/common/Modal.js";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const couleurStore = useCouleurStore();
 
@@ -12,8 +13,9 @@ const couleurs = computed(() =>
   couleurStore.liste.slice().sort((c1, c2) => c1.nom.localeCompare(c2.nom)),
 );
 
-const awn = useNotification();
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 
 const ajout = () => {
   showModal({ component: "ModalCouleur", data: {} });
@@ -26,14 +28,19 @@ const update = (elem) => {
 };
 const remove = async (elem) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette couleur ?",
       "Attention, la suppression d'une couleur est irréversible !",
-    )
+    ))
   ) {
-    couleurStore
-      .removeCouleur(elem.id)
-      .catch((error) => awn.alert(error.message ?? "Impossible de supprimer cette couleur"));
+    return;
+  }
+  const { ok } = await submit(
+    () => couleurStore.removeCouleur(elem.id),
+    "Impossible de supprimer cette couleur",
+  );
+  if (ok) {
+    awn.success("Couleur supprimée.");
   }
 };
 
@@ -59,7 +66,12 @@ const fields = [
           <button type="button" class="btn btn-outline-primary border-0" @click="update(rowData)">
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
-          <button type="button" class="btn btn-outline-danger border-0" @click="remove(rowData)">
+          <button
+            :disabled="isSubmitting"
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="remove(rowData)"
+          >
             <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>
         </template>

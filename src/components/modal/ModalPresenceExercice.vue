@@ -11,6 +11,7 @@ import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useExerciceStore } from "../../stores/exercice/Exercice.js";
 import { exportFileName } from "../../tools/index.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const localiteStore = useLocaliteStore();
 const sapeurStore = useSapeurStore();
@@ -53,6 +54,7 @@ const computeExercices = computed(() => {
 const presences = ref(computeExercices.value.map((e) => ({ ...e.presence, ...e })));
 
 const { closeModal, confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 
 const canEditAbsence = (exercice) => {
@@ -146,10 +148,12 @@ const removeExcuse = async (sapeur) => {
       "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
     )
   ) {
-    try {
-      await exerciceStore.removeExcuse(sapeur?.presence?.exercice_id, sapeur?.presence?.sapeur_id);
-    } catch (err) {
-      awn.alert(err?.message || "Erreur lors de la suppression de l'excuse.");
+    const { ok } = await submit(
+      () => exerciceStore.removeExcuse(sapeur?.presence?.exercice_id, sapeur?.presence?.sapeur_id),
+      "Erreur lors de la suppression de l'excuse.",
+    );
+    if (ok) {
+      awn.success("Excuse supprimée.");
     }
   }
 
@@ -304,6 +308,7 @@ const close = async () => {
                   v-else
                   type="button"
                   class="btn btn-outline-danger border-0"
+                  :disabled="isSubmitting"
                   @click="removeExcuse(e)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />

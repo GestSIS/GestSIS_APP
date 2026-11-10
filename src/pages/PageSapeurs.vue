@@ -15,6 +15,7 @@ import { computed, onMounted, ref, useTemplateRef, watch, watchEffect } from "vu
 import { useNotification } from "../composables/useNotification.js";
 import { exportFileName } from "../tools/index.js";
 import { useDownload } from "../composables/useDownload.js";
+import { useSubmit } from "../composables/useSubmit.js";
 
 const TYPE_SAPEUR = 0;
 const TYPE_CIVIL = 1;
@@ -176,6 +177,7 @@ onMounted(() => {
 });
 
 const { confirm, showModal } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const { download } = useDownload();
 const awn = useNotification();
 
@@ -246,29 +248,29 @@ const addSapeur = () => {
 };
 const deleteSapeur = async () => {
   if (
-    await confirm(
+    !(await confirm(
       isRecrue.value
         ? "Voulez-vous vraiment rejeter cette recrue ?"
         : "Voulez-vous vraiment supprimer ce sapeur ?",
       isRecrue.value
         ? "Attention, le rejet d'une recrue est irréversible ! Toutes ses données seront perdues !"
         : "Attention, la suppression d'un sapeur est irréversible ! Toutes les données de ce sapeur seront perdues !",
-    )
+    ))
   ) {
-    sapeurStore
-      .deleteSapeur(activeSapeur.value.id)
-      .then(() => {
-        const newSelectedSapeurId = filteredSapeurs.value[0]?.id;
-        sapeurStore.selectSapeur(newSelectedSapeurId);
-        router.push({
-          name: "sapeur-details",
-          params: { id: newSelectedSapeurId },
-        });
-        awn.success(isRecrue.value ? "Recrue rejetée avec succès" : "Sapeur supprimé avec succès");
-      })
-      .catch((err) => {
-        awn.alert(err?.message ?? "Impossible de supprimer ce sapeur");
-      });
+    return;
+  }
+  const { ok } = await submit(
+    () => sapeurStore.deleteSapeur(activeSapeur.value.id),
+    "Impossible de supprimer ce sapeur",
+  );
+  if (ok) {
+    const newSelectedSapeurId = filteredSapeurs.value[0]?.id;
+    sapeurStore.selectSapeur(newSelectedSapeurId);
+    router.push({
+      name: "sapeur-details",
+      params: { id: newSelectedSapeurId },
+    });
+    awn.success(isRecrue.value ? "Recrue rejetée avec succès" : "Sapeur supprimé avec succès");
   }
 };
 </script>
@@ -426,6 +428,7 @@ const deleteSapeur = async () => {
               class="vr d-none d-md-block mx-2"
             ></div>
             <button
+              :disabled="isSubmitting"
               v-if="activeSapeur?.id && hasEditPermission"
               class="btn btn-outline-danger mb-2"
               @click="deleteSapeur"

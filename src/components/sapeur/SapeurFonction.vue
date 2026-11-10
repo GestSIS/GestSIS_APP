@@ -5,9 +5,8 @@ import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useNotification } from "../../composables/useNotification.js";
-
-const awn = useNotification();
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -33,6 +32,8 @@ const activeSapeurFonctions = computed(() =>
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const awn = useNotification();
 
 const newFonction = () => {
   showModal("ModalSapeurFonction");
@@ -42,14 +43,19 @@ const editFonction = (fonction) => {
 };
 const supprimerFonction = async (fonction) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer cette fonction ?",
       "Attention, la suppression d'une fonction est irréversible ! Toutes les données de cette fonction seront perdues !",
-    )
+    ))
   ) {
-    sapeurStore
-      .removeSapeurFonction(fonction?.id)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de la suppression de la fonction."));
+    return;
+  }
+  const { ok } = await submit(
+    () => sapeurStore.removeSapeurFonction(fonction?.id),
+    "Erreur lors de la suppression de la fonction.",
+  );
+  if (ok) {
+    awn.success("Fonction supprimée.");
   }
 };
 
@@ -98,6 +104,7 @@ const fields = [
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             v-if="hasEditPermission"
             type="button"
             class="btn btn-outline-danger border-0"

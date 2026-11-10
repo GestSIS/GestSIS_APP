@@ -2,8 +2,9 @@
 import { computed } from "vue";
 import { useControleStore } from "../../stores/materiel/Controle.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import { useNotification } from "../../composables/useNotification.js";
 import ParametreTachesControle from "./ParametreTachesControle.vue";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useNotification } from "../../composables/useNotification.js";
 
 const store = useControleStore();
 await store.fetchControles();
@@ -11,6 +12,7 @@ await store.fetchControles();
 const controles = computed(() => store.liste.slice().sort((a, b) => a.nom.localeCompare(b.nom)));
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 
 const recurrenceLabel = (controle) => {
@@ -36,14 +38,19 @@ const editControle = (controle) =>
 
 const deleteControle = async (controle) => {
   if (
-    await confirm(
+    !(await confirm(
       "Supprimer ce contrôle ?",
       `Voulez-vous vraiment supprimer le contrôle "${controle.nom}" ? Cette action est irréversible.`,
-    )
+    ))
   ) {
-    store
-      .removeControle(controle.id)
-      .catch((err) => awn.alert(err.message ?? "Impossible de supprimer ce contrôle"));
+    return;
+  }
+  const { ok } = await submit(
+    () => store.removeControle(controle.id),
+    "Impossible de supprimer ce contrôle",
+  );
+  if (ok) {
+    awn.success("Contrôle supprimé.");
   }
 };
 
@@ -90,6 +97,7 @@ const fields = [
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteControle(rowData)"

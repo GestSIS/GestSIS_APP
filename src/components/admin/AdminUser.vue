@@ -6,6 +6,7 @@ import AdminService from "../../services/AdminService";
 import { useModalStore } from "../../stores/common/Modal";
 import { useAdminStore } from "../../stores/admin/Admin";
 import { useAuthStore } from "../../stores/auth/Auth";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const { id } = defineProps({
   id: {
@@ -46,6 +47,7 @@ const organisations = computed(() => adminStore.organisations);
 const roles = computed(() => adminStore.roles);
 
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
 
 const twoFactorExemptStep = ref("status"); // status | grant
@@ -166,30 +168,38 @@ const ajouterRole = () =>
   });
 const supprimerRole = async (userRole) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment enlever ce rôle à cet utilisateur ?",
       "Attention, l'action est irréversible.",
-    )
+    ))
   ) {
-    adminStore
-      .removeUserRole(userRole)
-      .then((res) => awn.success(res?.message || "Rôle supprimé"))
-      .then(loadUser)
-      .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression"));
+    return;
+  }
+  const { ok, data } = await submit(
+    () => adminStore.removeUserRole(userRole),
+    "Erreur lors de la suppression",
+  );
+  if (ok) {
+    awn.success(data?.message || "Rôle supprimé");
+    loadUser();
   }
 };
 const supprimerSapeur = async (sapeurLink) => {
   if (
-    await confirm(
+    !(await confirm(
       "Voulez-vous vraiment supprimer ce lien sapeur ?",
       "Attention, l'action est irréversible.",
-    )
+    ))
   ) {
-    adminStore
-      .removeSapeur(sapeurLink)
-      .then((res) => awn.success(res?.message || "Lien sapeur supprimé"))
-      .then(loadUser)
-      .catch((e) => awn.alert(e?.message || "Erreur lors de la suppression"));
+    return;
+  }
+  const { ok, data } = await submit(
+    () => adminStore.removeSapeur(sapeurLink),
+    "Erreur lors de la suppression",
+  );
+  if (ok) {
+    awn.success(data?.message || "Lien sapeur supprimé");
+    loadUser();
   }
 };
 
@@ -413,6 +423,7 @@ const fieldsSapeurs = [
           >
             <template #actions="{ rowData }">
               <button
+                :disabled="isSubmitting"
                 type="button"
                 class="btn btn-outline-danger border-0"
                 @click="supprimerRole(rowData)"
@@ -445,6 +456,7 @@ const fieldsSapeurs = [
           >
             <template #actions="{ rowData }">
               <button
+                :disabled="isSubmitting"
                 type="button"
                 class="btn btn-outline-danger border-0"
                 @click="supprimerSapeur(rowData)"

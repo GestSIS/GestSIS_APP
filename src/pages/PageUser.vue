@@ -5,6 +5,7 @@ import { useAuthStore } from "../stores/auth/Auth";
 import { useNotification } from "../composables/useNotification.js";
 import { useModalStore } from "../stores/common/Modal";
 import { PASSWORD_HINT, PASSWORD_MIN_LENGTH, passwordErrors } from "../tools/passwordPolicy.js";
+import { useSubmit } from "../composables/useSubmit.js";
 
 const jeton = ref("");
 const oldPassword = ref("");
@@ -17,6 +18,7 @@ const tab = ref(route.query.tab === "2fa" ? "2fa" : "password");
 
 const loading = ref(false);
 const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 
 const ajouter = () =>
   showModal({ component: "ModalApiToken", data: { totpActive: isTotpEnabled.value } });
@@ -88,15 +90,19 @@ const changerMotDePasse = async () => {
 
 const deleteApiToken = async (id) => {
   if (
-    await confirm(
+    !(await confirm(
       "Êtes-vous sûr de vouloir supprimer ce jeton d'API ?",
       "Attention, l'action est irréversible et un nouveau jeton d'API devra être recréé, les applications utilisant ce jeton perdront l'accès à l'API et devront être reconfigurées avec le nouveau jeton d'API.",
-    )
+    ))
   ) {
-    authStore
-      .deleteApiToken(id)
-      .then(() => awn.success("Jeton d'API supprimé"))
-      .catch(() => awn.alert("Erreur lors de la suppression du jeton d'API"));
+    return;
+  }
+  const { ok } = await submit(
+    () => authStore.deleteApiToken(id),
+    "Erreur lors de la suppression du jeton d'API",
+  );
+  if (ok) {
+    awn.success("Jeton d'API supprimé");
   }
 };
 
@@ -240,13 +246,14 @@ const deleteSession = async (session) => {
   if (!confirmed) {
     return;
   }
-  return authStore
-    .deleteSession(session.id)
-    .then(() => {
-      awn.success("Session déconnectée");
-      return loadSessions();
-    })
-    .catch((e) => awn.alert(e?.message || "Erreur lors de la déconnexion"));
+  const { ok } = await submit(
+    () => authStore.deleteSession(session.id),
+    "Erreur lors de la déconnexion",
+  );
+  if (ok) {
+    awn.success("Session déconnectée");
+    return loadSessions();
+  }
 };
 
 const sessionFields = [
@@ -496,7 +503,11 @@ const fields = [
                 <span v-else class="badge bg-success">Actif</span>
               </template>
               <template #actions="{ rowData }">
-                <button class="btn btn-sm btn-outline-danger" @click="deleteApiToken(rowData.id)">
+                <button
+                  :disabled="isSubmitting"
+                  class="btn btn-sm btn-outline-danger"
+                  @click="deleteApiToken(rowData.id)"
+                >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
                 </button>
               </template>
@@ -616,6 +627,7 @@ const fields = [
                   v-if="!rowData.current"
                   type="button"
                   class="btn btn-sm btn-outline-danger"
+                  :disabled="isSubmitting"
                   @click="deleteSession(rowData)"
                 >
                   <font-awesome-icon :icon="['far', 'trash-alt']" />
