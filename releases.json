@@ -1,6 +1,18 @@
 {
   "releases": [
     {
+      "date": "10.11.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Messages d'erreur affichés dans toute l'application, y compris lorsqu'un enregistrement ou une suppression est refusé",
+        "Boutons d'enregistrement et de suppression désactivés pendant l'envoi, plus de doublons en cas de double clic",
+        "Message de confirmation après chaque suppression ou annulation",
+        "Décomptes, le formulaire reste ouvert en cas d'erreur lors de la génération",
+        "Thème clair/sombre synchronisé entre les onglets"
+      ]
+    },
+    {
       "date": "06.11.2026",
       "version": "1.0",
       "app": "GestSIS APP",
