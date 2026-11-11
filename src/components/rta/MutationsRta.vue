@@ -239,13 +239,11 @@ const mutate = async () => {
     ],
   };
 
-  const { ok } = await submit(
+  await submit(
     () => rtaStore.updateReferenceRta(data),
     "Une erreur s'est produite lors du transfert",
+    "Mutation transmise avec succès",
   );
-  if (ok) {
-    awn.success("Mutation transmise avec succès");
-  }
 };
 </script>
 

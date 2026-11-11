@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useExcuseParamStore } from "../../stores/exercice/ExcuseParam.js";
 import { useSubmit } from "../../composables/useSubmit.js";
 
@@ -18,13 +17,12 @@ const params = ref({
   ...excuseParams.value,
 });
 
-const awn = useNotification();
-
 const save = async () => {
-  const { ok, data } = await submit(() => excuseParamStore.updateExcuseParams(params.value));
-  if (ok) {
-    awn.success(data?.message || "Modifications enregistrées");
-  }
+  await submit(
+    () => excuseParamStore.updateExcuseParams(params.value),
+    "Erreur lors de l'enregistrement",
+    "Modifications enregistrées",
+  );
 };
 </script>
 

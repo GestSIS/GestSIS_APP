@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
 import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
@@ -46,6 +47,7 @@ const excuseTypes = computed(() => excuseTypeStore.liste);
 const localites = computed(() => localiteStore.liste);
 
 const awn = useNotification();
+const { isSubmitting, submit } = useSubmit();
 
 const computedData = computed(() => {
   return activeSapeurExercices.value
@@ -102,16 +104,21 @@ watchEffect(async () => {
 });
 
 const review = async (state) => {
+  const previous = form.value.excuse_statut;
   form.value.excuse_statut = state;
-  try {
-    const res = await exerciceStore.editPresenceExercice(form.value?.id, form.value);
-    activeSapeurExercices.value = activeSapeurExercices.value.map((e) =>
-      e.presence.id === res.id ? { ...e, presence: res } : e,
-    );
-    awn.success(res?.message || "Modifications enregistrées");
-  } catch (err) {
-    return awn.alert(err?.message || "Erreur lors de l'enregistrement");
+  const { ok, data: res } = await submit(
+    () => exerciceStore.editPresenceExercice(form.value?.id, form.value),
+    "Erreur lors de l'enregistrement",
+    "Modifications enregistrées",
+  );
+  if (!ok) {
+    // Rien n'a été enregistré : le bouton actif revient au statut précédent.
+    form.value.excuse_statut = previous;
+    return;
   }
+  activeSapeurExercices.value = activeSapeurExercices.value.map((e) =>
+    e.presence.id === res.id ? { ...e, presence: res } : e,
+  );
 };
 const nextAbsence = () => {
   // Switch to next absence
@@ -270,6 +277,7 @@ const fields = [
               class="btn"
               :class="'btn-' + (form.excuse_statut == -2 ? '' : 'outline-') + 'danger'"
               :disabled="
+                isSubmitting ||
                 !categories.find((c) => c.id == activeExercice?.exercice_categorie_id)?.amendable
               "
               @click="review(-2)"
@@ -280,6 +288,7 @@ const fields = [
               type="button"
               class="btn"
               :class="'btn-' + (form.excuse_statut == -1 ? '' : 'outline-') + 'warning'"
+              :disabled="isSubmitting"
               @click="review(-1)"
             >
               Refusé
@@ -288,6 +297,7 @@ const fields = [
               type="button"
               class="btn"
               :class="'btn-' + (form.excuse_statut == 0 ? '' : 'outline-') + 'primary'"
+              :disabled="isSubmitting"
               @click="review(0)"
             >
               A traiter
@@ -296,6 +306,7 @@ const fields = [
               type="button"
               class="btn"
               :class="'btn-' + (form.excuse_statut == 1 ? '' : 'outline-') + 'success'"
+              :disabled="isSubmitting"
               @click="review(1)"
             >
               Accepté

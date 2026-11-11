@@ -83,7 +83,7 @@ const awn = useNotification();
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
 
-const imputer = (travailId) => {
+const imputer = async (travailId) => {
   const ids = travailId
     ? [travailId]
     : travaux.value.filter((t) => t.statut == TRAVAIL_STATUT.ACCEPTE).map((t) => t.id);
@@ -93,15 +93,14 @@ const imputer = (travailId) => {
     return;
   }
 
-  imputationStore
-    .imputerTravail(ids)
-    .then((res) => {
-      travailStore.fetchTravaux(activeExerciceComptableId.value);
-      awn.success(res?.message ?? "Travaux imputé avec succès");
-    })
-    .catch((err) => {
-      awn.alert(err?.message ?? "Erreur impossible d'annuler l'imputation");
-    });
+  const { ok } = await submit(
+    () => imputationStore.imputerTravail(ids),
+    "Erreur lors de l'imputation des travaux",
+    "Travaux imputés avec succès",
+  );
+  if (ok) {
+    travailStore.fetchTravaux(activeExerciceComptableId.value);
+  }
 };
 const annulerImputer = async (travailId) => {
   if (
@@ -112,13 +111,11 @@ const annulerImputer = async (travailId) => {
   ) {
     return;
   }
-  const { ok, data } = await submit(
+  await submit(
     () => imputationStore.annulerImputationTravail(travailId),
     "Erreur impossible d'annuler l'imputation",
+    "Imputation annulée.",
   );
-  if (ok) {
-    awn.success(data?.message ?? "Travaux imputé avec succès");
-  }
 };
 
 const onRowClass = (dataItem, isSelected) => {
@@ -196,7 +193,7 @@ const fields = [
             <button
               v-if="!selectedItem || selectedItem?.statut == TRAVAIL_STATUT.ACCEPTE"
               class="btn btn-outline-primary"
-              :disabled="selectedItem?.statut != TRAVAIL_STATUT.ACCEPTE"
+              :disabled="isSubmitting || selectedItem?.statut != TRAVAIL_STATUT.ACCEPTE"
               @click="imputer(selectedId)"
             >
               Imputer le travail
@@ -209,7 +206,9 @@ const fields = [
             >
               Annuler l'imputation du travail
             </button>
-            <button class="btn btn-outline-primary" @click="imputer()">Tout imputer</button>
+            <button class="btn btn-outline-primary" :disabled="isSubmitting" @click="imputer()">
+              Tout imputer
+            </button>
             <!-- <button :disabled="isSubmitting"
             v-if="selectedItem?.ecritures?.length"
             class="btn btn-outline-danger"
@@ -292,6 +291,7 @@ const fields = [
                 <button
                   v-if="hasEditPermission && rowData.statut == TRAVAIL_STATUT.ACCEPTE"
                   class="btn btn-outline-primary border-0"
+                  :disabled="isSubmitting"
                   title="Imputer travail"
                   @click="imputer(rowData.id)"
                 >

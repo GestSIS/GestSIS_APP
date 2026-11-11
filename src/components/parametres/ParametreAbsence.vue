@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useAbsenceParamStore } from "../../stores/absence/AbsenceParam.js";
 import { useSubmit } from "../../composables/useSubmit.js";
 
@@ -13,12 +12,12 @@ const params = ref({
   ...absenceParamStore.params,
 });
 
-const awn = useNotification();
 const save = async () => {
-  const { ok, data } = await submit(() => absenceParamStore.updateAbsenceParams(params.value));
-  if (ok) {
-    awn.success(data?.message || "Modifications enregistrées");
-  }
+  await submit(
+    () => absenceParamStore.updateAbsenceParams(params.value),
+    "Erreur lors de l'enregistrement",
+    "Modifications enregistrées",
+  );
 };
 </script>
 

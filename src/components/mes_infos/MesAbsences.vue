@@ -3,7 +3,6 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useAbsenceParamStore } from "../../stores/absence/AbsenceParam.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { computed, ref, watchEffect } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos.js";
 import { useSubmit } from "../../composables/useSubmit.js";
 
@@ -31,7 +30,6 @@ const absences = computed(() =>
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 const addAbsence = () =>
   showModal({
     component: "ModalSAbsenter",
@@ -50,13 +48,11 @@ const removeAbsence = async (absence) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => infosStore.removeMonAbsence(absence),
     "Impossible de supprimer l'absence",
+    "Absence supprimée avec succès",
   );
-  if (ok) {
-    awn.success("Absence supprimée avec succès");
-  }
 };
 
 const fields = [

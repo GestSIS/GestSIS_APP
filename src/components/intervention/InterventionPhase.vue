@@ -6,7 +6,6 @@ import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const { id } = defineProps({
   id: {
@@ -44,7 +43,6 @@ const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 const newPhase = () =>
   showModal({
     component: "ModalPhase",
@@ -73,13 +71,11 @@ const removePhase = async (id) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => interventionStore.removePhase(id),
     "Erreur lors de la suppression de la phase.",
+    "Phase supprimée.",
   );
-  if (ok) {
-    awn.success("Phase supprimée.");
-  }
 };
 
 const fields = [

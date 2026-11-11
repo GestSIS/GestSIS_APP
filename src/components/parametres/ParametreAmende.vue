@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useAmendeStore } from "../../stores/comptabilite/Amende.js";
@@ -64,12 +63,12 @@ const addAmende = () => {
   params.value.amendes = [...params.value.amendes, { montant: 0 }];
 };
 
-const awn = useNotification();
 const save = async () => {
-  const { ok, data } = await submit(() => amendeStore.updateAmendes(params.value));
-  if (ok) {
-    awn.success(data?.message || "Modifications enregistrées");
-  }
+  await submit(
+    () => amendeStore.updateAmendes(params.value),
+    "Erreur lors de l'enregistrement",
+    "Modifications enregistrées",
+  );
 };
 </script>
 

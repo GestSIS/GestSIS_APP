@@ -6,7 +6,6 @@ import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const compteStore = useCompteStore();
 const imputationStore = useImputationStore();
@@ -34,7 +33,6 @@ const listeCompte = computed(() =>
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 const ajoutCompte = () => showModal({ component: "ModalCompte", data: {} });
 const updateCompte = (compte) => showModal({ component: "ModalCompte", data: { ...compte } });
 const deleteCompte = async (compteId) => {
@@ -46,13 +44,11 @@ const deleteCompte = async (compteId) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => compteStore.removeCompte(compteId),
     "Erreur lors de la suppression",
+    "Compte supprimé.",
   );
-  if (ok) {
-    awn.success("Compte supprimé.");
-  }
 };
 </script>
 

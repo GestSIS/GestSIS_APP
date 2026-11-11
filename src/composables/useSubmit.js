@@ -10,6 +10,9 @@ import { useNotification } from "./useNotification.js";
  *   const { errors, isSubmitting, submit } = useSubmit();
  *   const { ok, data } = await submit(() => store.save(form));
  *   if (ok) closeModal();
+ *
+ *   // Avec message de succès (affiché seulement si l'appel réussit)
+ *   await submit(() => store.remove(id), "Erreur lors de la suppression", "Grade supprimé.");
  */
 export function useSubmit() {
   const errors = ref({});
@@ -17,18 +20,27 @@ export function useSubmit() {
 
   /**
    * @param {() => Promise<any>} action appel à l'API
-   * @param {string} defaultMessage message si l'API n'en fournit pas
+   * @param {string} defaultMessage message d'erreur si l'API n'en fournit pas
+   * @param {string} [successMessage] notification affichée en cas de succès (aucune si omis)
    * @returns {Promise<{ ok: boolean, data?: any, ignored?: boolean }>}
    *   ignored : appel ignoré car une soumission est déjà en cours (rien n'a été envoyé)
    */
-  const submit = async (action, defaultMessage = "Erreur lors de l'enregistrement") => {
+  const submit = async (
+    action,
+    defaultMessage = "Erreur lors de l'enregistrement",
+    successMessage = null,
+  ) => {
     if (isSubmitting.value) {
       return { ok: false, ignored: true };
     }
     isSubmitting.value = true;
     errors.value = {};
     try {
-      return { ok: true, data: await action() };
+      const data = await action();
+      if (successMessage) {
+        useNotification().success(successMessage);
+      }
+      return { ok: true, data };
     } catch (err) {
       // Erreurs de validation par champ : affichées dans le formulaire.
       // Une ArrayException peut renvoyer une liste (ex. [statut]) : pas des erreurs de champs.

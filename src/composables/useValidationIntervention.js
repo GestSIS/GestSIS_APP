@@ -3,7 +3,7 @@
 import { computed } from "vue";
 import permissions from "./permissions.js";
 import { useHasPermission } from "./useHasPermission.js";
-import { useNotification } from "./useNotification.js";
+import { useSubmit } from "./useSubmit.js";
 import { interventionStatut } from "../tools/intervention.js";
 import { useInterventionStore } from "../stores/intervention/Intervention.js";
 import { useModalStore } from "../stores/common/Modal.js";
@@ -16,7 +16,7 @@ const INTERVENTION_VALIDEE = 2;
 export function useValidationIntervention(id = null) {
   const interventionStore = useInterventionStore();
   const modalStore = useModalStore();
-  const awn = useNotification();
+  const { isSubmitting, submit } = useSubmit();
   const hasValidationPermission = useHasPermission(permissions.INTERVENTION.VALIDATION);
 
   const statut = computed(() => interventionStore.active.data?.statut);
@@ -35,12 +35,11 @@ export function useValidationIntervention(id = null) {
         "Une fois validée, seule une personne avec la permission de validation pourra encore la modifier. Voulez-vous continuer ?",
       )
     ) {
-      interventionStore
-        .validerIntervention(id)
-        .then(() => awn.success("Intervention validée."))
-        .catch((err) =>
-          awn.alert(err?.message ?? "Erreur lors de la validation de l'intervention."),
-        );
+      await submit(
+        () => interventionStore.validerIntervention(id),
+        "Erreur lors de la validation de l'intervention.",
+        "Intervention validée.",
+      );
     }
   };
 
@@ -51,16 +50,18 @@ export function useValidationIntervention(id = null) {
         `L'intervention repassera au statut « ${interventionStatut(INTERVENTION_SAISIE).label} » et redeviendra modifiable. Voulez-vous continuer ?`,
       )
     ) {
-      interventionStore
-        .devaliderIntervention(interventionId)
-        .then(() => awn.success("Validation annulée."))
-        .catch((err) => awn.alert(err?.message ?? "Erreur lors de l'annulation de la validation."));
+      await submit(
+        () => interventionStore.devaliderIntervention(interventionId),
+        "Erreur lors de l'annulation de la validation.",
+        "Validation annulée.",
+      );
     }
   };
 
   const devaliderIntervention = () => devaliderInterventionId(id);
 
   return {
+    isSubmitting,
     showValiderButton,
     showDevaliderButton,
     validerIntervention,

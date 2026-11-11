@@ -3,7 +3,6 @@ import { computed } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useBatterieTypeStore } from "../../stores/materiel/BatterieType";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const batterieStore = useBatterieTypeStore();
 
@@ -12,7 +11,6 @@ const batteries = computed(() => batterieStore.liste);
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const ajout = () => {
   showModal({ component: "ModalBatterieType", data: {} });
@@ -32,13 +30,11 @@ const remove = async (elem) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => batterieStore.removeBatterieType(elem.id),
     "Impossible de supprimer cette batterie",
+    "Batterie supprimée.",
   );
-  if (ok) {
-    awn.success("Batterie supprimée.");
-  }
 };
 
 const fields = [

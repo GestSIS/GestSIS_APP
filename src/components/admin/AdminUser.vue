@@ -1,13 +1,11 @@
 <script setup>
 import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useNotification } from "../../composables/useNotification.js";
 import AdminService from "../../services/AdminService";
 import { useModalStore } from "../../stores/common/Modal";
 import { useAdminStore } from "../../stores/admin/Admin";
 import { useAuthStore } from "../../stores/auth/Auth";
 import { useSubmit } from "../../composables/useSubmit.js";
-
 
 const { id } = defineProps({
   id: {
@@ -48,8 +46,7 @@ const organisations = computed(() => adminStore.organisations);
 const roles = computed(() => adminStore.roles);
 
 const { showModal, confirm } = useModalStore();
-const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
+const { errors, isSubmitting, submit } = useSubmit();
 
 const twoFactorExemptStep = ref("status"); // status | grant
 const twoFactorExemptReason = ref("");
@@ -78,13 +75,13 @@ const grantTwoFactorExemption = async () => {
           : null,
       ),
     "Erreur lors de l'octroi de l'exemption",
+    "Exemption accordée",
   );
   if (ok) {
     user.value = { ...user.value, ...data };
     twoFactorExemptStep.value = "status";
     twoFactorExemptReason.value = "";
     twoFactorExemptUntil.value = "";
-    awn.success("Exemption accordée");
   }
 };
 
@@ -92,6 +89,7 @@ const revokeTwoFactorExemption = async () => {
   const { ok } = await submit(
     () => adminStore.revokeTwoFactorExemption(user.value.id),
     "Erreur lors de la révocation",
+    "Exemption révoquée",
   );
   if (ok) {
     user.value = {
@@ -100,7 +98,6 @@ const revokeTwoFactorExemption = async () => {
       two_factor_exempt_reason: null,
       two_factor_exempt_until: null,
     };
-    awn.success("Exemption révoquée");
   }
 };
 
@@ -117,10 +114,10 @@ const sessionMaxDays = computed({
     const { ok, data } = await submit(
       () => adminStore.updateSessionPolicy(user.value.id, maxDays),
       "Erreur lors de la mise à jour",
+      "Durée des sessions mise à jour",
     );
     if (ok) {
       user.value = { ...user.value, ...data };
-      awn.success("Durée des sessions mise à jour");
     }
   },
 });
@@ -134,21 +131,16 @@ const revokeAllSessions = async () => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => adminStore.revokeAllSessions(user.value.id),
     "Erreur lors de la déconnexion",
+    "Tous les appareils ont été déconnectés",
   );
-  if (ok) {
-    awn.success("Tous les appareils ont été déconnectés");
-  }
 };
 
 const editUser = (user) => showModal({ component: "ModalUser", data: user });
 const impersonateUser = async (user) => {
-  const { ok } = await submit(
-    () => authStore.impersonate(user.id),
-    "Erreur lors de l'usurpation",
-  );
+  const { ok } = await submit(() => authStore.impersonate(user.id), "Erreur lors de l'usurpation");
   if (ok) {
     router.push({ name: "accueil" });
   }
@@ -189,12 +181,12 @@ const supprimerRole = async (userRole) => {
   ) {
     return;
   }
-  const { ok, data } = await submit(
+  const { ok } = await submit(
     () => adminStore.removeUserRole(userRole),
     "Erreur lors de la suppression",
+    "Rôle supprimé",
   );
   if (ok) {
-    awn.success(data?.message || "Rôle supprimé");
     loadUser();
   }
 };
@@ -207,12 +199,12 @@ const supprimerSapeur = async (sapeurLink) => {
   ) {
     return;
   }
-  const { ok, data } = await submit(
+  const { ok } = await submit(
     () => adminStore.removeSapeur(sapeurLink),
     "Erreur lors de la suppression",
+    "Lien sapeur supprimé",
   );
   if (ok) {
-    awn.success(data?.message || "Lien sapeur supprimé");
     loadUser();
   }
 };
@@ -372,7 +364,11 @@ const fieldsSapeurs = [
                   v-model="twoFactorExemptReason"
                   type="text"
                   class="form-control form-control-sm"
+                  :class="{ 'is-invalid': errors['reason'] }"
                 />
+                <div v-if="errors['reason']" class="invalid-feedback">
+                  {{ errors["reason"][0] }}
+                </div>
               </div>
               <div class="mb-2">
                 <label for="exempt-until">Jusqu'au (optionnel)</label>
@@ -381,7 +377,11 @@ const fieldsSapeurs = [
                   v-model="twoFactorExemptUntil"
                   type="date"
                   class="form-control form-control-sm"
+                  :class="{ 'is-invalid': errors['until'] }"
                 />
+                <div v-if="errors['until']" class="invalid-feedback">
+                  {{ errors["until"][0] }}
+                </div>
               </div>
               <button
                 type="button"

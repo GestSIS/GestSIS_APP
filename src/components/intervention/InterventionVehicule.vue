@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
@@ -38,16 +38,22 @@ const vehicules = computed(() =>
 );
 const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
-const awn = useNotification();
+// Les cases sont désactivées pendant l'envoi : aucun clic ne peut être ignoré par useSubmit.
+const { isSubmitting, submit } = useSubmit();
 
 const editVehicule = async (vehiculeId) => {
-  const event = selected.value[vehiculeId]
-    ? "addInterventionVehicules"
-    : "removeInterventionVehicules";
+  const present = selected.value[vehiculeId];
+  const event = present ? "addInterventionVehicules" : "removeInterventionVehicules";
 
-  interventionStore[event](id, [vehiculeId])
-    .then(() => awn.success("Modifications enregistrées"))
-    .catch((err) => awn.alert(err.message ?? "Erreur lors de l'enregistrement"));
+  const { ok } = await submit(
+    () => interventionStore[event](id, [vehiculeId]),
+    "Erreur lors de l'enregistrement",
+    "Modifications enregistrées",
+  );
+  if (!ok) {
+    // Rien n'a été enregistré : la case revient à son état précédent.
+    selected.value[vehiculeId] = !present;
+  }
 };
 
 const fields = [
@@ -81,7 +87,7 @@ const fields = [
             <input
               :id="'v-' + rowData.id"
               v-model="selected[rowData.id]"
-              :disabled="!hasEditPermission"
+              :disabled="!hasEditPermission || isSubmitting"
               type="checkbox"
               class="form-check-input"
               @change="editVehicule(rowData.id)"

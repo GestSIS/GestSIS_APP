@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { ecritureTypeLabel } from "../../tools/comptabilite.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useModalStore } from "../../stores/common/Modal.js";
@@ -59,6 +60,7 @@ const computedIndemnites = computed(() => {
 
 const { closeModal } = useModalStore();
 const awn = useNotification();
+const { isSubmitting, submit } = useSubmit();
 
 const selectIndemnite = (indemnite) => {
   activeIndemnite.value = indemnite;
@@ -71,23 +73,25 @@ const cancel = () => {
     }
   });
 };
-const imputer = () => {
+const imputer = async () => {
   if (activeIndemnite.value === null) {
     awn.warning("Veuillez sélectionner une indemnité type");
     return;
   }
 
-  imputationStore
-    .imputerCours({
-      id: data.id,
-      indemnite_cours_type_id: activeIndemnite.value.id,
-      exercice_comptable_id: anneeComptableId.value,
-    })
-    .then((res) => {
-      phase.value = 2;
-      ecritures.value = res;
-    })
-    .catch((err) => awn.alert(err?.message ?? "Impossible d'effectuer cette action"));
+  const { ok, data: res } = await submit(
+    () =>
+      imputationStore.imputerCours({
+        id: data.id,
+        indemnite_cours_type_id: activeIndemnite.value.id,
+        exercice_comptable_id: anneeComptableId.value,
+      }),
+    "Impossible d'effectuer cette action",
+  );
+  if (ok) {
+    phase.value = 2;
+    ecritures.value = res;
+  }
 };
 const fields = [
   { title: "Désignation", key: "designation" },
@@ -166,7 +170,7 @@ const ecritureFields = [
         v-if="phase === 1"
         type="button"
         class="btn btn-primary"
-        :disabled="activeIndemnite === null"
+        :disabled="isSubmitting || activeIndemnite === null"
         @click="imputer()"
       >
         Imputer

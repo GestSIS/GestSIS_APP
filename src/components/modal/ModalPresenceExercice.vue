@@ -75,8 +75,8 @@ const canEditPresence = (exercice) => {
 };
 const savePresence = async (sapeur) => {
   try {
-    const res = await exerciceStore.editPresenceExercice(sapeur?.presence?.id, sapeur);
-    awn.success(res?.message || "Modifications enregistrées");
+    await exerciceStore.editPresenceExercice(sapeur?.presence?.id, sapeur);
+    awn.success("Modifications enregistrées");
   } catch (err) {
     awn.alert(err?.message || "Erreur lors de l'enregistrement");
   }
@@ -150,13 +150,11 @@ const removeExcuse = async (sapeur) => {
       "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
     )
   ) {
-    const { ok } = await submit(
+    await submit(
       () => exerciceStore.removeExcuse(sapeur?.presence?.exercice_id, sapeur?.presence?.sapeur_id),
       "Erreur lors de la suppression de l'excuse.",
+      "Excuse supprimée.",
     );
-    if (ok) {
-      awn.success("Excuse supprimée.");
-    }
   }
 
   showModal({

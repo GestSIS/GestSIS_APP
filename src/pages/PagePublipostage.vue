@@ -4,17 +4,18 @@ import { useSapeurStore } from "../stores/sapeur/Sapeur";
 import { useModalStore } from "../stores/common/Modal";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
 import PublipostageService from "/src/services/PublipostageService.js";
-import { useNotification } from "../composables/useNotification.js";
+import { useDownload } from "../composables/useDownload.js";
 
-const awn = useNotification();
+const { download } = useDownload();
 
 useSapeurStore().fetchSapeurs();
 
 const sapeurIds = ref([]);
 
 const publipostage = () =>
-  PublipostageService.downloadExcel(sapeurIds.value).catch((err) =>
-    awn.alert(err?.message || "Erreur lors de la génération du fichier Excel."),
+  download(
+    () => PublipostageService.downloadExcel(sapeurIds.value),
+    "Erreur lors de la génération du fichier Excel.",
   );
 
 const { showModal } = useModalStore();

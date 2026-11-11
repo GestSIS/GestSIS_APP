@@ -178,13 +178,11 @@ const removePresence = async (id) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => interventionStore.removePresence(id),
     "Erreur lors de la suppression de la présence.",
+    "Présence supprimée.",
   );
-  if (ok) {
-    awn.success("Présence supprimée.");
-  }
 };
 
 const editQuittance = (e, id) => {

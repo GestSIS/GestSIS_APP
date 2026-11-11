@@ -7,7 +7,6 @@ import { useLocaliteStore } from "../../stores/common/Localite.js";
 import TagCouleur from "../materiel/TagCouleur.vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const couleurStore = useCouleurStore();
 const emplacementStore = useEmplacementStore();
@@ -26,7 +25,6 @@ const hangars = computed(() => emplacementStore.liste.filter((e) => e.hangar != 
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const ajout = () => showModal({ component: "ModalHangar", data: {} });
 const update = (elem) =>
@@ -43,13 +41,11 @@ const remove = async (elem) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => emplacementStore.removeEmplacement(elem.id),
     "Erreur lors de la suppression",
+    "Hangar supprimé.",
   );
-  if (ok) {
-    awn.success("Hangar supprimé.");
-  }
 };
 
 const fields = [

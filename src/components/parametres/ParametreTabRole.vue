@@ -3,7 +3,6 @@ import { computed, ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const authStore = useAuthStore();
 
@@ -38,7 +37,6 @@ const groupedPermissions = computed(() => {
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 const selectRole = (role) => (selectedId.value = role.id);
 
 const edit = (role) => showModal({ component: "ModalRole", data: role });
@@ -52,13 +50,11 @@ const remove = async (role) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => authStore.deleteRole(role.id),
     "Erreur lors de la suppression du rôle.",
+    "Rôle supprimé.",
   );
-  if (ok) {
-    awn.success("Rôle supprimé.");
-  }
 };
 
 const moduleMapping = (key) => {

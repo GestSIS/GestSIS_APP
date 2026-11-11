@@ -82,13 +82,11 @@ const deleteGroupe = async () => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => groupeStore.deleteGroupe(active.value.data.id),
     "Erreur lors de la suppression du groupe.",
+    "Groupe supprimé.",
   );
-  if (ok) {
-    awn.success("Groupe supprimé.");
-  }
 };
 const addGroupe = () => {
   showModal({

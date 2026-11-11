@@ -3,7 +3,6 @@ import { computed } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useTuyauDiametreStore } from "../../stores/materiel/TuyauDiametre";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const diametreStore = useTuyauDiametreStore();
 
@@ -13,7 +12,6 @@ const diametres = computed(() => diametreStore.liste);
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const ajout = () => {
   showModal({ component: "ModalTuyauDiametre", data: {} });
@@ -33,13 +31,11 @@ const remove = async (elem) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => diametreStore.removeTuyauDiametre(elem.id),
     "Impossible de supprimer ce diamètre",
+    "Diamètre supprimé.",
   );
-  if (ok) {
-    awn.success("Diamètre supprimé.");
-  }
 };
 
 const fields = [

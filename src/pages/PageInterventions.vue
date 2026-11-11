@@ -13,10 +13,7 @@ import { useInterventionTraitementStore } from "../stores/intervention/Intervent
 import { useStatFederalStore } from "../stores/intervention/StatFederal.js";
 import { useTypeInterventionStore } from "../stores/intervention/TypeIntervention.js";
 import { INTERVENTION_STATUT, interventionStatut } from "../tools/intervention.js";
-import { useNotification } from "../composables/useNotification.js";
 import { useSubmit } from "../composables/useSubmit.js";
-
-const awn = useNotification();
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -109,16 +106,16 @@ const supprimerIntervention = async (id) => {
   await submit(
     () => interventionStore.removeIntervention(id),
     "Erreur lors de la suppression de l'intervention.",
+    "Intervention supprimée.",
   );
-  if (ok) {
-    awn.success("Intervention supprimée.");
-  }
 };
-const validerIntervention = (id) =>
-  interventionStore
-    .validerIntervention(id)
-    .then(() => awn.success("Intervention validée."))
-    .catch((err) => awn.alert(err?.message || "Erreur lors de la validation de l'intervention."));
+const validerIntervention = async (id) => {
+  await submit(
+    () => interventionStore.validerIntervention(id),
+    "Erreur lors de la validation de l'intervention.",
+    "Intervention validée.",
+  );
+};
 const { devaliderInterventionId } = useValidationIntervention();
 
 const rapportIntervention = () => {
@@ -334,6 +331,7 @@ const fields = [
                     v-if="
                       hasValidationPermission && rowData.statut === INTERVENTION_STATUT.A_VALIDER
                     "
+                    :disabled="isSubmitting"
                     title="Valider"
                     class="btn btn-outline-success border-0"
                     @click="validerIntervention(rowData.id)"

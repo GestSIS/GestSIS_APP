@@ -2,7 +2,7 @@
 import { useExcuseTypeStore } from "../../stores/exercice/ExcuseType.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const excuseTypeStore = useExcuseTypeStore();
 await excuseTypeStore.fetchExcuseTypes();
@@ -26,14 +26,25 @@ const fields = [
 ];
 const listeExcuse = computed(() => excuseTypeStore.liste.slice().sort((a, b) => a.tri - b.tri));
 
-const { showModal } = useModalStore();
-const awn = useNotification();
+const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const ajoutExcuse = () => showModal({ component: "ModalExcuseType", data: {} });
 const updateExcuse = (excuse) => showModal({ component: "ModalExcuseType", data: { ...excuse } });
-const deleteExcuse = (excuse) =>
-  excuseTypeStore
-    .removeExcuseType(excuse.id)
-    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+const deleteExcuse = async (excuse) => {
+  if (
+    !(await confirm(
+      "Voulez-vous vraiment supprimer ce type d'excuse ?",
+      "Attention, la suppression d'un type d'excuse est irréversible !",
+    ))
+  ) {
+    return;
+  }
+  await submit(
+    () => excuseTypeStore.removeExcuseType(excuse.id),
+    "Erreur lors de la suppression",
+    "Type d'excuse supprimé.",
+  );
+};
 </script>
 
 <template>
@@ -60,6 +71,7 @@ const deleteExcuse = (excuse) =>
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteExcuse(rowData)"

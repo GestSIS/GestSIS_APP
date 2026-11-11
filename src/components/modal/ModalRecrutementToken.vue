@@ -5,7 +5,6 @@ import { useRouter } from "vue-router";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import RecrutementService from "/src/services/RecrutementService.js";
-import { useNotification } from "../../composables/useNotification.js";
 import { useSubmit } from "../../composables/useSubmit.js";
 import { useClipboard } from "../../composables/useClipboard.js";
 
@@ -14,7 +13,6 @@ const { copy } = useClipboard();
 const authStore = useAuthStore();
 const router = useRouter();
 const { closeModal } = useModalStore();
-const awn = useNotification();
 
 const sisKey = computed(() => authStore.organisation.activeKey);
 
@@ -76,12 +74,12 @@ const invalider = async () => {
   const { ok } = await submit(
     () => RecrutementService.invaliderToken(),
     "Erreur lors de l'invalidation du lien.",
+    "Lien d'inscription invalidé.",
   );
   if (ok) {
     lien.value = "";
     qrCodeDataUrl.value = "";
     expireAt.value = null;
-    awn.success("Lien d'inscription invalidé.");
   }
 };
 

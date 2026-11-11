@@ -16,7 +16,6 @@ import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const sapeurStore = useSapeurStore();
 const coursStore = useCoursStore();
@@ -85,7 +84,6 @@ const filteredDataTypes = computed(() => {
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const imputer = (courSapeur) => {
   showModal({
@@ -107,9 +105,9 @@ const annulerImputer = async (courSapeur) => {
   const { ok } = await submit(
     () => imputationStore.annulerImputationCours(courSapeur?.id),
     "Erreur impossible d'annuler l'imputation",
+    "Imputation annulée.",
   );
   if (ok) {
-    awn.success("Imputation annulée.");
     init();
   }
 };

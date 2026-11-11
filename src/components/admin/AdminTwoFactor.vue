@@ -1,11 +1,9 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useAdminStore } from "../../stores/admin/Admin";
-import { useNotification } from "../../composables/useNotification.js";
 import { useSubmit } from "../../composables/useSubmit.js";
 
 const adminStore = useAdminStore();
-const awn = useNotification();
 const { isSubmitting, submit } = useSubmit();
 
 const loading = ref(true);
@@ -24,13 +22,11 @@ const stats = computed(() => adminStore.twoFactorStats);
 
 const saveEnforcedAt = async (enforcedAtValue) => {
   const enforcedAt = enforcedAtValue ? new Date(enforcedAtValue).toISOString() : null;
-  const { ok } = await submit(
+  await submit(
     () => adminStore.updateTwoFactorPolicy(enforcedAt),
     "Erreur lors de la mise à jour",
+    "Politique 2FA mise à jour",
   );
-  if (ok) {
-    awn.success("Politique 2FA mise à jour");
-  }
 };
 
 const clearEnforcedAt = () => {
@@ -38,12 +34,16 @@ const clearEnforcedAt = () => {
   saveEnforcedAt(null);
 };
 
-const revokeExemption = (user) =>
-  adminStore
-    .revokeTwoFactorExemption(user.id)
-    .then(() => adminStore.loadTwoFactorStats())
-    .then(() => awn.success("Exemption révoquée"))
-    .catch((e) => awn.alert(e?.message || "Erreur lors de la révocation"));
+const revokeExemption = async (user) => {
+  await submit(
+    async () => {
+      await adminStore.revokeTwoFactorExemption(user.id);
+      await adminStore.loadTwoFactorStats();
+    },
+    "Erreur lors de la révocation",
+    "Exemption révoquée",
+  );
+};
 
 const exemptionFields = [
   { title: "Nom", key: "name" },
@@ -138,6 +138,7 @@ const exemptionFields = [
             <font-awesome-icon :icon="['far', 'eye']" />
           </router-link>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="revokeExemption(rowData)"

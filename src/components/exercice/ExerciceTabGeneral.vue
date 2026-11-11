@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useRouter } from "vue-router";
 import { useExerciceStore } from "../../stores/exercice/Exercice.js";
 import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
@@ -67,18 +66,20 @@ watchEffect(() => {
 });
 
 const router = useRouter();
-const awn = useNotification();
 
 const save = async () => {
   const action = (form.value.id || 0) === 0 ? "createExercice" : "saveExercice";
-  const { ok, data } = await submit(() => exerciceStore[action](form.value));
+  const { ok, data } = await submit(
+    () => exerciceStore[action](form.value),
+    "Erreur lors de l'enregistrement",
+    action === "createExercice" ? "Exercice créé" : "Modifications enregistrées",
+  );
   if (!ok) {
     return;
   }
   if (id === "new") {
     router.push("/exercices/" + data.id);
   }
-  awn.success(data?.message || "Exercice créé");
 };
 </script>
 

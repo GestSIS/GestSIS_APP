@@ -11,7 +11,6 @@ import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -83,7 +82,6 @@ const filteredSapeurs = computed(() => {
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const regenererSapeur = () => showModal({ component: "ModalImputerAnnuel", size: 2 });
 
@@ -96,13 +94,11 @@ const annulerImputation = async () => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => imputationStore.annulerImputationAnnuel(activeExerciceComptableId.value),
     "Une erreur est survenue durant l'annulation des indemnités/frais annuelles",
+    "Imputation annuelle annulée.",
   );
-  if (ok) {
-    awn.success("Imputation annuelle annulée.");
-  }
 };
 const generer = () => showModal({ component: "ModalImputerAnnuel", size: 2 });
 

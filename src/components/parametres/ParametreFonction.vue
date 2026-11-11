@@ -3,7 +3,6 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { computed } from "vue";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const fonctionStore = useFonctionStore();
 await fonctionStore.fetchFonctions();
@@ -21,7 +20,6 @@ const listeFonction = computed(() => fonctionStore.liste.slice().sort((a, b) => 
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 const ajoutFonction = () => showModal({ component: "ModalFonction", data: {} });
 const updateFonction = (fonction) =>
   showModal({ component: "ModalFonction", data: { ...fonction } });
@@ -34,13 +32,11 @@ const deleteFonction = async (fonction) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => fonctionStore.removeFonction(fonction.id),
     "Erreur lors de la suppression",
+    "Fonction supprimée.",
   );
-  if (ok) {
-    awn.success("Fonction supprimée.");
-  }
 };
 </script>
 

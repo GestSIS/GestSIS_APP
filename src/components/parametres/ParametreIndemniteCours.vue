@@ -8,7 +8,6 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 import { computed } from "vue";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const uniteStore = useUniteStore();
 const imputationStore = useImputationStore();
@@ -58,7 +57,6 @@ const computedData = computed(() => {
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const ajoutIndemnite = () =>
   showModal({
@@ -81,13 +79,11 @@ const deleteIndemnite = async (indemnite) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => imputationStore.removeIndemniteCours(indemnite.id),
     "Erreur lors de la suppression",
+    "Indemnité supprimée.",
   );
-  if (ok) {
-    awn.success("Indemnité supprimée.");
-  }
 };
 </script>
 

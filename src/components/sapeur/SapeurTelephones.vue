@@ -5,13 +5,11 @@ import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
-import { useNotification } from "../../composables/useNotification.js";
 import { formatPhoneNumber } from "../../tools/formatters.js";
 import { useSubmit } from "../../composables/useSubmit.js";
 
 const baseDataStore = useBaseDataStore();
 const sapeurStore = useSapeurStore();
-const awn = useNotification();
 const { isSubmitting, submit } = useSubmit();
 const loading = ref(true);
 
@@ -71,10 +69,11 @@ const saveTelephones = async () => {
     }
   });
 
-  const { ok } = await submit(() => Promise.all(operations.map((operation) => operation())));
-  if (ok) {
-    awn.success("Modifications enregistrées");
-  }
+  await submit(
+    () => Promise.all(operations.map((operation) => operation())),
+    "Erreur lors de l'enregistrement",
+    "Modifications enregistrées",
+  );
 };
 const addTelephone = () => {
   if (telephonesData.value.length < 3) {

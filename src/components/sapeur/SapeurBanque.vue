@@ -1,13 +1,11 @@
 <script setup>
 import { computed, watchEffect } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useSubmit } from "../../composables/useSubmit.js";
 
 const sapeurStore = useSapeurStore();
-const awn = useNotification();
 
 const activeSapeur = computed(() => sapeurStore.active.data);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
@@ -16,13 +14,11 @@ const { errors, isSubmitting, submit } = useSubmit();
 watchEffect(() => sapeurStore.fetchSapeur(sapeurStore.active.id));
 
 const save = async () => {
-  const { ok } = await submit(
+  await submit(
     () => sapeurStore.saveActiveSapeur({ iban: activeSapeur.value.iban }),
     "Erreur lors de la sauvegarde",
+    "Modification enregistrée",
   );
-  if (ok) {
-    awn.success("Modification enregistrée");
-  }
 };
 </script>
 

@@ -9,7 +9,6 @@ import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
 import HistoriqueControleExec from "./HistoriqueControleExec.vue";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const { loading, articles, controle, refresh } = defineProps({
   loading: {
@@ -81,7 +80,6 @@ const tooltipProchainControle = (article) => {
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const infoMateriel = (materiel) =>
   showModal({
@@ -118,9 +116,9 @@ const supprimer = async (article) => {
   const { ok } = await submit(
     () => ArticleService.supprimerArticles([article.id]),
     "Une erreur est survenue",
+    "Article supprimé.",
   );
   if (ok) {
-    awn.success("Article supprimé.");
     refresh();
   }
 };

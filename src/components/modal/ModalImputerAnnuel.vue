@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
@@ -43,7 +43,7 @@ const filteredFonctions = computed(() => {
 });
 
 const { closeModal } = useModalStore();
-const awn = useNotification();
+const { isSubmitting, submit } = useSubmit();
 
 const montantAnnuelTypePourFonction = (type, fonction) => {
   const elem = type.fonctions?.find((e) => e.fonction_id == fonction.id);
@@ -59,14 +59,15 @@ const compte = (id) => {
 const cancel = () => {
   closeModal();
 };
-const imputer = () => {
-  imputationStore
-    .imputerAnnuel(exerciceComptableStore.activeId)
-    .then((data) => {
-      phase.value = 2;
-      ecritures.value = [...data].sort((e1, e2) => e2.sapeur_id - e1.sapeur_id);
-    })
-    .catch((err) => awn.alert(err?.message ?? "Impossible d'effectuer cette action"));
+const imputer = async () => {
+  const { ok, data } = await submit(
+    () => imputationStore.imputerAnnuel(exerciceComptableStore.activeId),
+    "Impossible d'effectuer cette action",
+  );
+  if (ok) {
+    phase.value = 2;
+    ecritures.value = [...data].sort((e1, e2) => e2.sapeur_id - e1.sapeur_id);
+  }
 };
 </script>
 
@@ -180,7 +181,13 @@ const imputer = () => {
       <button type="button" class="btn btn-secondary" @click="closeModal()">
         {{ phase === 1 ? "Annuler" : "Fermer" }}
       </button>
-      <button v-if="phase === 1" type="button" class="btn btn-primary" @click="imputer()">
+      <button
+        v-if="phase === 1"
+        type="button"
+        class="btn btn-primary"
+        :disabled="isSubmitting"
+        @click="imputer()"
+      >
         Imputer
       </button>
     </div>

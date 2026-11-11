@@ -2,7 +2,7 @@
 import { useControleMedicalTypeStore } from "../../stores/controleMedical/ControleMedicalType.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const controleMedicalTypeStore = useControleMedicalTypeStore();
 await controleMedicalTypeStore.fetchTypes();
@@ -19,8 +19,8 @@ const listeType = computed(() =>
   controleMedicalTypeStore.liste.slice().sort((a, b) => a.tri - b.tri),
 );
 
-const { showModal } = useModalStore();
-const awn = useNotification();
+const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const ajoutType = () => showModal({ component: "ModalControleMedicalType", data: {} });
 const updateType = (type) =>
   showModal({
@@ -28,11 +28,19 @@ const updateType = (type) =>
     data: { ...type },
   });
 const deleteType = async (type) => {
-  try {
-    await controleMedicalTypeStore.removeType(type.id);
-  } catch (res) {
-    awn.alert(res.message || "Erreur lors de la suppression");
+  if (
+    !(await confirm(
+      "Voulez-vous vraiment supprimer ce type de contrôle médical ?",
+      "Attention, la suppression d'un type de contrôle médical est irréversible !",
+    ))
+  ) {
+    return;
   }
+  await submit(
+    () => controleMedicalTypeStore.removeType(type.id),
+    "Erreur lors de la suppression",
+    "Type de contrôle médical supprimé.",
+  );
 };
 </script>
 
@@ -60,6 +68,7 @@ const deleteType = async (type) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteType(rowData)"

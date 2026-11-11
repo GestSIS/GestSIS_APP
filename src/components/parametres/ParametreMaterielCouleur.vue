@@ -4,7 +4,6 @@ import { useCouleurStore } from "../../stores/materiel/Couleur";
 import TagCouleur from "../materiel/TagCouleur.vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const couleurStore = useCouleurStore();
 
@@ -15,7 +14,6 @@ const couleurs = computed(() =>
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const ajout = () => {
   showModal({ component: "ModalCouleur", data: {} });
@@ -35,13 +33,11 @@ const remove = async (elem) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => couleurStore.removeCouleur(elem.id),
     "Impossible de supprimer cette couleur",
+    "Couleur supprimée.",
   );
-  if (ok) {
-    awn.success("Couleur supprimée.");
-  }
 };
 
 const fields = [

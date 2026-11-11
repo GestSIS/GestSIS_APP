@@ -10,7 +10,6 @@ import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useTravailStore } from "../../stores/travail/Travail.js";
 import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 import { EXERCICE_STATUT } from "../../tools/exercice.js";
 import { INTERVENTION_STATUT } from "../../tools/intervention.js";
 
@@ -129,7 +128,6 @@ const peutAnnulerExamen = (travail) =>
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const ajouterTravail = () =>
   showModal({
@@ -151,13 +149,11 @@ const annulerExamen = async (travail) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => travailStore.cancelReviewTravail(travail.id),
     "Erreur lors de l'annulation de l'examen",
+    "Examen annulé.",
   );
-  if (ok) {
-    awn.success("Examen annulé.");
-  }
 };
 const supprimerTravail = async (travail) => {
   if (
@@ -168,13 +164,11 @@ const supprimerTravail = async (travail) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => travailStore.removeTravail(travail.id),
     "Erreur lors de la suppression",
+    "Travail supprimé.",
   );
-  if (ok) {
-    awn.success("Travail supprimé.");
-  }
 };
 
 const fields = [

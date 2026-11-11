@@ -1,4 +1,5 @@
 <script setup>
+import { useDownload } from "../composables/useDownload.js";
 import { computed, onUnmounted, ref } from "vue";
 import { useNotification } from "../composables/useNotification.js";
 import { useAuthStore } from "../stores/auth/Auth.js";
@@ -28,6 +29,7 @@ const validated = computed(() => authStore.validated);
 const availableSisListe = computed(() => authStore.availableSisListe);
 
 const awn = useNotification();
+const { download } = useDownload();
 
 if (!authStore.organisation.activeId && availableSisListe.value.length > 0) {
   await authStore.selectOrganisation(availableSisListe.value[0]);
@@ -207,22 +209,26 @@ const removeExcuse = async (rowData) => {
   ) {
     return;
   }
-  await submit(
+  const { ok } = await submit(
     () => infosStore.removeMonExcuse(rowData, rowData.sis_key),
     "Impossible de supprimer l'excuse",
+    "Excuse supprimée avec succès",
   );
   if (ok) {
-    awn.success("Excuse supprimée avec succès");
     fetchProchainesConvocations();
   }
 };
 
 const downloadJustificatif = (rowData) => {
-  ExerciceService.downloadMonExcuseJustificatif(
-    rowData.exercice_id,
-    exportFileName(["justificatif", rowData.designation, rowData.date], "pdf"),
-    rowData.sis_key,
-  ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
+  download(
+    () =>
+      ExerciceService.downloadMonExcuseJustificatif(
+        rowData.exercice_id,
+        exportFileName(["justificatif", rowData.designation, rowData.date], "pdf"),
+        rowData.sis_key,
+      ),
+    "Erreur lors du chargement du justificatif",
+  );
 };
 
 const prochainesConvocationsFields = computed(() =>

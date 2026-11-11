@@ -2,7 +2,7 @@
 import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const ecritureCategorieStore = useEcritureCategorieStore();
 await ecritureCategorieStore.fetchEcritureCategories();
@@ -16,8 +16,8 @@ const listeCategorie = computed(() =>
   ecritureCategorieStore.liste.slice().sort((a, b) => a.tri - b.tri),
 );
 
-const { showModal } = useModalStore();
-const awn = useNotification();
+const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 
 const ajoutCategorie = () => showModal({ component: "ModalEcritureCategorie", data: {} });
 
@@ -27,10 +27,21 @@ const updateCategorie = (categorie) =>
     data: { ...categorie },
   });
 
-const deleteCategorie = (compteId) =>
-  ecritureCategorieStore
-    .removeEcritureCategorie(compteId)
-    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+const deleteCategorie = async (compteId) => {
+  if (
+    !(await confirm(
+      "Voulez-vous vraiment supprimer cette catégorie ?",
+      "Attention, la suppression d'une catégorie est irréversible !",
+    ))
+  ) {
+    return;
+  }
+  await submit(
+    () => ecritureCategorieStore.removeEcritureCategorie(compteId),
+    "Erreur lors de la suppression",
+    "Catégorie supprimée.",
+  );
+};
 </script>
 
 <template>
@@ -57,6 +68,7 @@ const deleteCategorie = (compteId) =>
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteCategorie(rowData.id)"

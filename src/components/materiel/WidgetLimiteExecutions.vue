@@ -6,7 +6,6 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
@@ -47,7 +46,6 @@ const colonnesArticles = [
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 // L'article est listé sous un contrôle donné : on présélectionne ce contrôle
 // plutôt que de laisser le modal retomber sur le premier applicable au type.
 const controler = (article, controleId) =>
@@ -69,9 +67,9 @@ const supprimer = async (article) => {
   const { ok } = await submit(
     () => ArticleService.supprimerArticles([article.id]),
     "Une erreur est survenue",
+    "Article supprimé.",
   );
   if (ok) {
-    awn.success("Article supprimé.");
     loadArticles();
   }
 };

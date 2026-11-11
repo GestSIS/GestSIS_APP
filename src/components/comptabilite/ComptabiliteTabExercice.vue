@@ -14,7 +14,6 @@ import ImputationService from "/src/services/ImputationService.js";
 import permissions from "../../composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const localiteStore = useLocaliteStore();
 const sapeurStore = useSapeurStore();
@@ -78,7 +77,6 @@ const filteredCategories = computed(() => {
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const genererDecompteExercice = (exerciceId, designation) =>
   showModal({
@@ -108,9 +106,9 @@ const annulerImputer = async (exerciceId) => {
   const { ok, data } = await submit(
     () => imputationStore.annulerImputationExercice(exerciceId),
     "Erreur impossible d'annuler l'imputation",
+    "Imputation annulée.",
   );
   if (ok) {
-    awn.success("Imputation annulée.");
     const { statut } = data;
     exercices.value = [
       ...exercices.value.filter((e) => e.id != exerciceId),

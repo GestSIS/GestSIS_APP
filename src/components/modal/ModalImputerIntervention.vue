@@ -7,7 +7,7 @@ import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import MultiStep from "../base/MultiStep.vue";
-import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -31,7 +31,6 @@ const phase = ref(1);
 const activeIndemnite = ref(null);
 const ecritures = ref([]);
 const successMessageVisibility = ref(true);
-const submitting = ref(false);
 
 const sapeurs = computed(() => sapeurStore.liste);
 const indemnitesTypes = computed(() => imputationStore.fraisIndemnites.interventions);
@@ -42,7 +41,7 @@ const activeIndemniteHasFonction = computed(() => {
   return activeIndemnite.value !== null && activeIndemnite.value.par_fonction;
 });
 
-const awn = useNotification();
+const { isSubmitting, submit } = useSubmit();
 const { closeModal: close } = useModalStore();
 const closeModal = () => {
   callback().then(() => close());
@@ -50,25 +49,23 @@ const closeModal = () => {
 const selectIndemnite = (indemnite) => {
   activeIndemnite.value = indemnite;
 };
-const imputer = () => {
-  if (activeIndemnite.value === null || submitting.value) {
+const imputer = async () => {
+  if (activeIndemnite.value === null) {
     return;
   }
 
-  submitting.value = true;
-  imputationStore
-    .imputerIntervention({
-      intervention_id: data.id,
-      indemnite_intervention_type_id: activeIndemnite.value.id,
-    })
-    .then((data) => {
-      phase.value = 2;
-      ecritures.value = data.ecritures;
-    })
-    .catch((err) => awn.alert(err?.message ?? "Impossible d'effectuer cette action"))
-    .finally(() => {
-      submitting.value = false;
-    });
+  const { ok, data: res } = await submit(
+    () =>
+      imputationStore.imputerIntervention({
+        intervention_id: data.id,
+        indemnite_intervention_type_id: activeIndemnite.value.id,
+      }),
+    "Impossible d'effectuer cette action",
+  );
+  if (ok) {
+    phase.value = 2;
+    ecritures.value = res.ecritures;
+  }
 };
 const formatCompte = (compte) => {
   if (!compte) return "";
@@ -207,11 +204,11 @@ const ecritureFields = [
         v-if="phase === 1"
         type="button"
         class="btn btn-primary"
-        :disabled="activeIndemnite === null || submitting"
+        :disabled="activeIndemnite === null || isSubmitting"
         @click="imputer()"
       >
         <span
-          v-if="submitting"
+          v-if="isSubmitting"
           class="spinner-border spinner-border-sm me-1"
           role="status"
           aria-hidden="true"

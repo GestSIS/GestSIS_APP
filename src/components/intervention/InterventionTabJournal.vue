@@ -6,7 +6,6 @@ import { useHasPermission } from "../../composables/useHasPermission.js";
 import { computed, ref, watchEffect } from "vue";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const sapeurStore = useSapeurStore();
 const interventionStore = useInterventionStore();
@@ -149,7 +148,6 @@ const events = computed(() => {
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const supprimerAppel = async (id) => {
   if (
@@ -160,13 +158,11 @@ const supprimerAppel = async (id) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => interventionStore.removeInterventionAppel(id),
     "Erreur lors de la suppression de l'appel.",
+    "Appel supprimé.",
   );
-  if (ok) {
-    awn.success("Appel supprimé.");
-  }
 };
 
 const newAppel = () => {
@@ -211,13 +207,11 @@ const supprimerJalon = async (id) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => interventionStore.removeInterventionJalon(id),
     "Erreur lors de la suppression du jalon.",
+    "Jalon supprimé.",
   );
-  if (ok) {
-    awn.success("Jalon supprimé.");
-  }
 };
 
 const newJalon = () => {
@@ -263,13 +257,11 @@ const supprimerMission = async (id) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => interventionStore.removeInterventionMission(id),
     "Erreur lors de la suppression de la mission.",
+    "Mission supprimée.",
   );
-  if (ok) {
-    awn.success("Mission supprimée.");
-  }
 };
 
 const newMission = () => {

@@ -81,10 +81,11 @@ const { download } = useDownload();
 const awn = useNotification();
 const convoquer = async () => {
   const convocationParamStore = useConvocationParamStore();
-  try {
-    await convocationParamStore.fetchParams();
-  } catch (err) {
-    awn.alert(err?.message || "Erreur lors du chargement des paramètres de convocation.");
+  const { ok } = await submit(
+    () => convocationParamStore.fetchParams(),
+    "Erreur lors du chargement des paramètres de convocation.",
+  );
+  if (!ok) {
     return;
   }
   showModal({ component: "ModalConvoquer", size: 1 });
@@ -101,30 +102,38 @@ const sms = ({ id }) => {
     data: exercice,
   });
 };
-const email = ({ id }) =>
-  ExerciceService.getSapeurs(id)
-    .then((presences) => {
-      const link = document.createElement("a");
-      link.href =
-        "mailto:?bcc=" +
-        presences
-          .map((p) => sapeurs.value.find((s) => s.id == p.sapeur_id)?.email)
-          .filter((s) => s)
-          .join(", ");
-      link.click();
-    })
-    .catch((err) => awn.alert(err?.message || "Erreur lors de la récupération des convocations."));
+const email = async ({ id }) => {
+  const { ok, data: presences } = await submit(
+    () => ExerciceService.getSapeurs(id),
+    "Erreur lors de la récupération des convocations.",
+  );
+  if (!ok) {
+    return;
+  }
+  const link = document.createElement("a");
+  link.href =
+    "mailto:?bcc=" +
+    presences
+      .map((p) => sapeurs.value.find((s) => s.id == p.sapeur_id)?.email)
+      .filter((s) => s)
+      .join(", ");
+  link.click();
+};
 
-const validerExercice = (id) =>
-  exerciceStore
-    .validerExercice(id)
-    .then(() => awn.success("Exercice validé."))
-    .catch((err) => awn.alert(err?.message || "Erreur lors de la validation de l'exercice."));
-const annulerExercice = (id) =>
-  exerciceStore
-    .annulerExercice(id)
-    .then(() => awn.success("Exercice annulé."))
-    .catch((err) => awn.alert(err?.message || "Erreur lors de l'annulation de l'exercice."));
+const validerExercice = async (id) => {
+  await submit(
+    () => exerciceStore.validerExercice(id),
+    "Erreur lors de la validation de l'exercice.",
+    "Exercice validé.",
+  );
+};
+const annulerExercice = async (id) => {
+  await submit(
+    () => exerciceStore.annulerExercice(id),
+    "Erreur lors de l'annulation de l'exercice.",
+    "Exercice annulé.",
+  );
+};
 // Symétrique de "valider" : un exercice validé (pas encore imputé) repasse en saisie
 const devaliderExercice = async (id) => {
   if (
@@ -138,16 +147,16 @@ const devaliderExercice = async (id) => {
   await submit(
     () => exerciceStore.devaliderExercice(id),
     "Erreur lors de l'annulation de la validation.",
+    "Validation annulée.",
   );
-  if (ok) {
-    awn.success("Validation annulée.");
-  }
 };
-const reactiverExercice = (id) =>
-  exerciceStore
-    .reactiverExercice(id)
-    .then(() => awn.success("Exercice réactivé."))
-    .catch((err) => awn.alert(err?.message || "Erreur lors de la réactivation de l'exercice."));
+const reactiverExercice = async (id) => {
+  await submit(
+    () => exerciceStore.reactiverExercice(id),
+    "Erreur lors de la réactivation de l'exercice.",
+    "Exercice réactivé.",
+  );
+};
 
 const removeExercice = async (id) => {
   if (
@@ -158,13 +167,11 @@ const removeExercice = async (id) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => exerciceStore.removeExercice(id),
     "Erreur lors de la suppression de l'exercice.",
+    "Exercice supprimé.",
   );
-  if (ok) {
-    awn.success("Exercice supprimé.");
-  }
 };
 
 const importExerciceComptable = () =>
@@ -286,7 +293,7 @@ const fields = [
               </div>
               <div class="col-6">
                 <button
-                  :disabled="!selectedId"
+                  :disabled="isSubmitting || !selectedId"
                   class="btn btn-outline-primary col-12"
                   @click="email({ id: selectedId })"
                 >
@@ -311,7 +318,7 @@ const fields = [
           <div class="card-body d-grid gap-2">
             <button
               class="btn btn-outline-primary"
-              :disabled="!exercices.length"
+              :disabled="isSubmitting || !exercices.length"
               @click="convoquer"
             >
               Convocations
@@ -414,6 +421,7 @@ const fields = [
                 </router-link>
                 <button
                   v-if="hasValidationPermission && rowData.statut == EXERCICE_STATUT.A_VALIDER"
+                  :disabled="isSubmitting"
                   title="valider"
                   class="btn btn-outline-success border-0"
                   @click="validerExercice(rowData.id)"
@@ -435,6 +443,7 @@ const fields = [
                     rowData.statut < EXERCICE_STATUT.VALIDE &&
                     rowData.statut > EXERCICE_STATUT.ANNULE
                   "
+                  :disabled="isSubmitting"
                   title="annuler"
                   class="btn btn-outline-warning border-0"
                   @click="annulerExercice(rowData.id)"
@@ -443,6 +452,7 @@ const fields = [
                 </button>
                 <button
                   v-if="hasValidationPermission && rowData.statut == EXERCICE_STATUT.ANNULE"
+                  :disabled="isSubmitting"
                   title="réactiver"
                   class="btn btn-outline-success border-0"
                   @click="reactiverExercice(rowData.id)"

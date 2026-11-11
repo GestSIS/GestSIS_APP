@@ -18,7 +18,6 @@ import {
   lienTravail,
 } from "../tools/travail.js";
 import { useSubmit } from "../composables/useSubmit.js";
-import { useNotification } from "../composables/useNotification.js";
 
 const authStore = useAuthStore();
 const sapeurStore = useSapeurStore();
@@ -95,7 +94,6 @@ const peutSupprimer = computed(
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 const select = (row) => (selectedId.value = row?.id);
 
 const createTravail = () => showModal({ component: "ModalTravail" });
@@ -113,13 +111,11 @@ const cancelReviewTravail = async (travail) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => travailStore.cancelReviewTravail(travail?.id),
     "Erreur lors de l'annulation de l'examen.",
+    "Examen annulé.",
   );
-  if (ok) {
-    awn.success("Examen annulé.");
-  }
 };
 
 const supprimerTravail = async (travail) => {
@@ -131,13 +127,11 @@ const supprimerTravail = async (travail) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => travailStore.removeTravail(travail?.id),
     "Erreur lors de la suppression du travail.",
+    "Travail supprimé.",
   );
-  if (ok) {
-    awn.success("Travail supprimé.");
-  }
 };
 
 const onRowClass = (dataItem, isSelected) => {

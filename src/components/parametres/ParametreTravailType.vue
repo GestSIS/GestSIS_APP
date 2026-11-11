@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { ecritureTypeLabel } from "../../tools/comptabilite.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
@@ -62,8 +62,8 @@ const computedData = computed(() => {
   }));
 });
 
-const { showModal } = useModalStore();
-const awn = useNotification();
+const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 
 const ajoutTravailType = () =>
   showModal({
@@ -79,10 +79,21 @@ const updateTravailType = (travailType) =>
     data: { ...travailType },
   });
 
-const deleteTravailType = (travailType) =>
-  travailTypeStore
-    .removeTravailType(travailType.id)
-    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+const deleteTravailType = async (travailType) => {
+  if (
+    !(await confirm(
+      "Voulez-vous vraiment supprimer ce type de travail ?",
+      "Attention, la suppression d'un type de travail est irréversible !",
+    ))
+  ) {
+    return;
+  }
+  await submit(
+    () => travailTypeStore.removeTravailType(travailType.id),
+    "Erreur lors de la suppression",
+    "Type de travail supprimé.",
+  );
+};
 </script>
 
 <template>
@@ -113,6 +124,7 @@ const deleteTravailType = (travailType) =>
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteTravailType(rowData)"

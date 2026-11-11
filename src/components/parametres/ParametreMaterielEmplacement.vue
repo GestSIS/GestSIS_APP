@@ -6,7 +6,6 @@ import TagCouleur from "../materiel/TagCouleur.vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const couleurStore = useCouleurStore();
 const emplacementStore = useEmplacementStore();
@@ -31,7 +30,6 @@ const computedData = computed(() => {
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const ajout = () => showModal({ component: "ModalChoixTypeEmplacement", data: {} });
 const update = (elem) =>
@@ -51,13 +49,11 @@ const remove = async (elem) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => emplacementStore.removeEmplacement(elem.id),
     "Erreur lors de la suppression",
+    "Emplacement supprimé.",
   );
-  if (ok) {
-    awn.success("Emplacement supprimé.");
-  }
 };
 
 const fields = [

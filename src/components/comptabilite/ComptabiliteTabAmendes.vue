@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
 import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
@@ -52,22 +53,20 @@ const filteredSapeurs = computed(() => {
 });
 
 const awn = useNotification();
-const generer = () => {
-  imputationStore
-    .genererAmendesAnnuels(activeExerciceComptableId.value)
-    .then((amendes) => {
-      if (amendes?.length == 0) {
-        awn.success("Aucune amende requise pour cet exercice comptable");
-      } else {
-        awn.success("Amendes générées avec succes");
-      }
-    })
-    .catch((err) =>
-      awn.alert(
-        err?.message ??
-          "Une erreur est survenue durant le génération des indemnités/frais annuelles",
-      ),
+const { isSubmitting, submit } = useSubmit();
+const generer = async () => {
+  const { ok, data: amendes } = await submit(
+    () => imputationStore.genererAmendesAnnuels(activeExerciceComptableId.value),
+    "Une erreur est survenue durant la génération des amendes",
+  );
+  if (ok) {
+    // Message selon le résultat : pas de 3e argument à submit()
+    awn.success(
+      amendes?.length == 0
+        ? "Aucune amende requise pour cet exercice comptable"
+        : "Amendes générées avec succès",
     );
+  }
 };
 const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {
@@ -110,7 +109,9 @@ const fields = [
             <h3 class="card-title">Actions</h3>
           </div>
           <div class="card-body d-grid gap-1">
-            <button class="btn btn-primary" @click="generer">Générer les amendes</button>
+            <button class="btn btn-primary" :disabled="isSubmitting" @click="generer">
+              Générer les amendes
+            </button>
           </div>
         </div>
       </div>

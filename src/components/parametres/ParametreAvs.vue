@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useAvsParamStore } from "../../stores/comptabilite/AvsParam.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useEcritureCategorieStore } from "../../stores/comptabilite/EcritureCategorie.js";
@@ -29,13 +28,12 @@ const params = ref({
 
 params.value = avsParams.value ? avsParams.value : params.value;
 
-const awn = useNotification();
-
 const save = async () => {
-  const { ok, data } = await submit(() => avsParamStore.updateAvsParams(params.value));
-  if (ok) {
-    awn.success(data?.message || "Modifications enregistrées");
-  }
+  await submit(
+    () => avsParamStore.updateAvsParams(params.value),
+    "Erreur lors de l'enregistrement",
+    "Modifications enregistrées",
+  );
 };
 </script>
 

@@ -2,9 +2,9 @@
 import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import AdminService from "../../services/AdminService";
-import { useNotification } from "../../composables/useNotification.js";
 import { useModalStore } from "../../stores/common/Modal";
 import { useAuthStore } from "../../stores/auth/Auth";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -43,13 +43,17 @@ const editOrganisation = () =>
     data: organisation.value,
     callback: loadOrganisation,
   });
-const awn = useNotification();
+const { isSubmitting, submit } = useSubmit();
 
-const impersonateUser = (user) =>
-  authStore
-    .impersonate(user.user_id)
-    .then(() => router.push({ name: "accueil" }))
-    .catch((e) => awn.alert(e?.message || "Erreur lors de l'usurpation"));
+const impersonateUser = async (user) => {
+  const { ok } = await submit(
+    () => authStore.impersonate(user.user_id),
+    "Erreur lors de l'usurpation",
+  );
+  if (ok) {
+    router.push({ name: "accueil" });
+  }
+};
 
 const computedDataUsers = computed(() => {
   const usersById = {};
@@ -206,7 +210,7 @@ const fields = [
               <button
                 type="button"
                 class="btn btn-outline-primary border-0"
-                :disabled="rowData.user_id === authStore.user?.id"
+                :disabled="isSubmitting || rowData.user_id === authStore.user?.id"
                 :title="
                   rowData.user_id === authStore.user?.id
                     ? 'Vous ne pouvez pas usurper votre propre identité'

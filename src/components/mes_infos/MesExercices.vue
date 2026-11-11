@@ -1,4 +1,5 @@
 <script setup>
+import { useDownload } from "../../composables/useDownload.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
@@ -67,10 +68,12 @@ const exercices = computed(() =>
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
 const awn = useNotification();
+const { download } = useDownload();
 
-const download = () => {
+const exportIcs = () => {
   if (exercices.value.length <= 0) {
-    awn.value.alert("Aucun exercice à exporter");
+    awn.alert("Aucun exercice à exporter");
+    return;
   }
   exercicesToIcs(exercices.value, sisName.value, sisKey.value, annee.value);
 };
@@ -92,17 +95,22 @@ const removeExcuse = async (exercice) => {
   ) {
     return;
   }
-  await submit(() => infosStore.removeMonExcuse(exercice), "Impossible de supprimer l'excuse");
-  if (ok) {
-    awn.success("Excuse supprimée avec succès");
-  }
+  await submit(
+    () => infosStore.removeMonExcuse(exercice),
+    "Impossible de supprimer l'excuse",
+    "Excuse supprimée avec succès",
+  );
 };
 
 const downloadJustificatif = (exercice) => {
-  ExerciceService.downloadMonExcuseJustificatif(
-    exercice.exercice_id,
-    exportFileName(["justificatif", exercice.designation, exercice.date], "pdf"),
-  ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
+  download(
+    () =>
+      ExerciceService.downloadMonExcuseJustificatif(
+        exercice.exercice_id,
+        exportFileName(["justificatif", exercice.designation, exercice.date], "pdf"),
+      ),
+    "Erreur lors du chargement du justificatif",
+  );
 };
 const onRowClass = (dataItem) => (dataItem.statut == EXERCICE_STATUT.ANNULE ? "table-danger" : "");
 
@@ -131,7 +139,7 @@ const fields = [
       <button v-if="excuseParams?.actif" type="button" class="btn btn-primary" @click="addExcuse">
         S'excuser
       </button>
-      <button type="button" class="btn btn-primary" @click="download">
+      <button type="button" class="btn btn-primary" @click="exportIcs">
         Télécharger fichier <em>iCalendrier</em>
       </button>
     </div>

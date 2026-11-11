@@ -1,6 +1,7 @@
 <script setup>
-import { computed, nextTick, reactive, ref, useTemplateRef, watch } from "vue";
+import { computed, nextTick, reactive, useTemplateRef, watch } from "vue";
 import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
@@ -9,7 +10,8 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useCoursStore } from "../../stores/sapeur/Cours.js";
 import { useCoursSapeurStore } from "../../stores/sapeur/CoursSapeur.js";
 
-const errors = ref({});
+// `errors` vient de useSubmit (erreurs de champs de l'API), aussi remis à zéro localement.
+const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   precedent_id: 0,
   sapeurs: [{ sapeur_id: null }],
@@ -89,7 +91,7 @@ const dateChange = () => {
   }
 };
 
-const save = () => {
+const save = async () => {
   errors.value = {};
 
   const sapeurIds = form.sapeurs.map((s) => s.sapeur_id);
@@ -114,19 +116,16 @@ const save = () => {
   });
   saveData.sapeur_ids = sapeurIds;
 
-  coursSapeurStore
-    .addCoursMultiple(saveData)
-    .then(closeModal)
-    .catch((err) => {
-      errors.value = err.errors ?? {};
-      // Erreurs par sapeur (ex. fonction déjà attribuée) : détail affiché sous chaque ligne
-      const erreurSapeur = Object.keys(errors.value).some((key) => key.startsWith("sapeur_ids."));
-      awn.alert(
-        erreurSapeur
-          ? "Aucun cours n'a été ajouté, certains sapeurs posent problème (voir le détail)."
-          : err?.message || "Erreur lors de l'enregistrement",
-      );
-    });
+  const { ok } = await submit(() => coursSapeurStore.addCoursMultiple(saveData));
+  if (ok) {
+    closeModal();
+    return;
+  }
+  // Erreurs par sapeur (ex. fonction déjà attribuée) : détail affiché sous chaque ligne. useSubmit
+  // n'affiche pas de notification quand il y a des erreurs de champs, on la donne ici.
+  if (Object.keys(errors.value).some((key) => key.startsWith("sapeur_ids."))) {
+    awn.alert("Aucun cours n'a été ajouté, certains sapeurs posent problème (voir le détail).");
+  }
 };
 </script>
 
@@ -291,7 +290,7 @@ const save = () => {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" @click="closeModal()">Fermer</button>
-      <button type="submit" class="btn btn-primary">Ajouter</button>
+      <button type="submit" class="btn btn-primary" :disabled="isSubmitting">Ajouter</button>
     </div>
   </form>
 </template>

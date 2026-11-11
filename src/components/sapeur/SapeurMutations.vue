@@ -6,7 +6,6 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -30,7 +29,6 @@ const finServiceButtonState = computed(
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const removeMutation = async (mutation) => {
   if (
@@ -41,13 +39,11 @@ const removeMutation = async (mutation) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => sapeurStore.removeMutation(mutation?.id),
     "Erreur lors de la suppression de la mutation.",
+    "Mutation supprimée.",
   );
-  if (ok) {
-    awn.success("Mutation supprimée.");
-  }
 };
 
 const editMutation = (mutation) => showModal({ component: "ModalMutation", data: mutation });

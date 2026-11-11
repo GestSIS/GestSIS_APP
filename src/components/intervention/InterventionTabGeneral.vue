@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
@@ -85,7 +84,6 @@ const dateFinMax = computed(() => {
   return activeExerciceComptable.value?.fin;
 });
 
-const awn = useNotification();
 const save = async () => {
   if (newMode.value) {
     const { ok, data } = await submit(() => interventionStore.createIntervention(form.value));
@@ -93,10 +91,11 @@ const save = async () => {
       router.push("/interventions/" + data.id);
     }
   } else {
-    const { ok, data } = await submit(() => interventionStore.saveActiveIntervention(form.value));
-    if (ok) {
-      awn.success(data?.message || "Modifications enregistrées");
-    }
+    await submit(
+      () => interventionStore.saveActiveIntervention(form.value),
+      "Erreur lors de l'enregistrement",
+      "Modifications enregistrées",
+    );
   }
 };
 

@@ -5,7 +5,6 @@ import { useGroupeStore } from "../../stores/groupe/Groupe.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
-import { useNotification } from "../../composables/useNotification.js";
 import { useSubmit } from "../../composables/useSubmit.js";
 import { EXERCICE_STATUT } from "../../tools/exercice.js";
 
@@ -128,7 +127,6 @@ watch(sapFonctions, (l) => selectionnerParDefaut(l, selectedFonctions), {
 });
 
 const { closeModal } = useModalStore();
-const awn = useNotification();
 
 const save = async () => {
   const mapToId = (e) => e.id;
@@ -168,11 +166,9 @@ const save = async () => {
   const { ok } = await submit(
     () => Promise.all(actions.map((action) => action())),
     "Une erreur est survenue lors du traitement",
+    actions.length ? "Traitement effectué" : null,
   );
   if (ok) {
-    if (actions.length) {
-      awn.success("Traitement effectué");
-    }
     closeModal();
   }
 };

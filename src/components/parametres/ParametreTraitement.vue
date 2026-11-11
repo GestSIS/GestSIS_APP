@@ -2,7 +2,7 @@
 import { useInterventionTraitementStore } from "../../stores/intervention/InterventionTraitement.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const traitementStore = useInterventionTraitementStore();
 await traitementStore.fetchTraitements();
@@ -15,8 +15,8 @@ const fields = [
 
 const listeTraitement = computed(() => traitementStore.liste.slice().sort((a, b) => a.tri - b.tri));
 
-const { showModal } = useModalStore();
-const awn = useNotification();
+const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 
 const ajoutTraitement = () => showModal({ component: "ModalInterventionTraitement", data: {} });
 
@@ -26,10 +26,21 @@ const updateTraitement = (traitement) =>
     data: { ...traitement },
   });
 
-const deleteTraitement = (traitement) =>
-  traitementStore
-    .removeTraitement(traitement.id)
-    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+const deleteTraitement = async (traitement) => {
+  if (
+    !(await confirm(
+      "Voulez-vous vraiment supprimer ce traitement ?",
+      "Attention, la suppression d'un traitement est irréversible !",
+    ))
+  ) {
+    return;
+  }
+  await submit(
+    () => traitementStore.removeTraitement(traitement.id),
+    "Erreur lors de la suppression",
+    "Traitement supprimé.",
+  );
+};
 </script>
 
 <template>
@@ -56,6 +67,7 @@ const deleteTraitement = (traitement) =>
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteTraitement(rowData)"

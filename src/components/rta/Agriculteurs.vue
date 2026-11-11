@@ -77,9 +77,9 @@ const remove = async (agriculteur) => {
   const { ok } = await submit(
     () => RtaService.deleteAgriculteur(agriculteur.id),
     "Erreur lors de la suppression de l'agriculteur.",
+    "Agriculteur supprimé.",
   );
   if (ok) {
-    awn.success("Agriculteur supprimé.");
     loadData();
   }
 };

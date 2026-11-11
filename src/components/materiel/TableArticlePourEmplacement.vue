@@ -9,7 +9,6 @@ import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const { loading, articles, hideDownload, emplacement, refresh } = defineProps({
   loading: {
@@ -65,7 +64,6 @@ const piecesColonnes = computed(() => [
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 const infoMateriel = (materiel) =>
   //TODO: Gérer le cas affichageIndividuel
   showModal({
@@ -100,9 +98,9 @@ const supprimer = async (article) => {
   const { ok } = await submit(
     () => ArticleService.supprimerArticles([article.id]),
     "Une erreur est survenue",
+    "Article supprimé.",
   );
   if (ok) {
-    awn.success("Article supprimé.");
     refresh();
   }
 };

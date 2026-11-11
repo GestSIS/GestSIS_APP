@@ -3,7 +3,6 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
 import { computed } from "vue";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const gradeStore = useGradeStore();
 await gradeStore.fetchGrades();
@@ -31,7 +30,6 @@ const listeGrade = computed(() =>
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 const ajoutGrade = () => showModal({ component: "ModalGrade", data: {} });
 const updateGrade = (grade) => showModal({ component: "ModalGrade", data: { ...grade } });
 const deleteGrade = async (grade) => {
@@ -43,13 +41,11 @@ const deleteGrade = async (grade) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => gradeStore.removeGrade(grade.id),
     "Erreur lors de la suppression",
+    "Grade supprimé.",
   );
-  if (ok) {
-    awn.success("Grade supprimé.");
-  }
 };
 </script>
 

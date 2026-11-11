@@ -6,7 +6,6 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -33,7 +32,6 @@ const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const newFonction = () => {
   showModal("ModalSapeurFonction");
@@ -50,13 +48,11 @@ const supprimerFonction = async (fonction) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => sapeurStore.removeSapeurFonction(fonction?.id),
     "Erreur lors de la suppression de la fonction.",
+    "Fonction supprimée.",
   );
-  if (ok) {
-    awn.success("Fonction supprimée.");
-  }
 };
 
 const fields = [

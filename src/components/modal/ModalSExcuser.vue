@@ -110,9 +110,9 @@ const validate = async () => {
   const { ok } = await submit(
     () => infosStore.addMonExcuse(activeExcuse.value, sisKey.value),
     "Erreur lors de la création de l'excuse",
+    "Excuse enregistrée",
   );
   if (ok) {
-    awn.success("Excuse enregistrée");
     callback();
     closeModal();
   }

@@ -1,6 +1,5 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
@@ -62,7 +61,6 @@ const gradeActuel = computed(
 );
 
 const { showModal, confirm } = useModalStore();
-const awn = useNotification();
 
 const saveSapeur = async () => {
   let fields = [
@@ -85,40 +83,34 @@ const saveSapeur = async () => {
       delete saveSapeur[key];
     }
   }
-  const { ok, data } = await submit(
+  await submit(
     () => sapeurStore.saveActiveSapeur(saveSapeur),
     "Erreur lors de l'enregistrement des données",
+    "Modifications sauvegardées",
   );
-  if (ok) {
-    awn.success(data?.message || "Modifications sauvegardées");
-  }
 };
 const saveNonSapeurStatut = async () => {
   let saveSapeur = {
     id: activeSapeur.value.id,
     actif: activeSapeur.value.actif,
   };
-  const { ok, data } = await submit(
+  await submit(
     () => sapeurStore.saveNonSapeurStatut(saveSapeur),
     "Erreur lors de l'enregistrement des données",
+    "Modifications sauvegardées",
   );
-  if (ok) {
-    awn.success(data?.message || "Modifications sauvegardées");
-  }
 };
 const saveSapeurRefPro = () =>
-  sapeurStore
-    .saveActiveSapeur({
-      profession: activeSapeur.value.profession,
-      employeur: activeSapeur.value.employeur,
-      lieu_de_travail: activeSapeur.value.lieu_de_travail,
-    })
-    .then((res) => {
-      awn.success(res.message || "Modifications sauvegardées");
-    })
-    .catch((err) => {
-      awn.alert(err.message || "Erreur lors de l'enregistrement des données");
-    });
+  submit(
+    () =>
+      sapeurStore.saveActiveSapeur({
+        profession: activeSapeur.value.profession,
+        employeur: activeSapeur.value.employeur,
+        lieu_de_travail: activeSapeur.value.lieu_de_travail,
+      }),
+    "Erreur lors de l'enregistrement des données",
+    "Modifications sauvegardées",
+  );
 const supprimerPhoto = async () => {
   if (
     !(await confirm(
@@ -131,9 +123,9 @@ const supprimerPhoto = async () => {
   const { ok } = await submit(
     () => SapeurService.deletePhoto(activeSapeurId.value),
     "Erreur lors de la suppression de la photo.",
+    "Photo supprimée.",
   );
   if (ok) {
-    awn.success("Photo supprimée.");
     photo.value = null;
   }
 };
@@ -344,6 +336,7 @@ const editPhoto = () =>
           <button
             v-if="hasEditPermission"
             class="btn btn-primary"
+            :disabled="isSubmitting"
             @click.prevent="saveSapeurRefPro"
           >
             Enregistrer

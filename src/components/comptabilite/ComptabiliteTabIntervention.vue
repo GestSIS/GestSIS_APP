@@ -16,7 +16,6 @@ import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { INTERVENTION_STATUT, interventionStatut } from "../../tools/intervention.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const sapeurStore = useSapeurStore();
 const uniteStore = useUniteStore();
@@ -84,7 +83,6 @@ const selectedItem = computed(() => interventions.value.find((i) => i.id == sele
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const imputer = (interventionId) =>
   showModal({
@@ -106,9 +104,9 @@ const annulerImputer = async (interventionId) => {
   const { ok } = await submit(
     () => imputationStore.annulerImputationIntervention(interventionId),
     "Erreur impossible d'annuler l'imputation",
+    "Imputation annulée.",
   );
   if (ok) {
-    awn.success("Imputation annulée.");
     init();
   }
 };

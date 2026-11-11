@@ -3,7 +3,6 @@ import { useMissionStore } from "../../stores/intervention/Mission.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const missionStore = useMissionStore();
 await missionStore.fetchMissions();
@@ -17,7 +16,6 @@ const listeMission = computed(() => missionStore.liste.slice().sort((a, b) => a.
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 const ajoutMission = () => showModal({ component: "ModalMission", data: {} });
 const updateMission = (mission) => showModal({ component: "ModalMission", data: { ...mission } });
 const deleteMission = async (mission) => {
@@ -29,13 +27,11 @@ const deleteMission = async (mission) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => missionStore.removeMission(mission.id),
     "Erreur lors de la suppression de la mission.",
+    "Mission supprimée.",
   );
-  if (ok) {
-    awn.success("Mission supprimée.");
-  }
 };
 </script>
 

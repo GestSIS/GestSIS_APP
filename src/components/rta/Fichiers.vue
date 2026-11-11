@@ -4,7 +4,7 @@ import RtaService from "../../services/RtaService.js";
 import { useRtaStore } from "../../stores/rta/Rta.js";
 import PdfViewer from "../pdf/PdfViewer.vue";
 import EditableTree from "../editable_tree/EditableTree.vue";
-import { useNotification } from "../../composables/useNotification.js";
+import { useDownload } from "../../composables/useDownload.js";
 import {
   SelectRoot,
   SelectTrigger,
@@ -19,7 +19,7 @@ import {
 } from "vue3-select-component/primitives";
 
 const rtaStore = useRtaStore();
-const awn = useNotification();
+const { download } = useDownload();
 const loadError = ref(null);
 rtaStore
   .fetchFichiers()
@@ -27,11 +27,11 @@ rtaStore
     (err) => (loadError.value = err?.message ?? "Erreur lors de la récupération des données RTA"),
   );
 
-const download = (fichier) => {
-  RtaService.downloadFichier(fichier.id, fichier.nom).catch((err) =>
-    awn.alert(err?.message ?? "Erreur lors du téléchargement du fichier"),
+const telechargerFichier = (fichier) =>
+  download(
+    () => RtaService.downloadFichier(fichier.id, fichier.nom),
+    "Erreur lors du téléchargement du fichier",
   );
-};
 
 const isPdf = (fichier) => fichier?.nom?.endsWith(".pdf") ?? false;
 
@@ -179,7 +179,7 @@ const selectedFichierId = computed({
                   class="btn btn-sm btn-outline-primary border-0 ms-auto ps-1 pe-1"
                   type="button"
                   aria-label="Télécharger le fichier"
-                  @click.stop="download(node.data)"
+                  @click.stop="telechargerFichier(node.data)"
                 >
                   <font-awesome-icon :icon="['fas', 'file-arrow-down']" />
                 </button>
@@ -200,7 +200,10 @@ const selectedFichierId = computed({
                 .slice(0, 16)
             }}</em>
           </div>
-          <button class="btn btn-sm btn-primary" @click="download(selectedFichier.metadata)">
+          <button
+            class="btn btn-sm btn-primary"
+            @click="telechargerFichier(selectedFichier.metadata)"
+          >
             <font-awesome-icon :icon="['fas', 'download']" />
             Télécharger
           </button>

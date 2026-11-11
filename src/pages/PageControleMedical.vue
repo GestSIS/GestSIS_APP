@@ -1,6 +1,6 @@
 <script setup>
+import { useDownload } from "../composables/useDownload.js";
 import { computed, ref, useTemplateRef, watch } from "vue";
-import { useNotification } from "../composables/useNotification.js";
 import { useRouter } from "vue-router";
 import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
@@ -20,7 +20,7 @@ const controleMedicalStore = useControleMedicalStore();
 const medecinStore = useMedecinStore();
 const controleMedicalTypeStore = useControleMedicalTypeStore();
 const router = useRouter();
-const awn = useNotification();
+const { download } = useDownload();
 const hasEditPermission = useHasPermission(permissions.CONTROLE_MEDICAL.MODIFICATION);
 
 const { id } = defineProps({
@@ -113,17 +113,24 @@ const onFileChange = (event) => {
   file.value = files[0];
 };
 const downloadJustificatif = () => {
-  ControlesMedicauxService.downloadJustificatif(
-    controleMedical.value.id,
-    controleMedical.value.filename,
-  ).catch((err) => awn.alert(err?.message || "Erreur lors du téléchargement du justificatif."));
+  download(
+    () =>
+      ControlesMedicauxService.downloadJustificatif(
+        controleMedical.value.id,
+        controleMedical.value.filename,
+      ),
+    "Erreur lors du téléchargement du justificatif.",
+  );
 };
 const save = async () => {
-  const { ok, data } = await submit(() =>
-    // Ajout d'un nouveau controle-médical, ou sauvegarde des changements
-    modeAjout.value
-      ? controleMedicalStore.createControleMedical()
-      : controleMedicalStore.updateControleMedical(),
+  const { ok, data } = await submit(
+    () =>
+      // Ajout d'un nouveau controle-médical, ou sauvegarde des changements
+      modeAjout.value
+        ? controleMedicalStore.createControleMedical()
+        : controleMedicalStore.updateControleMedical(),
+    "Erreur lors de l'enregistrement",
+    "Modifications enregistrées",
   );
   if (!ok) {
     return;
@@ -131,15 +138,15 @@ const save = async () => {
   if (modeAjout.value) {
     router.push({ name: "controle-medical", params: { id: data.id } });
   }
-  awn.success(data?.message || "Modifications enregistrées");
 };
 const fileComponent = useTemplateRef("file-justificatif");
-const ajoutJustificatif = () => {
+const ajoutJustificatif = async () => {
   if (fileComponent.value.files.length > 0) {
     const file = fileComponent.value.files[0];
-    controleMedicalStore
-      .addJustificatif(file)
-      .catch((err) => awn.alert(err?.message || "Erreur lors de l'ajout du justificatif."));
+    await submit(
+      () => controleMedicalStore.addJustificatif(file),
+      "Erreur lors de l'ajout du justificatif.",
+    );
   }
 };
 const { confirm } = useModalStore();
@@ -152,13 +159,11 @@ const removeJustificatif = async () => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => controleMedicalStore.removeJustificatif(),
     "Erreur lors de la suppression du justificatif.",
+    "Justificatif supprimé.",
   );
-  if (ok) {
-    awn.success("Justificatif supprimé.");
-  }
 };
 
 const validite = (duree) => {
@@ -381,7 +386,7 @@ const validite = (duree) => {
               <button
                 v-if="!controleMedical.filename"
                 class="btn btn-outline-primary"
-                :disabled="!file"
+                :disabled="isSubmitting || !file"
                 @click="ajoutJustificatif"
               >
                 Ajouter

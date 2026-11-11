@@ -9,7 +9,6 @@ import { useUniteStore } from "../../stores/common/Unite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const phaseTypeStore = usePhaseTypeStore();
 const imputationStore = useImputationStore();
@@ -63,7 +62,6 @@ const indemnitesIntervention = computed(() =>
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 const ajoutIndemnite = () =>
   showModal({
     component: "ModalIndemniteIntervention",
@@ -83,13 +81,11 @@ const removeIndemnite = async (indemnite) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => imputationStore.removeIndemniteIntervention(indemnite.id),
     "Erreur lors de la suppression de l'indemnité.",
+    "Indemnité supprimée.",
   );
-  if (ok) {
-    awn.success("Indemnité supprimée.");
-  }
 };
 </script>
 

@@ -64,13 +64,11 @@ const supprimer = async (decompteId) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => decompteStore.removeDecompte(decompteId),
     "Impossible d'effectuer cette action",
+    "Décompte supprimé.",
   );
-  if (ok) {
-    awn.success("Décompte supprimé.");
-  }
 };
 const impressionResumeParSapeur = () => {
   const annee = exercicesComptables.value.find(

@@ -3,7 +3,7 @@ import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useMedecinStore } from "../../stores/controleMedical/Medecin.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { computed } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const localiteStore = useLocaliteStore();
 const medecinStore = useMedecinStore();
@@ -26,16 +26,24 @@ const listeMedecin = computed(() =>
     .sort((a, b) => a.designation?.localeCompare(b.designation)),
 );
 
-const { showModal } = useModalStore();
-const awn = useNotification();
+const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const ajoutMedecin = () => showModal({ component: "ModalMedecin", data: {} });
 const updateMedecin = (medecin) => showModal({ component: "ModalMedecin", data: { ...medecin } });
 const deleteMedecin = async (medecin) => {
-  try {
-    await medecinStore.removeMedecin(medecin.id);
-  } catch (res) {
-    awn.alert(res.message || "Erreur lors de la suppression");
+  if (
+    !(await confirm(
+      "Voulez-vous vraiment supprimer ce médecin ?",
+      "Attention, la suppression d'un médecin est irréversible !",
+    ))
+  ) {
+    return;
   }
+  await submit(
+    () => medecinStore.removeMedecin(medecin.id),
+    "Erreur lors de la suppression",
+    "Médecin supprimé.",
+  );
 };
 </script>
 
@@ -58,6 +66,7 @@ const deleteMedecin = async (medecin) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteMedecin(rowData)"

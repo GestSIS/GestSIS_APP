@@ -8,7 +8,6 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useAbsenceStore } from "../../stores/absence/Absence.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const localiteStore = useLocaliteStore();
 const sapeurStore = useSapeurStore();
@@ -42,7 +41,6 @@ const computedData = computed(() => {
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 const addAbsence = () => showModal({ component: "ModalAbsence" });
 
 const modifierAbsence = (absence) => showModal({ component: "ModalAbsence", data: absence });
@@ -56,13 +54,11 @@ const removeAbsence = async (id) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => absenceStore.removeAbsence(id),
     "Erreur lors de la suppression de l'absence.",
+    "Absence supprimée.",
   );
-  if (ok) {
-    awn.success("Absence supprimée.");
-  }
 };
 
 const onRowClass = (dataItem, isSelected) => {

@@ -3,7 +3,6 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useTelephoneStore } from "../../stores/sapeur/Telephone.js";
 import { computed } from "vue";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const telephoneStore = useTelephoneStore();
 await telephoneStore.fetchTelephones();
@@ -18,7 +17,6 @@ const listeTelephone = computed(() => telephoneStore.liste.slice().sort((a, b) =
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 const ajoutTelephone = () => showModal({ component: "ModalTelephone", data: {} });
 
 const updateTelephone = (telephone) =>
@@ -33,13 +31,11 @@ const deleteTelephone = async (telephone) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => telephoneStore.removeTelephone(telephone.id),
     "Erreur lors de la suppression du contact.",
+    "Contact supprimé.",
   );
-  if (ok) {
-    awn.success("Contact supprimé.");
-  }
 };
 </script>
 

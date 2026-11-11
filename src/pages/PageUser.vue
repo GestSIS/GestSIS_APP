@@ -43,13 +43,14 @@ const utiliserJeton = async () => {
   if (!jeton.value) {
     awn.alert("Jeton invalide");
   } else {
-    authStore
-      .useToken(jeton.value)
-      .then((message) => {
-        awn.success(message || "Jeton enregistré avec succès");
-        jeton.value = "";
-      })
-      .catch((e) => awn.alert(e?.message || "Jeton déjà utilisé ou invalide."));
+    const { ok } = await submit(
+      () => authStore.useToken(jeton.value),
+      "Jeton déjà utilisé ou invalide.",
+      "Jeton enregistré avec succès",
+    );
+    if (ok) {
+      jeton.value = "";
+    }
   }
 };
 
@@ -97,13 +98,11 @@ const deleteApiToken = async (id) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => authStore.deleteApiToken(id),
     "Erreur lors de la suppression du jeton d'API",
+    "Jeton d'API supprimé",
   );
-  if (ok) {
-    awn.success("Jeton d'API supprimé");
-  }
 };
 
 const revocationReasons = {
@@ -249,9 +248,9 @@ const deleteSession = async (session) => {
   const { ok } = await submit(
     () => authStore.deleteSession(session.id),
     "Erreur lors de la déconnexion",
+    "Session déconnectée",
   );
   if (ok) {
-    awn.success("Session déconnectée");
     return loadSessions();
   }
 };
@@ -445,7 +444,9 @@ const fields = [
                   placeholder="jeton"
                 />
               </div>
-              <button type="submit" class="btn btn-primary">Utiliser</button>
+              <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
+                Utiliser
+              </button>
             </div>
           </div>
         </form>

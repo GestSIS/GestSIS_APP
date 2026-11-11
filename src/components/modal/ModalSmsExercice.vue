@@ -110,10 +110,10 @@ const send = async () => {
   const { ok } = await submit(
     () => AspsmsParamService.sendSms(clonedParams),
     "Erreur lors de l'envoi des SMS",
+    "Message envoyé avec succès",
   );
   if (ok) {
     aspsmsParamStore.fetchCredit();
-    awn.success("Message envoyé avec succès");
     closeModal();
   }
 };

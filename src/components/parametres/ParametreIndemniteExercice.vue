@@ -9,7 +9,6 @@ import { useUniteStore } from "../../stores/common/Unite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import GenericDetailsRow from "../table/GenericDetailsRow.vue";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const imputationStore = useImputationStore();
 const compteStore = useCompteStore();
@@ -70,7 +69,6 @@ const computedIndemnites = computed(() =>
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 const ajoutIndemnite = () =>
   showModal({
     component: "ModalIndemniteExercice",
@@ -92,13 +90,11 @@ const removeIndemnite = async (indemnite) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => imputationStore.removeIndemniteExercice(indemnite.id),
     "Erreur lors de la suppression de l'indemnité.",
+    "Indemnité supprimée.",
   );
-  if (ok) {
-    awn.success("Indemnité supprimée.");
-  }
 };
 </script>
 

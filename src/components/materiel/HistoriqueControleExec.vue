@@ -5,7 +5,6 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const { articleId, controle } = defineProps({
   articleId: { type: Number, required: true },
@@ -41,7 +40,6 @@ const colonnes = computed(() => [
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const modifier = (exec) =>
   showModal({
@@ -70,9 +68,9 @@ const supprimer = async (exec) => {
   const { ok } = await submit(
     () => ControleExecService.supprimerExec(exec.id),
     "Impossible de supprimer ce contrôle",
+    "Contrôle supprimé.",
   );
   if (ok) {
-    awn.success("Contrôle supprimé.");
     loadExecs();
   }
 };

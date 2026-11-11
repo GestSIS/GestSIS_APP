@@ -1,33 +1,30 @@
 <script setup>
 import { ref } from "vue";
 import { useAuthStore } from "../stores/auth/Auth";
-import { useNotification } from "../composables/useNotification";
+import { useSubmit } from "../composables/useSubmit.js";
 
 const email = ref(null);
-const errors = ref({});
 const sent = ref(false);
 
 const authStore = useAuthStore();
-const awn = useNotification();
+// Erreurs de champs : tableaux de messages (format API), comme la vérification locale ci-dessous.
+const { errors, isSubmitting, submit } = useSubmit();
 
 const request = async () => {
   if (email.value?.trim()?.toLowerCase()?.endsWith("@gestsis.ch")) {
     errors.value = {
-      email: "Email invalid",
+      email: ["Email invalid"],
     };
     return;
   }
 
-  authStore
-    .forgottenPassword(email.value)
-    .then(() => {
-      errors.value = {};
-      sent.value = true;
-    })
-    .catch((err) => {
-      errors.value = { email: err.message };
-      awn.alert(err?.message ?? "Erreur lors de la demande de récupération du mot de passe");
-    });
+  const { ok } = await submit(
+    () => authStore.forgottenPassword(email.value),
+    "Erreur lors de la demande de récupération du mot de passe",
+  );
+  if (ok) {
+    sent.value = true;
+  }
 };
 </script>
 
@@ -49,9 +46,14 @@ const request = async () => {
         :class="{ 'is-invalid': errors['email'] }"
       />
       <div v-if="!sent && errors['email']" class="invalid-feedback">
-        {{ errors["email"] }}
+        {{ errors["email"][0] }}
       </div>
-      <button v-if="!sent" class="btn btn-lg btn-primary mt-3" type="submit">
+      <button
+        v-if="!sent"
+        class="btn btn-lg btn-primary mt-3"
+        type="submit"
+        :disabled="isSubmitting"
+      >
         M'envoyer un lien de récupération
       </button>
       <div v-if="sent">

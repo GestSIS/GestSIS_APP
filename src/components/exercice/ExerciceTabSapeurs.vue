@@ -180,13 +180,11 @@ const validate = async () => {
   ) {
     return;
   }
-  const { ok, data } = await submit(
+  await submit(
     () => exerciceStore.validerExercice(id),
     "Erreur lors de la validation de l'exercice.",
+    "Exercice validé avec succès.",
   );
-  if (ok) {
-    awn.success(data?.message || "Exercice validé avec succès.");
-  }
 };
 const devalider = async () => {
   if (
@@ -200,10 +198,8 @@ const devalider = async () => {
   await submit(
     () => exerciceStore.devaliderExercice(id),
     "Erreur lors de l'annulation de la validation.",
+    "Validation annulée.",
   );
-  if (ok) {
-    awn.success("Validation annulée.");
-  }
 };
 const manageSapeurs = () => {
   let callback = (param) => {
@@ -396,13 +392,11 @@ const removeExcuse = async (presence) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => exerciceStore.removeExcuse(presence.exercice_id, presence.sapeur_id),
     "Erreur lors de la suppression de l'excuse.",
+    "Excuse supprimée.",
   );
-  if (ok) {
-    awn.success("Excuse supprimée.");
-  }
 };
 
 const downloadJustificatif = (sapeur) => {
@@ -410,11 +404,15 @@ const downloadJustificatif = (sapeur) => {
     awn.warning("Permissions insuffisantes pour accéder au détails de l'excuse");
     return;
   }
-  ExerciceService.downloadExcuseJustificatif(
-    sapeur.exercice_id,
-    sapeur.sapeur_id,
-    "justificatif_" + sapeur.justificatif_filename,
-  ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
+  download(
+    () =>
+      ExerciceService.downloadExcuseJustificatif(
+        sapeur.exercice_id,
+        sapeur.sapeur_id,
+        "justificatif_" + sapeur.justificatif_filename,
+      ),
+    "Erreur lors du chargement du justificatif",
+  );
 };
 
 const exerciceFileName = (sujet) =>

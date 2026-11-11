@@ -6,7 +6,6 @@ import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const sapeurStore = useSapeurStore();
 const gradeStore = useGradeStore();
@@ -32,7 +31,6 @@ const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 const newGrade = () => showModal("ModalSapeurPromotion");
 const editGrade = (grade) => showModal({ component: "ModalSapeurPromotion", data: grade });
 const supprimerGrade = async (grade) => {
@@ -44,13 +42,11 @@ const supprimerGrade = async (grade) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => sapeurStore.removeSapeurGrade(grade?.id),
     "Erreur lors de la suppression du grade.",
+    "Grade supprimé.",
   );
-  if (ok) {
-    awn.success("Grade supprimé.");
-  }
 };
 
 const fields = [

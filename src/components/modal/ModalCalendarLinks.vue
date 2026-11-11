@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 import IcsTokenService from "../../services/IcsTokenService.js";
 import { DOC_URL } from "../../http/Env.js";
 import { useClipboard } from "../../composables/useClipboard.js";
@@ -11,6 +12,7 @@ const { copy } = useClipboard();
 
 const authStore = useAuthStore();
 const awn = useNotification();
+const { isSubmitting, submit } = useSubmit();
 const { closeModal } = useModalStore();
 
 const loading = ref(true);
@@ -43,16 +45,16 @@ const copyToClipboard = (text) => copy(text, "Lien copié dans le presse-papiers
 // URL" n'accepte pas toujours webcal:// proprement).
 const webcalUrl = (url) => url.replace(/^https?:\/\//, "webcal://");
 
-const regenerate = (sisKey) => {
-  IcsTokenService.regenerate(sisKey)
-    .then(() => {
-      confirmingSisKey.value = null;
-      awn.success("Lien régénéré, l'ancien lien ne fonctionne plus");
-      load();
-    })
-    .catch(() => {
-      awn.alert("Impossible de régénérer ce lien");
-    });
+const regenerate = async (sisKey) => {
+  const { ok } = await submit(
+    () => IcsTokenService.regenerate(sisKey),
+    "Impossible de régénérer ce lien",
+    "Lien régénéré, l'ancien lien ne fonctionne plus",
+  );
+  if (ok) {
+    confirmingSisKey.value = null;
+    load();
+  }
 };
 </script>
 
@@ -113,6 +115,7 @@ const regenerate = (sisKey) => {
               <button
                 class="btn btn-sm btn-warning me-2"
                 type="button"
+                :disabled="isSubmitting"
                 @click="regenerate(link.sis_key)"
               >
                 Régénérer

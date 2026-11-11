@@ -29,10 +29,11 @@ const save = async () => {
     awn.success("Modifications enregistrées");
     return;
   }
-  const { ok, data } = await submit(() => aspsmsParamStore.updateAspsmsParams({ ...params.value }));
-  if (ok) {
-    awn.success(data?.message || "Modifications enregistrées");
-  }
+  await submit(
+    () => aspsmsParamStore.updateAspsmsParams({ ...params.value }),
+    "Erreur lors de l'enregistrement",
+    "Modifications enregistrées",
+  );
 };
 </script>
 

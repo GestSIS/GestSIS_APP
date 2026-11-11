@@ -6,7 +6,6 @@ import permissions from "/src/composables/permissions.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useMaterielStore } from "../../stores/intervention/Materiel.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const interventionStore = useInterventionStore();
 const materielStore = useMaterielStore();
@@ -38,7 +37,6 @@ const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION
 
 const { confirm, showModal } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const newMateriel = () => showModal("ModalInterventionMateriel");
 
@@ -57,13 +55,11 @@ const supprimerMateriel = async (materielId) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => interventionStore.removeInterventionMateriel(id, materielId),
     "Erreur lors de la suppression du matériel.",
+    "Matériel supprimé.",
   );
-  if (ok) {
-    awn.success("Matériel supprimé.");
-  }
 };
 
 const fields = [

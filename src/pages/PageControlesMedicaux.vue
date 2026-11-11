@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useNotification } from "../composables/useNotification.js";
+import { useDownload } from "../composables/useDownload.js";
 import { useSapeurStore } from "../stores/sapeur/Sapeur.js";
 import { useMedecinStore } from "../stores/controleMedical/Medecin.js";
 import { useControleMedicalTypeStore } from "../stores/controleMedical/ControleMedicalType.js";
@@ -106,33 +107,38 @@ const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
 const selected = (item) => (selectedItem.value = item);
 const downloadJustificatif = ({ id, filename }) =>
-  ControlesMedicauxService.downloadJustificatif(id, filename).catch((err) =>
-    awn.alert(err?.message || "Erreur lors du téléchargement du justificatif."),
+  download(
+    () => ControlesMedicauxService.downloadJustificatif(id, filename),
+    "Erreur lors du téléchargement du justificatif.",
   );
 
 const awn = useNotification();
-const sms = (controleMedicaux) => {
+const { download } = useDownload();
+const sms = async (controleMedicaux) => {
   if (!hasSmsEnvoiePermission.value) {
     awn.alert("Permission manquante, vous n'avez pas les droits suffisant pour l'envoie de SMS");
     return;
   }
 
-  SapeurService.getSapeursTelephones()
-    .then((telephones) => {
-      const ids = new Set(controleMedicaux.map((c) => c.sapeur_id));
-      const sap = sapeurs.value
-        .filter((e) => ids.has(e.id))
-        .map((s) => ({
-          ...s,
-          telephones: telephones.find((t) => t.id == s.id)?.telephones,
-        }));
-      showModal({
-        component: "ModalSms",
-        size: 1,
-        data: sap,
-      });
-    })
-    .catch((err) => awn.alert(err?.message || "Erreur lors de la récupération des téléphones."));
+  const { ok, data: telephones } = await submit(
+    () => SapeurService.getSapeursTelephones(),
+    "Erreur lors de la récupération des téléphones.",
+  );
+  if (!ok) {
+    return;
+  }
+  const ids = new Set(controleMedicaux.map((c) => c.sapeur_id));
+  const sap = sapeurs.value
+    .filter((e) => ids.has(e.id))
+    .map((s) => ({
+      ...s,
+      telephones: telephones.find((t) => t.id == s.id)?.telephones,
+    }));
+  showModal({
+    component: "ModalSms",
+    size: 1,
+    data: sap,
+  });
 };
 const email = (controleMedicaux) => {
   const ids = new Set(controleMedicaux.map((c) => c.sapeur_id));
@@ -156,13 +162,11 @@ const supprimer = async (controle) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => controleMedicalStore.removeControleMedical(controle.id),
     "Erreur lors de la suppression du contrôle médical.",
+    "Contrôle médical supprimé.",
   );
-  if (ok) {
-    awn.success("Contrôle médical supprimé.");
-  }
 };
 
 const onRowClass = (dataItem, isSelected) => {
@@ -255,7 +259,11 @@ const fields = [
               </router-link>
               <div class="row">
                 <div class="col-6">
-                  <button class="btn btn-outline-primary col-12" @click="sms(filteredData)">
+                  <button
+                    class="btn btn-outline-primary col-12"
+                    :disabled="isSubmitting"
+                    @click="sms(filteredData)"
+                  >
                     SMS
                   </button>
                 </div>

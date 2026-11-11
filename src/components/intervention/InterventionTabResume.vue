@@ -2,7 +2,6 @@
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { reactive, ref, watchEffect } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useSubmit } from "../../composables/useSubmit.js";
 
@@ -29,18 +28,17 @@ watchEffect(async () => {
 
 const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 
-const awn = useNotification();
 const { errors, isSubmitting, submit } = useSubmit();
 const save = async () => {
-  const { ok, data } = await submit(() =>
-    interventionStore.saveActiveIntervention({
-      id,
-      ...form,
-    }),
+  await submit(
+    () =>
+      interventionStore.saveActiveIntervention({
+        id,
+        ...form,
+      }),
+    "Erreur lors de l'enregistrement",
+    "Modifications enregistrées",
   );
-  if (ok) {
-    awn.success(data?.message || "Modifications enregistrées");
-  }
 };
 </script>
 

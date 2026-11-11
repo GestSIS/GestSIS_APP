@@ -4,7 +4,7 @@ import { useCoursStore } from "../../stores/sapeur/Cours.js";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
 import { computed } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
+import { useSubmit } from "../../composables/useSubmit.js";
 
 const coursStore = useCoursStore();
 const fonctionStore = useFonctionStore();
@@ -39,14 +39,25 @@ const listeCours = computed(() =>
     .sort((a, b) => b.tri - a.tri),
 );
 
-const { showModal } = useModalStore();
-const awn = useNotification();
+const { showModal, confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
 const ajoutCours = () => showModal({ component: "ModalCours", data: {} });
 const updateCours = (cours) => showModal({ component: "ModalCours", data: { ...cours } });
-const deleteCours = (cours) =>
-  coursStore
-    .removeCours(cours.id)
-    .catch((res) => awn.alert(res.message || "Erreur lors de la suppression"));
+const deleteCours = async (cours) => {
+  if (
+    !(await confirm(
+      "Voulez-vous vraiment supprimer ce cours ?",
+      "Attention, la suppression d'un cours est irréversible !",
+    ))
+  ) {
+    return;
+  }
+  await submit(
+    () => coursStore.removeCours(cours.id),
+    "Erreur lors de la suppression",
+    "Cours supprimé.",
+  );
+};
 </script>
 
 <template>
@@ -66,6 +77,7 @@ const deleteCours = (cours) =>
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="deleteCours(rowData)"

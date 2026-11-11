@@ -1,6 +1,6 @@
 <script setup>
+import { useDownload } from "../../composables/useDownload.js";
 import { computed, ref, watchEffect } from "vue";
-import { useNotification } from "../../composables/useNotification.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
@@ -61,13 +61,17 @@ const edit = () =>
       }),
   });
 
-const awn = useNotification();
+const { download } = useDownload();
 const downloadJustificatif = (exercice) =>
-  ExerciceService.downloadExcuseJustificatif(
-    exercice.exercice_id,
-    exercice.sapeur_id,
-    "justificatif_" + exercice.justificatif_filename,
-  ).catch((err) => awn.alert(err?.message ?? "Erreur lors du chargement du justificatif"));
+  download(
+    () =>
+      ExerciceService.downloadExcuseJustificatif(
+        exercice.exercice_id,
+        exercice.sapeur_id,
+        "justificatif_" + exercice.justificatif_filename,
+      ),
+    "Erreur lors du chargement du justificatif",
+  );
 
 const fields = [
   { title: "Date", key: "date", type: Date },

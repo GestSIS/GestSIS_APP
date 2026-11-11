@@ -95,13 +95,11 @@ const deleteEcriture = async (ecritureId) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => imputationStore.removeEcriture(ecritureId),
     "Erreur, impossible de supprimer cette écriture",
+    "Écriture supprimée.",
   );
-  if (ok) {
-    awn.success("Écriture supprimée.");
-  }
 };
 const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {

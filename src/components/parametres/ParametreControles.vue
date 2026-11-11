@@ -4,7 +4,6 @@ import { useControleStore } from "../../stores/materiel/Controle.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import ParametreTachesControle from "./ParametreTachesControle.vue";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useNotification } from "../../composables/useNotification.js";
 
 const store = useControleStore();
 await store.fetchControles();
@@ -13,7 +12,6 @@ const controles = computed(() => store.liste.slice().sort((a, b) => a.nom.locale
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
-const awn = useNotification();
 
 const recurrenceLabel = (controle) => {
   if (controle.recurrence_type === "PERIODIQUE") {
@@ -45,13 +43,11 @@ const deleteControle = async (controle) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => store.removeControle(controle.id),
     "Impossible de supprimer ce contrôle",
+    "Contrôle supprimé.",
   );
-  if (ok) {
-    awn.success("Contrôle supprimé.");
-  }
 };
 
 const fields = [

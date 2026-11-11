@@ -73,13 +73,11 @@ const removeContact = async (contact) => {
   ) {
     return;
   }
-  const { ok } = await submit(
+  await submit(
     () => sisParamStore.removeSisContact(contact.id),
     "Erreur lors de la suppression de l'email.",
+    "Email supprimé.",
   );
-  if (ok) {
-    awn.success("Email supprimé.");
-  }
 };
 
 const updateLocalitesSis = () => {
@@ -103,10 +101,11 @@ const updateLocalitesSis = () => {
   });
 };
 const save = async () => {
-  const { ok, data } = await submit(() => sisParamStore.updateSisParams(sisParam.value));
-  if (ok) {
-    awn.success(data?.message || "Modifications enregistrées");
-  }
+  await submit(
+    () => sisParamStore.updateSisParams(sisParam.value),
+    "Erreur lors de l'enregistrement",
+    "Modifications enregistrées",
+  );
 };
 const loadSisLogo = () => {
   const timestamp = new Date().getTime();
@@ -126,9 +125,12 @@ const saveLogo = async () => {
     awn.warning("Veuillez sélectionner un logo");
     return;
   }
-  const { ok, data } = await submit(() => SisParamService.updateLogo(logo.value));
+  const { ok } = await submit(
+    () => SisParamService.updateLogo(logo.value),
+    "Erreur lors de l'enregistrement",
+    "Modifications enregistrées",
+  );
   if (ok) {
-    awn.success(data?.message || "Modifications enregistrées");
     loadSisLogo();
   }
 };
