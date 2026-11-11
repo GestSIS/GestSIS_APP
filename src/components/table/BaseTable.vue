@@ -227,6 +227,17 @@ const toCvs = () => {
   window.URL.revokeObjectURL(url);
 };
 
+// Clé de colonne unique : les colonnes slot (ex. `actions`) n'ont souvent pas de `key`.
+const fieldKey = (field, index) => field.key ?? field.slot ?? index;
+
+// Colonnes triables uniquement (même condition que sort() et le bouton de tri).
+const ariaSort = (field) => {
+  const sortKey = field.sortKey ?? field.key;
+  if (!sortKey) return undefined;
+  if (sorted.value.key !== sortKey) return "none";
+  return sorted.value.asc ? "ascending" : "descending";
+};
+
 const sort = (field) => {
   const sortKey = field.sortKey ?? field.key;
   if (sortKey) {
@@ -320,21 +331,30 @@ defineExpose({
             </button>
           </th>
           <th
-            v-for="f in fields"
-            :key="f.key"
+            v-for="(f, index) in fields"
+            :key="fieldKey(f, index)"
             :class="[f.titleClass, f.type === 'boolean' || f.type === Boolean ? 'text-center' : '']"
-            @click="sort(f)"
+            :aria-sort="ariaSort(f)"
           >
-            <font-awesome-icon
-              v-if="f.key && sorted.key == (f.sortKey ?? f.key) && sorted.asc"
-              :icon="['fas', 'sort-down']"
-            />
-            <font-awesome-icon
-              v-else-if="f.key && sorted.key == (f.sortKey ?? f.key) && !sorted.asc"
-              :icon="['fas', 'sort-up']"
-            />
-            <font-awesome-icon v-else-if="f.key" :icon="['fas', 'sort']" />
-            {{ f.title }}
+            <!-- Bouton sans apparence propre (reset Bootstrap) : accessible au clavier et lecteur d'écran -->
+            <button
+              v-if="f.sortKey ?? f.key"
+              type="button"
+              class="border-0 bg-transparent p-0 text-reset"
+              @click="sort(f)"
+            >
+              <font-awesome-icon
+                v-if="sorted.key == (f.sortKey ?? f.key) && sorted.asc"
+                :icon="['fas', 'sort-down']"
+              />
+              <font-awesome-icon
+                v-else-if="sorted.key == (f.sortKey ?? f.key) && !sorted.asc"
+                :icon="['fas', 'sort-up']"
+              />
+              <font-awesome-icon v-else :icon="['fas', 'sort']" />
+              {{ f.title }}
+            </button>
+            <template v-else>{{ f.title }}</template>
           </th>
         </tr>
       </thead>
@@ -385,8 +405,8 @@ defineExpose({
             </button>
           </td>
           <td
-            v-for="f in fields"
-            :key="f.key"
+            v-for="(f, index) in fields"
+            :key="fieldKey(f, index)"
             :class="[
               f.columnClass,
               f.type === 'boolean' || f.type === Boolean ? 'text-center' : '',
