@@ -1,6 +1,14 @@
 {
   "releases": [
     {
+      "date": "11.11.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Tableaux, correction du tri des colonnes contenant des cellules vides (placées en fin de liste)"
+      ]
+    },
+    {
       "date": "10.11.2026",
       "version": "1.0",
       "app": "GestSIS APP",
