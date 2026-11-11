@@ -49,18 +49,17 @@ const updateType = (type) =>
 
 const deleteType = async (type) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce type d'intervention ?",
       "Attention, la suppression d'un type d'intervention est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => typeInterventionStore.removeTypeIntervention(type.id),
+      "Erreur lors de la suppression",
+      "Type d'intervention supprimé.",
+    );
   }
-  await submit(
-    () => typeInterventionStore.removeTypeIntervention(type.id),
-    "Erreur lors de la suppression",
-    "Type d'intervention supprimé.",
-  );
 };
 
 const ajoutStat = () => showModal({ component: "ModalStatIntervention", data: {} });
@@ -73,18 +72,17 @@ const updateStat = (stat) =>
 
 const deleteStat = async (stat) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette statistique ?",
       "Attention, la suppression d'une statistique est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => statInterventionStore.removeStatIntervention(stat.id),
+      "Erreur lors de la suppression",
+      "Statistique supprimée.",
+    );
   }
-  await submit(
-    () => statInterventionStore.removeStatIntervention(stat.id),
-    "Erreur lors de la suppression",
-    "Statistique supprimée.",
-  );
 };
 </script>
 

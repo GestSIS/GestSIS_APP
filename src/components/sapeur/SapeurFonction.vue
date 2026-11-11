@@ -41,18 +41,17 @@ const editFonction = (fonction) => {
 };
 const supprimerFonction = async (fonction) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette fonction ?",
       "Attention, la suppression d'une fonction est irréversible ! Toutes les données de cette fonction seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => sapeurStore.removeSapeurFonction(fonction?.id),
+      "Erreur lors de la suppression de la fonction.",
+      "Fonction supprimée.",
+    );
   }
-  await submit(
-    () => sapeurStore.removeSapeurFonction(fonction?.id),
-    "Erreur lors de la suppression de la fonction.",
-    "Fonction supprimée.",
-  );
 };
 
 const fields = [

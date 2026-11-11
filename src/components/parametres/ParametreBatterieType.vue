@@ -23,18 +23,17 @@ const update = (elem) => {
 };
 const remove = async (elem) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette batterie ?",
       "Attention, la suppression d'une batterie est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => batterieStore.removeBatterieType(elem.id),
+      "Impossible de supprimer cette batterie",
+      "Batterie supprimée.",
+    );
   }
-  await submit(
-    () => batterieStore.removeBatterieType(elem.id),
-    "Impossible de supprimer cette batterie",
-    "Batterie supprimée.",
-  );
 };
 
 const fields = [

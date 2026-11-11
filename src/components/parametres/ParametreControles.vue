@@ -36,18 +36,17 @@ const editControle = (controle) =>
 
 const deleteControle = async (controle) => {
   if (
-    !(await confirm(
+    await confirm(
       "Supprimer ce contrôle ?",
       `Voulez-vous vraiment supprimer le contrôle "${controle.nom}" ? Cette action est irréversible.`,
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => store.removeControle(controle.id),
+      "Impossible de supprimer ce contrôle",
+      "Contrôle supprimé.",
+    );
   }
-  await submit(
-    () => store.removeControle(controle.id),
-    "Impossible de supprimer ce contrôle",
-    "Contrôle supprimé.",
-  );
 };
 
 const fields = [

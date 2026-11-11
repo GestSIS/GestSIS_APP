@@ -25,18 +25,17 @@ const updateFonction = (fonction) =>
   showModal({ component: "ModalFonction", data: { ...fonction } });
 const deleteFonction = async (fonction) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette fonction ?",
       "Attention, la suppression d'une fonction est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => fonctionStore.removeFonction(fonction.id),
+      "Erreur lors de la suppression",
+      "Fonction supprimée.",
+    );
   }
-  await submit(
-    () => fonctionStore.removeFonction(fonction.id),
-    "Erreur lors de la suppression",
-    "Fonction supprimée.",
-  );
 };
 </script>
 

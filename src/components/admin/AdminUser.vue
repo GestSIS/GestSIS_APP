@@ -124,18 +124,17 @@ const sessionMaxDays = computed({
 
 const revokeAllSessions = async () => {
   if (
-    !(await confirm(
+    await confirm(
       "Déconnecter tous les appareils de cet utilisateur ?",
       "Chaque appareil devra se reconnecter avec le mot de passe (et le 2FA si actif). Utile en cas d'appareil perdu ou volé.",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => adminStore.revokeAllSessions(user.value.id),
+      "Erreur lors de la déconnexion",
+      "Tous les appareils ont été déconnectés",
+    );
   }
-  await submit(
-    () => adminStore.revokeAllSessions(user.value.id),
-    "Erreur lors de la déconnexion",
-    "Tous les appareils ont été déconnectés",
-  );
 };
 
 const editUser = (user) => showModal({ component: "ModalUser", data: user });

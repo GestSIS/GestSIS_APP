@@ -75,18 +75,17 @@ const deleteGroupe = async () => {
     return;
   }
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce groupe ?",
       "Attention, la suppression du groupe entraînera la suppression de tous les sous-groupes. Cette action n'est pas réversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => groupeStore.deleteGroupe(active.value.data.id),
+      "Erreur lors de la suppression du groupe.",
+      "Groupe supprimé.",
+    );
   }
-  await submit(
-    () => groupeStore.deleteGroupe(active.value.data.id),
-    "Erreur lors de la suppression du groupe.",
-    "Groupe supprimé.",
-  );
 };
 const addGroupe = () => {
   showModal({

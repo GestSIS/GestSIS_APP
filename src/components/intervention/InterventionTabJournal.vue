@@ -151,18 +151,17 @@ const { isSubmitting, submit } = useSubmit();
 
 const supprimerAppel = async (id) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cet appel ?",
       "Attention, la suppression d'un appel est irréversible ! Toutes les données de cet appel seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => interventionStore.removeInterventionAppel(id),
+      "Erreur lors de la suppression de l'appel.",
+      "Appel supprimé.",
+    );
   }
-  await submit(
-    () => interventionStore.removeInterventionAppel(id),
-    "Erreur lors de la suppression de l'appel.",
-    "Appel supprimé.",
-  );
 };
 
 const newAppel = () => {
@@ -200,18 +199,17 @@ const editAppel = (id) => {
 
 const supprimerJalon = async (id) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce jalon ?",
       "Attention, la suppression d'un jalon est irréversible ! Toutes les données de ce jalon seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => interventionStore.removeInterventionJalon(id),
+      "Erreur lors de la suppression du jalon.",
+      "Jalon supprimé.",
+    );
   }
-  await submit(
-    () => interventionStore.removeInterventionJalon(id),
-    "Erreur lors de la suppression du jalon.",
-    "Jalon supprimé.",
-  );
 };
 
 const newJalon = () => {
@@ -250,18 +248,17 @@ const editJalon = (id) => {
 
 const supprimerMission = async (id) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette mission ?",
       "Attention, la suppression d'un mission est irréversible ! Toutes les données de cette mission seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => interventionStore.removeInterventionMission(id),
+      "Erreur lors de la suppression de la mission.",
+      "Mission supprimée.",
+    );
   }
-  await submit(
-    () => interventionStore.removeInterventionMission(id),
-    "Erreur lors de la suppression de la mission.",
-    "Mission supprimée.",
-  );
 };
 
 const newMission = () => {

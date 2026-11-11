@@ -81,18 +81,17 @@ const updateTravailType = (travailType) =>
 
 const deleteTravailType = async (travailType) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce type de travail ?",
       "Attention, la suppression d'un type de travail est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => travailTypeStore.removeTravailType(travailType.id),
+      "Erreur lors de la suppression",
+      "Type de travail supprimé.",
+    );
   }
-  await submit(
-    () => travailTypeStore.removeTravailType(travailType.id),
-    "Erreur lors de la suppression",
-    "Type de travail supprimé.",
-  );
 };
 </script>
 

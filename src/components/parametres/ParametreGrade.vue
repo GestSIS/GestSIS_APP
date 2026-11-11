@@ -34,18 +34,17 @@ const ajoutGrade = () => showModal({ component: "ModalGrade", data: {} });
 const updateGrade = (grade) => showModal({ component: "ModalGrade", data: { ...grade } });
 const deleteGrade = async (grade) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce grade ?",
       "Attention, la suppression d'un grade est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => gradeStore.removeGrade(grade.id),
+      "Erreur lors de la suppression",
+      "Grade supprimé.",
+    );
   }
-  await submit(
-    () => gradeStore.removeGrade(grade.id),
-    "Erreur lors de la suppression",
-    "Grade supprimé.",
-  );
 };
 </script>
 

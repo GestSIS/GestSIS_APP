@@ -43,18 +43,17 @@ const edit = (role) => showModal({ component: "ModalRole", data: role });
 const newRole = () => showModal({ component: "ModalRole", data: {} });
 const remove = async (role) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce rôle ?",
       "Attention, la suppression d'un rôle est irréversible ! Les utilisateurs ayant ce rôle perdront ces permissions.",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => authStore.deleteRole(role.id),
+      "Erreur lors de la suppression du rôle.",
+      "Rôle supprimé.",
+    );
   }
-  await submit(
-    () => authStore.deleteRole(role.id),
-    "Erreur lors de la suppression du rôle.",
-    "Rôle supprimé.",
-  );
 };
 
 const moduleMapping = (key) => {

@@ -28,18 +28,17 @@ const updateTraitement = (traitement) =>
 
 const deleteTraitement = async (traitement) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce traitement ?",
       "Attention, la suppression d'un traitement est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => traitementStore.removeTraitement(traitement.id),
+      "Erreur lors de la suppression",
+      "Traitement supprimé.",
+    );
   }
-  await submit(
-    () => traitementStore.removeTraitement(traitement.id),
-    "Erreur lors de la suppression",
-    "Traitement supprimé.",
-  );
 };
 </script>
 

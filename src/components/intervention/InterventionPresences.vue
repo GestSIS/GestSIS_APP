@@ -171,18 +171,17 @@ const editPresence = (presence) => {
 };
 const removePresence = async (id) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette présence ?",
       "Attention, la suppression d'une présence est irréversible ! Toutes les données de cette présence seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => interventionStore.removePresence(id),
+      "Erreur lors de la suppression de la présence.",
+      "Présence supprimée.",
+    );
   }
-  await submit(
-    () => interventionStore.removePresence(id),
-    "Erreur lors de la suppression de la présence.",
-    "Présence supprimée.",
-  );
 };
 
 const editQuittance = (e, id) => {

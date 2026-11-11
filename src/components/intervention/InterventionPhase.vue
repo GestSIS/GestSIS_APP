@@ -64,18 +64,17 @@ const editPhase = (phase) =>
 
 const removePhase = async (id) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette phase ?",
       "Attention, la suppression d'une phase est irréversible ! Toutes les données de cette phase seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => interventionStore.removePhase(id),
+      "Erreur lors de la suppression de la phase.",
+      "Phase supprimée.",
+    );
   }
-  await submit(
-    () => interventionStore.removePhase(id),
-    "Erreur lors de la suppression de la phase.",
-    "Phase supprimée.",
-  );
 };
 
 const fields = [

@@ -37,18 +37,17 @@ const ajoutCompte = () => showModal({ component: "ModalCompte", data: {} });
 const updateCompte = (compte) => showModal({ component: "ModalCompte", data: { ...compte } });
 const deleteCompte = async (compteId) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce compte ?",
       "Attention, la suppression d'un compte est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => compteStore.removeCompte(compteId),
+      "Erreur lors de la suppression",
+      "Compte supprimé.",
+    );
   }
-  await submit(
-    () => compteStore.removeCompte(compteId),
-    "Erreur lors de la suppression",
-    "Compte supprimé.",
-  );
 };
 </script>
 

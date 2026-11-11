@@ -41,18 +41,17 @@ const modifierAbsence = (absence) =>
   });
 const removeAbsence = async (absence) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer votre absence ?",
       "Attention, la suppression d'une absence est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => infosStore.removeMonAbsence(absence),
+      "Impossible de supprimer l'absence",
+      "Absence supprimée avec succès",
+    );
   }
-  await submit(
-    () => infosStore.removeMonAbsence(absence),
-    "Impossible de supprimer l'absence",
-    "Absence supprimée avec succès",
-  );
 };
 
 const fields = [

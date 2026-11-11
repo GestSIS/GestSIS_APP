@@ -72,18 +72,17 @@ const updateIndemnite = (indemnite) =>
   });
 const deleteIndemnite = async (indemnite) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette indemnité ?",
       "Attention, la suppression d'une indemnité est irréversible ! Toutes les données de cette indemnité seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => imputationStore.removeIndemniteCours(indemnite.id),
+      "Erreur lors de la suppression",
+      "Indemnité supprimée.",
+    );
   }
-  await submit(
-    () => imputationStore.removeIndemniteCours(indemnite.id),
-    "Erreur lors de la suppression",
-    "Indemnité supprimée.",
-  );
 };
 </script>
 

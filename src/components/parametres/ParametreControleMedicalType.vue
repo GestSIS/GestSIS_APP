@@ -29,18 +29,17 @@ const updateType = (type) =>
   });
 const deleteType = async (type) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce type de contrôle médical ?",
       "Attention, la suppression d'un type de contrôle médical est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => controleMedicalTypeStore.removeType(type.id),
+      "Erreur lors de la suppression",
+      "Type de contrôle médical supprimé.",
+    );
   }
-  await submit(
-    () => controleMedicalTypeStore.removeType(type.id),
-    "Erreur lors de la suppression",
-    "Type de contrôle médical supprimé.",
-  );
 };
 </script>
 

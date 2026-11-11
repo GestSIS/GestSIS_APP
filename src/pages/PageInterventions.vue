@@ -96,18 +96,17 @@ const select = (row) => (selectedId.value = row?.id);
 
 const supprimerIntervention = async (id) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer l'intervention ?",
       "Attention, la suppression d'une intervention est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => interventionStore.removeIntervention(id),
+      "Erreur lors de la suppression de l'intervention.",
+      "Intervention supprimée.",
+    );
   }
-  await submit(
-    () => interventionStore.removeIntervention(id),
-    "Erreur lors de la suppression de l'intervention.",
-    "Intervention supprimée.",
-  );
 };
 const validerIntervention = async (id) => {
   await submit(

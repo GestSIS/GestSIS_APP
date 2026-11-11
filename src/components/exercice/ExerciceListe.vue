@@ -137,18 +137,17 @@ const annulerExercice = async (id) => {
 // Symétrique de "valider" : un exercice validé (pas encore imputé) repasse en saisie
 const devaliderExercice = async (id) => {
   if (
-    !(await confirm(
+    await confirm(
       "Annuler la validation ?",
       `L'exercice repassera au statut « ${exerciceStatut(EXERCICE_STATUT.A_VALIDER).label} » et redeviendra modifiable. Voulez-vous continuer ?`,
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => exerciceStore.devaliderExercice(id),
+      "Erreur lors de l'annulation de la validation.",
+      "Validation annulée.",
+    );
   }
-  await submit(
-    () => exerciceStore.devaliderExercice(id),
-    "Erreur lors de l'annulation de la validation.",
-    "Validation annulée.",
-  );
 };
 const reactiverExercice = async (id) => {
   await submit(
@@ -160,18 +159,17 @@ const reactiverExercice = async (id) => {
 
 const removeExercice = async (id) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cet exercice ?",
       "Attention, la suppression d'un exercice est irréversible ! Toutes les données de cet exercice seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => exerciceStore.removeExercice(id),
+      "Erreur lors de la suppression de l'exercice.",
+      "Exercice supprimé.",
+    );
   }
-  await submit(
-    () => exerciceStore.removeExercice(id),
-    "Erreur lors de la suppression de l'exercice.",
-    "Exercice supprimé.",
-  );
 };
 
 const importExerciceComptable = () =>

@@ -38,18 +38,17 @@ const impersonateUser = async (user) => {
 const editUser = (user) => showModal({ component: "ModalUser", data: user });
 const deleteUser = async (user) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cet utilisateur ?",
       "Attention, l'action est irréversible et l'utilisateur devra recréer un compte pour utiliser GestSIS.",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => adminStore.deleteUser(user?.id),
+      "Erreur lors de la suppression",
+      "Utilisateur supprimé",
+    );
   }
-  await submit(
-    () => adminStore.deleteUser(user?.id),
-    "Erreur lors de la suppression",
-    "Utilisateur supprimé",
-  );
 };
 
 const fields = [

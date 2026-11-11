@@ -40,18 +40,17 @@ const editCours = (cours) => showModal({ component: "ModalSapeurCours", data: co
 
 const supprimerCours = async (cours) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce cours ?",
       "Attention, la suppression d'un cours est irréversible ! Toutes les données de ce cours seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => sapeurStore.removeSapeurCours(cours?.id),
+      "Erreur lors de la suppression du cours.",
+      "Cours supprimé.",
+    );
   }
-  await submit(
-    () => sapeurStore.removeSapeurCours(cours?.id),
-    "Erreur lors de la suppression du cours.",
-    "Cours supprimé.",
-  );
 };
 
 const fields = [

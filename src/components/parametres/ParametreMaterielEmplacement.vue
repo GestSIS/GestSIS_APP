@@ -42,18 +42,17 @@ const dupliquerEnfants = (elem) =>
   showModal({ component: "ModalDupliquerEmplacementsEnfants", data: { ...elem } });
 const remove = async (elem) => {
   if (
-    !(await confirm(
+    await confirm(
       `Voulez-vous vraiment supprimer cet emplacement ?`,
       "Attention, la suppression de cet élément est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => emplacementStore.removeEmplacement(elem.id),
+      "Erreur lors de la suppression",
+      "Emplacement supprimé.",
+    );
   }
-  await submit(
-    () => emplacementStore.removeEmplacement(elem.id),
-    "Erreur lors de la suppression",
-    "Emplacement supprimé.",
-  );
 };
 
 const fields = [

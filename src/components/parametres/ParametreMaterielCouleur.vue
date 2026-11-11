@@ -26,18 +26,17 @@ const update = (elem) => {
 };
 const remove = async (elem) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette couleur ?",
       "Attention, la suppression d'une couleur est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => couleurStore.removeCouleur(elem.id),
+      "Impossible de supprimer cette couleur",
+      "Couleur supprimée.",
+    );
   }
-  await submit(
-    () => couleurStore.removeCouleur(elem.id),
-    "Impossible de supprimer cette couleur",
-    "Couleur supprimée.",
-  );
 };
 
 const fields = [

@@ -142,33 +142,31 @@ const modifierTravail = (travail) =>
 const traiterTravail = (travail) => showModal({ component: "ModalReviewTravail", data: travail });
 const annulerExamen = async (travail) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment annuler l'examen de ce travail ?",
       "Attention, la justification fournie lors de l'examen sera perdue.",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => travailStore.cancelReviewTravail(travail.id),
+      "Erreur lors de l'annulation de l'examen",
+      "Examen annulé.",
+    );
   }
-  await submit(
-    () => travailStore.cancelReviewTravail(travail.id),
-    "Erreur lors de l'annulation de l'examen",
-    "Examen annulé.",
-  );
 };
 const supprimerTravail = async (travail) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce travail ?",
       "Attention, la suppression d'un travail est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => travailStore.removeTravail(travail.id),
+      "Erreur lors de la suppression",
+      "Travail supprimé.",
+    );
   }
-  await submit(
-    () => travailStore.removeTravail(travail.id),
-    "Erreur lors de la suppression",
-    "Travail supprimé.",
-  );
 };
 
 const fields = [

@@ -32,18 +32,17 @@ const ajoutExcuse = () => showModal({ component: "ModalExcuseType", data: {} });
 const updateExcuse = (excuse) => showModal({ component: "ModalExcuseType", data: { ...excuse } });
 const deleteExcuse = async (excuse) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce type d'excuse ?",
       "Attention, la suppression d'un type d'excuse est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => excuseTypeStore.removeExcuseType(excuse.id),
+      "Erreur lors de la suppression",
+      "Type d'excuse supprimé.",
+    );
   }
-  await submit(
-    () => excuseTypeStore.removeExcuseType(excuse.id),
-    "Erreur lors de la suppression",
-    "Type d'excuse supprimé.",
-  );
 };
 </script>
 

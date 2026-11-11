@@ -155,18 +155,17 @@ const email = (controleMedicaux) => {
 };
 const supprimer = async (controle) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce contrôle médical ?",
       "Attention, la suppression d'un contrôle est irréversible ! Il vous sera cependant possible d'en ajouter un nouveau'.",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => controleMedicalStore.removeControleMedical(controle.id),
+      "Erreur lors de la suppression du contrôle médical.",
+      "Contrôle médical supprimé.",
+    );
   }
-  await submit(
-    () => controleMedicalStore.removeControleMedical(controle.id),
-    "Erreur lors de la suppression du contrôle médical.",
-    "Contrôle médical supprimé.",
-  );
 };
 
 const onRowClass = (dataItem, isSelected) => {

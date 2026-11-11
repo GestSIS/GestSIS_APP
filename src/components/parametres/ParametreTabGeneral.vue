@@ -66,18 +66,17 @@ const addContact = (liste) =>
   });
 const removeContact = async (contact) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cet email ?",
       "Attention, cet email ne recevra plus les emails de cette liste de diffusion !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => sisParamStore.removeSisContact(contact.id),
+      "Erreur lors de la suppression de l'email.",
+      "Email supprimé.",
+    );
   }
-  await submit(
-    () => sisParamStore.removeSisContact(contact.id),
-    "Erreur lors de la suppression de l'email.",
-    "Email supprimé.",
-  );
 };
 
 const updateLocalitesSis = () => {

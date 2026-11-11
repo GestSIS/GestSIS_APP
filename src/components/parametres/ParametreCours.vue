@@ -45,18 +45,17 @@ const ajoutCours = () => showModal({ component: "ModalCours", data: {} });
 const updateCours = (cours) => showModal({ component: "ModalCours", data: { ...cours } });
 const deleteCours = async (cours) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce cours ?",
       "Attention, la suppression d'un cours est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => coursStore.removeCours(cours.id),
+      "Erreur lors de la suppression",
+      "Cours supprimé.",
+    );
   }
-  await submit(
-    () => coursStore.removeCours(cours.id),
-    "Erreur lors de la suppression",
-    "Cours supprimé.",
-  );
 };
 </script>
 

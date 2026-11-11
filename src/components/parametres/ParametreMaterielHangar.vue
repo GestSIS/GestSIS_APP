@@ -34,18 +34,17 @@ const update = (elem) =>
   });
 const remove = async (elem) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce hangar ?",
       "Attention, la suppression de cet élément est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => emplacementStore.removeEmplacement(elem.id),
+      "Erreur lors de la suppression",
+      "Hangar supprimé.",
+    );
   }
-  await submit(
-    () => emplacementStore.removeEmplacement(elem.id),
-    "Erreur lors de la suppression",
-    "Hangar supprimé.",
-  );
 };
 
 const fields = [

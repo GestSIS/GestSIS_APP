@@ -20,18 +20,17 @@ const ajoutMission = () => showModal({ component: "ModalMission", data: {} });
 const updateMission = (mission) => showModal({ component: "ModalMission", data: { ...mission } });
 const deleteMission = async (mission) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette mission ?",
       "Attention, la suppression d'une mission est irréversible ! Toutes les données de cette mission seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => missionStore.removeMission(mission.id),
+      "Erreur lors de la suppression de la mission.",
+      "Mission supprimée.",
+    );
   }
-  await submit(
-    () => missionStore.removeMission(mission.id),
-    "Erreur lors de la suppression de la mission.",
-    "Mission supprimée.",
-  );
 };
 </script>
 

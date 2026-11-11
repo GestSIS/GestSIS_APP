@@ -32,18 +32,17 @@ const ajoutMedecin = () => showModal({ component: "ModalMedecin", data: {} });
 const updateMedecin = (medecin) => showModal({ component: "ModalMedecin", data: { ...medecin } });
 const deleteMedecin = async (medecin) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce médecin ?",
       "Attention, la suppression d'un médecin est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => medecinStore.removeMedecin(medecin.id),
+      "Erreur lors de la suppression",
+      "Médecin supprimé.",
+    );
   }
-  await submit(
-    () => medecinStore.removeMedecin(medecin.id),
-    "Erreur lors de la suppression",
-    "Médecin supprimé.",
-  );
 };
 </script>
 

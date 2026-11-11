@@ -39,18 +39,17 @@ const updateMateriel = (materiel) =>
   });
 const deleteMateriel = async (materiel) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce matériel ?",
       "Attention, la suppression d'un matériel est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => materielStore.removeMateriel(materiel.id),
+      "Erreur lors de la suppression",
+      "Matériel supprimé.",
+    );
   }
-  await submit(
-    () => materielStore.removeMateriel(materiel.id),
-    "Erreur lors de la suppression",
-    "Matériel supprimé.",
-  );
 };
 </script>
 

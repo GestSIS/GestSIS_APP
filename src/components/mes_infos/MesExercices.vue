@@ -88,18 +88,17 @@ const addExcuse = (exercice) => {
 };
 const removeExcuse = async (exercice) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer votre excuse ?",
       "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => infosStore.removeMonExcuse(exercice),
+      "Impossible de supprimer l'excuse",
+      "Excuse supprimée avec succès",
+    );
   }
-  await submit(
-    () => infosStore.removeMonExcuse(exercice),
-    "Impossible de supprimer l'excuse",
-    "Excuse supprimée avec succès",
-  );
 };
 
 const downloadJustificatif = (exercice) => {

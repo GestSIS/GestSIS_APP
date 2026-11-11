@@ -104,18 +104,17 @@ const imputer = async (travailId) => {
 };
 const annulerImputer = async (travailId) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette imputation ?",
       "Attention, la suppression d'une imputation est irréversible ! Il vous sera cependant possible de réimputer à nouveau ce travail.",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => imputationStore.annulerImputationTravail(travailId),
+      "Erreur impossible d'annuler l'imputation",
+      "Imputation annulée.",
+    );
   }
-  await submit(
-    () => imputationStore.annulerImputationTravail(travailId),
-    "Erreur impossible d'annuler l'imputation",
-    "Imputation annulée.",
-  );
 };
 
 const onRowClass = (dataItem, isSelected) => {

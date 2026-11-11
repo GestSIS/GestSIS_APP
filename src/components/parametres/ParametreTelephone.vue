@@ -24,18 +24,17 @@ const updateTelephone = (telephone) =>
 
 const deleteTelephone = async (telephone) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce contact ?",
       "Attention, la suppression d'un contact est irréversible ! Toutes les données de ce contact seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => telephoneStore.removeTelephone(telephone.id),
+      "Erreur lors de la suppression du contact.",
+      "Contact supprimé.",
+    );
   }
-  await submit(
-    () => telephoneStore.removeTelephone(telephone.id),
-    "Erreur lors de la suppression du contact.",
-    "Contact supprimé.",
-  );
 };
 </script>
 

@@ -35,18 +35,17 @@ const newGrade = () => showModal("ModalSapeurPromotion");
 const editGrade = (grade) => showModal({ component: "ModalSapeurPromotion", data: grade });
 const supprimerGrade = async (grade) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce grade ?",
       "Attention, la suppression d'un grade est irréversible ! Toutes les données de ce grade seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => sapeurStore.removeSapeurGrade(grade?.id),
+      "Erreur lors de la suppression du grade.",
+      "Grade supprimé.",
+    );
   }
-  await submit(
-    () => sapeurStore.removeSapeurGrade(grade?.id),
-    "Erreur lors de la suppression du grade.",
-    "Grade supprimé.",
-  );
 };
 
 const fields = [

@@ -32,18 +32,17 @@ const { isSubmitting, submit } = useSubmit();
 
 const removeMutation = async (mutation) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette mutation ?",
       "Attention, la suppression d'une mutation est irréversible ! Toutes les données de cette mutation seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => sapeurStore.removeMutation(mutation?.id),
+      "Erreur lors de la suppression de la mutation.",
+      "Mutation supprimée.",
+    );
   }
-  await submit(
-    () => sapeurStore.removeMutation(mutation?.id),
-    "Erreur lors de la suppression de la mutation.",
-    "Mutation supprimée.",
-  );
 };
 
 const editMutation = (mutation) => showModal({ component: "ModalMutation", data: mutation });

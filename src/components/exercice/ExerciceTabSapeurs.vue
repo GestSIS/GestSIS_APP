@@ -173,33 +173,31 @@ const selectAllConvoque = (status) => {
 };
 const validate = async () => {
   if (
-    !(await confirm(
+    await confirm(
       "Valider l'exercice ?",
       "Une fois validé, les présences ne seront plus modifiables sans permission de validation. Voulez-vous continuer ?",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => exerciceStore.validerExercice(id),
+      "Erreur lors de la validation de l'exercice.",
+      "Exercice validé avec succès.",
+    );
   }
-  await submit(
-    () => exerciceStore.validerExercice(id),
-    "Erreur lors de la validation de l'exercice.",
-    "Exercice validé avec succès.",
-  );
 };
 const devalider = async () => {
   if (
-    !(await confirm(
+    await confirm(
       "Annuler la validation ?",
       `L'exercice repassera au statut « ${exerciceStatut(EXERCICE_STATUT.A_VALIDER).label} » et redeviendra modifiable. Voulez-vous continuer ?`,
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => exerciceStore.devaliderExercice(id),
+      "Erreur lors de l'annulation de la validation.",
+      "Validation annulée.",
+    );
   }
-  await submit(
-    () => exerciceStore.devaliderExercice(id),
-    "Erreur lors de l'annulation de la validation.",
-    "Validation annulée.",
-  );
 };
 const manageSapeurs = () => {
   let callback = (param) => {
@@ -385,18 +383,17 @@ const addExcuse = (sapeur) =>
 
 const removeExcuse = async (presence) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette excuse ?",
       "Attention, la suppression d'une excuse est irréversible ! Toutes les données relatives à celle-ci seront supprimées définitivement.",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => exerciceStore.removeExcuse(presence.exercice_id, presence.sapeur_id),
+      "Erreur lors de la suppression de l'excuse.",
+      "Excuse supprimée.",
+    );
   }
-  await submit(
-    () => exerciceStore.removeExcuse(presence.exercice_id, presence.sapeur_id),
-    "Erreur lors de la suppression de l'excuse.",
-    "Excuse supprimée.",
-  );
 };
 
 const downloadJustificatif = (sapeur) => {

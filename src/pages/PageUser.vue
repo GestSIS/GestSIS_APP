@@ -91,18 +91,17 @@ const changerMotDePasse = async () => {
 
 const deleteApiToken = async (id) => {
   if (
-    !(await confirm(
+    await confirm(
       "Êtes-vous sûr de vouloir supprimer ce jeton d'API ?",
       "Attention, l'action est irréversible et un nouveau jeton d'API devra être recréé, les applications utilisant ce jeton perdront l'accès à l'API et devront être reconfigurées avec le nouveau jeton d'API.",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => authStore.deleteApiToken(id),
+      "Erreur lors de la suppression du jeton d'API",
+      "Jeton d'API supprimé",
+    );
   }
-  await submit(
-    () => authStore.deleteApiToken(id),
-    "Erreur lors de la suppression du jeton d'API",
-    "Jeton d'API supprimé",
-  );
 };
 
 const revocationReasons = {

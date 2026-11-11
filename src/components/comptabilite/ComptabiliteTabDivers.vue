@@ -88,18 +88,17 @@ const editEcriture = (ecriture) => {
 };
 const deleteEcriture = async (ecritureId) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette écriture ?",
       "Attention, la suppression d'une écriture est irréversible ! Toutes les données de cette écriture seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => imputationStore.removeEcriture(ecritureId),
+      "Erreur, impossible de supprimer cette écriture",
+      "Écriture supprimée.",
+    );
   }
-  await submit(
-    () => imputationStore.removeEcriture(ecritureId),
-    "Erreur, impossible de supprimer cette écriture",
-    "Écriture supprimée.",
-  );
 };
 const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {

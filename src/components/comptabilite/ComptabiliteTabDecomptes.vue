@@ -57,18 +57,17 @@ const { download } = useDownload();
 
 const supprimer = async (decompteId) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce décompte ?",
       "Attention, la suppression d'un décompte est irréversible ! Il vous sera cependant possible de générer un nouveau décompte incluant les écritures de ce décompte.",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => decompteStore.removeDecompte(decompteId),
+      "Impossible d'effectuer cette action",
+      "Décompte supprimé.",
+    );
   }
-  await submit(
-    () => decompteStore.removeDecompte(decompteId),
-    "Impossible d'effectuer cette action",
-    "Décompte supprimé.",
-  );
 };
 const impressionResumeParSapeur = () => {
   const annee = exercicesComptables.value.find(

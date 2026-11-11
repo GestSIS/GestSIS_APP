@@ -29,18 +29,17 @@ const updateCategorie = (categorie) =>
   });
 const deleteCategorie = async (categorie) => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer cette catégorie ?",
       "Attention, la suppression d'une catégorie est irréversible !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => exerciceCategorieStore.removeExerciceCategorie(categorie.id),
+      "Erreur lors de la suppression",
+      "Catégorie supprimée.",
+    );
   }
-  await submit(
-    () => exerciceCategorieStore.removeExerciceCategorie(categorie.id),
-    "Erreur lors de la suppression",
-    "Catégorie supprimée.",
-  );
 };
 </script>
 

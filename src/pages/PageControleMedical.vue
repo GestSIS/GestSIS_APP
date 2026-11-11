@@ -152,18 +152,17 @@ const ajoutJustificatif = async () => {
 const { confirm } = useModalStore();
 const removeJustificatif = async () => {
   if (
-    !(await confirm(
+    await confirm(
       "Voulez-vous vraiment supprimer ce justificatif ?",
       "Attention, la suppression d'un justificatif est irréversible ! Toutes les données de ce justificatif seront perdues !",
-    ))
+    )
   ) {
-    return;
+    await submit(
+      () => controleMedicalStore.removeJustificatif(),
+      "Erreur lors de la suppression du justificatif.",
+      "Justificatif supprimé.",
+    );
   }
-  await submit(
-    () => controleMedicalStore.removeJustificatif(),
-    "Erreur lors de la suppression du justificatif.",
-    "Justificatif supprimé.",
-  );
 };
 
 const validite = (duree) => {
