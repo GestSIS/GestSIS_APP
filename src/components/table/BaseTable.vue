@@ -414,7 +414,7 @@ defineExpose({
             </template>
             <template v-else-if="f.type === 'number' || f.type == Number">
               {{
-                r[f.key]
+                r[f.key] != null && r[f.key] !== ""
                   ? parseFloat(r[f.key])?.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                     })

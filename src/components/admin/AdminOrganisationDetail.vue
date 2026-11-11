@@ -32,7 +32,6 @@ await loadOrganisation();
 watch(
   () => id,
   () => {
-    console.log("loading ...");
     loadOrganisation();
   },
 );
