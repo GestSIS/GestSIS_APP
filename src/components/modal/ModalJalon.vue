@@ -3,7 +3,7 @@ import { computed, reactive, ref } from "vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import { DateTime } from "luxon";
+import { fromDateTimeLocalValue, toDateTimeLocalValue } from "../../tools/index.js";
 import { useSubmit } from "../../composables/useSubmit.js";
 
 const responsableOptions = [
@@ -27,12 +27,10 @@ const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   intervention_id: interventionStore.active.id,
   ...data.jalon,
-  date_time2: DateTime.fromSQL(data.jalon.date_time)?.toISO()?.slice(0, 16),
+  date_time2: toDateTimeLocalValue(data.jalon.date_time),
 });
-const format = "yyyy-MM-dd HH:mm";
-
-const min = DateTime.fromSQL(data.min)?.toISO();
-const max = DateTime.fromSQL(data.max)?.toISO();
+const min = toDateTimeLocalValue(data.min);
+const max = toDateTimeLocalValue(data.max);
 
 const responsableMode = ref(
   data?.jalon?.sapeur_id ? "sapeur_id" : data?.jalon?.sapeur ? "sapeur" : "aucun",
@@ -43,7 +41,7 @@ const { closeModal } = useModalStore();
 
 const save = async () => {
   // Format back dates to SQL Format
-  form.date_time = DateTime.fromISO(form.date_time2).toFormat(format);
+  form.date_time = fromDateTimeLocalValue(form.date_time2);
 
   if (responsableMode.value == "sapeur") {
     delete form.sapeur_id;

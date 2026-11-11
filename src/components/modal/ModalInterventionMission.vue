@@ -4,7 +4,7 @@ import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useMissionStore } from "../../stores/intervention/Mission.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import { DateTime } from "luxon";
+import { fromDateTimeLocalValue, toDateTimeLocalValue } from "../../tools/index.js";
 import BaseAutocomplete from "/src/components/base/BaseAutocomplete.vue";
 import { useSubmit } from "../../composables/useSubmit.js";
 
@@ -31,14 +31,13 @@ const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   intervention_id: interventionStore.active.id,
   ...data.mission,
-  debut2: data.mission.debut?.replace(" ", "T"),
-  fin2: data.mission.fin?.replace(" ", "T"),
+  debut2: toDateTimeLocalValue(data.mission.debut),
+  fin2: toDateTimeLocalValue(data.mission.fin),
 });
 // min = data.min;//DateTime.fromSQL(data.min)slice(0, ).toISO().slice(0, 16);
 // max = data.max;//DateTime.fromSQL(data.max).toISO().slice(0, 16);
 
 const responsableMode = ref(data?.mission?.sapeur_id ? "sapeur_id" : "sapeur");
-const format = "yyyy-MM-dd HH:mm";
 
 const listMissions = computed(() => missionStore.liste);
 const listeSapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
@@ -47,8 +46,8 @@ const { closeModal } = useModalStore();
 
 const save = async () => {
   // Format back dates to SQL Format
-  form.debut = DateTime.fromISO(form.debut2)?.toFormat(format);
-  form.fin = DateTime.fromISO(form.fin2)?.toFormat(format);
+  form.debut = fromDateTimeLocalValue(form.debut2);
+  form.fin = fromDateTimeLocalValue(form.fin2);
 
   if (responsableMode.value == "sapeur") {
     delete form.sapeur_id;

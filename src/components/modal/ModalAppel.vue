@@ -3,7 +3,7 @@ import { computed, reactive, watch } from "vue";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useTelephoneStore } from "../../stores/sapeur/Telephone.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import { DateTime } from "luxon";
+import { fromDateTimeLocalValue, toDateTimeLocalValue } from "../../tools/index.js";
 import BaseAutocomplete from "/src/components/base/BaseAutocomplete.vue";
 import { useSubmit } from "../../composables/useSubmit.js";
 
@@ -22,12 +22,10 @@ const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
   intervention_id: interventionStore.active.id,
   ...data.appel,
-  date2: DateTime.fromSQL(data.appel.date)?.toISO()?.slice(0, 16),
+  date2: toDateTimeLocalValue(data.appel.date),
 });
-const format = "yyyy-MM-dd HH:mm";
-
-const min = DateTime.fromSQL(data.min)?.toISO();
-const max = DateTime.fromSQL(data.max)?.toISO();
+const min = toDateTimeLocalValue(data.min);
+const max = toDateTimeLocalValue(data.max);
 
 const listTelephones = computed(() => telephoneStore.liste);
 
@@ -45,7 +43,7 @@ watch(
 
 const save = async () => {
   // Format back dates to SQL Format
-  form.date = DateTime.fromISO(form.date2).toFormat(format);
+  form.date = fromDateTimeLocalValue(form.date2);
 
   const { ok } = await submit(() =>
     form.id

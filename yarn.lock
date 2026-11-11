@@ -2293,7 +2293,6 @@ __metadata:
     bootstrap: "npm:^5.3.8"
     floating-vue: "npm:^5.4.0"
     jwt-decode: "npm:^4.0.0"
-    luxon: "npm:^3.7.2"
     nprogress: "npm:^0.2.0"
     pinia: "npm:^4.1.0"
     qrcode: "npm:^1.5.4"
@@ -2615,13 +2614,6 @@ __metadata:
   version: 11.5.3
   resolution: "lru-cache@npm:11.5.3"
   checksum: 10/824394f43827de37e961e9e344d4f0d2afb0347106ddafae620d0035c36337bc64e64cddbc17f6c630a73c9db34cf3f81211e3d43699a32e9f3641f391415b82
-  languageName: node
-  linkType: hard
-
-"luxon@npm:^3.7.2":
-  version: 3.7.2
-  resolution: "luxon@npm:3.7.2"
-  checksum: 10/b24cd205ed306ce7415991687897dcc4027921ae413c9116590bc33a95f93b86ce52cf74ba72b4f5c5ab1c10090517f54ac8edfb127c049e0bf55b90dc2260be
   languageName: node
   linkType: hard
 

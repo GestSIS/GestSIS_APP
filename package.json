@@ -26,7 +26,6 @@
     "bootstrap": "^5.3.8",
     "floating-vue": "^5.4.0",
     "jwt-decode": "^4.0.0",
-    "luxon": "^3.7.2",
     "nprogress": "^0.2.0",
     "pinia": "^4.1.0",
     "qrcode": "^1.5.4",

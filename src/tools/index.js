@@ -41,6 +41,16 @@ export const exportFileName = (parts, extension) =>
 // convertir en heure locale pourrait les décaler d'un jour.
 export const toDateInputValue = (value) => (value ? String(value).slice(0, 10) : null);
 
+// Valeur d'un <input type="datetime-local"> (« YYYY-MM-DDTHH:mm ») à partir d'une date-heure SQL
+// de l'API (« YYYY-MM-DD HH:mm:ss »). Sert aussi pour les attributs min/max, qui n'acceptent que ce
+// format (un ISO avec millisecondes ou fuseau est ignoré par le navigateur).
+export const toDateTimeLocalValue = (value) =>
+  value ? String(value).replace(" ", "T").slice(0, 16) : null;
+
+// Inverse : valeur d'un <input type="datetime-local"> vers le format SQL « YYYY-MM-DD HH:mm ».
+export const fromDateTimeLocalValue = (value) =>
+  value ? String(value).replace("T", " ").slice(0, 16) : null;
+
 // Ajoute un nombre de mois à une date (chaîne "YYYY-MM-DD" ou ISO complet),
 // sans déborder sur le mois suivant si le jour d'origine n'existe pas dans le
 // mois cible (31 janvier + 1 mois -> 28 février, + 2 mois -> 31 mars). Sert de

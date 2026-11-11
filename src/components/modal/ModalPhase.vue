@@ -2,7 +2,8 @@
 import { usePhaseTypeStore } from "../../stores/intervention/PhaseType.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useModalStore } from "../../stores/common/Modal.js";
-import { DateTime } from "luxon";
+import { toDateInputValue, toDateTimeLocalValue } from "../../tools/index.js";
+import { formatTime } from "../../tools/formatters.js";
 import { computed, reactive } from "vue";
 import { useSubmit } from "../../composables/useSubmit.js";
 
@@ -25,14 +26,13 @@ const form = reactive({
 
 const listePhaseType = computed(() => phaseTypeStore.liste);
 
-const min = DateTime.fromSQL(data.min).toISO();
+const min = toDateTimeLocalValue(data.min);
 
 if (form.debut === null && form.id) {
   form.debut2 = min;
 } else {
-  const date = DateTime.fromSQL(form.debut);
-  form.date = date.toISODate();
-  form.heure = date.toLocaleString(DateTime.TIME_24_SIMPLE);
+  form.date = toDateInputValue(form.debut);
+  form.heure = formatTime(form.debut) || null;
 }
 
 const { closeModal } = useModalStore();

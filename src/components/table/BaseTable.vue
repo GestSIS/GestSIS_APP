@@ -2,6 +2,7 @@
 import { computed, ref, useSlots, watch } from "vue";
 import { useRoute } from "vue-router";
 import { exportFileName, toLocalIsoDate } from "../../tools/index.js";
+import { formatDate, formatDateTime, formatNumber, formatTime } from "../../tools/formatters.js";
 
 const {
   data,
@@ -186,6 +187,20 @@ const exportRows = computed(() =>
 
 const route = useRoute();
 
+// Formatage par `type` de colonne, commun à l'affichage et à l'export CSV (même rendu des dates).
+// Boolean et multiline ont un rendu propre (case à cocher, retours à la ligne) : pas ici.
+const TYPE_FORMATTERS = new Map([
+  ["date", formatDate],
+  [Date, formatDate],
+  ["datetime", formatDateTime],
+  ["time", formatTime],
+  ["number", formatNumber],
+  [Number, formatNumber],
+]);
+// CSV : les nombres restent bruts (1234.5) pour qu'Excel les lise comme des nombres.
+const CSV_RAW_TYPES = new Set(["number", Number]);
+const typeFormatter = (field) => TYPE_FORMATTERS.get(field.type);
+
 const toCvs = () => {
   // "\ufeff" = BOM UTF-8 : sans lui Excel ouvre le CSV en Latin-1 et casse les accents
   const csv =
@@ -200,16 +215,12 @@ const toCvs = () => {
         fields
           .filter((f) => !f.slot || f.formatter)
           .map((f) => {
-            switch (f.type) {
-              case "boolean":
-              case Boolean:
-                return e[f.key] ? "vrai" : "faux";
-              case "date":
-              case Date:
-                return e[f.key] ? new Date(e[f.key]).toLocaleDateString("fr-CH") : "";
-              default:
-                return csvEscape((f.formatter || defaultFormatter)(e[f.key], e));
+            if (f.type === "boolean" || f.type === Boolean) {
+              return e[f.key] ? "vrai" : "faux";
             }
+            const format =
+              (!CSV_RAW_TYPES.has(f.type) && typeFormatter(f)) || f.formatter || defaultFormatter;
+            return csvEscape(format(e[f.key], e));
           })
           .join(";"),
       )
@@ -422,24 +433,9 @@ defineExpose({
                 disabled
               /><label v-if="f.labelKey">{{ r[f.labelKey] }}</label>
             </template>
-            <!-- Date types -->
-            <template v-else-if="f.type === 'date' || f.type == Date">
-              {{ r[f.key] ? new Date(r[f.key]).toLocaleDateString("fr-CH").slice(0, 10) : "" }}
-            </template>
-            <template v-else-if="f.type === 'datetime'">
-              {{ r[f.key] ? new Date(r[f.key]).toLocaleString("fr-CH").slice(0, 16) : "" }}
-            </template>
-            <template v-else-if="f.type === 'time'">
-              {{ r[f.key] ? new Date(r[f.key]).toLocaleString("fr-CH").slice(11, 16) : "" }}
-            </template>
-            <template v-else-if="f.type === 'number' || f.type == Number">
-              {{
-                r[f.key] != null && r[f.key] !== ""
-                  ? parseFloat(r[f.key])?.toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                    })
-                  : ""
-              }}
+            <!-- Dates, heures, nombres : voir TYPE_FORMATTERS -->
+            <template v-else-if="typeFormatter(f)">
+              {{ typeFormatter(f)(r[f.key], r) }}
             </template>
             <!-- Multiline types -->
             <template v-else-if="f.type === 'multiline'">

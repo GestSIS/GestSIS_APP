@@ -40,3 +40,81 @@ export const formatAvs = (noAvs) => {
   }
   return `${chiffres.slice(0, 3)}.${chiffres.slice(3, 7)}.${chiffres.slice(7, 11)}.${chiffres.slice(11)}`;
 };
+
+// --- Dates -------------------------------------------------------------------------------------
+// Formats explicites (Intl) plutôt que de découper le résultat de toLocaleString : le découpage
+// dépend du format rendu par le navigateur pour la locale.
+const LOCALE = "fr-CH";
+const dateFormat = new Intl.DateTimeFormat(LOCALE, {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+});
+const timeFormat = new Intl.DateTimeFormat(LOCALE, { hour: "2-digit", minute: "2-digit" });
+
+const DATE_ONLY = /^(\d{4})-(\d{2})-(\d{2})$/;
+const SQL_DATETIME = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}/;
+
+/**
+ * Convertit une valeur de l'API en Date, ou null si vide/invalide.
+ * - « 2026-11-11 » : date locale (new Date() la lirait comme minuit UTC) ;
+ * - « 2026-11-11 14:30:00 » (format SQL) : heure locale (l'espace n'est pas lu par tous les navigateurs) ;
+ * - ISO 8601 (« …T…Z »), timestamp ou Date : tels quels.
+ */
+export const parseDate = (value) => {
+  if (value === null || value === undefined || value === "") return null;
+  let date;
+  if (value instanceof Date) {
+    date = value;
+  } else if (typeof value === "string" && DATE_ONLY.test(value)) {
+    const [, y, m, d] = value.match(DATE_ONLY);
+    date = new Date(Number(y), Number(m) - 1, Number(d));
+  } else if (typeof value === "string" && SQL_DATETIME.test(value)) {
+    date = new Date(value.replace(" ", "T"));
+  } else {
+    date = new Date(value);
+  }
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
+/** « 11.11.2026 », chaîne vide si la valeur est vide ou invalide. */
+export const formatDate = (value) => {
+  const date = parseDate(value);
+  return date ? dateFormat.format(date) : "";
+};
+
+/** « 14:30 », chaîne vide si la valeur est vide ou invalide. */
+export const formatTime = (value) => {
+  const date = parseDate(value);
+  return date ? timeFormat.format(date) : "";
+};
+
+const dateMoyenneFormat = new Intl.DateTimeFormat(LOCALE, {
+  weekday: "short",
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+});
+
+/** « mer. 11 nov. 2026 », chaîne vide si la valeur est vide ou invalide. */
+export const formatDateMoyenne = (value) => {
+  const date = parseDate(value);
+  return date ? dateMoyenneFormat.format(date) : "";
+};
+
+/** « 11.11.2026 14:30 », chaîne vide si la valeur est vide ou invalide. */
+export const formatDateTime = (value) => {
+  const date = parseDate(value);
+  return date ? `${dateFormat.format(date)} ${timeFormat.format(date)}` : "";
+};
+
+// --- Nombres -----------------------------------------------------------------------------------
+
+/** Montant avec 2 décimales minimum, dans la locale du navigateur ; chaîne vide si vide. */
+export const formatNumber = (value) => {
+  if (value === null || value === undefined || value === "") return "";
+  const number = parseFloat(value);
+  return Number.isNaN(number)
+    ? String(value)
+    : number.toLocaleString(undefined, { minimumFractionDigits: 2 });
+};

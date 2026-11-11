@@ -27,7 +27,7 @@ Une bibliothèque de composants de base est **enregistrée globalement** dans `s
 Tableau de données avec tri par colonne (clic sur l'en-tête), états de chargement/vide, sélection de ligne, lignes de détail dépliables et export CSV intégré.
 
 - Props : `:data` (Array), `:fields` (définition des colonnes), `:loading`, `no-data` (texte si vide), `:selectable` (+ événement `@selected="row => …"`), `select-key` (défaut `id`), `:row-class`, `:grouped-data`, `:detail-row-column`, `hide-download`, `show-count` (affiche « Nombre : N » dans le pied).
-- `fields` = tableau d'objets `{ title, key, type?, slot?, formatter?, titleClass?, columnClass?, sortKey?, labelKey? }`. `type` ∈ `Boolean`, `Date`, `Number`, `'datetime'`, `'time'`, `'multiline'` (formatage auto). Une colonne avec `slot: 'nom'` se rend via `<template #nom="{ rowData, value, actions, status }">`.
+- `fields` = tableau d'objets `{ title, key, type?, slot?, formatter?, titleClass?, columnClass?, sortKey?, labelKey? }`. `type` ∈ `Boolean`, `Date`, `Number`, `'datetime'`, `'time'`, `'multiline'` (formatage auto, identique à l'écran et dans l'export CSV ; les nombres restent bruts dans le CSV). Une colonne avec `slot: 'nom'` se rend via `<template #nom="{ rowData, value, actions, status }">`.
 - Slots : la colonne personnalisée (`#nom`), `#head`, `#foot="{ data, colspan }"` (`colspan` = nombre de colonnes affichées, colonne de détail comprise), `#detail-row="{ rowData }"`, `#groupeHeader`.
 
 ```vue
@@ -54,6 +54,10 @@ Tableau de données avec tri par colonne (clic sur l'en-tête), états de charge
 - **`<stateful-filter>`** — wrapper de filtrage à état persistant (clé `:id`, `:data`) ; expose en scoped slot `{ setFilter, filters, filteredData, reset, canReset }`.
 
 > `BaseAutocomplete` (`components/base/BaseAutocomplete.vue`) existe mais n'est **pas** enregistré globalement → l'importer localement si besoin.
+
+### Dates et nombres
+
+Formater avec `tools/formatters.js` : `formatDate` (« 11.11.2026 »), `formatTime` (« 14:30 »), `formatDateTime`, `formatNumber`, et `parseDate` pour obtenir une `Date`. Ils lisent les formats de l'API (ISO, SQL `YYYY-MM-DD HH:mm:ss`, date seule en heure locale) et renvoient `""` si la valeur est vide ou invalide. Ne pas découper le résultat de `toLocaleString` (`.slice(…)`) ni passer une date SQL à `new Date()`.
 
 ## Commandes
 

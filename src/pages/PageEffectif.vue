@@ -9,12 +9,11 @@ import permissions from "../composables/permissions.js";
 
 import SapeurService from "../services/SapeurService.js";
 import { useAuthStore } from "../stores/auth/Auth.js";
-import { DateTime } from "luxon";
 import { downloadVcard } from "../tools/exportSapeurs";
 import { computed, ref } from "vue";
 import { useNotification } from "../composables/useNotification.js";
 import { useHasPermission } from "../composables/useHasPermission.js";
-import { formatPhoneNumber } from "../tools/formatters.js";
+import { formatPhoneNumber, parseDate } from "../tools/formatters.js";
 import { exportFileName, toLocalIsoDate } from "../tools/index.js";
 import { useDownload } from "../composables/useDownload.js";
 
@@ -79,9 +78,7 @@ const computedData = computed(() => {
       b: s.permis.find((p) => p.permis_type_id == b_id) != undefined,
       c1: s.permis.find((p) => p.permis_type_id == c1_id) != undefined,
       c1_118: s.permis.find((p) => p.permis_type_id == c1_118_id) != undefined,
-      fonctions: s.fonctions.filter(
-        (f) => f.fin == null || DateTime.fromSQL(f.fin).diff(DateTime.now()) >= 0,
-      ),
+      fonctions: s.fonctions.filter((f) => f.fin == null || parseDate(f.fin) >= new Date()),
       fonction: indexedFonctions.get(s.fonction_id)?.nom || "",
       localite: indexedLocalite.get(s.localite_id)?.designation || "",
       fonction_tri: indexedFonctions.get(s.fonction_id)?.tri || 0,

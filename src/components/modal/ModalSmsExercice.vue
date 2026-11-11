@@ -5,7 +5,7 @@ import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useExerciceCategorieStore } from "../../stores/exercice/ExerciceCategorie.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useAspsmsParamStore } from "../../stores/sms/AspsmsParam.js";
-import { DateTime } from "luxon";
+import { formatDateMoyenne } from "../../tools/formatters.js";
 
 import SapeurService from "../../services/SapeurService";
 import ExerciceService from "../../services/ExerciceService";
@@ -50,9 +50,7 @@ const params = ref({
   exerciceId: data.id,
   message:
     `Rappel\n` +
-    `${DateTime.fromSQL(data.date).toLocaleString(
-      DateTime.DATE_MED_WITH_WEEKDAY,
-    )} ${data.heure.slice(0, 5)} ${data.lieu} à ${localite?.designation ?? ""} \n` +
+    `${formatDateMoyenne(data.date)} ${data.heure.slice(0, 5)} ${data.lieu} à ${localite?.designation ?? ""} \n` +
     `${categorie?.designation} : ${data.communications}`,
 });
 
