@@ -7,9 +7,7 @@ import { useModalStore } from "../../stores/common/Modal";
 import { useAdminStore } from "../../stores/admin/Admin";
 import { useAuthStore } from "../../stores/auth/Auth";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { useClipboard } from "../../composables/useClipboard.js";
 
-const { copy } = useClipboard();
 
 const { id } = defineProps({
   id: {
@@ -67,40 +65,44 @@ const twoFactorExemptionActive = computed(
       new Date(user.value.two_factor_exempt_until) > new Date()),
 );
 
-const grantTwoFactorExemption = () => {
-  adminStore
-    .grantTwoFactorExemption(
-      user.value.id,
-      twoFactorExemptReason.value,
-      // `<input type="date">` donne "YYYY-MM-DD", que `new Date()` lirait comme
-      // minuit UTC : l'exemption doit couvrir toute la journée choisie, en heure locale.
-      twoFactorExemptUntil.value
-        ? new Date(`${twoFactorExemptUntil.value}T23:59:59`).toISOString()
-        : null,
-    )
-    .then((data) => {
-      user.value = { ...user.value, ...data };
-      twoFactorExemptStep.value = "status";
-      twoFactorExemptReason.value = "";
-      twoFactorExemptUntil.value = "";
-      awn.success("Exemption accordée");
-    })
-    .catch((e) => awn.alert(e?.message || "Erreur lors de l'octroi de l'exemption"));
+const grantTwoFactorExemption = async () => {
+  const { ok, data } = await submit(
+    () =>
+      adminStore.grantTwoFactorExemption(
+        user.value.id,
+        twoFactorExemptReason.value,
+        // `<input type="date">` donne "YYYY-MM-DD", que `new Date()` lirait comme
+        // minuit UTC : l'exemption doit couvrir toute la journée choisie, en heure locale.
+        twoFactorExemptUntil.value
+          ? new Date(`${twoFactorExemptUntil.value}T23:59:59`).toISOString()
+          : null,
+      ),
+    "Erreur lors de l'octroi de l'exemption",
+  );
+  if (ok) {
+    user.value = { ...user.value, ...data };
+    twoFactorExemptStep.value = "status";
+    twoFactorExemptReason.value = "";
+    twoFactorExemptUntil.value = "";
+    awn.success("Exemption accordée");
+  }
 };
 
-const revokeTwoFactorExemption = () =>
-  adminStore
-    .revokeTwoFactorExemption(user.value.id)
-    .then(() => {
-      user.value = {
-        ...user.value,
-        two_factor_exempt: false,
-        two_factor_exempt_reason: null,
-        two_factor_exempt_until: null,
-      };
-      awn.success("Exemption révoquée");
-    })
-    .catch((e) => awn.alert(e?.message || "Erreur lors de la révocation"));
+const revokeTwoFactorExemption = async () => {
+  const { ok } = await submit(
+    () => adminStore.revokeTwoFactorExemption(user.value.id),
+    "Erreur lors de la révocation",
+  );
+  if (ok) {
+    user.value = {
+      ...user.value,
+      two_factor_exempt: false,
+      two_factor_exempt_reason: null,
+      two_factor_exempt_until: null,
+    };
+    awn.success("Exemption révoquée");
+  }
+};
 
 // Durée maximale des sessions du compte, depuis le login (30 jours par
 // défaut) : 90 jours pour une tablette ou un appareil partagé.
@@ -110,37 +112,47 @@ const sessionMaxDaysOptions = [
 ];
 const sessionMaxDays = computed({
   get: () => user.value.session_max_days ?? 30,
-  set: (maxDays) =>
-    adminStore
-      .updateSessionPolicy(user.value.id, maxDays)
-      .then((data) => {
-        user.value = { ...user.value, ...data };
-        awn.success("Durée des sessions mise à jour");
-      })
-      .catch((e) => awn.alert(e?.message || "Erreur lors de la mise à jour")),
+  // En cas d'échec, `user` n'est pas modifié : le select revient à la valeur enregistrée.
+  set: async (maxDays) => {
+    const { ok, data } = await submit(
+      () => adminStore.updateSessionPolicy(user.value.id, maxDays),
+      "Erreur lors de la mise à jour",
+    );
+    if (ok) {
+      user.value = { ...user.value, ...data };
+      awn.success("Durée des sessions mise à jour");
+    }
+  },
 });
 
-const revokeAllSessions = () =>
-  confirm(
-    "Déconnecter tous les appareils de cet utilisateur ?",
-    "Chaque appareil devra se reconnecter avec le mot de passe (et le 2FA si actif). Utile en cas d'appareil perdu ou volé.",
-  ).then(() =>
-    adminStore
-      .revokeAllSessions(user.value.id)
-      .then(() => awn.success("Tous les appareils ont été déconnectés"))
-      .catch((e) => awn.alert(e?.message || "Erreur lors de la déconnexion")),
+const revokeAllSessions = async () => {
+  if (
+    !(await confirm(
+      "Déconnecter tous les appareils de cet utilisateur ?",
+      "Chaque appareil devra se reconnecter avec le mot de passe (et le 2FA si actif). Utile en cas d'appareil perdu ou volé.",
+    ))
+  ) {
+    return;
+  }
+  const { ok } = await submit(
+    () => adminStore.revokeAllSessions(user.value.id),
+    "Erreur lors de la déconnexion",
   );
+  if (ok) {
+    awn.success("Tous les appareils ont été déconnectés");
+  }
+};
 
-const tokenForUser = (user) =>
-  AdminService.getUserToken(user.id)
-    .then((data) => copy(data.accessToken, "Jeton copié dans le presse-papiers"))
-    .catch((err) => awn.alert(err?.message || "Erreur lors de la récupération du jeton"));
 const editUser = (user) => showModal({ component: "ModalUser", data: user });
-const impersonateUser = (user) =>
-  authStore
-    .impersonate(user.id)
-    .then(() => router.push({ name: "accueil" }))
-    .catch((e) => awn.alert(e?.message || "Erreur lors de l'usurpation"));
+const impersonateUser = async (user) => {
+  const { ok } = await submit(
+    () => authStore.impersonate(user.id),
+    "Erreur lors de l'usurpation",
+  );
+  if (ok) {
+    router.push({ name: "accueil" });
+  }
+};
 
 const computedDataRoles = computed(() =>
   (user.value.user_roles || []).map((ur) => {
@@ -231,7 +243,7 @@ const fieldsSapeurs = [
             <button
               type="button"
               class="btn btn-outline-primary me-1"
-              :disabled="user.id === authStore.user?.id"
+              :disabled="isSubmitting || user.id === authStore.user?.id"
               :title="
                 user.id === authStore.user?.id
                   ? 'Vous ne pouvez pas usurper votre propre identité'
@@ -344,6 +356,7 @@ const fieldsSapeurs = [
               </button>
               <button
                 v-if="user.two_factor_exempt"
+                :disabled="isSubmitting"
                 type="button"
                 class="btn btn-sm btn-outline-danger mt-1"
                 @click="revokeTwoFactorExemption"
@@ -373,7 +386,7 @@ const fieldsSapeurs = [
               <button
                 type="button"
                 class="btn btn-sm btn-primary me-1"
-                :disabled="!twoFactorExemptReason"
+                :disabled="isSubmitting || !twoFactorExemptReason"
                 @click="grantTwoFactorExemption"
               >
                 Confirmer
@@ -400,6 +413,7 @@ const fieldsSapeurs = [
             <button
               type="button"
               class="btn btn-sm btn-outline-danger mt-1"
+              :disabled="isSubmitting"
               @click="revokeAllSessions"
             >
               Déconnecter tous les appareils

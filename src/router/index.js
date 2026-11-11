@@ -7,6 +7,7 @@ import { useAuthStore } from "../stores/auth/Auth.js";
 import { TokenService } from "../services/StorageService.js";
 
 import NProgress from "nprogress";
+import { safeSessionStorage } from "../tools/storage.js";
 import { useHasPermission } from "../composables/useHasPermission.js";
 
 const redirect = async (to, from) => {
@@ -1114,16 +1115,13 @@ router.beforeEach((to) => {
 });
 
 window.addEventListener("vite:preloadError", (event) => {
-  try {
-    if (sessionStorage.getItem(CHUNK_RELOAD_GUARD_KEY)) {
-      // Déjà rechargé sans succès : on laisse Vite relancer l'erreur pour qu'elle soit rapportée.
-      return;
-    }
-    sessionStorage.setItem(CHUNK_RELOAD_GUARD_KEY, "1");
-  } catch {
-    // sessionStorage indisponible (navigation privée, quota) : on recharge quand même, au prix
-    // d'une éventuelle boucle si l'erreur persiste (préférable à rester bloqué sur l'erreur).
+  // sessionStorage indisponible (stockage bloqué) : get renvoie null et on recharge quand même,
+  // au prix d'une éventuelle boucle si l'erreur persiste (préférable à rester bloqué sur l'erreur).
+  if (safeSessionStorage.get(CHUNK_RELOAD_GUARD_KEY)) {
+    // Déjà rechargé sans succès : on laisse Vite relancer l'erreur pour qu'elle soit rapportée.
+    return;
   }
+  safeSessionStorage.set(CHUNK_RELOAD_GUARD_KEY, "1");
 
   // Sans preventDefault, Vite relance l'erreur après l'événement : elle remonterait comme rejet
   // non géré (Sentry) alors que le rechargement la résout.
@@ -1160,11 +1158,7 @@ router.beforeEach(async (to, from) => {
 
 router.afterEach(async () => {
   NProgress.done();
-  try {
-    sessionStorage.removeItem(CHUNK_RELOAD_GUARD_KEY);
-  } catch {
-    // sessionStorage indisponible : rien à nettoyer.
-  }
+  safeSessionStorage.remove(CHUNK_RELOAD_GUARD_KEY);
 });
 
 // `localStorage` est partagé entre onglets : si un autre onglet se connecte
