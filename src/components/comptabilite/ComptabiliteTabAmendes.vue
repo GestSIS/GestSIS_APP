@@ -86,13 +86,25 @@ const detailRowOptions = {
     { title: "Date", key: "date", type: Date },
     { title: "Exercice", key: "designation" },
     { title: "Excuse", key: "complement" },
-    { title: "Total", key: "total", type: Number },
+    {
+      title: "Total",
+      key: "total",
+      type: Number,
+      titleClass: "text-center",
+      columnClass: "text-end",
+    },
   ],
 };
 const fields = [
   { title: "Sapeur", key: "sapeur" },
   { title: "Nombre", key: "nb" },
-  { title: "Montant", key: "total", type: Number },
+  {
+    title: "Montant",
+    key: "total",
+    type: Number,
+    titleClass: "text-center",
+    columnClass: "text-end",
+  },
 ];
 </script>
 

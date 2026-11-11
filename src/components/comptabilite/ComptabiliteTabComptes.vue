@@ -97,7 +97,13 @@ const fields = [
   },
   { title: "Designation", key: "designation" },
   { title: "Sapeur", key: "sapeur" },
-  { title: "Total", key: "total", type: Number },
+  {
+    title: "Total",
+    key: "total",
+    type: Number,
+    titleClass: "text-center",
+    columnClass: "text-end",
+  },
   { title: "Actions", slot: "actions" },
 ];
 </script>

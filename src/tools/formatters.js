@@ -114,7 +114,9 @@ export const formatDateTime = (value) => {
 export const formatNumber = (value) => {
   if (value === null || value === undefined || value === "") return "";
   const number = parseFloat(value);
-  return Number.isNaN(number)
-    ? String(value)
-    : number.toLocaleString(undefined, { minimumFractionDigits: 2 });
+  if (Number.isNaN(number)) return String(value);
+  // -0 (ex. amende nulle passée en négatif) s'afficherait « -0.00 »
+  return (Object.is(number, -0) ? 0 : number).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+  });
 };

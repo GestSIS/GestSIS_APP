@@ -135,12 +135,14 @@ const detailRowOptions = {
     {
       title: "Tarif",
       key: "tarif",
+      type: Number,
       titleClass: "text-center",
       columnClass: "text-end",
     },
     {
       title: "Quantite",
       key: "quantite",
+      type: Number,
       titleClass: "text-center",
       columnClass: "text-end",
     },
@@ -163,7 +165,7 @@ const fields = [
   { title: "Date", key: "date", type: Date },
   { title: "Cours", key: "designation" },
   { title: "Sapeur", key: "nom_prenom" },
-  { title: "Durée [jour]", key: "duree" },
+  { title: "Durée [jour]", key: "duree", titleClass: "text-center", columnClass: "text-end" },
   { title: "Localité", key: "localite" },
   { title: "Actions", slot: "actions" },
 ];

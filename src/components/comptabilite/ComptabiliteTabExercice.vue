@@ -152,25 +152,29 @@ const detailRowOptions = {
     {
       title: "Tarif",
       key: "tarif",
+      type: Number,
       titleClass: "text-center",
       columnClass: "text-end",
     },
     {
       title: "Quantite",
       key: "quantite",
+      type: Number,
       titleClass: "text-center",
       columnClass: "text-end",
     },
     {
       title: "Amende",
       key: "total",
-      formatter: (total, ecriture) => (ecriture.module == 5 ? ecriture.total : "0.00"),
+      formatter: (total, ecriture) => (ecriture.module == 5 ? total : 0),
+      type: Number,
       titleClass: "text-center",
       columnClass: "text-end",
     },
     {
       title: "Total",
       key: "total",
+      // TODO: check si le cas formatter + type peut être simplifé dans les cas spéciaux comme ici
       formatter: (total, ecriture) => (ecriture.module == 5 ? -total : total),
       type: Number,
       titleClass: "text-center",

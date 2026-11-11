@@ -142,12 +142,14 @@ const detailRowOptions = {
     {
       title: "Tarif",
       key: "tarif",
+      type: Number,
       titleClass: "text-center",
       columnClass: "text-end",
     },
     {
       title: "Tarif min",
       key: "tarif_min",
+      type: Number,
       titleClass: "text-center",
       columnClass: "text-end",
     },
@@ -174,6 +176,7 @@ const detailRowOptions = {
     {
       title: "Taux",
       key: "taux",
+      type: Number,
       titleClass: "text-center",
       columnClass: "text-end",
     },
@@ -186,12 +189,14 @@ const detailRowOptions = {
     {
       title: "Quantité",
       key: "quantite",
+      type: Number,
       titleClass: "text-center",
       columnClass: "text-end",
     },
     {
       title: "Total",
       key: "total",
+      type: Number,
       titleClass: "text-center",
       columnClass: "text-end",
     },

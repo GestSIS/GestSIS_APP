@@ -201,6 +201,13 @@ const TYPE_FORMATTERS = new Map([
 const CSV_RAW_TYPES = new Set(["number", Number]);
 const typeFormatter = (field) => TYPE_FORMATTERS.get(field.type);
 
+// Valeur d'une cellule typée : d'abord le `formatter` du champ (calcul, ex. amende en négatif),
+// puis la mise en forme du type (présentation). `brut` : sans mise en forme (export CSV des nombres).
+const valeurTypee = (field, row, { brut = false } = {}) => {
+  const valeur = field.formatter ? field.formatter(row[field.key], row) : row[field.key];
+  return brut ? valeur : typeFormatter(field)(valeur, row);
+};
+
 const toCvs = () => {
   // "\ufeff" = BOM UTF-8 : sans lui Excel ouvre le CSV en Latin-1 et casse les accents
   const csv =
@@ -218,9 +225,10 @@ const toCvs = () => {
             if (f.type === "boolean" || f.type === Boolean) {
               return e[f.key] ? "vrai" : "faux";
             }
-            const format =
-              (!CSV_RAW_TYPES.has(f.type) && typeFormatter(f)) || f.formatter || defaultFormatter;
-            return csvEscape(format(e[f.key], e));
+            if (typeFormatter(f)) {
+              return csvEscape(valeurTypee(f, e, { brut: CSV_RAW_TYPES.has(f.type) }));
+            }
+            return csvEscape((f.formatter || defaultFormatter)(e[f.key], e));
           })
           .join(";"),
       )
@@ -435,7 +443,7 @@ defineExpose({
             </template>
             <!-- Dates, heures, nombres : voir TYPE_FORMATTERS -->
             <template v-else-if="typeFormatter(f)">
-              {{ typeFormatter(f)(r[f.key], r) }}
+              {{ valeurTypee(f, r) }}
             </template>
             <!-- Multiline types -->
             <template v-else-if="f.type === 'multiline'">
