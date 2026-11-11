@@ -36,9 +36,6 @@ export default {
   getPermis(sapeurId) {
     return Api.api().get("/sapeurs/" + sapeurId + "/permis");
   },
-  getTelephones(sapeurId) {
-    return Api.api().get("/sapeurs/" + sapeurId + "/telephones");
-  },
   getGroupes(sapeurId) {
     return Api.api().get("/sapeurs/" + sapeurId + "/groupes");
   },

@@ -30,8 +30,13 @@ export const useSapeurStore = defineStore("sapeur", {
       return data;
     },
     async fetchSapeur(sapeurId) {
-      const data = await SapeurService.getData(sapeurId);
-      this.active.data = data;
+      // La fiche inclut les numéros de téléphone : rangés à part, comme les autres listes du sapeur
+      const { telephones = [], ...data } = await SapeurService.getData(sapeurId);
+      // Réponse arrivée après un changement de sapeur : ne pas écraser la fiche du nouveau
+      if (this.active.id == sapeurId) {
+        this.active.data = data;
+        this.active.telephones = telephones;
+      }
       this.liste = this.liste.map((s) =>
         s.id == data.id
           ? {
@@ -50,11 +55,6 @@ export const useSapeurStore = defineStore("sapeur", {
     async fetchSapeurPermis(sapeurId) {
       const data = await SapeurService.getPermis(sapeurId);
       this.active.permis = data;
-      return data;
-    },
-    async fetchSapeurTelephones(sapeurId) {
-      const data = await SapeurService.getTelephones(sapeurId);
-      this.active.telephones = data;
       return data;
     },
     async fetchSapeurGrades(sapeurId) {

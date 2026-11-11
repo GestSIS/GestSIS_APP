@@ -14,6 +14,7 @@ import { useHasPermission } from "../composables/useHasPermission.js";
 import { computed, onMounted, ref, useTemplateRef, watch, watchEffect } from "vue";
 import { useNotification } from "../composables/useNotification.js";
 import { exportFileName } from "../tools/index.js";
+import { formatPhoneNumber } from "../tools/formatters.js";
 import { useDownload } from "../composables/useDownload.js";
 import { useSubmit } from "../composables/useSubmit.js";
 
@@ -87,11 +88,31 @@ watch(
 );
 
 // Fetch sapeur Data
-watchEffect(async () => {
+const erreurChargement = ref(false);
+const chargerSapeur = async (sapeurId) => {
+  erreurChargement.value = false;
+  try {
+    await sapeurStore.fetchSapeur(sapeurId);
+  } catch {
+    // Seulement si l'utilisateur n'a pas déjà sélectionné un autre sapeur entre-temps
+    if (sapeurStore.active.id == sapeurId) {
+      erreurChargement.value = true;
+    }
+  }
+};
+watchEffect(() => {
   if (parseInt(sapeurStore.active.id) > 0) {
-    await sapeurStore.fetchSapeur(sapeurStore.active.id);
+    chargerSapeur(sapeurStore.active.id);
   }
 });
+// Chargement en cours : la fiche en mémoire est celle d'un autre sapeur (ou pas encore là).
+// On affiche alors un indicateur de chargement plutôt qu'un mélange de l'ancien et du nouveau sapeur.
+const chargementSapeur = computed(
+  () =>
+    parseInt(sapeurStore.active.id) > 0 &&
+    !erreurChargement.value &&
+    sapeurStore.active.data?.id != sapeurStore.active.id,
+);
 
 // Redirect civils/recrues vers les onglets qui leur sont pertinents
 watchEffect(() => {
@@ -132,22 +153,71 @@ const sapeurs = computed(() => sapeurStore.liste);
 const activeSapeur = computed(() => sapeurStore.active.data);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
 const isRecrue = computed(() => activeSapeur.value?.type === TYPE_RECRUE);
-const nbRecrues = computed(() => sapeurs.value.filter(typeFilters.value.recrue).length);
+
+// En-tête de la fiche : identité du sapeur affiché, quel que soit l'onglet ouvert.
+const TYPE_LABELS = { [TYPE_SAPEUR]: "Sapeur", [TYPE_CIVIL]: "Civil", [TYPE_RECRUE]: "Recrue" };
+const enTete = computed(() => {
+  const s = activeSapeur.value;
+  if (!s?.id) return null;
+  return {
+    nomPrenom: `${s.nom ?? ""} ${s.prenom ?? ""}`.trim(),
+    type: TYPE_LABELS[s.type] ?? "",
+    // Rôle dans le corps : fonction principale puis grade
+    // (grade_id / fonction_id valent 0 quand ils ne sont pas renseignés)
+    details: [
+      fonctionStore.liste.find((f) => f.id == s.fonction_id)?.nom,
+      gradeStore.liste.find((g) => g.id == s.grade_id)?.designation,
+    ]
+      .filter(Boolean)
+      .join(" · "),
+    adresse: adresseSapeur(s),
+  };
+});
+
+// « Rue de l'Exemple 12, 2800 Localité » ; les parties manquantes sont simplement omises
+const adresseSapeur = (s) => {
+  const localite = localiteStore.liste.find((l) => l.id == s.localite_id);
+  const rue = [s.rue, s.no_rue].filter(Boolean).join(" ");
+  const ville = [localite?.npa, localite?.designation].filter(Boolean).join(" ");
+  return [rue, ville].filter(Boolean).join(", ");
+};
+
+// Numéros de l'en-tête : arrivent avec la fiche (fetchSapeur), l'en-tête n'est affiché
+// qu'une fois celle-ci chargée. Libellés des types : information d'appoint.
+baseDataStore.fetchTelephoneTypes().catch(() => {});
+const telephonesEnTete = computed(() => {
+  return sapeurStore.active.telephones
+    .slice()
+    .sort((t1, t2) => t1.priorite - t2.priorite)
+    .map((t) => ({
+      id: t.id,
+      numero: formatPhoneNumber(t.numero),
+      // Lien tel: sans espaces
+      href: `tel:${formatPhoneNumber(t.numero).replace(/\s/g, "")}`,
+      type: baseDataStore.telephoneTypes.find((tt) => tt.id == t.telephone_type_id)?.type,
+    }));
+});
 const typeFilterOptions = computed(() => [
   {
     value: "sapeur",
     label: "Sapeurs",
+    badge: sapeurs.value.filter(typeFilters.value.sapeur).filter(filters.value.actif).length,
   },
   {
     value: "civil",
     label: "Civils",
+    badge: sapeurs.value.filter(typeFilters.value.civil).filter(filters.value.actif).length,
   },
-  { value: "recrue", label: "Recrues", badge: nbRecrues.value },
+  {
+    value: "recrue",
+    label: "Recrues",
+    badge: sapeurs.value.filter(typeFilters.value.recrue).length,
+  },
 ]);
 
 const sapeursDuType = computed(() => sapeurs.value.filter(typeFilters.value[typeFilter.value]));
 const actifFilterOptions = computed(() => [
-  { value: "actif", label: "Actif", badge: sapeursDuType.value.filter(filters.value.actif).length },
+  { value: "actif", label: "Actif" },
   {
     value: "inactif",
     label: "Inactif",
@@ -156,10 +226,35 @@ const actifFilterOptions = computed(() => [
   { value: "all", label: "Tous" },
 ]);
 
+// Recherche sur le nom, la localité et la fonction principale, sans tenir compte
+// des majuscules ni des accents (« jerome » trouve « Jérôme »).
+const recherche = ref("");
+const normaliser = (texte) =>
+  String(texte ?? "")
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase();
+const texteRecherche = (s) =>
+  normaliser(
+    [
+      s.nom_prenom,
+      localiteStore.liste.find((l) => l.id == s.localite_id)?.designation,
+      fonctionStore.liste.find((f) => f.id == s.fonction_id)?.nom,
+    ].join(" "),
+  );
+
 const filteredSapeurs = computed(() => {
   const statutPredicate =
     typeFilter.value === "recrue" ? filters.value.all : filters.value[filter.value];
-  return sapeurs.value.filter(statutPredicate).filter(typeFilters.value[typeFilter.value]);
+  const termes = normaliser(recherche.value).split(/\s+/).filter(Boolean);
+  return sapeurs.value
+    .filter(statutPredicate)
+    .filter(typeFilters.value[typeFilter.value])
+    .filter((s) => {
+      if (!termes.length) return true;
+      const texte = texteRecherche(s);
+      return termes.every((terme) => texte.includes(terme));
+    });
 });
 
 const currentRouteName = computed(() => route.name);
@@ -295,27 +390,52 @@ const deleteSapeur = async () => {
     <div class="row nested-container">
       <div class="col-3 d-none d-sm-block custom-scroll-column">
         <div class="card card-primary card-outline mb-3">
-          <div class="card-header">
-            <h3 class="card-title">Filtres</h3>
-            <div class="card-body px-0">
-              <base-radio
-                v-model="typeFilter"
-                button-style
-                size="sm"
-                label="Type"
-                :options="typeFilterOptions"
-              />
-              <template v-if="typeFilter !== 'recrue'">
-                <hr class="my-2" />
-                <base-radio
-                  v-model="filter"
-                  button-style
-                  size="sm"
-                  label="Statut"
-                  :options="actifFilterOptions"
-                />
-              </template>
+          <!-- Espacement unique (gap-2) entre tous les blocs : pas de marge propre aux éléments -->
+          <div class="card-header d-flex flex-column gap-2">
+            <h5 class="card-title mb-0">Effectif</h5>
+            <div v-if="hasEditPermission" class="d-flex gap-2">
+              <button type="button" class="btn btn-primary w-50" @click="addSapeur">
+                <font-awesome-icon :icon="['fas', 'plus']" />
+                Ajouter
+              </button>
+              <button
+                type="button"
+                title="Lien d'inscription recrues"
+                class="btn btn-outline-secondary w-50"
+                @click="lienInscription"
+              >
+                <font-awesome-icon :icon="['fas', 'link']" />
+                Lien recrues
+              </button>
             </div>
+            <label for="recherche-sapeur" class="visually-hidden">Rechercher un sapeur</label>
+            <div class="input-group">
+              <input
+                id="recherche-sapeur"
+                v-model="recherche"
+                type="search"
+                class="form-control"
+                placeholder="Rechercher : nom, localité, fonction…"
+              />
+              <span class="input-group-text" aria-hidden="true">
+                <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+              </span>
+            </div>
+            <base-radio
+              v-model="typeFilter"
+              class="w-100"
+              button-style
+              label="Type"
+              :options="typeFilterOptions"
+            />
+            <base-radio
+              v-if="typeFilter !== 'recrue'"
+              v-model="filter"
+              class="w-100"
+              button-style
+              label="Statut"
+              :options="actifFilterOptions"
+            />
           </div>
           <ul id="liste-sapeurs" ref="liste-sapeurs" class="list-group list-group-flush">
             <router-link
@@ -341,40 +461,63 @@ const deleteSapeur = async () => {
                 <font-awesome-icon v-if="sapeur.type === TYPE_RECRUE" icon="person-circle-plus" />
               </a>
             </router-link>
-            <li v-if="filteredSapeurs.length === 0" class="list-group-item">Aucun sapeur</li>
-            <button
-              v-if="!filteredSapeurs.length && hasEditPermission"
-              class="btn btn-primary"
-              @click="addSapeur"
-            >
-              Ajouter un sapeur
-            </button>
+            <li v-if="filteredSapeurs.length === 0" class="list-group-item">
+              {{ recherche ? `Aucun résultat pour « ${recherche} »` : "Aucun sapeur" }}
+            </li>
           </ul>
         </div>
       </div>
       <div class="col-12 col-sm-9 custom-scroll-column">
         <div class="card card-primary card-outline mb-3 d-sm-none">
-          <div class="card-header">
-            <h3 class="card-title">Filtres</h3>
-            <div class="card-body p-0">
-              <base-radio
-                v-model="typeFilter"
-                button-style
-                size="sm"
-                label="Type"
-                :options="typeFilterOptions"
-              />
-              <template v-if="typeFilter !== 'recrue'">
-                <hr class="my-2" />
-                <base-radio
-                  v-model="filter"
-                  button-style
-                  size="sm"
-                  label="Statut"
-                  :options="actifFilterOptions"
-                />
-              </template>
+          <div class="card-header d-flex flex-column gap-2">
+            <h5 class="card-title mb-0">Effectif</h5>
+            <div v-if="hasEditPermission" class="d-flex gap-2">
+              <button type="button" class="btn btn-primary flex-fill" @click="addSapeur">
+                <font-awesome-icon :icon="['fas', 'plus']" />
+                Ajouter
+              </button>
+              <button
+                type="button"
+                title="Lien d'inscription recrues"
+                class="btn btn-outline-secondary flex-fill"
+                @click="lienInscription"
+              >
+                <font-awesome-icon :icon="['fas', 'link']" />
+                Lien recrues
+              </button>
             </div>
+            <label for="recherche-sapeur-mobile" class="visually-hidden"
+              >Rechercher un sapeur</label
+            >
+            <div class="input-group">
+              <input
+                id="recherche-sapeur-mobile"
+                v-model="recherche"
+                type="search"
+                class="form-control"
+                placeholder="Rechercher : nom, localité, fonction…"
+              />
+              <span class="input-group-text" aria-hidden="true">
+                <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
+              </span>
+            </div>
+            <base-radio
+              v-model="typeFilter"
+              class="w-100"
+              button-style
+              size="sm"
+              label="Type"
+              :options="typeFilterOptions"
+            />
+            <base-radio
+              v-if="typeFilter !== 'recrue'"
+              v-model="filter"
+              class="w-100"
+              button-style
+              size="sm"
+              label="Statut"
+              :options="actifFilterOptions"
+            />
           </div>
           <base-select
             base-option="&lt;Sapeur&gt;"
@@ -387,56 +530,118 @@ const deleteSapeur = async () => {
               Aucun sapeur
             </li> -->
         </div>
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-body d-flex flex-column flex-md-row align-items-md-center">
-            <button
-              v-if="activeSapeur?.id && !isRecrue"
-              type="button"
-              class="btn btn-outline-primary mb-2 me-md-auto"
-              @click="ficheSapeur"
-            >
-              <font-awesome-icon :icon="['fas', 'id-card-clip']" />
-              Fiche sapeur
-            </button>
-            <button
-              v-if="hasEditPermission"
-              type="button"
-              class="btn btn-outline-primary ms-md-2 mb-2"
-              @click="lienInscription"
-            >
-              Lien d'inscription recrues
-            </button>
-            <button
-              v-if="hasEditPermission"
-              type="button"
-              class="btn btn-outline-primary ms-md-2 mb-2"
-              @click="addSapeur"
-            >
-              Ajouter un sapeur/civil
-            </button>
-            <button
-              v-if="isRecrue && hasEditPermission"
-              type="button"
-              class="btn btn-outline-success ms-md-2 mb-2"
-              @click="validerRecrue"
-            >
-              <font-awesome-icon icon="check" />
-              Valider la recrue
-            </button>
-            <div
-              v-if="activeSapeur?.id && hasEditPermission"
-              class="vr d-none d-md-block mx-2"
-            ></div>
-            <button
-              :disabled="isSubmitting"
-              v-if="activeSapeur?.id && hasEditPermission"
-              class="btn btn-outline-danger mb-2"
-              @click="deleteSapeur"
-            >
-              {{ isRecrue ? "Rejeter la recrue" : "Supprimer le sapeur" }}
-            </button>
+        <!-- Même indicateur que base-table pendant le chargement -->
+        <section
+          v-if="chargementSapeur"
+          class="card card-primary card-outline mb-3"
+          aria-busy="true"
+        >
+          <div
+            class="card-body en-tete-chargement d-flex justify-content-center align-items-center"
+          >
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement du sapeur…</span>
+            </div>
           </div>
+        </section>
+        <div
+          v-else-if="erreurChargement"
+          class="alert alert-danger d-flex flex-wrap align-items-center gap-2 mb-3"
+          role="alert"
+        >
+          Impossible de charger ce sapeur.
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-danger"
+            @click="chargerSapeur(sapeurStore.active.id)"
+          >
+            Réessayer
+          </button>
         </div>
+        <section
+          v-else-if="enTete"
+          class="card card-primary card-outline mb-3"
+          aria-labelledby="fiche-sapeur-nom"
+        >
+          <div class="card-body d-flex flex-wrap align-items-center gap-3">
+            <div class="identite-sapeur d-flex flex-column gap-1">
+              <div class="d-flex flex-wrap align-items-center gap-2">
+                <h4 id="fiche-sapeur-nom" class="mb-0">{{ enTete.nomPrenom }}</h4>
+                <span
+                  v-if="!isRecrue"
+                  class="badge"
+                  :class="activeSapeur.actif ? 'text-bg-success' : 'text-bg-secondary'"
+                >
+                  {{ activeSapeur.actif ? "Actif" : "Inactif" }}
+                </span>
+                <span class="badge" :class="isRecrue ? 'text-bg-warning' : 'text-bg-light border'">
+                  {{ isRecrue ? "Recrue à valider" : enTete.type }}
+                </span>
+              </div>
+              <div v-if="enTete.details" class="text-body-secondary">{{ enTete.details }}</div>
+              <div
+                v-if="telephonesEnTete.length || activeSapeur.email"
+                class="d-flex flex-wrap column-gap-3 row-gap-1 small"
+              >
+                <a
+                  v-for="t in telephonesEnTete"
+                  :key="t.id"
+                  :href="t.href"
+                  class="text-decoration-none"
+                >
+                  <font-awesome-icon :icon="['fas', 'phone']" />
+                  {{ t.numero }}
+                  <span v-if="t.type" class="text-body-secondary">({{ t.type }})</span>
+                </a>
+                <a
+                  v-if="activeSapeur.email"
+                  :href="`mailto:${activeSapeur.email}`"
+                  class="text-decoration-none"
+                >
+                  <font-awesome-icon :icon="['fas', 'envelope']" />
+                  {{ activeSapeur.email }}
+                </a>
+              </div>
+              <!-- Toujours sur sa propre ligne, sous les numéros -->
+              <div v-if="enTete.adresse" class="small">
+                <font-awesome-icon :icon="['fas', 'location-dot']" />
+                {{ enTete.adresse }}
+              </div>
+            </div>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+              <button
+                v-if="!isRecrue"
+                type="button"
+                class="btn btn-outline-primary"
+                @click="ficheSapeur"
+              >
+                <font-awesome-icon :icon="['fas', 'id-card-clip']" />
+                Fiche sapeur
+              </button>
+              <button
+                v-if="isRecrue && hasEditPermission"
+                type="button"
+                class="btn btn-success"
+                @click="validerRecrue"
+              >
+                <font-awesome-icon icon="check" />
+                Valider la recrue
+              </button>
+              <template v-if="hasEditPermission">
+                <div class="d-none d-md-block"></div>
+                <button
+                  :disabled="isSubmitting"
+                  type="button"
+                  class="btn btn-outline-danger"
+                  @click="deleteSapeur"
+                >
+                  <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  {{ isRecrue ? "Rejeter la recrue" : "Supprimer" }}
+                </button>
+              </template>
+            </div>
+          </div>
+        </section>
         <base-navigation-tab
           v-if="activeSapeur?.id"
           :routes="
@@ -457,7 +662,12 @@ const deleteSapeur = async () => {
           <div id="tab-sapeur-details" class="tab-pane fade show active">
             <div class="row">
               <div v-if="activeSapeur?.id" class="col-12">
-                <router-view />
+                <!-- Pas de placeholder ici : les onglets (base-table) affichent leur propre chargement.
+                     En cas d'erreur, on masque l'onglet (v-show : il reste monté) pour ne pas
+                     laisser les données du sapeur précédent. -->
+                <div v-show="!erreurChargement">
+                  <router-view />
+                </div>
               </div>
               <div v-else class="col-12">
                 <div class="card">
@@ -477,6 +687,17 @@ const deleteSapeur = async () => {
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins/utilities";
 @import "bootstrap/scss/mixins/breakpoints";
+
+// Hauteur proche de celle de l'en-tête chargé : les onglets ne sautent pas à l'affichage
+.en-tete-chargement {
+  min-height: 6rem;
+}
+
+// Prend la place restante ; les actions passent dessous sur écran étroit
+.identite-sapeur {
+  flex: 1 1 16rem;
+  min-width: 0;
+}
 
 #liste-sapeurs {
   a {

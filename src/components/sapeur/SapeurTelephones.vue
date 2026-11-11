@@ -11,17 +11,9 @@ import { useSubmit } from "../../composables/useSubmit.js";
 const baseDataStore = useBaseDataStore();
 const sapeurStore = useSapeurStore();
 const { isSubmitting, submit } = useSubmit();
-const loading = ref(true);
-
-watchEffect(async () => {
-  const sapeurId = sapeurStore.active.id ?? 0;
-  if (sapeurId <= 0) {
-    return;
-  }
-  loading.value = true;
-  await sapeurStore.fetchSapeurTelephones(sapeurId);
-  loading.value = false;
-});
+// Les numéros arrivent avec la fiche du sapeur (fetchSapeur) : chargement en cours tant que
+// la fiche en mémoire est celle d'un autre sapeur.
+const loading = computed(() => sapeurStore.active.data?.id != sapeurStore.active.id);
 await baseDataStore.fetchTelephoneTypes();
 
 const telephonesData = ref([]);
