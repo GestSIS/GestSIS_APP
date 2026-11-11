@@ -95,8 +95,8 @@ const fields = [
       >
         <template #liste="{ value }">
           <span
-            v-for="(item, i) in value"
-            :key="i"
+            v-for="item in value"
+            :key="item.id"
             class="badge me-1"
             :class="{
               'bg-primary': item.deactivated_at == null && item.pending_deactivation_at == null,

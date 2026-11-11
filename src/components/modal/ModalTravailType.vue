@@ -145,7 +145,7 @@ const save = async () => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(indemnite, i) in base" :key="i">
+            <tr v-for="(indemnite, i) in base" :key="indemnite.id ?? `new-${i}`">
               <td class="col-3">
                 <base-select
                   v-model="base[i].type"

@@ -478,7 +478,7 @@ const toCvs = () => {
                 <td>{{ s.fonction }}</td>
                 <td
                   v-for="(p, index) in s.presences"
-                  :key="index"
+                  :key="displayExercice[index].id"
                   class="text-center table-border"
                   :class="{
                     'bg-danger-subtle': displayExercice[index].statut === EXERCICE_STATUT.ANNULE,

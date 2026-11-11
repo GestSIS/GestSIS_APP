@@ -114,7 +114,7 @@ const permissionMapping = (key) => {
               v-for="[key, perms] in groupedPermissions.filter(([, perms]) => perms.length !== 1)"
               :key="key"
             >
-              <th v-for="(p, i) in perms" :key="i" class="text-center text-capitalize">
+              <th v-for="p in perms" :key="p.id" class="text-center text-capitalize">
                 {{ permissionMapping(p.permission) }}
               </th>
             </template>

@@ -174,7 +174,7 @@ const formatType = ecritureTypeLabel;
               </tr>
               <tr
                 v-for="(i, index) in computedIndemnites"
-                :key="index"
+                :key="i.id"
                 :class="{
                   'table-primary': index === activeIndemniteIndex,
                 }"
