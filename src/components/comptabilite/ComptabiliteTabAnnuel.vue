@@ -243,7 +243,7 @@ const fields = [
               <template #foot>
                 <tr>
                   <th :colspan="filteredData.length ? 3 : 2">Total</th>
-                  <th>
+                  <th class="text-end">
                     {{
                       filteredData
                         .reduce((acc, e) => acc + parseFloat(e.total), 0.0)

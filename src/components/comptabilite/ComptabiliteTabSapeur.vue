@@ -303,7 +303,7 @@ const fields = [
                 <tr>
                   <th></th>
                   <th :colspan="filteredData.length ? 2 : 1">Total</th>
-                  <th>
+                  <th class="text-end">
                     {{
                       filteredData
                         .reduce((acc, e) => acc + parseFloat(e.total), 0.0)
