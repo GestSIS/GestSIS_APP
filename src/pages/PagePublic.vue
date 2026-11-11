@@ -90,11 +90,15 @@ const fonctionnalites = [
               :src="screenshotDashboard"
               alt="Aperçu du tableau de bord GestSIS, en mode clair sur ordinateur"
               class="screenshot rounded shadow-sm"
+              loading="lazy"
+              decoding="async"
             />
             <img
               :src="screenshotMobileLight"
               alt="Aperçu du tableau de bord GestSIS, en mode clair sur mobile"
               class="screenshot rounded shadow-sm"
+              loading="lazy"
+              decoding="async"
             />
           </div>
         </div>
