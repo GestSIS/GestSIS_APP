@@ -102,21 +102,32 @@ const detailsRowVisibility = ref(
 );
 const defaultFormatter = (e) => e;
 
+const isEmpty = (v) => v === null || v === undefined || v === "";
+
+// Les valeurs vides (null/undefined/"") sont toujours placées en fin de liste,
+// quel que soit le sens du tri : sinon le comparateur devient incohérent
+// (ex. "2026-01-01".localeCompare(null) ou null - "2026-01-01" = NaN).
+const compareRows = (a, b, key, func, asc) => {
+  let aVal = func(a[key]);
+  let bVal = func(b[key]);
+  const aEmpty = isEmpty(aVal);
+  const bEmpty = isEmpty(bVal);
+  if (aEmpty || bEmpty) return aEmpty === bEmpty ? 0 : aEmpty ? 1 : -1;
+  if (parseInt(aVal, 10) == aVal && parseInt(bVal, 10) == bVal) {
+    aVal = parseInt(aVal, 10);
+    bVal = parseInt(bVal, 10);
+  }
+  const res =
+    typeof aVal === "string" && typeof bVal === "string" ? aVal.localeCompare(bVal) : aVal - bVal;
+  return asc ? res : -1 * res;
+};
+
 const sortedData = computed(() => {
   const sortedData = [...data];
   const func = sorted.value.func;
   const key = sorted.value.key;
   if (key) {
-    sortedData.sort((a, b) => {
-      let aVal = func(a[key]);
-      let bVal = func(b[key]);
-      if (parseInt(aVal, 10) == aVal && parseInt(bVal, 10) == bVal) {
-        aVal = parseInt(aVal, 10);
-        bVal = parseInt(bVal, 10);
-      }
-      const res = typeof aVal === "string" ? aVal.localeCompare(bVal) : aVal - bVal;
-      return sorted.value.asc ? res : -1 * res;
-    });
+    sortedData.sort((a, b) => compareRows(a, b, key, func, sorted.value.asc));
   }
 
   return sortedData;
@@ -128,16 +139,8 @@ const sortedGroupedData = computed(() => {
       ...g,
       data: [...g.data].sort((a1, a2) => {
         const key = sorted.value.key;
-        const func = sorted.value.func;
         if (!key) return 0;
-        let aVal = func(a1[key]);
-        let bVal = func(a2[key]);
-        if (parseInt(aVal, 10) == aVal && parseInt(bVal, 10) == bVal) {
-          aVal = parseInt(aVal, 10);
-          bVal = parseInt(bVal, 10);
-        }
-        const res = typeof aVal === "string" ? aVal.localeCompare(bVal) : aVal - bVal;
-        return sorted.value.asc ? res : -1 * res;
+        return compareRows(a1, a2, key, sorted.value.func, sorted.value.asc);
       }),
     }))
     .sort((a, b) => a.label?.localeCompare(b.label));
