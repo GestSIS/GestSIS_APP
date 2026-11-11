@@ -146,7 +146,13 @@ const detailRowOptions = {
 const fields = [
   { title: "Sapeur", key: "nom_prenom" },
   { title: "Fonction", key: "fonction" },
-  { title: "Total", key: "total", type: Number },
+  {
+    title: "Total",
+    key: "total",
+    type: Number,
+    titleClass: "text-center",
+    columnClass: "text-end",
+  },
   {
     title: "Actions",
     slot: "actions",
