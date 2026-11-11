@@ -5,16 +5,10 @@
       "version": "1.0",
       "app": "GestSIS APP",
       "changes": [
-        "Sapeurs, recherche dans la liste par nom, localité ou fonction",
-        "Sapeurs, nouvel en-tête de fiche avec fonction, grade, téléphones, email et adresse",
-        "Sapeurs, boutons d'ajout et lien d'inscription des recrues placés en haut de la liste",
+        "Sapeurs, refonte de la page : recherche dans la liste et nouvel en-tête de fiche avec les coordonnées",
         "Paramètres, confirmation demandée avant chaque suppression",
-        "Imputations, plus de doublon en cas de double clic sur « Imputer »",
-        "Tableaux, cellules vides placées en fin de liste lors du tri",
-        "Tableaux, montants à zéro affichés « 0.00 » au lieu d'une cellule vide",
-        "Tableaux, dates et heures de l'export CSV au même format qu'à l'écran",
-        "Tableaux, tri des colonnes utilisable au clavier",
-        "Téléchargements, fonctionnent aussi après une longue période d'inactivité"
+        "Imputations, plus de doublon en cas de double clic",
+        "Tableaux, améliorations du tri, de l'affichage des montants et de l'export CSV"
       ]
     },
     {
