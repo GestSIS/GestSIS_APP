@@ -18,7 +18,7 @@ const { id } = defineProps({
   id: { type: String, required: true },
 });
 
-const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
+const hasControlePermission = useHasPermission(permissions.MATERIEL.CONTROLE);
 
 const controleStore = useControleStore();
 const materielTypeStore = useMaterielTypeStore();
@@ -123,7 +123,7 @@ const nouveauControle = () =>
     <template #title>Articles concernés</template>
     <template #header>
       <button
-        v-if="hasEditPermission"
+        v-if="hasControlePermission"
         type="button"
         class="btn btn-primary btn-sm"
         @click="nouveauControle"

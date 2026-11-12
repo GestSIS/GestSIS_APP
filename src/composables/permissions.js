@@ -63,6 +63,7 @@ export default {
   MATERIEL: {
     LECTURE: "materiel.lecture",
     MODIFICATION: "materiel.modification",
+    CONTROLE: "materiel.controle",
     CONFIG: "materiel.config",
   },
   RTA: {

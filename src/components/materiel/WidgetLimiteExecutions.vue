@@ -8,6 +8,7 @@ import permissions from "../../composables/permissions.js";
 import { useSubmit } from "../../composables/useSubmit.js";
 
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
+const hasControlePermission = useHasPermission(permissions.MATERIEL.CONTROLE);
 
 const controles = ref([]);
 const loading = ref(true);
@@ -132,7 +133,7 @@ const supprimer = async (article) => {
             </template>
             <template #actions="{ rowData: article }">
               <button
-                v-if="hasEditPermission"
+                v-if="hasControlePermission"
                 title="Contrôler"
                 class="btn btn-outline-success border-0"
                 @click="controler(article, rowData.controle_id)"

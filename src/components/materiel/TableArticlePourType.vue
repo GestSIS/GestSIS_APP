@@ -57,6 +57,7 @@ const {
 const couleurStore = useCouleurStore();
 const controleStore = useControleStore();
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
+const hasControlePermission = useHasPermission(permissions.MATERIEL.CONTROLE);
 
 const indexedCouleurs = computed(() => indexedData(couleurStore.liste));
 
@@ -256,7 +257,7 @@ const supprimer = async (article) => {
         <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
       </button>
       <button
-        v-if="hasEditPermission && controlesApplicables.length > 0"
+        v-if="hasControlePermission && controlesApplicables.length > 0"
         title="Contrôler"
         class="btn btn-outline-success border-0"
         @click="controlerMateriel(rowData)"

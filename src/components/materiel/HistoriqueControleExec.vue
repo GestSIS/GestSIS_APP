@@ -11,7 +11,7 @@ const { articleId, controle } = defineProps({
   controle: { type: Object, required: true },
 });
 
-const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
+const hasControlePermission = useHasPermission(permissions.MATERIEL.CONTROLE);
 
 const execs = ref([]);
 const loadExecs = async () => {
@@ -98,7 +98,7 @@ const supprimer = async (exec) => {
     </template>
     <template #actions="{ rowData }">
       <button
-        v-if="hasEditPermission"
+        v-if="hasControlePermission"
         title="Modifier"
         class="btn btn-outline-secondary border-0"
         @click="modifier(rowData)"
@@ -107,7 +107,7 @@ const supprimer = async (exec) => {
       </button>
       <button
         :disabled="isSubmitting"
-        v-if="hasEditPermission"
+        v-if="hasControlePermission"
         title="Supprimer"
         class="btn btn-outline-danger border-0"
         @click="supprimer(rowData)"
