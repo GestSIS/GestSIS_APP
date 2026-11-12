@@ -58,31 +58,31 @@ const router = createRouter({
     {
       path: "/login",
       name: "login",
-      meta: { layout: "empty", public: true, onlyWhenLoggedOut: true },
+      meta: { title: "Connexion", layout: "empty", public: true, onlyWhenLoggedOut: true },
       component: () => import("/src/pages/PageLogin.vue"),
     },
     {
       path: "/reset-mdp",
       name: "reset-password",
-      meta: { layout: "no-sidebar", public: true },
+      meta: { title: "Réinitialisation du mot de passe", layout: "no-sidebar", public: true },
       component: () => import("/src/pages/PageResetPassword.vue"),
     },
     {
       path: "/mdp-oublie",
       name: "forgotten-password",
-      meta: { layout: "no-sidebar", public: true },
+      meta: { title: "Mot de passe oublié", layout: "no-sidebar", public: true },
       component: () => import("/src/pages/PageForgottenPassword.vue"),
     },
     {
       path: "/register",
       name: "register",
-      meta: { layout: "empty", public: true, onlyWhenLoggedOut: true },
+      meta: { title: "Création de compte", layout: "empty", public: true, onlyWhenLoggedOut: true },
       component: () => import("/src/pages/PageRegister.vue"),
     },
     {
       path: "/inscription/:sisKey/:token",
       name: "inscription-recrue",
-      meta: { layout: "empty", public: true },
+      meta: { title: "Inscription", layout: "empty", public: true },
       props: true,
       component: () => import("/src/pages/PageInscriptionRecrue.vue"),
     },
@@ -95,16 +95,19 @@ const router = createRouter({
     {
       path: "/en-travaux",
       name: "en-travaux",
+      meta: { title: "En travaux" },
       component: () => import("/src/pages/PageEnTravaux.vue"),
     },
     {
       path: "/accueil",
       name: "accueil",
+      meta: { title: "Accueil" },
       component: Home,
     },
     {
       path: "/mes-infos",
       name: "mon-dashboard",
+      meta: { title: "Mes infos" },
       component: () => import("/src/pages/PageMesInfos.vue"),
       beforeEnter: sapeurGuard(),
       children: [
@@ -117,78 +120,91 @@ const router = createRouter({
         {
           path: "exercices",
           name: "mes-exercices",
+          meta: { title: "Mes exercices" },
           beforeEnter: sapeurGuard(),
           component: () => import("/src/components/mes_infos/MesExercices.vue"),
         },
         {
           path: "interventions",
           name: "mes-interventions",
+          meta: { title: "Mes interventions" },
           beforeEnter: sapeurGuard(),
           component: () => import("/src/components/mes_infos/MesInterventions.vue"),
         },
         {
           path: "absences",
           name: "mes-absences",
+          meta: { title: "Mes absences" },
           beforeEnter: sapeurGuard(),
           component: () => import("/src/components/mes_infos/MesAbsences.vue"),
         },
         {
           path: "materiel",
           name: "mon-materiel",
+          meta: { title: "Mon matériel" },
           beforeEnter: sapeurGuard(),
           component: () => import("/src/components/mes_infos/MonMateriel.vue"),
         },
         {
           path: "travaux",
           name: "mes-travaux",
+          meta: { title: "Ma fiche de travail" },
           beforeEnter: sapeurGuard(),
           component: () => import("/src/components/mes_infos/MesTravaux.vue"),
         },
         {
           path: "decomptes",
           name: "mes-decomptes",
+          meta: { title: "Mes décomptes" },
           beforeEnter: sapeurGuard(),
           component: () => import("/src/components/mes_infos/MesDecomptes.vue"),
         },
         {
           path: "controles-medicaux",
           name: "mes-controles-medicaux",
+          meta: { title: "Mes contrôles médicaux" },
           beforeEnter: sapeurGuard(),
           component: () => import("/src/components/mes_infos/MesControlesMedicaux.vue"),
         },
         {
           path: "cours",
           name: "mes-cours",
+          meta: { title: "Mes cours" },
           beforeEnter: sapeurGuard(),
           component: () => import("/src/components/mes_infos/MesCours.vue"),
         },
         {
           path: "fonctions",
           name: "mes-fonctions",
+          meta: { title: "Mes fonctions" },
           beforeEnter: sapeurGuard(),
           component: () => import("/src/components/mes_infos/MesFonctions.vue"),
         },
         {
           path: "grades",
           name: "mes-grades",
+          meta: { title: "Mes grades" },
           beforeEnter: sapeurGuard(),
           component: () => import("/src/components/mes_infos/MesGrades.vue"),
         },
         {
           path: "groupes",
           name: "mes-groupes",
+          meta: { title: "Mes groupes" },
           beforeEnter: sapeurGuard(),
           component: () => import("/src/components/mes_infos/MesGroupes.vue"),
         },
         {
           path: "mutations",
           name: "mes-mutations",
+          meta: { title: "Mes mutations" },
           beforeEnter: sapeurGuard(),
           component: () => import("/src/components/mes_infos/MesMutations.vue"),
         },
         {
           path: "permis",
           name: "mes-permis",
+          meta: { title: "Mes permis" },
           beforeEnter: sapeurGuard(),
           component: () => import("/src/components/mes_infos/MesPermis.vue"),
         },
@@ -197,6 +213,7 @@ const router = createRouter({
     {
       path: "/utilisateur",
       name: "utilisateur",
+      meta: { title: "Paramètres utilisateur" },
       component: () => import("/src/pages/PageUser.vue"),
     },
     {
@@ -214,6 +231,7 @@ const router = createRouter({
     {
       path: "/sapeurs/:id",
       name: "sapeur-index",
+      meta: { title: "Sapeurs" },
       beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
       component: () => import("/src/pages/PageSapeurs.vue"),
       props: true,
@@ -228,66 +246,77 @@ const router = createRouter({
         {
           path: "mutations",
           name: "sapeur-mutations",
+          meta: { title: "Mutations" },
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
           component: () => import("../components/sapeur/SapeurMutations.vue"),
         },
         {
           path: "controles-medicaux",
           name: "sapeur-controles-medicaux",
+          meta: { title: "Contrôles médicaux" },
           beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.LECTURE),
           component: () => import("../components/sapeur/SapeurControlesMedicaux.vue"),
         },
         {
           path: "fonctions",
           name: "sapeur-fonctions",
+          meta: { title: "Fonctions" },
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
           component: () => import("../components/sapeur/SapeurFonction.vue"),
         },
         {
           path: "cours",
           name: "sapeur-cours",
+          meta: { title: "Cours" },
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
           component: () => import("../components/sapeur/SapeurCours.vue"),
         },
         {
           path: "promotions",
           name: "sapeur-promotions",
+          meta: { title: "Promotions" },
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
           component: () => import("../components/sapeur/SapeurPromotion.vue"),
         },
         {
           path: "materiels",
           name: "sapeur-materiels",
+          meta: { title: "Matériel" },
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
           component: () => import("../components/sapeur/SapeurMateriel.vue"),
         },
         {
           path: "organisation",
           name: "sapeur-organisation",
+          meta: { title: "Organisation" },
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
           component: () => import("../components/sapeur/SapeurOrganisation.vue"),
         },
         {
           path: "permis",
           name: "sapeur-permis",
+          meta: { title: "Permis" },
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
           component: () => import("../components/sapeur/SapeurPermis.vue"),
         },
         {
           path: "banque",
           name: "sapeur-banque",
+          meta: { title: "Banque" },
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
           component: () => import("../components/sapeur/SapeurBanque.vue"),
         },
         {
           path: "exercices",
           name: "sapeur-exercices",
+          meta: { title: "Exercices" },
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
           component: () => import("../components/sapeur/SapeurExercice.vue"),
         },
         {
           path: "interventions",
           name: "sapeur-interventions",
+          meta: { title: "Interventions" },
           beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
           component: () => import("../components/sapeur/SapeurIntervention.vue"),
         },
@@ -296,11 +325,13 @@ const router = createRouter({
     {
       path: "/effectif",
       name: "effectif",
+      meta: { title: "Effectif" },
       beforeEnter: permissionGuard(permissions.EFFECTIF.TOUT),
       component: () => import("/src/pages/PageEffectif.vue"),
     },
     {
       path: "/exercices/:id",
+      meta: { title: "Exercice" },
       beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
       props: true,
       component: () => import("/src/pages/PageExercice.vue"),
@@ -315,6 +346,7 @@ const router = createRouter({
         {
           path: "presence",
           name: "exercice-presence",
+          meta: { title: "Présences" },
           props: true,
           beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
           component: () => import("../components/exercice/ExerciceTabSapeurs.vue"),
@@ -322,6 +354,7 @@ const router = createRouter({
         {
           path: "sms",
           name: "exercice-sms",
+          meta: { title: "SMS" },
           props: true,
           beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
           component: () => import("../components/exercice/ExerciceTabSms.vue"),
@@ -330,6 +363,7 @@ const router = createRouter({
     },
     {
       path: "/exercices",
+      meta: { title: "Exercices & Séances" },
       beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
       component: () => import("/src/pages/PageExercices.vue"),
       children: [
@@ -342,6 +376,7 @@ const router = createRouter({
         {
           path: "absences",
           name: "exercices-absences",
+          meta: { title: "Absences" },
           beforeEnter: permissionGuard(permissions.EXERCICE.LECTURE),
           component: () => import("/src/components/exercice/ExerciceAbsences.vue"),
         },
@@ -349,6 +384,7 @@ const router = createRouter({
     },
     {
       path: "/absences",
+      meta: { title: "Absences" },
       beforeEnter: permissionGuard(permissions.ABSENCE.LECTURE),
       component: () => import("/src/pages/PageAbsences.vue"),
       children: [
@@ -361,6 +397,7 @@ const router = createRouter({
         {
           path: "liste",
           name: "absences-liste",
+          meta: { title: "Liste" },
           beforeEnter: permissionGuard(permissions.ABSENCE.LECTURE),
           component: () => import("/src/components/absence/AbsenceListe.vue"),
         },
@@ -369,12 +406,14 @@ const router = createRouter({
     {
       path: "/cours",
       name: "cours",
+      meta: { title: "Cours" },
       beforeEnter: permissionGuard(permissions.COURS.LECTURE),
       component: () => import("/src/pages/PageCours.vue"),
     },
     {
       path: "/fiche-travail",
       name: "fiche-travail",
+      meta: { title: "Fiche de travail" },
       beforeEnter: permissionGuard(
         permissions.FICHE_TRAVAIL.LECTURE,
         permissions.FICHE_TRAVAIL.SAISIE_COMMUNE,
@@ -385,11 +424,13 @@ const router = createRouter({
     {
       path: "/organisation",
       name: "organisation",
+      meta: { title: "Organisation" },
       beforeEnter: permissionGuard(permissions.ORGANISATION.MODIFICATION),
       component: () => import("/src/pages/PageOrganisation.vue"),
     },
     {
       path: "/interventions/:id",
+      meta: { title: "Intervention" },
       beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
       props: true,
       component: () => import("/src/pages/PageIntervention.vue"),
@@ -404,6 +445,7 @@ const router = createRouter({
         {
           path: "resume",
           name: "intervention-resume",
+          meta: { title: "Résumé" },
           props: true,
           beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
           component: () => import("/src/components/intervention/InterventionTabResume.vue"),
@@ -411,6 +453,7 @@ const router = createRouter({
         {
           path: "presence",
           name: "intervention-presence",
+          meta: { title: "Présences" },
           props: true,
           beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
           component: () => import("/src/components/intervention/InterventionTabSapeurs.vue"),
@@ -418,6 +461,7 @@ const router = createRouter({
         {
           path: "journal",
           name: "intervention-journal",
+          meta: { title: "Journal" },
           props: true,
           beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
           component: () => import("/src/components/intervention/InterventionTabJournal.vue"),
@@ -425,6 +469,7 @@ const router = createRouter({
         {
           path: "materiel-vehicule",
           name: "intervention-materiel-vehicule",
+          meta: { title: "Matériels et véhicules" },
           props: true,
           beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
           component: () =>
@@ -435,72 +480,84 @@ const router = createRouter({
     {
       path: "/interventions",
       name: "interventions",
+      meta: { title: "Interventions" },
       beforeEnter: permissionGuard(permissions.INTERVENTION.LECTURE),
       component: () => import("/src/pages/PageInterventions.vue"),
     },
     {
       path: "/comptabilite",
       name: "comptabilite",
+      meta: { title: "Comptabilité" },
       beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
       component: () => import("/src/pages/PageComptabilite.vue"),
       children: [
         {
           path: "",
           name: "comptabilite-decompte",
+          meta: { title: "Décomptes" },
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () => import("/src/components/comptabilite/ComptabiliteTabDecomptes.vue"),
         },
         {
           path: "comptes",
           name: "comptabilite-compte",
+          meta: { title: "Comptes" },
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () => import("/src/components/comptabilite/ComptabiliteTabComptes.vue"),
         },
         {
           path: "exercices",
           name: "comptabilite-exercice",
+          meta: { title: "Exercices et séances" },
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () => import("/src/components/comptabilite/ComptabiliteTabExercice.vue"),
         },
         {
           path: "interventions",
           name: "comptabilite-intervention",
+          meta: { title: "Interventions" },
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () => import("/src/components/comptabilite/ComptabiliteTabIntervention.vue"),
         },
         {
           path: "cours",
           name: "comptabilite-cours",
+          meta: { title: "Cours" },
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () => import("/src/components/comptabilite/ComptabiliteTabCours.vue"),
         },
         {
           path: "travaux",
           name: "comptabilite-travaux",
+          meta: { title: "Fiches de travail" },
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () => import("/src/components/comptabilite/ComptabiliteTabTravaux.vue"),
         },
         {
           path: "annuel",
           name: "comptabilite-annuel",
+          meta: { title: "Indemnités et frais annuels" },
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () => import("/src/components/comptabilite/ComptabiliteTabAnnuel.vue"),
         },
         {
           path: "sapeurs",
           name: "comptabilite-sapeurs",
+          meta: { title: "Sapeurs" },
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () => import("/src/components/comptabilite/ComptabiliteTabSapeur.vue"),
         },
         {
           path: "divers",
           name: "comptabilite-divers",
+          meta: { title: "Autres" },
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () => import("/src/components/comptabilite/ComptabiliteTabDivers.vue"),
         },
         {
           path: "amendes",
           name: "comptabilite-amendes",
+          meta: { title: "Amendes" },
           beforeEnter: permissionGuard(permissions.COMPTABILITE.LECTURE),
           component: () => import("/src/components/comptabilite/ComptabiliteTabAmendes.vue"),
         },
@@ -509,12 +566,14 @@ const router = createRouter({
     {
       path: "/publipostage",
       name: "publipostage",
+      meta: { title: "Publipostage" },
       component: () => import("/src/pages/PagePublipostage.vue"),
       beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
     },
     {
       path: "/statistique",
       name: "statistique",
+      meta: { title: "Statistiques" },
       component: () => import("/src/pages/PageStatistique.vue"),
       children: [
         {
@@ -525,31 +584,37 @@ const router = createRouter({
         {
           path: "sapeur",
           name: "stat-sapeur",
+          meta: { title: "Sapeur" },
           component: () => import("/src/components/statistique/StatSapeur.vue"),
         },
         {
           path: "exercice",
           name: "stat-exercice-simple",
+          meta: { title: "Exercice" },
           component: () => import("/src/components/statistique/StatExercice.vue"),
         },
         {
           path: "exercice-presence",
           name: "stat-exercice-presence",
+          meta: { title: "Présences exercices" },
           component: () => import("/src/components/statistique/StatExercicePresence.vue"),
         },
         {
           path: "intervention",
           name: "stat-intervention",
+          meta: { title: "Intervention" },
           component: () => import("/src/components/statistique/StatIntervention.vue"),
         },
         {
           path: "intervention-presence",
           name: "stat-intervention-presence",
+          meta: { title: "Présences interventions" },
           component: () => import("/src/components/statistique/StatInterventionPresence.vue"),
         },
         {
           path: "comptabilite",
           name: "stat-comptabilite",
+          meta: { title: "Comptabilité" },
           component: () => import("/src/components/statistique/StatComptabilite.vue"),
         },
       ],
@@ -557,12 +622,14 @@ const router = createRouter({
     {
       path: "/controles-medicaux",
       name: "controles-medicaux",
+      meta: { title: "Contrôles médicaux" },
       beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.LECTURE),
       component: () => import("/src/pages/PageControlesMedicaux.vue"),
     },
     {
       path: "/controles-medicaux/:id",
       name: "controle-medical",
+      meta: { title: "Contrôle médical" },
       beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.LECTURE),
       props: true,
       component: () => import("/src/pages/PageControleMedical.vue"),
@@ -570,17 +637,20 @@ const router = createRouter({
     {
       path: "/sms",
       name: "sms",
+      meta: { title: "SMS" },
       beforeEnter: permissionGuard(permissions.SMS.LECTURE),
       component: () => import("/src/pages/PageSms.vue"),
     },
     {
       path: "/materiel",
+      meta: { title: "Matériel" },
       beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
       component: () => import("/src/pages/PageMateriel.vue"),
       children: [
         {
           path: "tableau-bord",
           name: "materiel-tableau-bord",
+          meta: { title: "Tableau de bord" },
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
           component: () => import("/src/components/materiel/TabTableauBord.vue"),
         },
@@ -588,7 +658,7 @@ const router = createRouter({
           path: "par-type",
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
           // Colonnes à scroll indépendant : PageMateriel occupe toute la hauteur.
-          meta: { pleineHauteur: true },
+          meta: { title: "Par type", pleineHauteur: true },
           children: [
             {
               path: "",
@@ -607,7 +677,7 @@ const router = createRouter({
           path: "par-emplacement",
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
           // Colonnes à scroll indépendant : PageMateriel occupe toute la hauteur.
-          meta: { pleineHauteur: true },
+          meta: { title: "Par emplacement", pleineHauteur: true },
           children: [
             {
               path: "",
@@ -626,7 +696,7 @@ const router = createRouter({
           path: "par-sapeur",
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
           // Colonnes à scroll indépendant : PageMateriel occupe toute la hauteur.
-          meta: { pleineHauteur: true },
+          meta: { title: "Par sapeur", pleineHauteur: true },
           children: [
             {
               path: "",
@@ -650,7 +720,7 @@ const router = createRouter({
           path: "controles",
           beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
           // Colonnes à scroll indépendant : PageMateriel occupe toute la hauteur.
-          meta: { pleineHauteur: true },
+          meta: { title: "Contrôles & maintenances", pleineHauteur: true },
           children: [
             {
               path: "",
@@ -676,6 +746,7 @@ const router = createRouter({
     },
     {
       path: "/utilisateurs",
+      meta: { title: "Utilisateurs" },
       beforeEnter: permissionGuard(permissions.UTILISATEUR.LECTURE),
       props: true,
       component: () => import("/src/pages/PageUtilisateurs.vue"),
@@ -688,6 +759,7 @@ const router = createRouter({
         {
           path: "manquants",
           name: "utilisateurs-manquants",
+          meta: { title: "Sapeurs sans compte" },
           component: () => import("/src/components/utilisateur/SapeurSansCompte.vue"),
         },
       ],
@@ -695,6 +767,7 @@ const router = createRouter({
     {
       path: "/configuration",
       name: "parametres",
+      meta: { title: "Configuration" },
       beforeEnter: permissionGuard(
         permissions.COMPTABILITE.CONFIG,
         permissions.CONTROLE_MEDICAL.CONFIG,
@@ -731,12 +804,14 @@ const router = createRouter({
         {
           path: "exercice-comptable",
           name: "param-exercice-comptable",
+          meta: { title: "Exercices comptables" },
           beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabExerciceComptable.vue"),
         },
         {
           path: "sapeur",
           name: "param-sapeur",
+          meta: { title: "Sapeur" },
           beforeEnter: permissionGuard(permissions.SAPEUR.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabSapeur.vue"),
           redirect: { name: "param-sapeur-cours" },
@@ -744,18 +819,21 @@ const router = createRouter({
             {
               path: "cours",
               name: "param-sapeur-cours",
+              meta: { title: "Cours" },
               beforeEnter: permissionGuard(permissions.SAPEUR.CONFIG),
               component: () => import("/src/components/parametres/ParametreCours.vue"),
             },
             {
               path: "fonction",
               name: "param-sapeur-fonction",
+              meta: { title: "Fonctions" },
               beforeEnter: permissionGuard(permissions.SAPEUR.CONFIG),
               component: () => import("/src/components/parametres/ParametreFonction.vue"),
             },
             {
               path: "grade",
               name: "param-sapeur-grade",
+              meta: { title: "Grades" },
               beforeEnter: permissionGuard(permissions.SAPEUR.CONFIG),
               component: () => import("/src/components/parametres/ParametreGrade.vue"),
             },
@@ -764,6 +842,7 @@ const router = createRouter({
         {
           path: "exercice",
           name: "param-exercice",
+          meta: { title: "Exercice" },
           beforeEnter: permissionGuard(permissions.EXERCICE.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabExercice.vue"),
           redirect: { name: "param-exercice-categorie" },
@@ -771,12 +850,14 @@ const router = createRouter({
             {
               path: "categorie",
               name: "param-exercice-categorie",
+              meta: { title: "Catégories" },
               beforeEnter: permissionGuard(permissions.EXERCICE.CONFIG),
               component: () => import("/src/components/parametres/ParametreExerciceCategorie.vue"),
             },
             {
               path: "excuse",
               name: "param-exercice-excuse",
+              meta: { title: "Excuses" },
               beforeEnter: permissionGuard(permissions.EXERCICE.CONFIG),
               component: () => import("/src/components/parametres/ParametreExerciceExcuse.vue"),
             },
@@ -785,6 +866,7 @@ const router = createRouter({
         {
           path: "intervention",
           name: "param-intervention",
+          meta: { title: "Intervention" },
           beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabIntervention.vue"),
           redirect: { name: "param-intervention-vehicule" },
@@ -792,42 +874,49 @@ const router = createRouter({
             {
               path: "vehicule",
               name: "param-intervention-vehicule",
+              meta: { title: "Véhicules" },
               beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
               component: () => import("/src/components/parametres/ParametreVehicule.vue"),
             },
             {
               path: "materiel",
               name: "param-intervention-materiel",
+              meta: { title: "Matériel" },
               beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
               component: () => import("/src/components/parametres/ParametreMateriel.vue"),
             },
             {
               path: "mission",
               name: "param-intervention-mission",
+              meta: { title: "Missions" },
               beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
               component: () => import("/src/components/parametres/ParametreMission.vue"),
             },
             {
               path: "telephone",
               name: "param-intervention-telephone",
+              meta: { title: "Téléphones" },
               beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
               component: () => import("/src/components/parametres/ParametreTelephone.vue"),
             },
             {
               path: "traitement",
               name: "param-intervention-traitement",
+              meta: { title: "Traitement" },
               beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
               component: () => import("/src/components/parametres/ParametreTraitement.vue"),
             },
             {
               path: "type",
               name: "param-intervention-type",
+              meta: { title: "Types d'intervention" },
               beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
               component: () => import("/src/components/parametres/ParametreTypeIntervention.vue"),
             },
             {
               path: "stat",
               name: "param-intervention-stat",
+              meta: { title: "Statistique fédérale" },
               beforeEnter: permissionGuard(permissions.INTERVENTION.CONFIG),
               component: () => import("/src/components/parametres/ParametreStatFederal.vue"),
             },
@@ -836,24 +925,28 @@ const router = createRouter({
         {
           path: "fiche-travail",
           name: "param-fiche-travail",
+          meta: { title: "Fiche de travail" },
           beforeEnter: permissionGuard(permissions.FICHE_TRAVAIL.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabFicheTravail.vue"),
         },
         {
           path: "sms",
           name: "param-sms",
+          meta: { title: "SMS" },
           beforeEnter: permissionGuard(permissions.SMS.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabSms.vue"),
         },
         {
           path: "absence",
           name: "param-absence",
+          meta: { title: "Absences" },
           beforeEnter: permissionGuard(permissions.ABSENCE.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabAbsence.vue"),
         },
         {
           path: "comptabilite",
           name: "param-comptabilite",
+          meta: { title: "Comptabilité" },
           beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabComptabilite.vue"),
           redirect: { name: "param-comptabilite-compte" },
@@ -861,24 +954,28 @@ const router = createRouter({
             {
               path: "compte",
               name: "param-comptabilite-compte",
+              meta: { title: "Comptes" },
               beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
               component: () => import("/src/components/parametres/ParametreCompte.vue"),
             },
             {
               path: "categorie",
               name: "param-comptabilite-categorie",
+              meta: { title: "Catégories comptables" },
               beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
               component: () => import("/src/components/parametres/ParametreEcritureCategorie.vue"),
             },
             {
               path: "indemnite-exercice",
               name: "param-comptabilite-indemnite-exercice",
+              meta: { title: "Imputation exercice & séance" },
               beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
               component: () => import("/src/components/parametres/ParametreIndemniteExercice.vue"),
             },
             {
               path: "indemnite-intervention",
               name: "param-comptabilite-indemnite-intervention",
+              meta: { title: "Imputation intervention" },
               beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
               component: () =>
                 import("/src/components/parametres/ParametreIndemniteIntervention.vue"),
@@ -886,12 +983,14 @@ const router = createRouter({
             {
               path: "indemnite-cours",
               name: "param-comptabilite-indemnite-cours",
+              meta: { title: "Imputation cours" },
               beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
               component: () => import("/src/components/parametres/ParametreIndemniteCours.vue"),
             },
             {
               path: "indemnite-frais-annuel",
               name: "param-comptabilite-indemnite-frais-annuel",
+              meta: { title: "Frais & indemnités annuels" },
               beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
               component: () =>
                 import("/src/components/parametres/ParametreIndemniteFraisAnnuel.vue"),
@@ -899,12 +998,14 @@ const router = createRouter({
             {
               path: "cotisations",
               name: "param-comptabilite-cotisations",
+              meta: { title: "Cotisations sociales" },
               beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
               component: () => import("/src/components/parametres/ParametreAvs.vue"),
             },
             {
               path: "amende",
               name: "param-comptabilite-amende",
+              meta: { title: "Amendes" },
               beforeEnter: permissionGuard(permissions.COMPTABILITE.CONFIG),
               component: () => import("/src/components/parametres/ParametreAmende.vue"),
             },
@@ -913,6 +1014,7 @@ const router = createRouter({
         {
           path: "controle-medical",
           name: "param-controle-medical",
+          meta: { title: "Contrôles médicaux" },
           beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabControleMedical.vue"),
           redirect: { name: "param-controle-medical-medecin" },
@@ -920,12 +1022,14 @@ const router = createRouter({
             {
               path: "medecin",
               name: "param-controle-medical-medecin",
+              meta: { title: "Médecins" },
               beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.CONFIG),
               component: () => import("/src/components/parametres/ParametreMedecin.vue"),
             },
             {
               path: "type",
               name: "param-controle-medical-type",
+              meta: { title: "Types de contrôles médicaux" },
               beforeEnter: permissionGuard(permissions.CONTROLE_MEDICAL.CONFIG),
               component: () =>
                 import("/src/components/parametres/ParametreControleMedicalType.vue"),
@@ -935,6 +1039,7 @@ const router = createRouter({
         {
           path: "materiel",
           name: "param-materiel",
+          meta: { title: "Matériel" },
           beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabMateriel.vue"),
           redirect: { name: "param-materiel-categorie" },
@@ -942,6 +1047,7 @@ const router = createRouter({
             {
               path: "categorie",
               name: "param-materiel-categorie",
+              meta: { title: "Catégories et types de matériel" },
               beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
               component: () =>
                 import("/src/components/parametres/ParametreMaterielTypeCategorie.vue"),
@@ -949,12 +1055,14 @@ const router = createRouter({
             {
               path: "couleur",
               name: "param-materiel-couleur",
+              meta: { title: "Couleurs" },
               beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
               component: () => import("/src/components/parametres/ParametreMaterielCouleur.vue"),
             },
             {
               path: "emplacement",
               name: "param-materiel-emplacement",
+              meta: { title: "Emplacements" },
               beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
               component: () =>
                 import("/src/components/parametres/ParametreMaterielEmplacement.vue"),
@@ -962,24 +1070,28 @@ const router = createRouter({
             {
               path: "hangar",
               name: "param-materiel-hangar",
+              meta: { title: "Hangars" },
               beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
               component: () => import("/src/components/parametres/ParametreMaterielHangar.vue"),
             },
             {
               path: "batterie-type",
               name: "param-materiel-batterie-type",
+              meta: { title: "Types de batteries" },
               beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
               component: () => import("/src/components/parametres/ParametreBatterieType.vue"),
             },
             {
               path: "tuyau-diametre",
               name: "param-materiel-tuyau-diametre",
+              meta: { title: "Diamètres de tuyaux" },
               beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
               component: () => import("/src/components/parametres/ParametreTuyauDiametre.vue"),
             },
             {
               path: "controles",
               name: "param-materiel-controles",
+              meta: { title: "Contrôles & maintenances" },
               beforeEnter: permissionGuard(permissions.MATERIEL.CONFIG),
               component: () => import("/src/components/parametres/ParametreControles.vue"),
             },
@@ -988,6 +1100,7 @@ const router = createRouter({
         {
           path: "roles",
           name: "param-roles",
+          meta: { title: "Droits et rôles" },
           beforeEnter: permissionGuard(permissions.UTILISATEUR.CONFIG),
           component: () => import("/src/components/parametres/ParametreTabRole.vue"),
         },
@@ -996,6 +1109,7 @@ const router = createRouter({
     {
       path: "/rta",
       name: "rta",
+      meta: { title: "RTA" },
       beforeEnter: permissionGuard(permissions.RTA.LECTURE),
       component: () => import("/src/pages/PageRta.vue"),
       redirect: { name: "rta-mutations" },
@@ -1003,36 +1117,42 @@ const router = createRouter({
         {
           path: "mutations",
           name: "rta-mutations",
+          meta: { title: "Mutations" },
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
           component: () => import("/src/components/rta/MutationsRta.vue"),
         },
         {
           path: "reference",
           name: "rta-reference",
+          meta: { title: "Référence" },
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
           component: () => import("/src/components/rta/ReferenceRta.vue"),
         },
         {
           path: "gestsis",
           name: "rta-gestsis",
+          meta: { title: "GestSIS" },
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
           component: () => import("/src/components/rta/GestSisRta.vue"),
         },
         {
           path: "fichiers",
           name: "rta-fichiers",
+          meta: { title: "Fichiers" },
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
           component: () => import("/src/components/rta/Fichiers.vue"),
         },
         {
           path: "demandes",
           name: "rta-demandes",
+          meta: { title: "Demandes" },
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
           component: () => import("/src/components/rta/Demandes.vue"),
         },
         {
           path: "agriculteurs",
           name: "rta-agriculteurs",
+          meta: { title: "Agriculteurs" },
           beforeEnter: permissionGuard(permissions.RTA.LECTURE),
           component: () => import("/src/components/rta/Agriculteurs.vue"),
         },
@@ -1041,29 +1161,34 @@ const router = createRouter({
     {
       path: "/about",
       name: "about",
+      meta: { title: "À propos" },
       component: () => import("/src/pages/PageAbout.vue"),
     },
     {
       path: "/alarmes",
       name: "alarmes",
+      meta: { title: "Alarmes" },
       beforeEnter: adminGuard(),
       component: () => import("/src/pages/PageAlarmes.vue"),
     },
     {
       path: "/admin",
       name: "admin",
+      meta: { title: "Administration" },
       beforeEnter: adminGuard(),
       component: () => import("/src/pages/PageAdmin.vue"),
       children: [
         {
           path: "organisations",
           name: "admin-organisations",
+          meta: { title: "Organisations" },
           beforeEnter: adminGuard(),
           component: () => import("/src/components/admin/AdminOrganisations.vue"),
         },
         {
           path: "organisations/:id",
           name: "admin-organisation-detail",
+          meta: { title: "Organisation" },
           props: true,
           beforeEnter: adminGuard(),
           component: () => import("/src/components/admin/AdminOrganisationDetail.vue"),
@@ -1071,12 +1196,14 @@ const router = createRouter({
         {
           path: "users",
           name: "admin-users",
+          meta: { title: "Utilisateurs" },
           beforeEnter: adminGuard(),
           component: () => import("/src/components/admin/AdminUsers.vue"),
         },
         {
           path: "users/:id",
           name: "admin-user",
+          meta: { title: "Utilisateur" },
           props: true,
           beforeEnter: adminGuard(),
           component: () => import("/src/components/admin/AdminUser.vue"),
@@ -1084,6 +1211,7 @@ const router = createRouter({
         {
           path: "2fa",
           name: "admin-2fa",
+          meta: { title: "2FA" },
           beforeEnter: adminGuard(),
           component: () => import("/src/components/admin/AdminTwoFactor.vue"),
         },
@@ -1092,6 +1220,7 @@ const router = createRouter({
     {
       path: "/:pathMatch(.*)*",
       name: "not-found",
+      meta: { title: "Page introuvable" },
       component: () => import("/src/pages/PageNotFound.vue"),
     },
   ],

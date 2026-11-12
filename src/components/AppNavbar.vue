@@ -55,6 +55,7 @@ const quitterImpersonation = async () => {
     </button>
   </div>
   <nav
+    aria-label="Barre supérieure"
     class="navbar navbar-expand border-bottom border-left justify-content-between d-print-none"
     :class="theme === 'dark' ? 'bg-dark' : 'bg-body-tertiary'"
   >

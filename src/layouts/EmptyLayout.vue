@@ -1,12 +1,14 @@
 <script setup>
 import AppModal from "/src/components/AppModal.vue";
+import AppTitrePage from "/src/components/AppTitrePage.vue";
 </script>
 
 <template>
   <div class="wrapper">
-    <div class="content">
+    <main id="contenu" class="content">
+      <app-titre-page />
       <slot></slot>
-    </div>
+    </main>
     <app-modal />
   </div>
 </template>

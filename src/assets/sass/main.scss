@@ -168,3 +168,17 @@ table button.btn {
 .modal-dialog.modal-pleine-largeur {
   max-width: 95vw;
 }
+
+// Lien « Aller au contenu » des layouts : masqué (visually-hidden-focusable) tant
+// qu'il n'a pas le focus clavier, puis affiché en haut à gauche, au-dessus de la page.
+.lien-evitement:focus {
+  position: fixed !important;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 2000;
+  padding: 0.5rem 1rem;
+  background-color: var(--bs-body-bg);
+  color: var(--bs-link-color);
+  border: 2px solid var(--bs-primary);
+  border-radius: var(--bs-border-radius);
+}

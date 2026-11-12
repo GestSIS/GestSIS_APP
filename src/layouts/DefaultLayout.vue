@@ -5,6 +5,11 @@ import AppNavbar from "/src/components/AppNavbar.vue";
 import AppModal from "/src/components/AppModal.vue";
 import AppSidebar from "/src/components/AppSidebar.vue";
 import AppTwoFactorBanner from "/src/components/AppTwoFactorBanner.vue";
+import AppTitrePage from "/src/components/AppTitrePage.vue";
+import { useRoute } from "vue-router";
+import { allerAuContenu } from "/src/tools/titrePage.js";
+
+const route = useRoute();
 
 // Sidebar affichée statiquement à partir du breakpoint Bootstrap "lg" (992px),
 // en offcanvas (par-dessus le contenu, avec backdrop) en dessous.
@@ -34,6 +39,13 @@ const isMobile = computed(() => {
 <template>
   <div class="wrapper">
     <div class="wrapper">
+      <a
+        href="#contenu"
+        class="visually-hidden-focusable lien-evitement"
+        @click.prevent="allerAuContenu"
+      >
+        Aller au contenu
+      </a>
       <!-- App Sidebar Container -->
       <app-sidebar
         class="custom-sidebar"
@@ -42,9 +54,18 @@ const isMobile = computed(() => {
       />
       <div v-if="sidebarOpen" class="sidebar-backdrop d-lg-none" @click="sidebarOpen = false" />
       <div class="content" :class="isMobile ? 'pb-6' : ''">
-        <app-navbar @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-        <app-two-factor-banner />
-        <slot />
+        <header>
+          <app-navbar @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+          <app-two-factor-banner />
+        </header>
+        <main
+          id="contenu"
+          class="contenu-principal"
+          :class="{ 'pleine-hauteur': route.meta.pleineHauteur === true }"
+        >
+          <app-titre-page />
+          <slot />
+        </main>
       </div>
       <app-modal />
     </div>
@@ -66,6 +87,21 @@ const isMobile = computed(() => {
   display: flex;
   flex-flow: column;
   height: 100%;
+}
+
+/* Le <main> prend la place qu'occupait la page directement dans .content (colonne
+   flex) : il grandit avec son contenu, et .content reste le conteneur qui défile. */
+.contenu-principal {
+  display: flex;
+  flex-flow: column;
+  flex: 1 0 auto;
+}
+
+/* Pages à colonnes défilant indépendamment (meta `pleineHauteur`) : le <main> est
+   limité à la hauteur restante pour que la page puisse s'y ajuster. */
+.contenu-principal.pleine-hauteur {
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 .custom-sidebar {

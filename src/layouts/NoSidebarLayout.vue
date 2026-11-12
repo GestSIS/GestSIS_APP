@@ -1,13 +1,27 @@
 <script setup>
 import AppNavbar from "/src/components/AppNavbar.vue";
 import AppModal from "/src/components/AppModal.vue";
+import AppTitrePage from "/src/components/AppTitrePage.vue";
+import { allerAuContenu } from "/src/tools/titrePage.js";
 </script>
 
 <template>
   <div class="wrapper">
     <div class="content">
-      <app-navbar :no-sidebar="true" />
-      <slot />
+      <a
+        href="#contenu"
+        class="visually-hidden-focusable lien-evitement"
+        @click.prevent="allerAuContenu"
+      >
+        Aller au contenu
+      </a>
+      <header>
+        <app-navbar :no-sidebar="true" />
+      </header>
+      <main id="contenu">
+        <app-titre-page />
+        <slot />
+      </main>
     </div>
     <app-modal />
   </div>

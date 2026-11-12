@@ -36,13 +36,8 @@ defineEmits(["close"]);
     <sis-selection />
     <hr />
 
-    <nav class="menu-options mt-2">
-      <ul
-        class="nav nav-pills nav-sidebar flex-column"
-        data-widget="treeview"
-        role="menu"
-        data-accordion="false"
-      >
+    <nav class="menu-options mt-2" aria-label="Menu principal">
+      <ul class="nav nav-pills nav-sidebar flex-column">
         <li v-for="link in filteredLinks" :key="link.nom" class="nav-item">
           <router-link
             :to="link.to"
