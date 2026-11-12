@@ -57,7 +57,7 @@ const save = async () => {
   <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un hangar</h5>
-      <button type="button" class="btn-close" @click="closeModal"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
       <legend class="w-auto px-2 fs-6 mb-2">Emplacement</legend>

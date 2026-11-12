@@ -60,7 +60,7 @@ const save = () => {
   <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">{{ data ? "Modifier" : "Ajouter" }} une photo</h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">

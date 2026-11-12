@@ -384,10 +384,11 @@ const fields = [
               <generic-details-row :options="detailRowOptions" :row-data="rowData" />
             </template>
             <template #actions="{ value }">
-              <!-- <button type="button" class="btn btn-outline-primary border-0">
+              <!-- <button aria-label="Modifier" type="button" class="btn btn-outline-primary border-0">
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>-->
               <button
+                aria-label="Supprimer"
                 :disabled="isSubmitting"
                 v-if="hasEditPermission"
                 type="button"

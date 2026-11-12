@@ -202,6 +202,7 @@ const fields = [
             </template>
             <template #actions="{ rowData }">
               <router-link
+                aria-label="Voir"
                 class="btn btn-sm btn-outline-primary border-0"
                 :to="{ name: 'admin-user', params: { id: rowData.user_id } }"
               >

@@ -405,6 +405,7 @@ const fields = [
                   <font-awesome-icon :icon="['fas', 'comment-sms']" />
                 </button>
                 <router-link
+                  aria-label="Modifier"
                   v-slot="{ navigate }"
                   :to="'/exercices/' + rowData.id + '/presence'"
                   custom

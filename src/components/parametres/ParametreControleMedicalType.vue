@@ -60,6 +60,7 @@ const deleteType = async (type) => {
       >
         <template #actions="{ rowData }">
           <button
+            aria-label="Modifier"
             type="button"
             class="btn btn-outline-primary border-0"
             @click="updateType(rowData)"

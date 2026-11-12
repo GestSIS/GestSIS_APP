@@ -76,7 +76,7 @@ const finish = () => {
   <form v-if="step === 'form'" @submit.prevent="register">
     <div class="modal-header">
       <h5 class="modal-title">Ajouter une clé de sécurité</h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <p class="text-body-secondary">

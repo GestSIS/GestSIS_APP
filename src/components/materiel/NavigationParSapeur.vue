@@ -64,6 +64,7 @@ const selectedSapeurId = computed({
   <div class="d-md-none mb-2 d-flex gap-2">
     <router-link
       v-if="hasSapeurEditPermission"
+      aria-label="Modifier"
       :to="{ name: 'sapeur-details', params: { id: id ?? 0 } }"
       class="btn btn-sm btn-outline-primary flex-shrink-0"
     >
@@ -105,6 +106,7 @@ const selectedSapeurId = computed({
     <div class="input-group mb-2">
       <router-link
         v-if="hasSapeurEditPermission"
+        aria-label="Modifier"
         :to="{ name: 'sapeur-details', params: { id: id ?? 0 } }"
         class="btn btn-sm btn-outline-primary"
       >

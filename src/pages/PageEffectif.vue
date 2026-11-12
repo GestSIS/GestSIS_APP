@@ -390,14 +390,22 @@ const fields = [
                     :to="{ name: 'sapeur-details', params: { id: rowData.id } }"
                     custom
                   >
-                    <button class="btn btn-outline-primary border-0" @click="navigate">
+                    <button
+                      aria-label="Modifier"
+                      class="btn btn-outline-primary border-0"
+                      @click="navigate"
+                    >
                       <font-awesome-icon :icon="['far', 'edit']" />
                     </button>
                   </router-link>
                   <a class="btn btn-outline-primary border-0" :href="'mailto:' + rowData.email">
                     <font-awesome-icon :icon="['fas', 'envelope']" />
                   </a>
-                  <button class="btn btn-outline-primary border-0" @click="vcard([rowData])">
+                  <button
+                    aria-label="Exporter la vCard"
+                    class="btn btn-outline-primary border-0"
+                    @click="vcard([rowData])"
+                  >
                     <font-awesome-icon :icon="['far', 'address-card']" />
                   </button>
                 </template>

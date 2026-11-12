@@ -107,12 +107,18 @@ const fields = [
         </template>
         <template #actions="{ rowData }">
           <router-link
+            aria-label="Voir"
             class="btn btn-sm btn-outline-primary border-0"
             :to="{ name: 'admin-user', params: { id: rowData.id } }"
           >
             <font-awesome-icon :icon="['far', 'eye']" />
           </router-link>
-          <button type="button" class="btn btn-outline-primary border-0" @click="editUser(rowData)">
+          <button
+            aria-label="Modifier"
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="editUser(rowData)"
+          >
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
@@ -129,6 +135,7 @@ const fields = [
             <font-awesome-icon :icon="['fas', 'user-secret']" />
           </button>
           <button
+            aria-label="Supprimer"
             :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"

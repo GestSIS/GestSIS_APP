@@ -103,6 +103,7 @@ const fields = [
           <template #actions="{ rowData }">
             <button
               v-if="rowData.debut !== null && hasEditPermission"
+              aria-label="Modifier"
               type="button"
               class="btn btn-outline-primary border-0 ms-2"
               @click="editPhase(rowData)"
@@ -110,6 +111,7 @@ const fields = [
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>
             <button
+              aria-label="Supprimer"
               :disabled="isSubmitting"
               v-if="rowData.debut !== null && hasEditPermission"
               type="button"

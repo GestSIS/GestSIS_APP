@@ -34,7 +34,12 @@ const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION
         "
         class="alert alert-dismissible alert-warning"
       >
-        <button type="button" class="btn-close" @click="dismissedWarning = true"></button>
+        <button
+          aria-label="Fermer"
+          type="button"
+          class="btn-close"
+          @click="dismissedWarning = true"
+        ></button>
         Intervention déjà imputée, impossible de modifier les présences.
       </div>
     </div>

@@ -321,8 +321,17 @@ const fields = [
                   <status-badge :status="interventionStatut(value)" />
                 </template>
                 <template #actions="{ rowData }">
-                  <router-link v-slot="{ navigate }" :to="'/interventions/' + rowData.id" custom>
-                    <button class="btn btn-outline-primary border-0" @click="navigate">
+                  <router-link
+                    aria-label="Modifier"
+                    v-slot="{ navigate }"
+                    :to="'/interventions/' + rowData.id"
+                    custom
+                  >
+                    <button
+                      aria-label="Modifier"
+                      class="btn btn-outline-primary border-0"
+                      @click="navigate"
+                    >
                       <font-awesome-icon :icon="['far', 'edit']" />
                     </button>
                   </router-link>

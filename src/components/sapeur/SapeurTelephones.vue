@@ -190,6 +190,7 @@ const fields = computed(() => [
         </template>
         <template #actions="{ rowData }">
           <button
+            aria-label="Supprimer"
             type="button"
             class="btn btn-outline-danger border-0"
             required

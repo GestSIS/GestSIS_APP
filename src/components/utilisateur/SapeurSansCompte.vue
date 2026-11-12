@@ -119,7 +119,11 @@ const fields = [
           :selectable="true"
         >
           <template #actions="{ rowData }">
-            <a class="btn btn-sm btn-outline-primary border-0" :href="'mailto:' + rowData.email">
+            <a
+              aria-label="Envoyer un e-mail"
+              class="btn btn-sm btn-outline-primary border-0"
+              :href="'mailto:' + rowData.email"
+            >
               <font-awesome-icon :icon="['fas', 'envelope']" />
             </a>
           </template>

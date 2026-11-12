@@ -89,6 +89,7 @@ const fields = [
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            aria-label="Supprimer"
             :disabled="isSubmitting"
             v-if="absenceParams?.actif"
             class="btn btn-outline-danger border-0"

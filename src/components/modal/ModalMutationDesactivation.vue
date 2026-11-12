@@ -199,7 +199,7 @@ const selectFonction = (state, fonctionId) => {
   <div>
     <div class="modal-header">
       <h5 class="modal-title">Suppression des groupes, exercices et fonctions</h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <form

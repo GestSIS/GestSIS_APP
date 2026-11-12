@@ -106,7 +106,7 @@ const removeSelected = () => {
   <div>
     <div class="modal-header">
       <h5 class="modal-title">Sélection des localités</h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
       <div class="row mb-2">
@@ -171,6 +171,7 @@ const removeSelected = () => {
                 <td>{{ indexedLocalite[item]?.designation }}</td>
                 <td>
                   <button
+                    aria-label="Supprimer"
                     type="button"
                     class="btn btn-outline-danger border-0"
                     @click="removeLocalite(item)"
@@ -223,6 +224,7 @@ const removeSelected = () => {
                 <td>{{ item.designation }}</td>
                 <td>
                   <button
+                    aria-label="Ajouter la localité"
                     type="button"
                     class="btn btn-outline-primary border-0"
                     @click="addLocalite(item.id)"

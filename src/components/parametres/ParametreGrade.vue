@@ -58,6 +58,7 @@ const deleteGrade = async (grade) => {
       <base-table :data="listeGrade" :fields="fields" no-data="Aucun grade" :selectable="true">
         <template #actions="{ rowData }">
           <button
+            aria-label="Modifier"
             type="button"
             class="btn btn-outline-primary border-0"
             @click="updateGrade(rowData)"
@@ -65,6 +66,7 @@ const deleteGrade = async (grade) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            aria-label="Supprimer"
             :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"

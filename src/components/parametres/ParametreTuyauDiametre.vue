@@ -52,10 +52,16 @@ const fields = [
     <div class="card-body table-responsive p-0">
       <base-table :data="diametres" :fields="fields" :selectable="true" no-data="Aucun diamètre">
         <template #actions="{ rowData }">
-          <button type="button" class="btn btn-outline-primary border-0" @click="update(rowData)">
+          <button
+            aria-label="Modifier"
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="update(rowData)"
+          >
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            aria-label="Supprimer"
             :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"

@@ -177,7 +177,7 @@ const fields = [
   <div>
     <div class="modal-header">
       <h5 class="modal-title">Revue absence</h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="row">
@@ -338,6 +338,7 @@ const fields = [
                 >
                 <button
                   v-if="rowData.justificatif_filename != ''"
+                  aria-label="Télécharger le justificatif"
                   type="button"
                   class="btn"
                   @click="downloadJustificatif(rowData)"

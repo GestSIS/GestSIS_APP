@@ -120,6 +120,7 @@ const types = [
               </td>
               <td v-if="form.capacites.length > 1">
                 <button
+                  aria-label="Supprimer"
                   type="button"
                   class="btn btn-sm btn-outline-danger"
                   @click="supprimerCapacite(capacite)"
@@ -132,7 +133,12 @@ const types = [
           <tfoot>
             <tr>
               <td :colspan="form.capacites.length > 1 ? 2 : 1">
-                <button type="button" class="btn btn-sm btn-outline-primary" @click="ajoutCapacite">
+                <button
+                  aria-label="Ajouter une capacité"
+                  type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  @click="ajoutCapacite"
+                >
                   <font-awesome-icon :icon="['fas', 'plus']" />
                 </button>
               </td>
@@ -177,6 +183,7 @@ const types = [
               <td>
                 <button
                   v-if="form.moyens_contact.length > 1"
+                  aria-label="Supprimer"
                   type="button"
                   class="btn btn-sm btn-outline-danger"
                   @click="supprimerMoyenContact(moyenContact)"
@@ -191,6 +198,7 @@ const types = [
               <td colspan="4">
                 <button
                   v-if="form.moyens_contact.length < 3"
+                  aria-label="Ajouter un moyen de contact"
                   type="button"
                   class="btn btn-sm btn-outline-primary"
                   @click="ajoutMoyenContact"

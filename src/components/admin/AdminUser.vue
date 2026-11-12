@@ -438,6 +438,7 @@ const fieldsSapeurs = [
           >
             <template #actions="{ rowData }">
               <button
+                aria-label="Supprimer"
                 :disabled="isSubmitting"
                 type="button"
                 class="btn btn-outline-danger border-0"
@@ -471,6 +472,7 @@ const fieldsSapeurs = [
           >
             <template #actions="{ rowData }">
               <button
+                aria-label="Supprimer"
                 :disabled="isSubmitting"
                 type="button"
                 class="btn btn-outline-danger border-0"

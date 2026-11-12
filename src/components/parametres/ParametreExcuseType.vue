@@ -63,6 +63,7 @@ const deleteExcuse = async (excuse) => {
       >
         <template #actions="{ rowData }">
           <button
+            aria-label="Modifier"
             type="button"
             class="btn btn-outline-primary border-0"
             @click="updateExcuse(rowData)"
@@ -70,6 +71,7 @@ const deleteExcuse = async (excuse) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            aria-label="Supprimer"
             :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"

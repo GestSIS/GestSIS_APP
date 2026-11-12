@@ -142,12 +142,14 @@ const fields = [
         </template>
         <template #actions="{ rowData }">
           <router-link
+            aria-label="Voir"
             class="btn btn-sm btn-outline-primary border-0"
             :to="{ name: 'admin-organisation-detail', params: { id: rowData.id } }"
           >
             <font-awesome-icon :icon="['far', 'eye']" />
           </router-link>
           <button
+            aria-label="Modifier"
             type="button"
             class="btn btn-outline-primary border-0"
             @click="editOrganisation(rowData)"

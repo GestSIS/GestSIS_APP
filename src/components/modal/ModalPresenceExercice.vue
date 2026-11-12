@@ -180,7 +180,7 @@ const close = async () => {
   <div>
     <div class="modal-header">
       <h5 class="modal-title">Modifier présences de {{ sapeur?.nom_prenom }}</h5>
-      <button type="button" class="btn-close" @click="close()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="close()"></button>
     </div>
     <div class="modal-body table-responsive p-0">
       <table id="sap-fonctions" class="table table-sm">
@@ -290,6 +290,7 @@ const close = async () => {
                 >
                 <button
                   v-if="e.justificatif_filename"
+                  aria-label="Télécharger le justificatif"
                   type="button"
                   class="btn"
                   @click="downloadJustificatif(e)"
@@ -298,6 +299,7 @@ const close = async () => {
                 </button>
                 <button
                   v-if="!e.excuse_type_id"
+                  aria-label="Ajouter une excuse"
                   type="button"
                   class="btn btn-outline-primary border-0"
                   @click="addExcuse(e)"
@@ -306,6 +308,7 @@ const close = async () => {
                 </button>
                 <button
                   v-else
+                  aria-label="Supprimer"
                   type="button"
                   class="btn btn-outline-danger border-0"
                   :disabled="isSubmitting"

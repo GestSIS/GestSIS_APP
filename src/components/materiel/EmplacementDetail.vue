@@ -74,7 +74,12 @@ const editEmplacement = () => {
       <div class="card mb-2 h-100">
         <div class="card-header d-flex justify-content-between align-items-center">
           <h5 class="m-0">Emplacement</h5>
-          <button type="button" class="btn btn-primary btn-sm" @click="editEmplacement">
+          <button
+            aria-label="Modifier"
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="editEmplacement"
+          >
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
         </div>

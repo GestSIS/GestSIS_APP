@@ -134,7 +134,7 @@ const fieldsStep2 = [
   <form @submit.prevent="importer">
     <div class="modal-header">
       <h5 class="modal-title">Importer des exercices depuis un autre exercice comptable</h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <multi-step
@@ -248,6 +248,7 @@ const fieldsStep2 = [
                 </td>
                 <td class="text-center">
                   <button
+                    aria-label="Supprimer"
                     type="button"
                     class="btn btn-outline-danger border-0"
                     @click="supprimerExercice(i)"

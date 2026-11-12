@@ -60,6 +60,7 @@ const deleteCategorie = async (compteId) => {
       >
         <template #actions="{ rowData }">
           <button
+            aria-label="Modifier"
             type="button"
             class="btn btn-outline-primary border-0"
             @click="updateCategorie(rowData)"
@@ -67,6 +68,7 @@ const deleteCategorie = async (compteId) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            aria-label="Supprimer"
             :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"

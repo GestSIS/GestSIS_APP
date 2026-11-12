@@ -74,6 +74,7 @@ const fields = [
         <template #actions="{ rowData }">
           <button
             v-if="hasEditPermission"
+            aria-label="Modifier"
             type="button"
             class="btn btn-outline-primary border-0"
             @click="editGrade(rowData)"
@@ -81,6 +82,7 @@ const fields = [
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            aria-label="Supprimer"
             :disabled="isSubmitting"
             v-if="hasEditPermission"
             type="button"

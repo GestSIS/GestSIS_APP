@@ -64,7 +64,12 @@ const fields = [
           no-data="Aucun contrôle médical"
         >
           <template #doc="{ rowData }">
-            <button v-if="rowData.filename" class="btn" @click="downloadJustificatif(rowData)">
+            <button
+              v-if="rowData.filename"
+              aria-label="Télécharger le justificatif"
+              class="btn"
+              @click="downloadJustificatif(rowData)"
+            >
               <font-awesome-icon :icon="['far', 'file-pdf']" />
             </button>
           </template>

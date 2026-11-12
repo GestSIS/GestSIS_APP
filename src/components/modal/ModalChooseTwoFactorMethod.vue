@@ -58,7 +58,7 @@ const chooseWebauthn = () =>
       <h5 class="modal-title">
         {{ excludeMethods.length ? "Ajouter une méthode" : "Activer la double authentification" }}
       </h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <p class="text-body-secondary">

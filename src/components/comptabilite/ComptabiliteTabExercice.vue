@@ -335,6 +335,7 @@ const fields = [
               <template #actions="{ rowData }">
                 <button
                   v-if="hasEditPermission && rowData.statut === EXERCICE_STATUT.VALIDE"
+                  aria-label="Imputer"
                   class="btn btn-outline-primary border-0"
                   @click="imputer(rowData.id)"
                 >

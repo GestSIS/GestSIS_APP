@@ -202,7 +202,7 @@ const save = async () => {
       <h5 class="modal-title">
         {{ form.id ? "Modifier" : "Ajouter" }} une indemnité pour exercice
       </h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="row">
@@ -278,6 +278,7 @@ const save = async () => {
                   </td>
                   <td v-if="base.length > 1" class="text-center col-1">
                     <button
+                      aria-label="Supprimer"
                       type="button"
                       class="btn btn-outline-danger border-0"
                       @click="supprimerType(i)"
@@ -325,6 +326,7 @@ const save = async () => {
                 <th></th>
                 <th v-for="(column, i) in columns" :key="i" class="text-center">
                   <button
+                    aria-label="Supprimer"
                     type="button"
                     class="btn btn-outline-danger border-0"
                     @click="supprimerTypePourFonction(i)"
@@ -347,6 +349,7 @@ const save = async () => {
                 </th>
                 <th rowspan="2" class="align-middle">
                   <button
+                    aria-label="Ajouter un type"
                     type="button"
                     class="btn btn-outline-primary border-0"
                     @click="ajoutTypePourFonction()"

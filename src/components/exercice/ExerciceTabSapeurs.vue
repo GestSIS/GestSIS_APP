@@ -444,6 +444,7 @@ const statuts = [
     class="alert alert-dismissible alert-warning"
   >
     <button
+      aria-label="Fermer"
       type="button"
       class="btn-close"
       data-bs-dismiss="alert"
@@ -586,11 +587,17 @@ const statuts = [
                 @click="detailExcuse(sap)"
                 >{{ excusesTypes.find((e) => e.id == sap.excuse_type_id)?.designation }}</span
               >
-              <button v-if="sap.justificatif_path" class="btn" @click="downloadJustificatif(sap)">
+              <button
+                v-if="sap.justificatif_path"
+                aria-label="Télécharger le justificatif"
+                class="btn"
+                @click="downloadJustificatif(sap)"
+              >
                 <font-awesome-icon :icon="['far', 'file-pdf']" />
               </button>
               <button
                 v-if="!sap.excuse_type_id"
+                aria-label="Ajouter une excuse"
                 class="btn btn-outline-primary border-0"
                 :disabled="!hasPresencePermission"
                 @click="addExcuse(sap)"
@@ -599,6 +606,7 @@ const statuts = [
               </button>
               <button
                 v-else
+                aria-label="Supprimer"
                 class="btn btn-outline-danger border-0"
                 :disabled="!hasPresencePermission || isSubmitting"
                 @click="removeExcuse(sap)"

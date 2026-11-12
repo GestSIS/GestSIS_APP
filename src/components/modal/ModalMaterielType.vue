@@ -60,7 +60,7 @@ const save = async () => {
   <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">{{ activeItem.id ? "Modifier" : "Ajouter" }} un matériel type</h5>
-      <button type="button" class="btn-close" @click="closeModal"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
       <div class="row">

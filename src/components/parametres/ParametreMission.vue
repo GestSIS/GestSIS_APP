@@ -46,6 +46,7 @@ const deleteMission = async (mission) => {
       <base-table :data="listeMission" :fields="fields" no-data="Aucune mission" :selectable="true">
         <template #actions="{ rowData }">
           <button
+            aria-label="Modifier"
             type="button"
             class="btn btn-outline-primary border-0"
             @click="updateMission(rowData)"
@@ -53,6 +54,7 @@ const deleteMission = async (mission) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            aria-label="Supprimer"
             :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"

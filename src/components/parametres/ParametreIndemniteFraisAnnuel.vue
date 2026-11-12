@@ -166,6 +166,7 @@ const deleteFonction = async (type, fonction) => {
             <th v-for="type in typesAnnuel" :key="type.id + '-' + type.type" class="text-center">
               {{ type.designation }}
               <button
+                aria-label="Modifier"
                 type="button"
                 class="btn btn-outline-primary border-0"
                 @click="updateType(type)"
@@ -173,6 +174,7 @@ const deleteFonction = async (type, fonction) => {
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <button
+                aria-label="Supprimer"
                 :disabled="isSubmitting"
                 type="button"
                 class="btn btn-outline-danger border-0"
@@ -182,7 +184,12 @@ const deleteFonction = async (type, fonction) => {
               </button>
             </th>
             <th rowspan="4" class="text-center align-middle">
-              <button type="button" class="btn btn-outline-primary border-0" @click="ajoutType()">
+              <button
+                aria-label="Ajouter un type"
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="ajoutType()"
+              >
                 <font-awesome-icon size="2x" :icon="['far', 'plus-square']" />
               </button>
             </th>
@@ -232,6 +239,7 @@ const deleteFonction = async (type, fonction) => {
               }}</template>
               <button
                 v-if="!type.fonctions.find((f) => f.fonction_id == fonction.id)"
+                aria-label="Ajouter une fonction"
                 type="button"
                 class="btn btn-outline-primary border-0"
                 @click="addFonction(type, fonction)"
@@ -240,6 +248,7 @@ const deleteFonction = async (type, fonction) => {
               </button>
               <button
                 v-if="type.fonctions.find((f) => f.fonction_id == fonction.id)"
+                aria-label="Modifier"
                 type="button"
                 class="btn btn-outline-primary border-0"
                 @click="updateFonction(type, fonction)"
@@ -248,6 +257,7 @@ const deleteFonction = async (type, fonction) => {
               </button>
               <button
                 v-if="type.fonctions.find((f) => f.fonction_id == fonction.id)"
+                aria-label="Supprimer"
                 type="button"
                 class="btn btn-outline-danger border-0"
                 :disabled="isSubmitting"

@@ -75,12 +75,17 @@ const imputer = async () => {
   <div>
     <div class="modal-header">
       <h5 class="modal-title">Imputer indemnités et frais annuels</h5>
-      <button type="button" class="btn-close" @click="cancel"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="cancel"></button>
     </div>
     <div class="modal-body">
       <multi-step :steps="['Type de frais', 'Résultat']" :active-index="phase - 1" />
       <div v-if="phase === 1" class="alert alert-dismissible alert-primary">
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <button
+          aria-label="Fermer"
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+        ></button>
         <h4 class="alert-heading">Aide</h4>
         <p class="mb-0">
           Les frais et indemnités annuels ci-dessous seront imputés automatiquement pour
@@ -149,7 +154,12 @@ const imputer = async () => {
       </div>
       <div v-if="phase === 2">
         <div class="alert alert-dismissible alert-success">
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          <button
+            aria-label="Fermer"
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
           Imputations effectuées avec
           <strong>succès</strong>!
         </div>

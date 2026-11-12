@@ -369,6 +369,7 @@ const fields = [
                 <template #doc="{ rowData }">
                   <button
                     v-if="rowData.filename"
+                    aria-label="Télécharger le justificatif"
                     class="btn"
                     @click="downloadJustificatif(rowData)"
                   >
@@ -377,6 +378,7 @@ const fields = [
                 </template>
                 <template #actions="{ rowData }">
                   <router-link
+                    aria-label="Modifier"
                     v-slot="{ navigate }"
                     :to="{
                       name: 'controle-medical',
@@ -384,11 +386,16 @@ const fields = [
                     }"
                     custom
                   >
-                    <button class="btn btn-outline-primary border-0" @click="navigate">
+                    <button
+                      aria-label="Modifier"
+                      class="btn btn-outline-primary border-0"
+                      @click="navigate"
+                    >
                       <font-awesome-icon :icon="['far', 'edit']" />
                     </button>
                   </router-link>
                   <button
+                    aria-label="Supprimer"
                     :disabled="isSubmitting"
                     v-if="hasEditPermission"
                     type="button"

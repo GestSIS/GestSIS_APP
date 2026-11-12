@@ -105,6 +105,7 @@ const deleteStat = async (stat) => {
           >
             <template #actions="{ rowData }">
               <button
+                aria-label="Modifier"
                 type="button"
                 class="btn btn-outline-primary border-0"
                 @click="updateType(rowData)"
@@ -112,6 +113,7 @@ const deleteStat = async (stat) => {
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <button
+                aria-label="Supprimer"
                 :disabled="isSubmitting"
                 type="button"
                 class="btn btn-outline-danger border-0"
@@ -136,6 +138,7 @@ const deleteStat = async (stat) => {
           <base-table :data="listeStat" :fields="fieldsStat" no-data="Aucune statistique">
             <template #actions="{ rowData }">
               <button
+                aria-label="Modifier"
                 type="button"
                 class="btn btn-outline-primary border-0"
                 @click="updateStat(rowData)"
@@ -143,6 +146,7 @@ const deleteStat = async (stat) => {
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <button
+                aria-label="Supprimer"
                 :disabled="isSubmitting"
                 type="button"
                 class="btn btn-outline-danger border-0"

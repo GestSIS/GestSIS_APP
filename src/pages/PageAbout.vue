@@ -156,6 +156,7 @@ const copyToClipboard = (text) => copy(text);
                   aria-describedby="copy-to-clipboard"
                 />
                 <button
+                  aria-label="Copier l'access token"
                   id="copy-to-clipboard"
                   class="btn btn-outline-secondary"
                   type="button"
@@ -177,6 +178,7 @@ const copyToClipboard = (text) => copy(text);
                     aria-describedby="copy-to-clipboard"
                   />
                   <button
+                    aria-label="Copier le refresh token"
                     id="copy-to-clipboard"
                     class="btn btn-outline-secondary"
                     type="button"

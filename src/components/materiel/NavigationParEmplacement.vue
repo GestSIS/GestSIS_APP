@@ -146,6 +146,7 @@ const ajoutEmplacement = () =>
   <div class="d-md-none mb-2 d-flex gap-2">
     <router-link
       v-if="hasConfigPermission"
+      aria-label="Modifier"
       :to="{ name: 'param-materiel' }"
       class="btn btn-sm btn-outline-primary flex-shrink-0"
     >
@@ -212,7 +213,11 @@ const ajoutEmplacement = () =>
         </select-popover>
       </select-root>
     </div>
-    <button class="btn btn-sm btn-outline-primary" @click="ajoutEmplacement">
+    <button
+      aria-label="Ajouter un emplacement"
+      class="btn btn-sm btn-outline-primary"
+      @click="ajoutEmplacement"
+    >
       <font-awesome-icon :icon="['fas', 'plus']" />
     </button>
   </div>
@@ -222,6 +227,7 @@ const ajoutEmplacement = () =>
     <div class="input-group mb-2">
       <router-link
         v-if="hasConfigPermission"
+        aria-label="Modifier"
         :to="{ name: 'param-materiel' }"
         class="btn btn-sm btn-outline-primary"
       >

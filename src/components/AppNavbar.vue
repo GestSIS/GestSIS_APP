@@ -62,6 +62,7 @@ const quitterImpersonation = async () => {
       <li class="nav-item position-relative me-2 ms-4">
         <button
           v-if="!noSidebar"
+          aria-label="Afficher ou masquer le menu"
           class="btn btn-sm btn-outline-secondary"
           @click="$emit('toggleSidebar')"
         >
@@ -87,6 +88,7 @@ const quitterImpersonation = async () => {
       </li>
       <li class="position-relative me-2">
         <a
+          aria-label="GestSIS sur GitHub (nouvel onglet)"
           href="https://github.com/GestSIS"
           target="_blank"
           rel="noopener noreferrer"
@@ -96,7 +98,12 @@ const quitterImpersonation = async () => {
         </a>
       </li>
       <li class="position-relative me-2">
-        <a :href="DOC_URL" target="_blank" class="btn btn-sm btn-link nav-link pt-0 pb-0">
+        <a
+          aria-label="Documentation (nouvel onglet)"
+          :href="DOC_URL"
+          target="_blank"
+          class="btn btn-sm btn-link nav-link pt-0 pb-0"
+        >
           <font-awesome-icon :icon="['far', 'question-circle']" />
         </a>
       </li>

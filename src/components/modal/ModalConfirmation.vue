@@ -26,7 +26,7 @@ const submit = async (confirm) => {
   <div>
     <div class="modal-header">
       <h5 class="modal-title">{{ data.title }}</h5>
-      <button type="button" class="btn-close" @click="submit(false)"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="submit(false)"></button>
     </div>
     <div class="modal-body">
       <p>{{ data.question }}</p>

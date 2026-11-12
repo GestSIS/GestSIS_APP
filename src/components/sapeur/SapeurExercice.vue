@@ -125,6 +125,7 @@ const fields = [
             >
             <button
               v-if="rowData.justificatif_filename"
+              aria-label="Télécharger le justificatif"
               class="btn"
               @click="downloadJustificatif(rowData)"
             >

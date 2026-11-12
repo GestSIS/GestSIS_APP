@@ -390,7 +390,7 @@ const selectOptions = {
   <div>
     <div class="modal-header">
       <h5 class="modal-title">Gérer les sapeurs</h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
       <div class="row mt-2">
@@ -497,6 +497,7 @@ const selectOptions = {
                 </td>
                 <td>
                   <button
+                    aria-label="Supprimer"
                     type="button"
                     class="btn btn-outline-danger border-0"
                     @click="removeSingleSapeur(item.id)"
@@ -557,6 +558,7 @@ const selectOptions = {
                 <td>
                   <button
                     v-if="item.leaf"
+                    aria-label="Ajouter le sapeur"
                     type="button"
                     class="btn btn-outline-primary border-0"
                     @click="addSingleSapeur(item.id)"
@@ -605,6 +607,7 @@ const selectOptions = {
                 </td>
                 <td>
                   <button
+                    aria-label="Ajouter le sapeur"
                     type="button"
                     class="btn btn-outline-primary border-0"
                     @click="addSingleSapeur(item.id)"

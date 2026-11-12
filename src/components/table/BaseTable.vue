@@ -334,6 +334,7 @@ defineExpose({
           <th v-if="detailRowColumn && (data.length || groupedData.length)">
             <button
               v-if="allRows.every((d) => detailsRowVisibility[d[selectKey]])"
+              aria-label="Replier toutes les lignes"
               class="btn btn-link border-0"
               @click="hideAllDetailRow"
             >
@@ -342,7 +343,12 @@ defineExpose({
                 :rotation="90"
               />
             </button>
-            <button v-else class="btn btn-link border-0" @click="showAllDetailRow">
+            <button
+              v-else
+              aria-label="Déplier toutes les lignes"
+              class="btn btn-link border-0"
+              @click="showAllDetailRow"
+            >
               <font-awesome-icon
                 :icon="['fas', 'up-right-and-down-left-from-center']"
                 :rotation="90"
@@ -410,6 +416,10 @@ defineExpose({
           <td v-if="detailRowColumn" class="details-width">
             <button
               v-if="!detailRowColumnHideButton(r)"
+              :aria-label="
+                detailsRowVisibility[r[selectKey]] ? 'Replier le détail' : 'Déplier le détail'
+              "
+              :aria-expanded="detailsRowVisibility[r[selectKey]] || false"
               class="btn btn-link border-0"
               @click="toggleDetailRow(r[selectKey])"
             >

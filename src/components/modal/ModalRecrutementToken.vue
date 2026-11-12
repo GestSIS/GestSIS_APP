@@ -90,7 +90,7 @@ const copyToClipboard = (value) => copy(value, "Lien copié dans le presse-papie
   <div>
     <div class="modal-header">
       <h5 class="modal-title">Lien d'inscription des recrues</h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div v-if="chargement" class="text-center py-3">Chargement…</div>

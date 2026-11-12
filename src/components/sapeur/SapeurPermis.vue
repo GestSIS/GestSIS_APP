@@ -197,6 +197,7 @@ const isInvalid = (key) => {
                 />
                 <button
                   v-if="(permis.date || '') !== '' && hasEditPermission"
+                  aria-label="Supprimer"
                   type="button"
                   class="btn btn-outline-danger border-0"
                   @click="supprimerPermis(permis)"

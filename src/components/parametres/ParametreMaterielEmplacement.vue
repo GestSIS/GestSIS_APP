@@ -120,10 +120,16 @@ const rowClass = (dataItem) => (emplacementVisible.value[dataItem.id] ? "" : "d-
           {{ indexedCouleurs[rowData.couleur_id]?.nom }}
         </template>
         <template #actions="{ rowData }">
-          <button type="button" class="btn btn-outline-primary border-0" @click="update(rowData)">
+          <button
+            aria-label="Modifier"
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="update(rowData)"
+          >
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            aria-label="Supprimer"
             :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"
@@ -133,6 +139,7 @@ const rowClass = (dataItem) => (emplacementVisible.value[dataItem.id] ? "" : "d-
           </button>
           <button
             v-if="emplacementsGroupedByParent[rowData.id]?.length"
+            aria-label="Dupliquer les sous-emplacements"
             v-tooltip.bottom="'Dupliquer emplacements enfants'"
             type="button"
             class="btn btn-outline-primary border-0"

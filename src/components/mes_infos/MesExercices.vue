@@ -167,6 +167,7 @@ const fields = [
             >
             <button
               v-if="rowData.justificatif_filename"
+              aria-label="Télécharger le justificatif"
               class="btn"
               @click="downloadJustificatif(rowData)"
             >
@@ -179,12 +180,14 @@ const fields = [
                 !rowData.excuse_type_id &&
                 rowData.statut != EXERCICE_STATUT.ANNULE
               "
+              aria-label="Ajouter une excuse"
               class="btn btn-outline-primary border-0"
               @click="addExcuse(rowData)"
             >
               <font-awesome-icon :icon="['fas', 'plus']" />
             </button>
             <button
+              aria-label="Supprimer"
               :disabled="isSubmitting"
               v-else-if="
                 excuseParams?.actif &&

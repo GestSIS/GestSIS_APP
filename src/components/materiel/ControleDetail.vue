@@ -70,7 +70,12 @@ const editControle = () =>
       <base-card>
         <template #title>Détails du contrôle</template>
         <template #header>
-          <button type="button" class="btn btn-primary btn-sm" @click="editControle">
+          <button
+            aria-label="Modifier"
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="editControle"
+          >
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
         </template>

@@ -505,7 +505,7 @@ const save = async () => {
               : `Nouveau contrôle — ${controleImpose?.nom}`
         }}
       </h5>
-      <button type="button" class="btn-close" @click="closeModal"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal"></button>
     </div>
 
     <div class="modal-body">
@@ -682,6 +682,7 @@ const save = async () => {
               </template>
               <template #actions="{ rowData }">
                 <button
+                  aria-label="Supprimer"
                   type="button"
                   class="btn btn-outline-danger border-0"
                   :disabled="lignesMultiples.length <= 1"

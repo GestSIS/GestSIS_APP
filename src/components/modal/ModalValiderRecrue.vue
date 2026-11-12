@@ -30,7 +30,7 @@ const submit = async () => {
   <form @submit.prevent="submit">
     <div class="modal-header">
       <h5 class="modal-title">Valider la recrue</h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <p>La recrue devient un sapeur actif à partir de la date d'incorporation choisie.</p>

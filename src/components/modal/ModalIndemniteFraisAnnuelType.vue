@@ -47,7 +47,7 @@ const save = async () => {
         {{ form.type == "frais" ? "un frais annuel" : "une indemnité annuelle" }}
         type
       </h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">

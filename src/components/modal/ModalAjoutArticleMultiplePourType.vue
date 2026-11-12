@@ -125,7 +125,7 @@ const save = async () => {
   <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">Ajouter du matériel : {{ type.designation }}</h5>
-      <button type="button" class="btn-close" @click="closeModal"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
       <select-emplacement

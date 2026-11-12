@@ -57,7 +57,7 @@ const save = () => {
   <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">Sélectionner une excuse</h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
       <p v-if="form.date_excuse" class="text-muted small">

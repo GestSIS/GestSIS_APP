@@ -83,7 +83,12 @@ const fields = computed(() => [
       />
     </template>
     <template #actions="{ rowData }">
-      <button type="button" class="btn btn-outline-danger border-0" @click="retirer(rowData._key)">
+      <button
+        aria-label="Supprimer"
+        type="button"
+        class="btn btn-outline-danger border-0"
+        @click="retirer(rowData._key)"
+      >
         <font-awesome-icon :icon="['far', 'trash-alt']" />
       </button>
     </template>

@@ -140,10 +140,16 @@ const permissionMapping = (key) => {
               <label class="form-check-label" :for="p.id + '-' + r.id"></label>
             </td>
             <td class="align-middle text-center">
-              <button type="button" class="btn btn-outline-primary border-0" @click="edit(r)">
+              <button
+                aria-label="Modifier"
+                type="button"
+                class="btn btn-outline-primary border-0"
+                @click="edit(r)"
+              >
                 <font-awesome-icon :icon="['far', 'edit']" />
               </button>
               <button
+                aria-label="Supprimer"
                 :disabled="isSubmitting"
                 type="button"
                 class="btn btn-outline-danger border-0"

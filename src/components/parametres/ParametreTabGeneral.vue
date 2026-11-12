@@ -313,6 +313,7 @@ const saveLogo = async () => {
               </div>
               <button
                 v-if="hasConfigGeneralPermission"
+                aria-label="Ajouter un contact"
                 class="btn btn-outline-primary"
                 @click="addContact(liste)"
               >

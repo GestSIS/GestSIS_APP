@@ -48,7 +48,7 @@ const submit = async () => {
   <form @submit.prevent="submit">
     <div class="modal-header">
       <h5 class="modal-title">Supprimer la clé « {{ data?.credential?.name }} »</h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <p class="text-body-secondary">

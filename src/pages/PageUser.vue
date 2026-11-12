@@ -504,6 +504,7 @@ const fields = [
               </template>
               <template #actions="{ rowData }">
                 <button
+                  aria-label="Supprimer"
                   :disabled="isSubmitting"
                   class="btn btn-sm btn-outline-danger"
                   @click="deleteApiToken(rowData.id)"
@@ -576,6 +577,7 @@ const fields = [
                   >
                     <template #actions="{ rowData }">
                       <button
+                        aria-label="Supprimer"
                         type="button"
                         class="btn btn-sm btn-outline-danger"
                         @click="deleteWebauthnKey(rowData)"
@@ -625,6 +627,7 @@ const fields = [
                 <!-- Session courante : se déconnecter via le menu, pas depuis cette liste. -->
                 <button
                   v-if="!rowData.current"
+                  aria-label="Supprimer"
                   type="button"
                   class="btn btn-sm btn-outline-danger"
                   :disabled="isSubmitting"

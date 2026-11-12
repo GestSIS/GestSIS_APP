@@ -54,7 +54,7 @@ const generer = () => {
   <form @submit.prevent="generer">
     <div class="modal-header">
       <h5 class="modal-title">Rapport d'intervention - Configuration</h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="form-check">

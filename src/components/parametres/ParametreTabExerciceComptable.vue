@@ -45,6 +45,7 @@ const updateExerciceComptable = (exercice) =>
       >
         <template #actions="{ rowData }">
           <button
+            aria-label="Modifier"
             type="button"
             class="btn btn-outline-primary border-0"
             @click="updateExerciceComptable(rowData)"
@@ -52,7 +53,13 @@ const updateExerciceComptable = (exercice) =>
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <!-- TODO Implement Suppression exercice comptable -->
-          <button v-if="false" type="button" class="btn btn-outline-danger border-0" disabled>
+          <button
+            v-if="false"
+            aria-label="Supprimer"
+            type="button"
+            class="btn btn-outline-danger border-0"
+            disabled
+          >
             <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>
         </template>

@@ -167,7 +167,7 @@ const lignesControles = computed(() =>
       <h5 class="modal-title">
         Informations — {{ data.numero || data.designation || type?.designation }}
       </h5>
-      <button type="button" class="btn-close" @click="closeModal"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal"></button>
     </div>
     <div class="modal-body">
       <div class="row">

@@ -113,6 +113,7 @@ const selectedTypeId = computed({
   <div class="d-md-none mb-2 d-flex gap-2">
     <router-link
       v-if="hasConfigPermission"
+      aria-label="Modifier"
       :to="{ name: 'param-materiel' }"
       class="btn btn-sm btn-outline-primary flex-shrink-0"
     >
@@ -159,6 +160,7 @@ const selectedTypeId = computed({
     <div class="input-group mb-2">
       <router-link
         v-if="hasConfigPermission"
+        aria-label="Modifier"
         :to="{ name: 'param-materiel' }"
         class="btn btn-sm btn-outline-primary"
       >

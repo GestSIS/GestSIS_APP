@@ -58,6 +58,7 @@ const deleteMedecin = async (medecin) => {
       <base-table :data="listeMedecin" :fields="fields" no-data="Aucun médecin" :selectable="true">
         <template #actions="{ rowData }">
           <button
+            aria-label="Modifier"
             type="button"
             class="btn btn-outline-primary border-0"
             @click="updateMedecin(rowData)"
@@ -65,6 +66,7 @@ const deleteMedecin = async (medecin) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
+            aria-label="Supprimer"
             :disabled="isSubmitting"
             type="button"
             class="btn btn-outline-danger border-0"

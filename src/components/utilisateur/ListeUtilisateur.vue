@@ -178,6 +178,7 @@ const fields = [
           <template #actions="{ rowData }">
             <button
               v-if="hasEditPermission"
+              aria-label="Modifier"
               class="btn btn-outline-primary border-0"
               @click="edit(rowData)"
             >

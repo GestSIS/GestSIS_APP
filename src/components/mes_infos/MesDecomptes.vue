@@ -116,7 +116,11 @@ const fields = [
         no-data="Aucun décompte pour le moment"
       >
         <template #actions="{ rowData }">
-          <button class="btn btn-outline-primary border-0" @click="downloadDecompte(rowData)">
+          <button
+            aria-label="Télécharger le décompte"
+            class="btn btn-outline-primary border-0"
+            @click="downloadDecompte(rowData)"
+          >
             <font-awesome-icon :icon="['far', 'file-pdf']" />
           </button>
         </template>

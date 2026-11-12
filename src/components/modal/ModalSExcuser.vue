@@ -127,7 +127,7 @@ const close = () => {
   <form @submit.prevent="validate">
     <div class="modal-header">
       <h5 class="modal-title">S'excuser</h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
       <base-select

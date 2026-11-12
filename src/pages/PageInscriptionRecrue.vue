@@ -493,6 +493,7 @@ const soumettre = async () => {
                     </td>
                     <td v-if="form.telephones.length > 1" class="align-middle text-center">
                       <button
+                        aria-label="Supprimer"
                         type="button"
                         class="btn btn-outline-danger border-0 btn-sm"
                         @click="retirerTelephone(index)"
@@ -566,6 +567,7 @@ const soumettre = async () => {
                     </td>
                     <td class="align-middle text-center">
                       <button
+                        aria-label="Supprimer"
                         type="button"
                         class="btn btn-outline-danger border-0 btn-sm"
                         @click="retirerPermis(index)"

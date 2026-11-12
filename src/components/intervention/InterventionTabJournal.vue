@@ -387,6 +387,7 @@ const fieldsJalons = [
               <template #actions="{ rowData }">
                 <div class="d-flex justify-content-center">
                   <button
+                    aria-label="Modifier"
                     type="button"
                     class="btn btn-outline-primary border-0"
                     @click="editAppel(rowData.id)"
@@ -394,6 +395,7 @@ const fieldsJalons = [
                     <font-awesome-icon :icon="['far', 'edit']" />
                   </button>
                   <button
+                    aria-label="Supprimer"
                     :disabled="isSubmitting"
                     type="button"
                     class="btn btn-outline-danger border-0"
@@ -429,6 +431,7 @@ const fieldsJalons = [
               <template #actions="{ rowData }">
                 <div class="d-flex justify-content-center">
                   <button
+                    aria-label="Modifier"
                     type="button"
                     class="btn btn-outline-primary border-0"
                     @click="editMission(rowData.id)"
@@ -436,6 +439,7 @@ const fieldsJalons = [
                     <font-awesome-icon :icon="['far', 'edit']" />
                   </button>
                   <button
+                    aria-label="Supprimer"
                     :disabled="isSubmitting"
                     type="button"
                     class="btn btn-outline-danger border-0"
@@ -471,6 +475,7 @@ const fieldsJalons = [
               <template #actions="{ rowData }">
                 <div class="d-flex justify-content-center">
                   <button
+                    aria-label="Modifier"
                     type="button"
                     class="btn btn-outline-primary border-0"
                     @click="editJalon(rowData.id)"
@@ -478,6 +483,7 @@ const fieldsJalons = [
                     <font-awesome-icon :icon="['far', 'edit']" />
                   </button>
                   <button
+                    aria-label="Supprimer"
                     :disabled="isSubmitting"
                     type="button"
                     class="btn btn-outline-danger border-0"

@@ -128,7 +128,7 @@ const ecritureFields = [
   <div>
     <div class="modal-header">
       <h5 class="modal-title">Imputer le cours</h5>
-      <button type="button" class="btn-close" @click="cancel"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="cancel"></button>
     </div>
     <div class="modal-body">
       <multi-step :steps="['Type de frais', 'Résultat']" :active-index="phase - 1" />
@@ -153,6 +153,7 @@ const ecritureFields = [
       <div v-if="phase === 2">
         <div v-if="successMessageVisibility" class="alert alert-dismissible alert-success">
           <button
+            aria-label="Fermer"
             type="button"
             class="btn-close"
             @click="successMessageVisibility = false"

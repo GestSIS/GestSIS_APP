@@ -271,6 +271,7 @@ const selectMaterielTypeNumerote = (item, value) => {
         <td>{{ item.remarque }}</td>
         <td>
           <button
+            aria-label="Supprimer"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="selectedArticles.splice(index, 1)"
@@ -281,7 +282,12 @@ const selectMaterielTypeNumerote = (item, value) => {
       </tr>
       <tr>
         <td colspan="6">
-          <button type="button" class="btn btn-outline-primary" @click="addEmptyLine">
+          <button
+            aria-label="Ajouter une ligne"
+            type="button"
+            class="btn btn-outline-primary"
+            @click="addEmptyLine"
+          >
             <font-awesome-icon :icon="['fas', 'plus']" />
           </button>
         </td>

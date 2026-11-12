@@ -249,6 +249,7 @@ const addEmptyLine = () => {
         </td>
         <td>
           <button
+            aria-label="Supprimer"
             type="button"
             class="btn btn-outline-danger border-0"
             @click="articles.splice(index, 1)"
@@ -269,7 +270,12 @@ const addEmptyLine = () => {
             (afficherColonePeremption ? 1 : 0)
           "
         >
-          <button type="button" class="btn btn-outline-primary" @click="addEmptyLine">
+          <button
+            aria-label="Ajouter une ligne"
+            type="button"
+            class="btn btn-outline-primary"
+            @click="addEmptyLine"
+          >
             <font-awesome-icon :icon="['fas', 'plus']" />
           </button>
         </td>

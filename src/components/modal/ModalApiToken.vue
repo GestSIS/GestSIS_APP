@@ -78,7 +78,7 @@ const copyToClipboard = (text) => copy(text, "Jeton copié dans le presse-papier
   <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un jeton d'API</h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div v-if="token" class="modal-body">
       <div class="alert alert-info">
@@ -100,6 +100,7 @@ const copyToClipboard = (text) => copy(text, "Jeton copié dans le presse-papier
           aria-describedby="copy-to-clipboard"
         />
         <button
+          aria-label="Copier le jeton"
           id="copy-to-clipboard"
           class="btn btn-outline-secondary"
           type="button"

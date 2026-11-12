@@ -184,7 +184,7 @@ const save = async () => {
   <form @submit.prevent="save">
     <div class="modal-header">
       <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} un contrôle</h5>
-      <button type="button" class="btn-close" @click="closeModal"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal"></button>
     </div>
 
     <div class="modal-body">
@@ -503,6 +503,7 @@ const save = async () => {
               </template>
               <div class="col-auto d-flex align-items-end pb-1">
                 <button
+                  aria-label="Supprimer"
                   type="button"
                   class="btn btn-outline-danger btn-sm border-0"
                   :disabled="taches.length <= 1"

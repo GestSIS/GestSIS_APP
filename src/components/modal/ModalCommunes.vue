@@ -47,6 +47,7 @@ const save = async () => {
               </td>
               <td v-if="form.length > 1">
                 <button
+                  aria-label="Supprimer"
                   type="button"
                   class="btn btn-sm btn-outline-danger"
                   @click="supprimerCommune(commune)"
@@ -59,7 +60,12 @@ const save = async () => {
           <tfoot>
             <tr>
               <td :colspan="form.length > 1 ? 2 : 1">
-                <button type="button" class="btn btn-sm btn-outline-primary" @click="ajoutCommune">
+                <button
+                  aria-label="Ajouter une commune"
+                  type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  @click="ajoutCommune"
+                >
                   <font-awesome-icon :icon="['fas', 'plus']" />
                 </button>
               </td>

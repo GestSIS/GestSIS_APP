@@ -68,7 +68,12 @@ const editMateriel = () =>
       <base-card>
         <template #title>Description du matériel</template>
         <template #header>
-          <button type="button" class="btn btn-primary btn-sm" @click="editMateriel">
+          <button
+            aria-label="Modifier"
+            type="button"
+            class="btn btn-primary btn-sm"
+            @click="editMateriel"
+          >
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
         </template>

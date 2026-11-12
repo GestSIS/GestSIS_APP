@@ -56,7 +56,7 @@ const save = async () => {
       <h5 class="modal-title">
         Ajouter un contact à la liste <em>{{ data?.designation }}</em>
       </h5>
-      <button type="button" class="btn-close" @click="close"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="close"></button>
     </div>
     <div class="modal-body">
       <!-- NOM -->

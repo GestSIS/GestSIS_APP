@@ -49,7 +49,12 @@ const modifier = (vehicule) =>
     <div class="card-body table-responsive p-0">
       <base-table :data="vehicules" :fields="fields" no-data="Aucun véhicule" :selectable="true">
         <template #actions="{ rowData }">
-          <button type="button" class="btn btn-outline-primary border-0" @click="modifier(rowData)">
+          <button
+            aria-label="Modifier"
+            type="button"
+            class="btn btn-outline-primary border-0"
+            @click="modifier(rowData)"
+          >
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
         </template>

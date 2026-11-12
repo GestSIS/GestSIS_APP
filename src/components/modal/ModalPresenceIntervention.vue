@@ -107,7 +107,7 @@ const save = async () => {
       <h5 class="modal-title">
         {{ editMode ? "Ajouter des présences" : "Modifier une présence" }}
       </h5>
-      <button type="button" class="btn-close" @click="closeModal()"></button>
+      <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
       <div class="mb-3">

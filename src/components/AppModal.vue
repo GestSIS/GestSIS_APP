@@ -123,7 +123,7 @@ onUnmounted(() => document.removeEventListener("keydown", escapeHandler));
             :data="modal.data"
             class="modal-content"
           ></component>
-          <template #fallback>Loading ...</template>
+          <template #fallback>Chargement ...</template>
         </suspense>
       </div>
     </div>
