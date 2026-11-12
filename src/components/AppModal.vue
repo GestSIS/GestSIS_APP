@@ -19,6 +19,98 @@ const components = Object.fromEntries(
 
 const modal = useModalStore();
 
+// Accessibilité : la modale ouverte reçoit le focus, le garde (Tab boucle à
+// l'intérieur, le reste de la page est rendu `inert`) et le rend à l'élément qui
+// l'a ouverte à la fermeture. Son nom accessible est le `.modal-title` du contenu.
+const racine = useTemplateRef("racine");
+const dialogue = useTemplateRef("dialogue");
+const confirmation = useTemplateRef("confirmation");
+const titreId = ref(null);
+const chargement = ref(false);
+let declencheur = null;
+let focusAvantConfirmation = null;
+
+const FOCUSABLES =
+  'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), [contenteditable="true"]';
+
+const elementsFocusables = (conteneur) =>
+  [...conteneur.querySelectorAll(FOCUSABLES)].filter((el) => el.getClientRects().length > 0);
+
+const rendreFocus = (element) => {
+  nextTick(() => {
+    if (element?.isConnected) {
+      element.focus();
+    }
+  });
+};
+
+// Les frères de l'AppModal dans le layout (sidebar, navbar, contenu de la page).
+const setFondInerte = (inerte) => {
+  const parent = racine.value?.parentElement;
+  if (!parent) {
+    return;
+  }
+  for (const enfant of parent.children) {
+    if (enfant !== racine.value) {
+      enfant.inert = inerte;
+    }
+  }
+};
+
+watch(
+  () => modal.visible,
+  (visible) => {
+    if (visible) {
+      // Flush "pre" : le DOM n'a pas encore changé, le focus est toujours sur le déclencheur.
+      declencheur = document.activeElement;
+      setFondInerte(true);
+    } else {
+      setFondInerte(false);
+      rendreFocus(declencheur);
+      declencheur = null;
+    }
+  },
+);
+
+// Appelé quand le contenu (composant asynchrone) de la modale est rendu, y compris
+// lorsqu'une modale en remplace une autre sans fermeture.
+const contenuPret = () => {
+  chargement.value = false;
+  const titre = dialogue.value?.querySelector(".modal-title");
+  if (titre && !titre.id) {
+    titre.id = "app-modal-titre";
+  }
+  titreId.value = titre?.id ?? null;
+  // Une modale qui place elle-même le focus (champ de recherche, autofocus…) garde la main.
+  if (dialogue.value && !dialogue.value.contains(document.activeElement)) {
+    dialogue.value.focus();
+  }
+};
+
+const pieger = (e) => {
+  const conteneur = confirmationVisible.value ? confirmation.value : dialogue.value;
+  if (!conteneur) {
+    return;
+  }
+  const focusables = elementsFocusables(conteneur);
+  if (focusables.length === 0) {
+    e.preventDefault();
+    conteneur.focus();
+    return;
+  }
+  const premier = focusables[0];
+  const dernier = focusables[focusables.length - 1];
+  const actif = document.activeElement;
+  const horsModale = actif === conteneur || !conteneur.contains(actif);
+  if (e.shiftKey && (horsModale || actif === premier)) {
+    e.preventDefault();
+    dernier.focus();
+  } else if (!e.shiftKey && (horsModale || actif === dernier)) {
+    e.preventDefault();
+    premier.focus();
+  }
+};
+
 // Une saisie a eu lieu dans la modale ouverte : la quitter avec Échap, la croix ou
 // le bouton Fermer / Annuler demande confirmation. Détecté ici, sur les évènements
 // natifs, pour couvrir toutes les modales sans que chacune ait à le gérer.
@@ -41,6 +133,7 @@ watch(
 );
 
 const demanderConfirmation = () => {
+  focusAvantConfirmation = document.activeElement;
   confirmationVisible.value = true;
   nextTick(() => boutonRester.value?.focus());
 };
@@ -48,6 +141,8 @@ const demanderConfirmation = () => {
 const rester = () => {
   confirmationVisible.value = false;
   boutonEnAttente = null;
+  rendreFocus(focusAvantConfirmation);
+  focusAvantConfirmation = null;
 };
 
 const quitter = () => {
@@ -67,6 +162,10 @@ const quitter = () => {
 };
 
 const escapeHandler = (e) => {
+  if (e.key === "Tab" && modal.visible) {
+    pieger(e);
+    return;
+  }
   if (e.key !== "Escape" || e.repeat || !modal.visible) {
     return;
   }
@@ -88,17 +187,25 @@ const interceptionSortie = (e) => {
   }
 };
 onMounted(() => document.addEventListener("keydown", escapeHandler));
-onUnmounted(() => document.removeEventListener("keydown", escapeHandler));
+onUnmounted(() => {
+  document.removeEventListener("keydown", escapeHandler);
+  setFondInerte(false);
+});
 </script>
 
 <template>
-  <div>
+  <div ref="racine">
     <!-- Modal -->
     <div
       v-if="modal.visible"
+      ref="dialogue"
       class="modal fade show d-block"
       tabindex="-1"
       role="dialog"
+      aria-modal="true"
+      :aria-labelledby="titreId"
+      :aria-busy="chargement"
+      :inert="confirmationVisible"
       @click.capture="interceptionSortie"
       @input.capture="modifiee = true"
       @change.capture="modifiee = true"
@@ -116,14 +223,21 @@ onUnmounted(() => document.removeEventListener("keydown", escapeHandler));
         "
         role="document"
       >
-        <suspense>
+        <suspense @pending="chargement = true" @resolve="contenuPret">
           <component
             :is="components[modal.component]"
             :callback="modal.callback"
             :data="modal.data"
             class="modal-content"
           ></component>
-          <template #fallback>Chargement ...</template>
+          <template #fallback>
+            <div class="modal-content">
+              <div class="modal-body d-flex justify-content-center" role="status">
+                <div class="spinner-border" aria-hidden="true"></div>
+                <span class="visually-hidden">Chargement…</span>
+              </div>
+            </div>
+          </template>
         </suspense>
       </div>
     </div>
@@ -133,13 +247,26 @@ onUnmounted(() => document.removeEventListener("keydown", escapeHandler));
          (le store n'affiche qu'une modale à la fois : modal.confirm() la remplacerait). -->
     <template v-if="confirmationVisible">
       <div class="modal-backdrop fade show" style="z-index: 1060"></div>
-      <div class="modal fade show d-block" style="z-index: 1065" tabindex="-1" role="alertdialog">
+      <div
+        ref="confirmation"
+        class="modal fade show d-block"
+        style="z-index: 1065"
+        tabindex="-1"
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="app-modal-confirmation-titre"
+        aria-describedby="app-modal-confirmation-texte"
+      >
         <div class="modal-dialog modal-sm">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Quitter sans enregistrer ?</h5>
+              <h5 id="app-modal-confirmation-titre" class="modal-title">
+                Quitter sans enregistrer ?
+              </h5>
             </div>
-            <div class="modal-body">Les informations saisies seront perdues.</div>
+            <div id="app-modal-confirmation-texte" class="modal-body">
+              Les informations saisies seront perdues.
+            </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-outline-danger" @click="quitter">Quitter</button>
               <button ref="bouton-rester" type="button" class="btn btn-primary" @click="rester">
