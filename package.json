@@ -40,7 +40,7 @@
     "@vue/devtools-api": "^8.2.1",
     "autoprefixer": "^10.6.2",
     "sass": "^1.108.1",
-    "vite": "npm:@voidzero-dev/vite-plus-core@1.4.0",
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.5.1",
     "vite-plus": "1.5.1",
     "vue-eslint-parser": "^10.4.2"
   },

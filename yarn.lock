@@ -412,24 +412,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@oxc-project/runtime@npm:=0.155.0":
-  version: 0.155.0
-  resolution: "@oxc-project/runtime@npm:0.155.0"
-  checksum: 10/d08d9533a467b24c05aaa2857e700372c75b39a297f6de42d3faaacee492c970d238404725a3a442f815a8152aa8d518c0e0244465d392abbcf10666a75e1492
-  languageName: node
-  linkType: hard
-
 "@oxc-project/runtime@npm:=0.157.0":
   version: 0.157.0
   resolution: "@oxc-project/runtime@npm:0.157.0"
   checksum: 10/440407053ec9b701455c5d0305b875fa95a68c0f84eeace3e26654913077e0a00caff108ba5e5eecc6654509f862c966efc468cc77bb3c9579a1d7b4905c90d1
-  languageName: node
-  linkType: hard
-
-"@oxc-project/types@npm:=0.155.0":
-  version: 0.155.0
-  resolution: "@oxc-project/types@npm:0.155.0"
-  checksum: 10/5f1a03ff2e71746c188e0740158fa1f01d3fe9982baf3269aa955a5d24b68f44fc92951ac843d8c55159a4263de27f1b849b8f0ad88d51476c20c086b24071de
   languageName: node
   linkType: hard
 
@@ -1262,24 +1248,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@voidzero-dev/vite-plus-darwin-arm64@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@voidzero-dev/vite-plus-darwin-arm64@npm:1.4.0"
-  conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
 "@voidzero-dev/vite-plus-darwin-arm64@npm:1.5.1":
   version: 1.5.1
   resolution: "@voidzero-dev/vite-plus-darwin-arm64@npm:1.5.1"
   conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@voidzero-dev/vite-plus-darwin-x64@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@voidzero-dev/vite-plus-darwin-x64@npm:1.4.0"
-  conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
@@ -1290,24 +1262,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@voidzero-dev/vite-plus-linux-arm64-gnu@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@voidzero-dev/vite-plus-linux-arm64-gnu@npm:1.4.0"
-  conditions: os=linux & cpu=arm64 & libc=glibc
-  languageName: node
-  linkType: hard
-
 "@voidzero-dev/vite-plus-linux-arm64-gnu@npm:1.5.1":
   version: 1.5.1
   resolution: "@voidzero-dev/vite-plus-linux-arm64-gnu@npm:1.5.1"
   conditions: os=linux & cpu=arm64 & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@voidzero-dev/vite-plus-linux-arm64-musl@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@voidzero-dev/vite-plus-linux-arm64-musl@npm:1.4.0"
-  conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
@@ -1318,24 +1276,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@voidzero-dev/vite-plus-linux-x64-gnu@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@voidzero-dev/vite-plus-linux-x64-gnu@npm:1.4.0"
-  conditions: os=linux & cpu=x64 & libc=glibc
-  languageName: node
-  linkType: hard
-
 "@voidzero-dev/vite-plus-linux-x64-gnu@npm:1.5.1":
   version: 1.5.1
   resolution: "@voidzero-dev/vite-plus-linux-x64-gnu@npm:1.5.1"
   conditions: os=linux & cpu=x64 & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@voidzero-dev/vite-plus-linux-x64-musl@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@voidzero-dev/vite-plus-linux-x64-musl@npm:1.4.0"
-  conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
@@ -1346,24 +1290,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@voidzero-dev/vite-plus-win32-arm64-msvc@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@voidzero-dev/vite-plus-win32-arm64-msvc@npm:1.4.0"
-  conditions: os=win32 & cpu=arm64
-  languageName: node
-  linkType: hard
-
 "@voidzero-dev/vite-plus-win32-arm64-msvc@npm:1.5.1":
   version: 1.5.1
   resolution: "@voidzero-dev/vite-plus-win32-arm64-msvc@npm:1.5.1"
   conditions: os=win32 & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@voidzero-dev/vite-plus-win32-x64-msvc@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@voidzero-dev/vite-plus-win32-x64-msvc@npm:1.4.0"
-  conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
@@ -2442,7 +2372,7 @@ __metadata:
     pinia: "npm:^4.1.0"
     qrcode: "npm:^1.5.4"
     sass: "npm:^1.108.1"
-    vite: "npm:@voidzero-dev/vite-plus-core@1.4.0"
+    vite: "npm:@voidzero-dev/vite-plus-core@1.5.1"
     vite-plus: "npm:1.5.1"
     vue: "npm:^3.5.45"
     vue-advanced-cropper: "npm:^2.8.9"
@@ -3347,7 +3277,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.5.29, postcss@npm:^8.5.30, postcss@npm:^8.5.32":
+"postcss@npm:^8.5.29, postcss@npm:^8.5.32":
   version: 8.5.32
   resolution: "postcss@npm:8.5.32"
   dependencies:
@@ -3761,112 +3691,6 @@ __metadata:
     vpr: ./bin/vpr
     vpx: ./bin/vpx
   checksum: 10/1cd518a3122ea8eff90706802a2d197a01d87ff5ada58eedfb7f1823ce635c664e7b3c56368f6d2b67c19a0fe68ff686abd2bb1d15de8ea1caaf0804b2744d1a
-  languageName: node
-  linkType: hard
-
-"vite@npm:@voidzero-dev/vite-plus-core@1.4.0":
-  version: 1.4.0
-  resolution: "@voidzero-dev/vite-plus-core@npm:1.4.0"
-  dependencies:
-    "@oxc-project/runtime": "npm:=0.155.0"
-    "@oxc-project/types": "npm:=0.155.0"
-    "@voidzero-dev/vite-plus-darwin-arm64": "npm:1.4.0"
-    "@voidzero-dev/vite-plus-darwin-x64": "npm:1.4.0"
-    "@voidzero-dev/vite-plus-linux-arm64-gnu": "npm:1.4.0"
-    "@voidzero-dev/vite-plus-linux-arm64-musl": "npm:1.4.0"
-    "@voidzero-dev/vite-plus-linux-x64-gnu": "npm:1.4.0"
-    "@voidzero-dev/vite-plus-linux-x64-musl": "npm:1.4.0"
-    "@voidzero-dev/vite-plus-win32-arm64-msvc": "npm:1.4.0"
-    "@voidzero-dev/vite-plus-win32-x64-msvc": "npm:1.4.0"
-    fsevents: "npm:~2.3.3"
-    lightningcss: "npm:^1.33.0"
-    postcss: "npm:^8.5.30"
-    yuku-parser: "npm:0.19.0"
-  peerDependencies:
-    "@arethetypeswrong/core": ^0.18.1
-    "@types/node": ^20.19.0 || >=22.12.0
-    "@typescript/native-preview": "*"
-    "@vitejs/devtools": ^0.7.1 || ^0.8.0
-    "@volar/typescript": ~2.4.0
-    "@vue/language-core": ~3.2.0 || ~3.3.0
-    esbuild: ^0.27.0 || ^0.28.0
-    jiti: ">=1.21.0"
-    less: ^4.0.0
-    publint: ^0.3.8
-    sass: ^1.70.0
-    sass-embedded: ^1.70.0
-    stylus: ">=0.54.8"
-    sugarss: ^5.0.0
-    terser: ^5.16.0
-    tsx: ^4.8.1
-    typescript: ^5.0.0 || ^6.0.0 || ^7.0.0
-    unplugin-unused: ">=0.5.0"
-    unrun: "*"
-    vue-tsc: ~3.2.0 || ~3.3.0
-    yaml: ^2.4.2
-  dependenciesMeta:
-    "@voidzero-dev/vite-plus-darwin-arm64":
-      optional: true
-    "@voidzero-dev/vite-plus-darwin-x64":
-      optional: true
-    "@voidzero-dev/vite-plus-linux-arm64-gnu":
-      optional: true
-    "@voidzero-dev/vite-plus-linux-arm64-musl":
-      optional: true
-    "@voidzero-dev/vite-plus-linux-x64-gnu":
-      optional: true
-    "@voidzero-dev/vite-plus-linux-x64-musl":
-      optional: true
-    "@voidzero-dev/vite-plus-win32-arm64-msvc":
-      optional: true
-    "@voidzero-dev/vite-plus-win32-x64-msvc":
-      optional: true
-    fsevents:
-      optional: true
-  peerDependenciesMeta:
-    "@arethetypeswrong/core":
-      optional: true
-    "@types/node":
-      optional: true
-    "@typescript/native-preview":
-      optional: true
-    "@vitejs/devtools":
-      optional: true
-    "@volar/typescript":
-      optional: true
-    "@vue/language-core":
-      optional: true
-    esbuild:
-      optional: true
-    jiti:
-      optional: true
-    less:
-      optional: true
-    publint:
-      optional: true
-    sass:
-      optional: true
-    sass-embedded:
-      optional: true
-    stylus:
-      optional: true
-    sugarss:
-      optional: true
-    terser:
-      optional: true
-    tsx:
-      optional: true
-    typescript:
-      optional: true
-    unplugin-unused:
-      optional: true
-    unrun:
-      optional: true
-    vue-tsc:
-      optional: true
-    yaml:
-      optional: true
-  checksum: 10/fde081baffd012ca18db990b31147e92536f7dbcc1216478d4d209df7e3e3603f3a59d7dadd8c69a95d22e71d1062ee2283e67df976855334877806a522a5dcf
   languageName: node
   linkType: hard
 
