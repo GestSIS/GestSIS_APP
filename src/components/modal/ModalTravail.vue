@@ -324,7 +324,7 @@ const save = async () => {
       <base-select
         v-if="form?.id && hasSaisieCommunePermission"
         v-model="form.sapeurs[0].sapeur_id"
-        :required="true"
+        disabled
         class="mb-3"
         label="Sapeur"
         display-key="nom_prenom"
