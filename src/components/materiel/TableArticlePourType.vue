@@ -20,7 +20,7 @@ const {
 } = defineProps({
   loading: {
     type: Boolean,
-    required: true,
+    default: false,
   },
   hideDownload: {
     type: Boolean,
