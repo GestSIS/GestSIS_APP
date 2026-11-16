@@ -79,28 +79,42 @@ const supprimerExercice = (i) => form.exercices.splice(i, 1);
 
 const { closeModal } = useModalStore();
 const awn = useNotification();
-const { isSubmitting, submit } = useSubmit();
+const { errors, isSubmitting, submit } = useSubmit();
+
+// Erreurs de validation de l'import (clés « exercices.<index>.<champ> ») : useSubmit
+// ne notifie pas les erreurs de champs, on signale la première avec sa ligne.
+const alerterErreurValidation = () => {
+  const [champ, messages] = Object.entries(errors.value)[0] ?? [];
+  if (!champ) {
+    return;
+  }
+  const index = Number(champ.split(".")[1]);
+  const prefixe = Number.isInteger(index) ? `Ligne ${index + 1} : ` : "";
+  awn.alert(prefixe + (messages?.[0] ?? "Données invalides"));
+};
 
 const importer = async () => {
   const { ok } = await submit(async () => {
-    await Promise.all(
-      form.exercices.map((e) =>
-        ExerciceService.createExercice({
-          designation: e.designation,
-          date: e.date,
-          heure: (e.heure ?? "").slice(0, 5),
-          lieu: e.lieu ?? "",
-          communications: e.communications ?? "",
-          duree: e.duree,
-          exercice_categorie_id: e.exercice_categorie_id,
-          localite_id: e.localite_id,
-          exercice_comptable_id: exerciceComptableStore.activeId,
-        }),
-      ),
+    // Une seule requête : des POST en parallèle saturaient les connexions MySQL
+    // (max_user_connections) et laissaient un import partiel en cas d'échec.
+    await ExerciceService.importExercices(
+      exerciceComptableStore.activeId,
+      form.exercices.map((e) => ({
+        designation: e.designation,
+        date: e.date,
+        heure: (e.heure ?? "").slice(0, 5),
+        lieu: e.lieu ?? "",
+        communications: e.communications ?? "",
+        duree: e.duree,
+        exercice_categorie_id: e.exercice_categorie_id,
+        localite_id: e.localite_id,
+      })),
     );
     await exerciceStore.fetchExercices(exerciceComptableStore.activeId);
   }, "Erreur lors de l'importation des exercices");
-  if (ok) {
+  if (!ok) {
+    alerterErreurValidation();
+  } else {
     awn.success(`${form.exercices.length} exercice(s) importé(s) avec succès`);
     closeModal();
   }
@@ -138,12 +152,7 @@ const fieldsStep2 = [
     </div>
     <div class="modal-body">
       <multi-step
-        :steps="[
-          'Choix de l\'exercice comptable',
-          'Ajustement temporel',
-          'Modifications finales',
-          'Convocations des groupes',
-        ]"
+        :steps="['Choix de l\'exercice comptable', 'Ajustement temporel', 'Modifications finales']"
         :active-index="phase - 1"
       />
       <template v-if="phase === 1">

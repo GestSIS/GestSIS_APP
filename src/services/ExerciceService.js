@@ -21,6 +21,13 @@ export default {
   createExercice(exerciceData) {
     return Api.api().post("/exercices", exerciceData);
   },
+  // Import groupé, en tout ou rien : une seule requête plutôt qu'un POST par exercice.
+  importExercices(exerciceComptableId, exercices) {
+    return Api.api().post("/exercices/import", {
+      exercice_comptable_id: exerciceComptableId,
+      exercices,
+    });
+  },
   deleteExercice(exerciceId) {
     return Api.api().delete("/exercices/" + exerciceId);
   },
