@@ -76,6 +76,30 @@ const linearEmplacements = (emplacementId) => {
   return [...linearEmplacements(emp.parent_id), emp];
 };
 
+// Lot supprimable en quantité : type non numéroté, pièces non supprimées toutes dans un même
+// emplacement (non attribuées) et un même compartiment.
+const lotSupprimable = (type, pieces) => {
+  const actives = pieces.filter((a) => a.supprime_le === null);
+  if (!type || type.est_numerote || actives.length === 0) {
+    return null;
+  }
+  const first = actives[0];
+  if (
+    first.emplacement_id === null ||
+    actives.some(
+      (a) => a.emplacement_id !== first.emplacement_id || a.compartiment !== first.compartiment,
+    )
+  ) {
+    return null;
+  }
+  return {
+    materiel_type_id: first.materiel_type_id,
+    emplacement_id: first.emplacement_id,
+    compartiment: first.compartiment ?? undefined,
+    nbPieces: actives.length,
+  };
+};
+
 const computedData = computed(() =>
   Object.entries(
     groupedByData(
@@ -111,6 +135,7 @@ const computedData = computed(() =>
                 type: values[0].type,
                 typeDesignation: values[0].typeDesignation,
                 data: values,
+                lot: lotSupprimable(values[0].type, values),
                 quantite: values.length,
                 compartiments: new Set(values.map((a) => a.compartiment)),
               }))
@@ -142,9 +167,16 @@ const colonnes = computed(() => [
     ? [{ title: "Compartiment", key: "compartiment" }]
     : []),
   { title: "Quantité", key: "quantite" },
+  ...(hasEditPermission.value ? [{ title: "Actions", slot: "actions" }] : []),
 ]);
 
 const { showModal } = useModalStore();
+const supprimerLot = (lot) =>
+  showModal({
+    component: "ModalSuppressionArticle",
+    data: { lot },
+    callback: loadArticles,
+  });
 const ajouter = () =>
   showModal({
     component: "ModalAjoutArticleMultiplePourEmplacement",
@@ -192,6 +224,17 @@ const ajouter = () =>
         :detail-row-column="true"
         :hide-download="true"
       >
+        <template #actions="{ rowData }">
+          <button
+            v-if="hasEditPermission && rowData.lot"
+            title="Supprimer"
+            class="btn btn-outline-danger border-0"
+            @click="supprimerLot(rowData.lot)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
+        </template>
+
         <template #detail-row="{ rowData }">
           <table-article-pour-type
             :articles="rowData.data"
