@@ -1,6 +1,17 @@
 {
   "releases": [
     {
+      "date": "16.11.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Matériel, un article supprimé reste consultable et peut être restauré",
+        "Matériel, historique des attributions et articles rendus par sapeur",
+        "Véhicules, option « Disponible en intervention »",
+        "Types de matériel et couleurs désactivables"
+      ]
+    },
+    {
       "date": "11.11.2026",
       "version": "1.0",
       "app": "GestSIS APP",
