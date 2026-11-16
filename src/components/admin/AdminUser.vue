@@ -210,13 +210,13 @@ const supprimerSapeur = async (sapeurLink) => {
 
 const fieldsRoles = [
   { title: "id", key: "id" },
-  { title: "organisation", key: "organisation" },
+  { title: "organisation", key: "organisation", slot: "organisation" },
   { title: "role", key: "role" },
   { title: "Actions", slot: "actions" },
 ];
 const fieldsSapeurs = [
   { title: "id", key: "id" },
-  { title: "organisation", key: "organisation" },
+  { title: "organisation", key: "organisation", slot: "organisation" },
   { title: "sapeur_id", key: "sapeur_id" },
   { title: "pending_deactivation_at", key: "pending_deactivation_at", type: Date },
   { title: "deactivated_at", key: "deactivated_at", type: Date },
@@ -436,6 +436,15 @@ const fieldsSapeurs = [
             :hide-download="true"
             no-data="Aucun rôle attribué"
           >
+            <template #organisation="{ rowData }">
+              <router-link
+                :to="{ name: 'admin-organisation-detail', params: { id: rowData.organisation_id } }"
+                class="badge bg-primary text-decoration-none me-1"
+              >
+                {{ rowData.organisation }}
+                <font-awesome-icon :icon="['fas', 'up-right-from-square']" class="ms-1" />
+              </router-link>
+            </template>
             <template #actions="{ rowData }">
               <button
                 aria-label="Supprimer"
@@ -470,6 +479,15 @@ const fieldsSapeurs = [
             :hide-download="true"
             no-data="Aucun sapeur lié"
           >
+            <template #organisation="{ rowData }">
+              <router-link
+                :to="{ name: 'admin-organisation-detail', params: { id: rowData.organisation_id } }"
+                class="badge bg-primary text-decoration-none me-1"
+              >
+                {{ rowData.organisation }}
+                <font-awesome-icon :icon="['fas', 'up-right-from-square']" class="ms-1" />
+              </router-link>
+            </template>
             <template #actions="{ rowData }">
               <button
                 aria-label="Supprimer"
