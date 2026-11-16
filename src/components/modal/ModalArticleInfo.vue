@@ -9,7 +9,7 @@ import { useControleStore } from "../../stores/materiel/Controle.js";
 import ArticleService from "../../services/materiel/ArticleService.js";
 import ControleExecService from "../../services/materiel/ControleExecService.js";
 import TagCouleur from "../materiel/TagCouleur.vue";
-import { indexedData } from "../../tools/index.js";
+import { indexedData, toDateInputValue, toLocalIsoDate } from "../../tools/index.js";
 import { formatDate, formatDateTime, parseDate } from "../../tools/formatters.js";
 import { emplacementIdPourArticle, estPerime } from "../../tools/materiel.js";
 
@@ -91,24 +91,55 @@ const emplacements = computed(() =>
 const nomSapeur = (sapeurId) =>
   sapeurStore.liste.find((s) => s.id === sapeurId)?.nom_prenom ?? null;
 
-// Historique de l'article, du plus récent au plus ancien
+// Ordre des événements d'un même jour (du plus ancien au plus récent).
+const ORDRE_EVENEMENT = {
+  AJOUT: 0,
+  ATTRIBUTION: 1,
+  FIN_ATTRIBUTION: 2,
+  CONTROLE: 3,
+  SUPPRESSION: 4,
+};
+
+// Jour (« YYYY-MM-DD ») d'un événement : une date pure est tronquée telle quelle
+// (la convertir en heure locale pourrait la décaler d'un jour), une date-heure
+// est ramenée au jour local.
+const jourEvenement = (evt) =>
+  evt.dateSeule ? toDateInputValue(evt.date) : toLocalIsoDate(parseDate(evt.date) ?? new Date(0));
+
+// Une attribution close le jour où une autre attribution du même article commence
+// (transfert) ou le jour de la suppression de l'article n'a pas été « rendue ».
+const estFinSansRetour = (attribution) => {
+  const jourFin = toDateInputValue(attribution.fin);
+  const transfert = attributions.value.some(
+    (a) => a.id !== attribution.id && toDateInputValue(a.debut) === jourFin,
+  );
+  return transfert || (!!data.supprime_le && toDateInputValue(data.supprime_le) === jourFin);
+};
+
+// Historique de l'article, du plus récent au plus ancien ; à jour égal, selon
+// l'ordre des événements (ex : une suppression après le retour du même jour).
 const historique = computed(() => {
   const events = [];
   if (data.created_at) {
-    events.push({ date: data.created_at, label: "Ajouté" });
+    events.push({ date: data.created_at, ordre: ORDRE_EVENEMENT.AJOUT, label: "Ajouté" });
   }
   attributions.value.forEach((a) => {
     const attribuePar = nomSapeur(a.attribue_par_sapeur_id);
+    const nom = a.sapeur?.nom_prenom ?? "-";
     events.push({
       date: a.debut,
-      label: `Attribué à ${a.sapeur?.nom_prenom ?? "-"}`,
+      dateSeule: true,
+      ordre: ORDRE_EVENEMENT.ATTRIBUTION,
+      label: `Attribué à ${nom}`,
       detail: attribuePar ? `par ${attribuePar}` : null,
     });
     if (a.fin) {
       const cloturePar = nomSapeur(a.cloture_par_sapeur_id);
       events.push({
         date: a.fin,
-        label: `Rendu par ${a.sapeur?.nom_prenom ?? "-"}`,
+        dateSeule: true,
+        ordre: ORDRE_EVENEMENT.FIN_ATTRIBUTION,
+        label: estFinSansRetour(a) ? `Fin d'attribution à ${nom}` : `Rendu par ${nom}`,
         detail: cloturePar ? `enregistré par ${cloturePar}` : null,
       });
     }
@@ -116,6 +147,7 @@ const historique = computed(() => {
   execs.value.forEach((e) => {
     events.push({
       date: e.executed_at,
+      ordre: ORDRE_EVENEMENT.CONTROLE,
       label: `Contrôle ${e.controle?.nom ?? ""}`.trim(),
       detail: e.conforme ? "conforme" : "non conforme",
     });
@@ -123,11 +155,20 @@ const historique = computed(() => {
   if (data.supprime_le) {
     events.push({
       date: data.supprime_le,
+      dateSeule: true,
+      ordre: ORDRE_EVENEMENT.SUPPRESSION,
       label: "Supprimé",
       detail: data.remarque_suppression || null,
     });
   }
-  return events.sort((a, b) => (parseDate(b.date) ?? 0) - (parseDate(a.date) ?? 0));
+  return events
+    .map((evt) => ({ ...evt, jour: jourEvenement(evt) }))
+    .sort(
+      (a, b) =>
+        b.jour.localeCompare(a.jour) ||
+        b.ordre - a.ordre ||
+        (parseDate(b.date) ?? 0) - (parseDate(a.date) ?? 0),
+    );
 });
 
 const addMonths = (date, months) => {
@@ -344,7 +385,9 @@ const lignesControles = computed(() =>
           <strong class="d-block mb-2">Historique</strong>
           <ul class="list-unstyled mb-0">
             <li v-for="(evt, i) in historique" :key="i">
-              <span class="text-muted me-2">{{ formatDateTime(evt.date) }}</span>
+              <span class="text-muted me-2">{{
+                evt.dateSeule ? formatDate(evt.date) : formatDateTime(evt.date)
+              }}</span>
               <span>{{ evt.label }}</span>
               <span v-if="evt.detail" class="text-muted"> — {{ evt.detail }}</span>
             </li>

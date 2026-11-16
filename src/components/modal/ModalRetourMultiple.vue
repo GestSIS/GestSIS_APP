@@ -1,5 +1,5 @@
 <script setup>
-import { toLocalIsoDate, indexedData, groupedByData } from "../../tools/index.js";
+import { toDateInputValue, toLocalIsoDate, indexedData, groupedByData } from "../../tools/index.js";
 import { computed, reactive, ref, watch } from "vue";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
@@ -36,6 +36,18 @@ const allSelected = computed(() => data.every((article) => selected.value[articl
 const toggleAll = (value) => {
   selected.value = Object.fromEntries(data.map((article) => [article.id, value]));
 };
+
+// Le retour ne peut pas précéder le début de l'attribution la plus récente
+// parmi les articles sélectionnés (dates « YYYY-MM-DD », comparables en texte).
+const dateMin = computed(
+  () =>
+    data
+      .filter((article) => selected.value[article.id])
+      .map((article) => toDateInputValue(article.attribution))
+      .filter(Boolean)
+      .sort()
+      .at(-1) ?? null,
+);
 
 const articleEmplacements = ref(Object.fromEntries(data.map((article) => [article.id, null])));
 watch(emplacementsMultiples, (multiple) => {
@@ -123,6 +135,7 @@ const save = async () => {
             v-model="form.date"
             required
             type="date"
+            :min="dateMin"
             :max="toLocalIsoDate()"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['attributions.0.date'] }"

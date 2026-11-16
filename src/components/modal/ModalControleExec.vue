@@ -68,20 +68,22 @@ if (modeMultiple.value && controleImpose.value) {
   resize(nbTaches <= 2 ? 1 : nbTaches <= 5 ? 2 : 3);
 }
 
-const articlesEligibles = ref([]);
+// Tous les articles des types du contrôle (supprimés compris, pour que le scan
+// d'un article supprimé le signale) ; seuls les non supprimés sont éligibles.
+const articlesDesTypes = ref([]);
+const articlesEligibles = computed(() =>
+  articlesDesTypes.value.filter((a) => a.supprime_le === null),
+);
 if (modeMultiple.value && controleImpose.value) {
   const typeIds = controleImpose.value.materiel_types.map((mt) => mt.materiel_type_id);
   const indexedTypes = indexedData(materielTypeStore.liste);
   const resultats = await Promise.all(
     typeIds.map((typeId) => ArticleService.getParMaterielType(typeId)),
   );
-  articlesEligibles.value = resultats
-    .flat()
-    .filter((a) => a.supprime_le === null)
-    .map((a) => ({
-      ...a,
-      label: `${a.numero || a.designation || a.id} — ${indexedTypes[a.materiel_type_id]?.designation ?? ""}`,
-    }));
+  articlesDesTypes.value = resultats.flat().map((a) => ({
+    ...a,
+    label: `${a.numero || a.designation || a.id} — ${indexedTypes[a.materiel_type_id]?.designation ?? ""}`,
+  }));
 }
 
 const { errors, isSubmitting, submit } = useSubmit();
@@ -119,12 +121,14 @@ const chargerArticlesComposants = async (c) => {
 };
 await chargerArticlesComposants(controle.value);
 
-const articlesActifsPourTypes = (materielTypes) => {
+// Articles des types acceptés par une tâche composant, supprimés compris : liste
+// passée au scan, qui signale alors « Article supprimé le … ».
+const articlesPourTypes = (materielTypes) => {
   const typeIds = materielTypes.map((mt) => mt.materiel_type_id);
-  return articlesComposants.value.filter(
-    (a) => a.supprime_le === null && typeIds.includes(a.materiel_type_id),
-  );
+  return articlesComposants.value.filter((a) => typeIds.includes(a.materiel_type_id));
 };
+const articlesActifsPourTypes = (materielTypes) =>
+  articlesPourTypes(materielTypes).filter((a) => a.supprime_le === null);
 
 // En édition, la valeur enregistrée fait foi : on ne la recalcule jamais
 // automatiquement. À la création, elle reste synchronisée avec la date
@@ -573,7 +577,7 @@ const save = async () => {
             >
             <scan-article
               ref="scan-input"
-              :articles="articlesEligibles"
+              :articles="articlesDesTypes"
               :deja-selectionnes="articlesDejaChoisis"
               @scan="ajouterArticleScanne"
             />
@@ -642,6 +646,9 @@ const save = async () => {
                     v-model="rowData.resultats[tacheIdFromKey(key)].article_id"
                     :articles="
                       articlesActifsPourTypes(tacheParId[tacheIdFromKey(key)].materiel_types)
+                    "
+                    :articles-scan="
+                      articlesPourTypes(tacheParId[tacheIdFromKey(key)].materiel_types)
                     "
                     :deja-selectionnes="articlesDejaChoisis"
                     :required="tacheParId[tacheIdFromKey(key)].obligatoire"
@@ -736,6 +743,7 @@ const save = async () => {
                         :ref="(el) => setComposantRef(resultat.key, el)"
                         v-model="resultat.article_id"
                         :articles="articlesPourResultat(resultat)"
+                        :articles-scan="articlesPourTypes(resultat.definition.materiel_types)"
                         :deja-selectionnes="articlesDejaChoisis"
                         :required="resultat.definition.obligatoire"
                         @avancer="avancerResultat(resultat)"

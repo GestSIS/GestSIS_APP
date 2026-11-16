@@ -1,5 +1,5 @@
 <script setup>
-import { toLocalIsoDate } from "../../tools/index.js";
+import { toDateInputValue, toLocalIsoDate } from "../../tools/index.js";
 import { ref } from "vue";
 import ArticleService from "../../services/materiel/ArticleService";
 import SelectEmplacement from "../materiel/SelectEmplacement.vue";
@@ -19,6 +19,8 @@ const { data, callback } = defineProps({
 
 const { errors, isSubmitting, submit } = useSubmit();
 const date = ref(toLocalIsoDate());
+// Le retour ne peut pas précéder le début de l'attribution en cours.
+const dateMin = toDateInputValue(data.attribution);
 const emplacement_id = ref(null);
 
 const { closeModal } = useModalStore();
@@ -53,6 +55,7 @@ const save = async () => {
           id="date"
           v-model="date"
           type="date"
+          :min="dateMin"
           :max="toLocalIsoDate()"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['attributions.0.date'] }"

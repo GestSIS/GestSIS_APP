@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import TagCouleur from "./TagCouleur.vue";
 import { indexedData } from "../../tools/index.js";
+import { libelleSuppression } from "../../tools/materiel.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
 import { useMaterielCategorieStore } from "../../stores/materiel/Categorie";
@@ -130,7 +131,7 @@ const classeLigne = (article) => (article.supprime_le ? "text-muted opacity-50" 
 
     <template #remarque="{ rowData }">
       <div v-if="rowData.supprime_le" class="fst-italic">
-        Supprimé le {{ new Date(rowData.supprime_le).toLocaleDateString("fr-CH") }}
+        {{ libelleSuppression(rowData) }}
       </div>
       {{ rowData.remarque }}
     </template>

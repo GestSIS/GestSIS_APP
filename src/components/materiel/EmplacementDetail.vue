@@ -156,6 +156,12 @@ const editEmplacement = () => {
               }}
             </div>
           </div>
+          <div class="row">
+            <div class="col-3">Disponible en intervention</div>
+            <div class="col-9">
+              {{ emplacement.article.disponible_intervention ? "Oui" : "Non" }}
+            </div>
+          </div>
         </div>
       </div>
     </div>

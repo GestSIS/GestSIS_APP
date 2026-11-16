@@ -5,9 +5,12 @@ import ScanArticle from "./ScanArticle.vue";
 // Article d'une tâche composant : un champ de scan, et une liste pour choisir à
 // la main (ex : plusieurs articles portant le même numéro). Émet `avancer` après
 // un scan ou sur Entrée dans le champ vide, pour passer au composant suivant.
-const { articles, dejaSelectionnes } = defineProps({
+const { articles, articlesScan, dejaSelectionnes } = defineProps({
   // Articles déjà libellés (`label`) : ceux qui peuvent être choisis ici.
   articles: { type: Array, required: true },
+  // Articles reconnus par le scan (ex : supprimés compris, pour le signaler) ;
+  // par défaut les mêmes que `articles`.
+  articlesScan: { type: Array, default: null },
   // Ids des articles déjà utilisés ailleurs dans la fenêtre.
   dejaSelectionnes: { type: Set, default: () => new Set() },
   required: { type: Boolean, default: false },
@@ -41,7 +44,7 @@ defineExpose({ focus: () => scan.value?.focus() });
   <div style="min-width: 110px">
     <scan-article
       ref="scan"
-      :articles="articles"
+      :articles="articlesScan ?? articles"
       :deja-selectionnes="dejaSelectionnes"
       @scan="choisir"
       @vide="emit('avancer')"

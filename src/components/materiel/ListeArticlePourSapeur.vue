@@ -210,14 +210,8 @@ const linearCategories = (categorieId) => {
       </div>
     </template>
     <template #body-table>
-      <div class="form-check mx-3 my-2">
-        <input
-          id="afficher-rendus"
-          v-model="afficherRendus"
-          class="form-check-input"
-          type="checkbox"
-        />
-        <label class="form-check-label" for="afficher-rendus">Afficher les articles rendus</label>
+      <div class="mx-3 my-2">
+        <base-checkbox v-model="afficherRendus" label="Afficher les articles rendus" />
       </div>
       <base-table
         :loading="loading"

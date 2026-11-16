@@ -28,8 +28,10 @@ const props = defineProps({
   },
 });
 
-const articlesAttribuable = computed(() => props.articles);
-const selectedArticles = defineModel({ default: () => [] });
+// Les articles supprimés ne sont pas proposés ; la liste complète reste passée au
+// scanner pour qu'il signale « Article supprimé le … ».
+const articlesAttribuable = computed(() => props.articles.filter((a) => !a.supprime_le));
+const selectedArticles = defineModel({ type: Array, default: () => [] });
 if (selectedArticles.value.length === 0) {
   selectedArticles.value.push({
     id: null,
@@ -146,7 +148,7 @@ const selectMaterielTypeNumerote = (item, value) => {
 <template>
   <scan-article
     v-if="articlesAttribuable.length > 0"
-    :articles="articlesAttribuable"
+    :articles="props.articles"
     :deja-selectionnes="articlesDejaSelectionnes"
     @scan="ajouterArticleScanne"
   />

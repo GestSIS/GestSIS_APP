@@ -1,4 +1,5 @@
 import { toLocalIsoDate } from "./index.js";
+import { formatDate } from "./formatters.js";
 
 // Un article qui est lui-même un emplacement (ex: véhicule) n'a pas son propre
 // emplacement_id : sa position est portée par le parent_id de l'emplacement qu'il
@@ -15,4 +16,11 @@ export const estPerime = (article) => {
     return false;
   }
   return String(peremption).slice(0, 10) <= toLocalIsoDate();
+};
+
+// Mention d'un article supprimé : « Supprimé le 01.11.2026 — Clé perdue »
+// (sans la remarque de suppression si elle est vide).
+export const libelleSuppression = (article) => {
+  const libelle = `Supprimé le ${formatDate(article.supprime_le)}`;
+  return article.remarque_suppression ? `${libelle} — ${article.remarque_suppression}` : libelle;
 };
