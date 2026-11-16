@@ -14,6 +14,7 @@ const { data } = defineProps({
 
 const { errors, isSubmitting, submit } = useSubmit();
 const activeItem = ref({
+  statut: true,
   ...data,
   fond: data?.fond?.slice(0, 7) ?? "#ffffff",
   texte: data?.texte?.slice(0, 7) ?? "#000000",
@@ -71,6 +72,7 @@ const save = async () => {
           :class="{ 'is-invalid': errors['fond'] }"
         />
       </div>
+      <base-checkbox v-model="activeItem.statut" class="mb-3" label="Actif" />
       <div class="mb-3">
         <label>Résultat</label>
         <div class="ms-2 mt-2">

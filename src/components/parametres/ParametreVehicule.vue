@@ -11,12 +11,19 @@ await vehiculeStore.fetchVehicules();
 const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 
 const fields = [
-  { columnClass: "col-2", title: "Actif", key: "statut", type: Boolean },
+  {
+    columnClass: "col-2",
+    title: "Disponible en intervention",
+    key: "disponible_intervention",
+    type: Boolean,
+  },
   { title: "Désignation", key: "designation" },
   ...(hasEditPermission.value ? [{ title: "Actions", slot: "actions" }] : []),
 ];
 
-const vehicules = computed(() => vehiculeStore.liste.slice().sort((a, b) => a.tri - b.tri));
+const vehicules = computed(() =>
+  vehiculeStore.liste.filter((v) => v.supprime_le === null).sort((a, b) => a.tri - b.tri),
+);
 
 const { showModal } = useModalStore();
 const ajouter = () =>

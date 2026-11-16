@@ -41,6 +41,7 @@ const remove = async (elem) => {
 
 const fields = [
   { title: "Couleur", slot: "couleur" },
+  { title: "Actif", type: Boolean, key: "statut" },
   { title: "Actions", slot: "actions" },
 ];
 </script>

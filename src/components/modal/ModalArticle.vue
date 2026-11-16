@@ -26,13 +26,13 @@ const { vehiculeUniquement, ...articleData } = data ?? {};
 
 const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
-  statut: true,
   quantite: 1,
+  disponible_intervention: true,
   ...articleData,
   // L'API sérialise la date en ISO complet, l'input attend "YYYY-MM-DD" :
   // sans cette normalisation la valeur repart telle quelle et l'API la rejette.
   date_peremption: toDateInputValue(articleData.date_peremption),
-  emplacementRepresentee: { statut: true, ...data?.emplacement_representee },
+  emplacementRepresentee: { ...data?.emplacement_representee },
 });
 
 const typeStore = useMaterielTypeStore();
@@ -46,14 +46,16 @@ const type = computed(() => typeStore.liste.find((t) => t.id == form.materiel_ty
 // n'importe quel type, y compris changer d'avis après un premier choix.
 // Depuis le flux "Ajouter un emplacement > Véhicule", seuls les types véhicule
 // (est_emplacement) sont pertinents à la création.
+// Seuls les types actifs sont proposés, sauf le type déjà sélectionné.
 const typeOptions = computed(() => {
+  const actifs = typeStore.liste.filter((t) => t.statut || t.id == form.materiel_type_id);
   if (form.id && type.value?.est_emplacement) {
-    return typeStore.liste.filter((t) => t.type === type.value.type);
+    return actifs.filter((t) => t.type === type.value.type);
   }
   if (!form.id && vehiculeUniquement) {
-    return typeStore.liste.filter((t) => t.est_emplacement);
+    return actifs.filter((t) => t.est_emplacement);
   }
-  return typeStore.liste;
+  return actifs;
 });
 
 const { closeModal, resize } = useModalStore();
@@ -78,8 +80,16 @@ const save = async () => {
   }
 
   const payload = type.value?.est_emplacement
-    ? { ...form, emplacement_id: null, sapeur_id: null, emplacement: form.emplacementRepresentee }
+    ? {
+        ...form,
+        emplacement_id: null,
+        sapeur_id: null,
+        emplacement: form.emplacementRepresentee,
+      }
     : form;
+  // Le statut (actif/inactif) n'existe plus sur l'article ni sur l'emplacement représenté.
+  delete payload.statut;
+  if (payload.emplacement) delete payload.emplacement.statut;
 
   const action = isCreation ? ArticleService.creerArticles : ArticleService.updateArticles;
   const { ok } = await submit(() => action([payload]), "Erreur lors de la sauvegarde de l'article");
@@ -144,7 +154,11 @@ const save = async () => {
                 :class="{ 'is-invalid': errors['designation'] }"
               />
             </div>
-            <base-checkbox v-model="form.statut" class="mb-3" label="Actif" />
+            <base-checkbox
+              v-model="form.disponible_intervention"
+              class="mb-3"
+              label="Disponible en intervention"
+            />
             <div class="mb-3">
               <label for="immatriculation">Immatriculation</label>
               <input
@@ -225,13 +239,8 @@ const save = async () => {
             />
             <base-checkbox
               v-model="form.emplacementRepresentee.est_compartimentable"
-              class="mb-3"
-              label="Emplacement compartimenté"
-            />
-            <base-checkbox
-              v-model="form.emplacementRepresentee.statut"
               class="mb-0"
-              label="Emplacement actif"
+              label="Emplacement compartimenté"
             />
           </fieldset>
         </div>

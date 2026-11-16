@@ -23,6 +23,7 @@ const activeItem = ref({
   est_taillee: false,
   a_batterie: false,
   est_perimable: false,
+  statut: true,
   ...data,
   tuyau: data?.tuyau ?? {
     separement: true,
@@ -145,6 +146,7 @@ const save = async () => {
           </div>
         </div>
         <div class="col-6">
+          <base-checkbox v-model="activeItem.statut" class="mb-3" label="Actif" />
           <legend class="w-auto px-2 fs-6 mb-2">Propriétés</legend>
           <fieldset class="border rounded p-3 mb-3">
             <base-checkbox

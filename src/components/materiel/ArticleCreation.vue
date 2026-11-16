@@ -21,8 +21,11 @@ if (articles.value.length === 0) {
   });
 }
 
+// Seuls les types actifs sont proposés, sauf ceux déjà sélectionnés.
 const types = computed(() =>
-  [...articleTypes].sort((a, b) => a.designation.localeCompare(b.designation)),
+  [...articleTypes]
+    .filter((t) => t.statut || articles.value.some((a) => a.materiel_type_id === t.id))
+    .sort((a, b) => a.designation.localeCompare(b.designation)),
 );
 const indexedTypes = computed(() => indexedData(types.value));
 

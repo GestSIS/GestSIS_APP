@@ -33,7 +33,8 @@ watchEffect(async () => {
 const vehicules = computed(() =>
   vehiculeStore.liste.filter(
     (v) =>
-      v.statut === true || interventionStore.active.vehicules.find((vi) => vi.vehicule_id === v.id),
+      (v.supprime_le === null && v.disponible_intervention) ||
+      interventionStore.active.vehicules.find((vi) => vi.vehicule_id === v.id),
   ),
 );
 const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);

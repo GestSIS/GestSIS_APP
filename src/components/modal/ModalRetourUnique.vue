@@ -53,6 +53,7 @@ const save = async () => {
           id="date"
           v-model="date"
           type="date"
+          :max="toLocalIsoDate()"
           class="form-control form-control-sm"
           :class="{ 'is-invalid': errors['attributions.0.date'] }"
         />

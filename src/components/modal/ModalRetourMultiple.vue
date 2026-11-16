@@ -123,6 +123,7 @@ const save = async () => {
             v-model="form.date"
             required
             type="date"
+            :max="toLocalIsoDate()"
             class="form-control form-control-sm"
             :class="{ 'is-invalid': errors['attributions.0.date'] }"
           />

@@ -25,9 +25,10 @@ const model = defineModel();
 
 const couleurStore = useCouleurStore();
 await couleurStore.fetchCouleurs();
+// Seules les couleurs actives sont proposées, sauf la valeur déjà sélectionnée.
 const couleurs = computed(() =>
   couleurStore.liste
-    .slice(0)
+    .filter((c) => c.statut || c.id === model.value)
     .map((c) => ({ ...c, label: c.nom, value: c.id }))
     .sort((c1, c2) => c1.nom.localeCompare(c2.nom)),
 );

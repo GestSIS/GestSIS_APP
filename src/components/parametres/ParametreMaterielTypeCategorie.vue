@@ -129,6 +129,7 @@ const fields = [
   { title: "Attribuable", type: Boolean, key: "est_attribuable" },
   { title: "Taille", type: Boolean, key: "est_taillee" },
   { title: "Numéroté", type: Boolean, key: "est_numerote" },
+  { title: "Actif", type: Boolean, key: "statut" },
   { title: "Actions", slot: "actions" },
 ];
 </script>
