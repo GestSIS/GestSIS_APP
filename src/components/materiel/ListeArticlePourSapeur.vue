@@ -56,23 +56,18 @@ const loadRendus = async () => {
 };
 watchEffect(loadRendus);
 
-const colonnesRendus = [
-  { title: "Article", key: "libelle" },
-  { title: "Du", key: "du" },
-  { title: "Au", key: "au" },
-  { title: "Statut", slot: "statut" },
-];
+// Une attribution close devient une ligne « rendue » de la même liste : l'article
+// tel qu'il est aujourd'hui, avec les dates de début et de fin de l'attribution.
 const lignesRendues = computed(() =>
-  attributionsRendues.value.map((a) => ({
-    ...a,
-    libelle:
-      [a.article?.materiel_type?.designation, a.article?.numero || a.article?.designation]
-        .filter(Boolean)
-        .join(" ") || `Article ${a.article_id}`,
-    du: formatDate(a.debut),
-    au: formatDate(a.fin),
-    supprime: !!a.article?.supprime_le,
-  })),
+  attributionsRendues.value
+    .filter((a) => a.article)
+    .map((a) => ({
+      ...a.article,
+      ligneId: `rendu-${a.id}`,
+      attribution: a.debut,
+      rendu_le: a.fin,
+      rendu: true,
+    })),
 );
 
 await Promise.all([
@@ -82,14 +77,17 @@ await Promise.all([
 ]);
 
 // Partie pièces
-const piecesColonnes = [
+const piecesColonnes = computed(() => [
   { title: "N°", key: "numero" },
   { title: "Matériel type", key: "type" },
   { title: "Taille", key: "taille" },
   { title: "Remarque", key: "remarque" },
   { title: "Attribué", key: "attribution", type: "date" },
+  ...(afficherRendus.value ? [{ title: "Rendu le", slot: "renduLe", sortKey: "rendu_le" }] : []),
   { title: "Actions", slot: "actions" },
-];
+]);
+
+const classeLigne = (row) => (row.rendu ? "text-muted" : "");
 
 const indexedTypes = computed(() => indexedData(materielTypeStore.liste));
 const indexedCategories = computed(() => indexedData(materielCategorieStore.liste));
@@ -99,14 +97,18 @@ const indexedSapeurs = computed(() => indexedData(sapeurStore.liste));
 const computedData = computed(() =>
   Object.entries(
     groupedByData(
-      articles.value
+      [
+        ...articles.value.map((a) => ({ ...a, ligneId: `article-${a.id}`, rendu: false })),
+        ...lignesRendues.value,
+      ]
         .map((a) => ({
           ...a,
-          type: indexedTypes.value[a.materiel_type_id]?.designation,
+          type: indexedTypes.value[a.materiel_type_id]?.designation ?? "",
           categorie_id: indexedTypes.value[a.materiel_type_id]?.materiel_categorie_id,
           sapeur: indexedSapeurs.value[a.sapeur_id]?.nom_prenom ?? "",
         }))
-        .sort((a1, a2) => a1.type.localeCompare(a2.type)),
+        // Dans chaque type : le matériel encore attribué d'abord, puis les articles rendus.
+        .sort((a1, a2) => a1.type.localeCompare(a2.type) || Number(a1.rendu) - Number(a2.rendu)),
       "categorie_id",
     ),
   ).map(([key, values]) => ({
@@ -214,11 +216,13 @@ const linearCategories = (categorieId) => {
         <base-checkbox v-model="afficherRendus" label="Afficher les articles rendus" />
       </div>
       <base-table
-        :loading="loading"
+        :loading="loading || loadingRendus"
         :grouped-data="computedData"
         no-data="Aucune pièce"
         :fields="piecesColonnes"
         :selectable="true"
+        select-key="ligneId"
+        :row-class="classeLigne"
       >
         <template #groupeHeader="{ categorie_id }">
           <tag-couleur
@@ -230,6 +234,13 @@ const linearCategories = (categorieId) => {
           </tag-couleur>
         </template>
 
+        <template #renduLe="{ rowData }">
+          <template v-if="rowData.rendu">
+            {{ formatDate(rowData.rendu_le) }}
+            <span v-if="rowData.supprime_le" class="badge bg-secondary ms-1">supprimé</span>
+          </template>
+        </template>
+
         <template #actions="{ rowData }">
           <button
             title="Info"
@@ -239,7 +250,7 @@ const linearCategories = (categorieId) => {
             <font-awesome-icon :icon="['fas', 'info-circle']" />
           </button>
           <button
-            v-if="hasEditPermission"
+            v-if="hasEditPermission && !rowData.rendu"
             title="Modifier"
             class="btn btn-outline-secondary border-0"
             @click="editMateriel(rowData)"
@@ -247,7 +258,7 @@ const linearCategories = (categorieId) => {
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
           <button
-            v-if="hasEditPermission"
+            v-if="hasEditPermission && !rowData.rendu"
             title="Retour"
             class="btn btn-outline-warning border-0"
             @click="retourMateriel(rowData)"
@@ -256,20 +267,6 @@ const linearCategories = (categorieId) => {
           </button>
         </template>
       </base-table>
-      <template v-if="afficherRendus">
-        <strong class="d-block mx-3 mt-3 mb-2">Articles rendus ({{ lignesRendues.length }})</strong>
-        <base-table
-          :loading="loadingRendus"
-          :data="lignesRendues"
-          no-data="Aucun article rendu"
-          :fields="colonnesRendus"
-          :hide-download="true"
-        >
-          <template #statut="{ rowData }">
-            <span v-if="rowData.supprime" class="badge bg-secondary">supprimé</span>
-          </template>
-        </base-table>
-      </template>
     </template>
   </base-card>
 </template>
