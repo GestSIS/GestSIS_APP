@@ -6,10 +6,11 @@ import { useEmplacementStore } from "../../stores/materiel/Emplacement.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useCouleurStore } from "../../stores/materiel/Couleur.js";
 import { useControleStore } from "../../stores/materiel/Controle.js";
+import ArticleService from "../../services/materiel/ArticleService.js";
 import ControleExecService from "../../services/materiel/ControleExecService.js";
 import TagCouleur from "../materiel/TagCouleur.vue";
 import { indexedData } from "../../tools/index.js";
-import { formatDate } from "../../tools/formatters.js";
+import { formatDate, formatDateTime, parseDate } from "../../tools/formatters.js";
 import { emplacementIdPourArticle, estPerime } from "../../tools/materiel.js";
 
 const { data } = defineProps({
@@ -37,6 +38,7 @@ const afficheEmplacement = !data.sapeur_id && emplacementIdPourArticle(data) !==
 
 const execs = ref([]);
 const composants = ref([]);
+const attributions = ref([]);
 const colonnesComposants = [
   { title: "Date", key: "executed_at", type: "date" },
   { title: "Contrôle", key: "controle_nom" },
@@ -51,6 +53,9 @@ await Promise.all([
   controleStore.fetchControles(),
   ControleExecService.getExecsPourArticle(articleId).then((r) => {
     execs.value = r;
+  }),
+  ArticleService.getAttributionsArticle(articleId).then((r) => {
+    attributions.value = r;
   }),
   ControleExecService.getComposantsPourArticle(articleId).then((r) => {
     composants.value = r;
@@ -82,6 +87,48 @@ const sapeur = computed(() =>
 const emplacements = computed(() =>
   afficheEmplacement ? linearEmplacements(emplacementIdPourArticle(data)) : [],
 );
+
+const nomSapeur = (sapeurId) =>
+  sapeurStore.liste.find((s) => s.id === sapeurId)?.nom_prenom ?? null;
+
+// Historique de l'article, du plus récent au plus ancien
+const historique = computed(() => {
+  const events = [];
+  if (data.created_at) {
+    events.push({ date: data.created_at, label: "Ajouté" });
+  }
+  attributions.value.forEach((a) => {
+    const attribuePar = nomSapeur(a.attribue_par_sapeur_id);
+    events.push({
+      date: a.debut,
+      label: `Attribué à ${a.sapeur?.nom_prenom ?? "-"}`,
+      detail: attribuePar ? `par ${attribuePar}` : null,
+    });
+    if (a.fin) {
+      const cloturePar = nomSapeur(a.cloture_par_sapeur_id);
+      events.push({
+        date: a.fin,
+        label: `Rendu par ${a.sapeur?.nom_prenom ?? "-"}`,
+        detail: cloturePar ? `enregistré par ${cloturePar}` : null,
+      });
+    }
+  });
+  execs.value.forEach((e) => {
+    events.push({
+      date: e.executed_at,
+      label: `Contrôle ${e.controle?.nom ?? ""}`.trim(),
+      detail: e.conforme ? "conforme" : "non conforme",
+    });
+  });
+  if (data.supprime_le) {
+    events.push({
+      date: data.supprime_le,
+      label: "Supprimé",
+      detail: data.remarque_suppression || null,
+    });
+  }
+  return events.sort((a, b) => (parseDate(b.date) ?? 0) - (parseDate(a.date) ?? 0));
+});
 
 const addMonths = (date, months) => {
   const d = new Date(date);
@@ -295,12 +342,14 @@ const lignesControles = computed(() =>
           </template>
 
           <strong class="d-block mb-2">Historique</strong>
-          <dl class="row mb-0">
-            <dt class="col-3">Créé le</dt>
-            <dd class="col-9">
-              {{ data.created_at ? new Date(data.created_at).toLocaleDateString("fr-CH") : "-" }}
-            </dd>
-          </dl>
+          <ul class="list-unstyled mb-0">
+            <li v-for="(evt, i) in historique" :key="i">
+              <span class="text-muted me-2">{{ formatDateTime(evt.date) }}</span>
+              <span>{{ evt.label }}</span>
+              <span v-if="evt.detail" class="text-muted"> — {{ evt.detail }}</span>
+            </li>
+            <li v-if="historique.length === 0" class="text-muted">Aucun événement</li>
+          </ul>
 
           <template v-if="composants.length > 0">
             <strong class="d-block mt-3 mb-2">Utilisé comme composant</strong>

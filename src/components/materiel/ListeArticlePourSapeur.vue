@@ -11,6 +11,7 @@ import ArticleService from "../../services/materiel/ArticleService";
 import TagCouleur from "./TagCouleur.vue";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur";
 import { useDownload } from "../../composables/useDownload.js";
+import { formatDate } from "../../tools/formatters.js";
 
 const { id } = defineProps({
   id: {
@@ -35,6 +36,44 @@ const loadArticles = async () => {
   loading.value = false;
 };
 watchEffect(loadArticles);
+
+// Articles rendus : attributions closes, chargées uniquement à la demande
+const afficherRendus = ref(false);
+const attributionsRendues = ref([]);
+const loadingRendus = ref(false);
+const loadRendus = async () => {
+  if (!afficherRendus.value) {
+    attributionsRendues.value = [];
+    return;
+  }
+  loadingRendus.value = true;
+  try {
+    const attributions = await ArticleService.getAttributionsSapeur(id);
+    attributionsRendues.value = attributions.filter((a) => a.fin);
+  } finally {
+    loadingRendus.value = false;
+  }
+};
+watchEffect(loadRendus);
+
+const colonnesRendus = [
+  { title: "Article", key: "libelle" },
+  { title: "Du", key: "du" },
+  { title: "Au", key: "au" },
+  { title: "Statut", slot: "statut" },
+];
+const lignesRendues = computed(() =>
+  attributionsRendues.value.map((a) => ({
+    ...a,
+    libelle:
+      [a.article?.materiel_type?.designation, a.article?.numero || a.article?.designation]
+        .filter(Boolean)
+        .join(" ") || `Article ${a.article_id}`,
+    du: formatDate(a.debut),
+    au: formatDate(a.fin),
+    supprime: !!a.article?.supprime_le,
+  })),
+);
 
 await Promise.all([
   materielTypeStore.fetchMaterielTypes(),
@@ -171,6 +210,15 @@ const linearCategories = (categorieId) => {
       </div>
     </template>
     <template #body-table>
+      <div class="form-check mx-3 my-2">
+        <input
+          id="afficher-rendus"
+          v-model="afficherRendus"
+          class="form-check-input"
+          type="checkbox"
+        />
+        <label class="form-check-label" for="afficher-rendus">Afficher les articles rendus</label>
+      </div>
       <base-table
         :loading="loading"
         :grouped-data="computedData"
@@ -214,6 +262,20 @@ const linearCategories = (categorieId) => {
           </button>
         </template>
       </base-table>
+      <template v-if="afficherRendus">
+        <strong class="d-block mx-3 mt-3 mb-2">Articles rendus ({{ lignesRendues.length }})</strong>
+        <base-table
+          :loading="loadingRendus"
+          :data="lignesRendues"
+          no-data="Aucun article rendu"
+          :fields="colonnesRendus"
+          :hide-download="true"
+        >
+          <template #statut="{ rowData }">
+            <span v-if="rowData.supprime" class="badge bg-secondary">supprimé</span>
+          </template>
+        </base-table>
+      </template>
     </template>
   </base-card>
 </template>
