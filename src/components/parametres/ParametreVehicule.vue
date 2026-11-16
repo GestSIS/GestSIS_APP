@@ -31,6 +31,12 @@ const modifier = (vehicule) =>
     data: { ...vehicule },
     callback: () => vehiculeStore.fetchVehicules(),
   });
+const supprimer = (vehicule) =>
+  showModal({
+    component: "ModalSuppressionArticle",
+    data: { articles: [vehicule] },
+    callback: () => vehiculeStore.fetchVehicules(),
+  });
 </script>
 
 <template>
@@ -56,6 +62,16 @@ const modifier = (vehicule) =>
             @click="modifier(rowData)"
           >
             <font-awesome-icon :icon="['far', 'edit']" />
+          </button>
+          <button
+            v-if="hasEditPermission"
+            aria-label="Supprimer"
+            title="Supprimer"
+            type="button"
+            class="btn btn-outline-danger border-0"
+            @click="supprimer(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
           </button>
         </template>
       </base-table>

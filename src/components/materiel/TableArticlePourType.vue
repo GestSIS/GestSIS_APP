@@ -2,14 +2,12 @@
 import { computed } from "vue";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
 import { useControleStore } from "../../stores/materiel/Controle.js";
-import ArticleService from "../../services/materiel/ArticleService";
 import TagCouleur from "./TagCouleur.vue";
 import { indexedData } from "../../tools/index.js";
 import { estPerime } from "../../tools/materiel.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
-import { useSubmit } from "../../composables/useSubmit.js";
 
 const {
   loading,
@@ -123,8 +121,7 @@ const colonnes = computed(() => [
   { title: "Actions", slot: "actions" },
 ]);
 
-const { showModal, confirm } = useModalStore();
-const { isSubmitting, submit } = useSubmit();
+const { showModal } = useModalStore();
 
 const infoMateriel = (materiel) =>
   showModal({
@@ -161,24 +158,12 @@ const controlerMateriel = (materiel) =>
     callback: refresh,
   });
 
-const supprimer = async (article) => {
-  if (
-    !(await confirm(
-      "Voulez-vous vraiment supprimer cet article ?",
-      "Attention, la suppression d'un article est irréversible ! Toutes les données relatives à celui-ci seront supprimées définitivement.",
-    ))
-  ) {
-    return;
-  }
-  const { ok } = await submit(
-    () => ArticleService.supprimerArticles([article.id]),
-    "Une erreur est survenue",
-    "Article supprimé.",
-  );
-  if (ok) {
-    refresh();
-  }
-};
+const supprimer = (article) =>
+  showModal({
+    component: "ModalSuppressionArticle",
+    data: { articles: [article] },
+    callback: refresh,
+  });
 </script>
 
 <template>
@@ -265,7 +250,6 @@ const supprimer = async (article) => {
         <font-awesome-icon :icon="['far', 'clipboard']" />
       </button>
       <button
-        :disabled="isSubmitting"
         v-if="hasEditPermission"
         title="Supprimer"
         class="btn btn-outline-danger border-0"
