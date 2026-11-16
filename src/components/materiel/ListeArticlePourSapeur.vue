@@ -184,6 +184,7 @@ const linearCategories = (categorieId) => {
   <base-card>
     <template #title>Matériel distribué ({{ articles.length }})</template>
     <template #header>
+      <base-checkbox v-model="afficherRendus" label="Afficher les articles rendus" />
       <div>
         <button
           type="button"
@@ -212,9 +213,6 @@ const linearCategories = (categorieId) => {
       </div>
     </template>
     <template #body-table>
-      <div class="mx-3 my-2">
-        <base-checkbox v-model="afficherRendus" label="Afficher les articles rendus" />
-      </div>
       <base-table
         :loading="loading || loadingRendus"
         :grouped-data="computedData"
