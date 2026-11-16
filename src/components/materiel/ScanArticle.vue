@@ -1,6 +1,7 @@
 <script setup>
 import { ref, useTemplateRef } from "vue";
 import { useNotification } from "../../composables/useNotification.js";
+import { formatDate } from "../../tools/formatters.js";
 
 // Champ de saisie au scanner : le numéro scanné (suivi d'un « return »)
 // désigne l'article correspondant parmi `articles` (numéro exact, sans tenir
@@ -25,11 +26,16 @@ const scanner = () => {
     return;
   }
 
-  const correspondants = articles.filter((a) => a.numero?.trim().toLowerCase() === numero);
+  const tousCorrespondants = articles.filter((a) => a.numero?.trim().toLowerCase() === numero);
+  // À numéro égal, un article supprimé ne masque pas un article en service.
+  const correspondants = tousCorrespondants.filter((a) => !a.supprime_le);
   const disponibles = correspondants.filter((a) => !dejaSelectionnes.has(a.id));
 
-  if (correspondants.length === 0) {
+  if (tousCorrespondants.length === 0) {
     awn.warning(`Aucun article avec le numéro « ${numero} »`);
+  } else if (correspondants.length === 0) {
+    const supprime = tousCorrespondants[0];
+    awn.warning(`Article supprimé le ${formatDate(supprime.supprime_le)}`);
   } else if (disponibles.length === 0) {
     awn.warning(`L'article « ${numero} » est déjà dans la liste`);
   } else if (disponibles.length > 1) {

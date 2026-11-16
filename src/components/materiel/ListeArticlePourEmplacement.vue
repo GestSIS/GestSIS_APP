@@ -87,7 +87,7 @@ const computedData = computed(() =>
           categorie_id: indexedTypes.value[a.materiel_type_id]?.materiel_categorie_id,
           emplacements: linearEmplacements(a.emplacement_id),
         }))
-        .filter((a) => a.statut),
+        .filter((a) => a.supprime_le === null),
       "categorie_id",
     ),
   )

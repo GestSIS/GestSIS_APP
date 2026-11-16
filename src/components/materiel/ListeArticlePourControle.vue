@@ -98,7 +98,7 @@ const loadArticles = async () => {
     key: typeId,
     label: materielTypeParId.value[typeId]?.designation,
     data: resultats[index]
-      .filter((a) => a.statut)
+      .filter((a) => a.supprime_le === null)
       .map((a) => enrichir(a, materielTypeParId.value[typeId], dernieresExecutions)),
   }));
   loading.value = false;

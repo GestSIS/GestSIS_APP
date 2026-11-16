@@ -5,6 +5,7 @@ import { useEmplacementStore } from "../../stores/materiel/Emplacement";
 import { useCouleurStore } from "../../stores/materiel/Couleur";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import TagCouleur from "./TagCouleur.vue";
+import { formatDate } from "../../tools/formatters.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 
 const { id } = defineProps({
@@ -147,7 +148,13 @@ const editEmplacement = () => {
           </div>
           <div class="row">
             <div class="col-3">Statut du véhicule</div>
-            <div class="col-9">{{ emplacement.article.statut ? "Actif" : "Inactif" }}</div>
+            <div class="col-9">
+              {{
+                emplacement.article.supprime_le
+                  ? `Supprimé le ${formatDate(emplacement.article.supprime_le)}`
+                  : "Actif"
+              }}
+            </div>
           </div>
         </div>
       </div>

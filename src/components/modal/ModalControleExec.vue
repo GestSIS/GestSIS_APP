@@ -77,7 +77,7 @@ if (modeMultiple.value && controleImpose.value) {
   );
   articlesEligibles.value = resultats
     .flat()
-    .filter((a) => a.statut)
+    .filter((a) => a.supprime_le === null)
     .map((a) => ({
       ...a,
       label: `${a.numero || a.designation || a.id} — ${indexedTypes[a.materiel_type_id]?.designation ?? ""}`,
@@ -121,7 +121,9 @@ await chargerArticlesComposants(controle.value);
 
 const articlesActifsPourTypes = (materielTypes) => {
   const typeIds = materielTypes.map((mt) => mt.materiel_type_id);
-  return articlesComposants.value.filter((a) => a.statut && typeIds.includes(a.materiel_type_id));
+  return articlesComposants.value.filter(
+    (a) => a.supprime_le === null && typeIds.includes(a.materiel_type_id),
+  );
 };
 
 // En édition, la valeur enregistrée fait foi : on ne la recalcule jamais

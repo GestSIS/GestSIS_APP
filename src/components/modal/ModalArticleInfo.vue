@@ -9,6 +9,7 @@ import { useControleStore } from "../../stores/materiel/Controle.js";
 import ControleExecService from "../../services/materiel/ControleExecService.js";
 import TagCouleur from "../materiel/TagCouleur.vue";
 import { indexedData } from "../../tools/index.js";
+import { formatDate } from "../../tools/formatters.js";
 import { emplacementIdPourArticle, estPerime } from "../../tools/materiel.js";
 
 const { data } = defineProps({
@@ -178,9 +179,12 @@ const lignesControles = computed(() =>
 
             <dt class="col-6">Statut</dt>
             <dd class="col-6">
-              <span class="badge" :class="data.statut ? 'bg-success' : 'bg-secondary'">
-                {{ data.statut ? "Actif" : "Inactif" }}
+              <span class="badge" :class="data.supprime_le ? 'bg-secondary' : 'bg-success'">
+                {{ data.supprime_le ? `Supprimé le ${formatDate(data.supprime_le)}` : "Actif" }}
               </span>
+              <div v-if="data.supprime_le && data.remarque_suppression" class="small text-muted">
+                {{ data.remarque_suppression }}
+              </div>
             </dd>
 
             <template v-if="type?.est_emplacement">
