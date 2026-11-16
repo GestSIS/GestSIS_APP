@@ -5,6 +5,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement";
 import { useMaterielTypeStore } from "../../stores/materiel/Type";
 import { useSubmit } from "../../composables/useSubmit.js";
+import SelectEmplacement from "../materiel/SelectEmplacement.vue";
 
 // data : { article: Article } (article supprimé)
 const { data, callback } = defineProps({
