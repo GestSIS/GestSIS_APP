@@ -32,6 +32,7 @@ const hasEditPermission = useHasPermission(permissions.MATERIEL.MODIFICATION);
 const articles = ref([]);
 const loading = ref(true);
 const affichageIndividuel = ref(false);
+const afficherSupprimes = ref(false);
 const affichageOptions = [
   { value: true, label: "Individuel" },
   { value: false, label: "Par type" },
@@ -111,7 +112,7 @@ const computedData = computed(() =>
           categorie_id: indexedTypes.value[a.materiel_type_id]?.materiel_categorie_id,
           emplacements: linearEmplacements(a.emplacement_id),
         }))
-        .filter((a) => a.supprime_le === null),
+        .filter((a) => afficherSupprimes.value || a.supprime_le === null),
       "categorie_id",
     ),
   )
@@ -136,7 +137,7 @@ const computedData = computed(() =>
                 typeDesignation: values[0].typeDesignation,
                 data: values,
                 lot: lotSupprimable(values[0].type, values),
-                quantite: values.length,
+                quantite: values.filter((a) => a.supprime_le === null).length,
                 compartiments: new Set(values.map((a) => a.compartiment)),
               }))
               .map((a) => ({
@@ -188,8 +189,9 @@ const ajouter = () =>
 
 <template>
   <base-card>
-    <template #title>Pièces ({{ articles.length }})</template>
+    <template #title>Pièces ({{ articles.filter((a) => a.supprime_le === null).length }})</template>
     <template #header>
+      <base-checkbox v-model="afficherSupprimes" label="Afficher le matériel supprimé" />
       <base-radio
         v-model="affichageIndividuel"
         button-style

@@ -114,7 +114,7 @@ const colonnes = computed(() => [
   ...(materielType.est_perimable
     ? [{ title: "Péremption", key: "date_peremption", slot: "peremption" }]
     : []),
-  { title: "Remarque", key: "remarque" },
+  { title: "Remarque", key: "remarque", slot: "remarque" },
   { title: "Ajouté", key: "created_at", type: "date" },
   // { title: 'Inventaire', key: 'inventaire' },
   // { title: 'Maintenance', key: 'maintenance' },
@@ -164,6 +164,15 @@ const supprimer = (article) =>
     data: { articles: [article] },
     callback: refresh,
   });
+
+const restaurer = (article) =>
+  showModal({
+    component: "ModalRestaurationArticle",
+    data: { article },
+    callback: refresh,
+  });
+
+const classeLigne = (article) => (article.supprime_le ? "text-muted opacity-50" : "");
 </script>
 
 <template>
@@ -173,6 +182,7 @@ const supprimer = (article) =>
     no-data="Aucune pièce"
     :fields="colonnes"
     :selectable="true"
+    :row-class="classeLigne"
     :hide-download="hideDownload"
   >
     <template #emplacement="{ rowData }">
@@ -209,6 +219,13 @@ const supprimer = (article) =>
       </div>
     </template>
 
+    <template #remarque="{ rowData }">
+      <div v-if="rowData.supprime_le" class="fst-italic">
+        Supprimé le {{ new Date(rowData.supprime_le).toLocaleDateString("fr-CH") }}
+      </div>
+      {{ rowData.remarque }}
+    </template>
+
     <template #actions="{ rowData }">
       <button
         title="Info"
@@ -218,45 +235,55 @@ const supprimer = (article) =>
         <font-awesome-icon :icon="['fas', 'info-circle']" />
       </button>
       <button
-        v-if="hasEditPermission"
-        title="Modifier"
-        class="btn btn-outline-secondary border-0"
-        @click="editMateriel(rowData)"
-      >
-        <font-awesome-icon :icon="['far', 'edit']" />
-      </button>
-      <button
-        v-if="hasEditPermission && materielType.est_attribuable && rowData.sapeur_id !== null"
-        title="Retour"
-        class="btn btn-outline-warning border-0"
-        @click="retourMateriel(rowData)"
-      >
-        <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
-      </button>
-      <button
-        v-if="hasEditPermission && materielType.est_attribuable && rowData.sapeur_id === null"
-        title="Attribuer"
-        class="btn btn-outline-primary border-0"
-        @click="attribuerMateriel(rowData)"
-      >
-        <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
-      </button>
-      <button
-        v-if="hasControlePermission && controlesApplicables.length > 0"
-        title="Contrôler"
+        v-if="hasEditPermission && rowData.supprime_le"
+        title="Restaurer"
         class="btn btn-outline-success border-0"
-        @click="controlerMateriel(rowData)"
+        @click="restaurer(rowData)"
       >
-        <font-awesome-icon :icon="['far', 'clipboard']" />
+        <font-awesome-icon :icon="['fas', 'rotate-left']" />
       </button>
-      <button
-        v-if="hasEditPermission"
-        title="Supprimer"
-        class="btn btn-outline-danger border-0"
-        @click="supprimer(rowData)"
-      >
-        <font-awesome-icon :icon="['far', 'trash-alt']" />
-      </button>
+      <template v-else>
+        <button
+          v-if="hasEditPermission"
+          title="Modifier"
+          class="btn btn-outline-secondary border-0"
+          @click="editMateriel(rowData)"
+        >
+          <font-awesome-icon :icon="['far', 'edit']" />
+        </button>
+        <button
+          v-if="hasEditPermission && materielType.est_attribuable && rowData.sapeur_id !== null"
+          title="Retour"
+          class="btn btn-outline-warning border-0"
+          @click="retourMateriel(rowData)"
+        >
+          <font-awesome-icon :icon="['fas', 'person-circle-minus']" />
+        </button>
+        <button
+          v-if="hasEditPermission && materielType.est_attribuable && rowData.sapeur_id === null"
+          title="Attribuer"
+          class="btn btn-outline-primary border-0"
+          @click="attribuerMateriel(rowData)"
+        >
+          <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
+        </button>
+        <button
+          v-if="hasControlePermission && controlesApplicables.length > 0"
+          title="Contrôler"
+          class="btn btn-outline-success border-0"
+          @click="controlerMateriel(rowData)"
+        >
+          <font-awesome-icon :icon="['far', 'clipboard']" />
+        </button>
+        <button
+          v-if="hasEditPermission"
+          title="Supprimer"
+          class="btn btn-outline-danger border-0"
+          @click="supprimer(rowData)"
+        >
+          <font-awesome-icon :icon="['far', 'trash-alt']" />
+        </button>
+      </template>
     </template>
   </base-table>
 </template>

@@ -55,7 +55,7 @@ const piecesColonnes = computed(() => [
   ...(emplacement?.est_compartimentable ? [{ title: "Compartiment", key: "compartiment" }] : []),
   { title: "Numéro", key: "numero" },
   { title: "Taille", key: "taille" },
-  { title: "Remarque", key: "remarque" },
+  { title: "Remarque", key: "remarque", slot: "remarque" },
   { title: "Ajouté", key: "created_at", type: "date" },
   { title: "Actions", slot: "actions" },
 ]);
@@ -89,6 +89,15 @@ const supprimer = (article) =>
     data: { articles: [article] },
     callback: refresh,
   });
+
+const restaurer = (article) =>
+  showModal({
+    component: "ModalRestaurationArticle",
+    data: { article },
+    callback: refresh,
+  });
+
+const classeLigne = (article) => (article.supprime_le ? "text-muted opacity-50" : "");
 </script>
 
 <template>
@@ -98,6 +107,7 @@ const supprimer = (article) =>
     no-data="Aucune pièce"
     :fields="piecesColonnes"
     :selectable="true"
+    :row-class="classeLigne"
   >
     <template #groupeHeader="{ categorie_id }">
       <tag-couleur
@@ -118,6 +128,13 @@ const supprimer = (article) =>
       >
     </template>
 
+    <template #remarque="{ rowData }">
+      <div v-if="rowData.supprime_le" class="fst-italic">
+        Supprimé le {{ new Date(rowData.supprime_le).toLocaleDateString("fr-CH") }}
+      </div>
+      {{ rowData.remarque }}
+    </template>
+
     <template #actions="{ rowData }">
       <button
         title="Info"
@@ -127,29 +144,39 @@ const supprimer = (article) =>
         <font-awesome-icon :icon="['fas', 'info-circle']" />
       </button>
       <button
-        v-if="hasEditPermission"
-        title="Modifier"
-        class="btn btn-outline-secondary border-0"
-        @click="editMateriel(rowData)"
+        v-if="hasEditPermission && rowData.supprime_le"
+        title="Restaurer"
+        class="btn btn-outline-success border-0"
+        @click="restaurer(rowData)"
       >
-        <font-awesome-icon :icon="['far', 'edit']" />
+        <font-awesome-icon :icon="['fas', 'rotate-left']" />
       </button>
-      <button
-        v-if="hasEditPermission && rowData.type.est_attribuable"
-        title="Attribuer"
-        class="btn btn-outline-primary border-0"
-        @click="attribuerMateriel(rowData)"
-      >
-        <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
-      </button>
-      <button
-        v-if="hasEditPermission"
-        title="Supprimer"
-        class="btn btn-outline-danger border-0"
-        @click="supprimer(rowData)"
-      >
-        <font-awesome-icon :icon="['far', 'trash-alt']" />
-      </button>
+      <template v-else>
+        <button
+          v-if="hasEditPermission"
+          title="Modifier"
+          class="btn btn-outline-secondary border-0"
+          @click="editMateriel(rowData)"
+        >
+          <font-awesome-icon :icon="['far', 'edit']" />
+        </button>
+        <button
+          v-if="hasEditPermission && rowData.type.est_attribuable"
+          title="Attribuer"
+          class="btn btn-outline-primary border-0"
+          @click="attribuerMateriel(rowData)"
+        >
+          <font-awesome-icon :icon="['fas', 'person-circle-plus']" />
+        </button>
+        <button
+          v-if="hasEditPermission"
+          title="Supprimer"
+          class="btn btn-outline-danger border-0"
+          @click="supprimer(rowData)"
+        >
+          <font-awesome-icon :icon="['far', 'trash-alt']" />
+        </button>
+      </template>
     </template>
   </base-table>
 </template>
