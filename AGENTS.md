@@ -2,7 +2,7 @@
 
 Frontend web de GestSIS : SPA Vue 3 (Composition API, `<script setup>`).
 
-> Dans l'environnement de dev intégré [GestSIS_dev_docker](../AGENTS.md), ce service tourne dans le conteneur `gestsis-app` (port 8080) et **les commandes s'exécutent via Docker Compose**, ex. `docker compose exec app yarn lint`. Les commandes ci-dessous sont données depuis la racine du dépôt (utiles en standalone, et à préfixer par `docker compose exec app` dans l'env intégré).
+> Dans l'environnement de dev intégré [GestSIS_dev_docker](../AGENTS.md), ce service tourne dans le conteneur `gestsis-app` (port 8080) et **les commandes s'exécutent via Docker Compose**, ex. `docker compose exec app pnpm lint`. Les commandes ci-dessous sont données depuis la racine du dépôt (utiles en standalone, et à préfixer par `docker compose exec app` dans l'env intégré).
 
 ## Stack
 
@@ -62,14 +62,14 @@ Formater avec `tools/formatters.js` : `formatDate` (« 11.11.2026 »), `formatTi
 ## Commandes
 
 ```bash
-yarn install        # dépendances
-yarn dev            # serveur de dev + hot reload (port 8080 dans Docker)
-yarn build          # build de production
-yarn preview        # aperçu du build
-yarn lint           # ESLint (--fix) sur src
+pnpm install        # dépendances
+pnpm dev            # serveur de dev + hot reload (port 8080 dans Docker)
+pnpm build          # build de production
+pnpm preview        # aperçu du build
+pnpm lint           # ESLint (--fix) sur src
 ```
 
-**Tests :** pas de suite de tests automatisés pour l'instant — `package.json` ne définit pas de script `test` et la CI se limite à `yarn build`. Valider un changement via `yarn lint` et un build qui passe.
+**Tests :** pas de suite de tests automatisés pour l'instant — `package.json` ne définit pas de script `test` et la CI se limite à `pnpm build`. Valider un changement via `pnpm lint` et un build qui passe.
 
 ## Configuration
 
@@ -83,7 +83,7 @@ Les erreurs sont envoyées à Bugsink via un tunnel côté API (`main.js` → `$
 
 - Composition API + `<script setup>` ; état partagé dans les stores Pinia, jamais d'appel API directement dans les composants → passer par `services/`.
 - **Réutiliser les composants de base** (voir section ci-dessus) au lieu de recréer tableaux, selects, cartes, etc.
-- Respecter la config ESLint existante (`eslint.config.js`) ; lancer `yarn lint` avant de commit.
+- Respecter la config ESLint existante (`eslint.config.js`) ; lancer `pnpm lint` avant de commit.
 - Pas de logique métier lourde dans les templates.
 
 ## Appels API déclenchés par l'utilisateur
@@ -112,6 +112,21 @@ Ne pas écrire de `.then/.catch` à la main pour une action utilisateur : passer
 This project is using Vite+, a unified toolchain built on top of Vite, Rolldown, Vitest, tsdown, Oxlint, Oxfmt, and Vite Task. Vite+ wraps runtime management, package management, and frontend tooling in a single global CLI called `vp`. Vite+ is distinct from Vite, and it invokes Vite through `vp dev` and `vp build`. Run `vp help` to print a list of commands and `vp <command> --help` for information about a specific command.
 
 Docs are local at `node_modules/vite-plus/docs` or online at https://viteplus.dev/guide/.
+
+## Built-in Commands vs Scripts
+
+`vp <name>` runs a built-in command. `vp run <name>` runs a `package.json` script or a `vite.config.ts` task. Scripts cannot overwrite built-ins, so `vp dev` and `vp run dev` may do different things. Check `package.json` and `vite.config.ts` first, and run `vp run <name>` when the project defines a script or task with that name.
+
+## Running Scripts
+
+Run TypeScript and JavaScript files with `vpx <file>`, for example `vpx ./scripts/seed.ts --dry-run`. It handles enums, decorators, JSX, and tsconfig `paths`, so do not add `tsx` or `ts-node` to run scripts. `vpx --watch <file>` reruns the file when a file it uses changes, in place of `tsx watch`. `vp node <file>` runs plain Node.js.
+
+## Tool Versions
+
+Run `vp toolchain` to show versions and relationships in the active Vite+
+release. Add a tool name to select part of the graph. For example, run
+`vp toolchain vite`. Use `--global` to ignore the local `vite-plus` package. Use
+`vp why <package>` to show the package-manager dependency graph.
 
 ## Review Checklist
 

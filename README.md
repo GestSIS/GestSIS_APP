@@ -29,22 +29,21 @@ L'application est alors disponible sur <http://localhost:8080>, avec rechargemen
 un fichier sur l'hôte suffit. Les commandes s'exécutent dans le conteneur, par exemple :
 
 ```bash
-docker compose exec app yarn lint
+docker compose exec app pnpm lint
 ```
 
 ### Sans Docker
 
-Prérequis : Node.js 26 et Yarn 4 (`corepack enable`), ainsi qu'une API et un serveur
-d'authentification accessibles.
+Prérequis : Node.js 26 et pnpm 12 (`npm install -g pnpm`, la version exacte est ensuite prise dans `packageManager`), ainsi qu'une API et un serveur d'authentification accessibles.
 
 ```bash
-yarn install
+pnpm install
 cp .env.example .env.local   # puis adapter les URL si besoin
-yarn dev                     # http://localhost:5173
+pnpm dev                     # http://localhost:5173
 ```
 
 Pour accéder au serveur de développement depuis une autre machine (machine virtuelle, téléphone sur
-le même réseau), lancez `yarn dev --host` et remplacez `127.0.0.1` par l'adresse de la machine dans
+le même réseau), lancez `pnpm dev --host` et remplacez `127.0.0.1` par l'adresse de la machine dans
 `.env.local`.
 
 ## Configuration
@@ -66,15 +65,15 @@ ignoré.
 
 | Commande       | Rôle                                                                |
 | -------------- | ------------------------------------------------------------------- |
-| `yarn dev`     | Serveur de développement avec rechargement à chaud                  |
-| `yarn build`   | Compilation pour la production (dossier `dist/`)                    |
-| `yarn preview` | Aperçu local de la version compilée                                 |
-| `yarn lint`    | Analyse du code de `src/` et correction automatique quand c'est sûr |
-| `yarn fmt`     | Mise en forme du code                                               |
-| `yarn check`   | Mise en forme, lint et vérification des types en une commande       |
+| `pnpm dev`     | Serveur de développement avec rechargement à chaud                  |
+| `pnpm build`   | Compilation pour la production (dossier `dist/`)                    |
+| `pnpm preview` | Aperçu local de la version compilée                                 |
+| `pnpm lint`    | Analyse du code de `src/` et correction automatique quand c'est sûr |
+| `pnpm fmt`     | Mise en forme du code                                               |
+| `pnpm check`   | Mise en forme, lint et vérification des types en une commande       |
 
-Il n'y a pas encore de tests automatisés : un changement se valide avec `yarn lint` et un
-`yarn build` qui passe.
+Il n'y a pas encore de tests automatisés : un changement se valide avec `pnpm lint` et un
+`pnpm build` qui passe.
 
 ## Organisation du code
 

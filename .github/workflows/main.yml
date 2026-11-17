@@ -12,14 +12,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-      - name: Use Node.js 26.x
-        uses: actions/setup-node@v7
-        with:
-          node-version: 26.x
-          cache: yarn
 
-      - name: Yarn install
-        run: yarn
+      # Installe pnpm (packageManager) et Node (devEngines.runtime), puis lance pnpm install
+      - uses: pnpm/setup@v3
+        with:
+          cache: true
 
       - name: Configure environment variables
         run: |
@@ -37,7 +34,7 @@ jobs:
           VITE_SENTRY_DSN: ${{ secrets.VITE_SENTRY_DSN }}
 
       - name: build
-        run: yarn build
+        run: pnpm build
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}

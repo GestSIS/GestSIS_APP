@@ -9,7 +9,7 @@ Ce service fait partie d'une architecture microservices. Pour obtenir un environ
 Depuis le dossier `GestSIS_Dev_docker` avec les services démarrés (`make up`) :
 
 ```bash
-docker compose exec app yarn lint
+docker compose exec app pnpm lint
 ```
 
 ## Contribution
