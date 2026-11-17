@@ -9,6 +9,9 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+    # Délai avant de proposer une nouvelle version (équivalent du minimumReleaseAge de pnpm)
+    cooldown:
+      default-days: 3
     groups:
       dependencies:
         applies-to: "version-updates"
@@ -18,3 +21,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # Délai avant de proposer une nouvelle version (équivalent du minimumReleaseAge de pnpm)
+    cooldown:
+      default-days: 3

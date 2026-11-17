@@ -3,8 +3,17 @@ name: Node.js CI
 on:
   push:
     branches: [main]
-
+  pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Un seul run par branche : les PR annulent le run précédent,
+# les déploiements sur main sont mis en file (jamais deux rsync --delete en parallèle)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
@@ -17,6 +26,9 @@ jobs:
       - uses: pnpm/setup@v3
         with:
           cache: true
+
+      - name: Check (format, lint, types)
+        run: pnpm check
 
       - name: Configure environment variables
         run: |
@@ -44,13 +56,15 @@ jobs:
           SENTRY_DISABLE_UPDATE_CHECK: "1"
 
       - name: Configure SSH
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/staging.key
           chmod 600 ~/.ssh/staging.key
 
-          # Ajouter le host key du serveur aux hosts connus
-          ssh-keyscan -H $SSH_HOST >> ~/.ssh/known_hosts
+          # Clés du serveur vérifiées et stockées en secret (pas de ssh-keyscan : il ferait
+          # confiance à n'importe quelle clé reçue au moment du déploiement)
+          echo "$KNOWN_HOSTS" >> ~/.ssh/known_hosts
 
           cat >>~/.ssh/config <<END
           Host staging
@@ -64,6 +78,8 @@ jobs:
           SSH_USER: ${{ secrets.STAGING_SSH_USER }}
           SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
           SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+          KNOWN_HOSTS: ${{ secrets.STAGING_KNOWN_HOSTS }}
 
       - name: Deploy build
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: rsync -rtz --delete --timeout 30 -e ssh dist/ staging:app.gestsis.ch
