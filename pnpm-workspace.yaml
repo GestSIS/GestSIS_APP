@@ -3,3 +3,7 @@ allowBuilds:
   vue-demi: false
 
 trustPolicy: no-downgrade
+
+update:
+  ignoreDeps:
+    - node
