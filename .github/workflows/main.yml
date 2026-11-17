@@ -16,9 +16,7 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: 26.x
-
-      - name: Install yarn
-        run: npm install -g yarn
+          cache: yarn
 
       - name: Yarn install
         run: yarn
