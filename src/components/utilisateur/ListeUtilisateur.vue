@@ -166,7 +166,9 @@ const fields = [
           </template>
           <template #sapeur="{ rowData }">
             {{ rowData.nom_prenom }}
-            <font-awesome-icon v-if="rowData?.type === 1" :icon="['far', 'handshake']" />
+            <span v-if="rowData?.type === 1" class="badge bg-info text-dark ms-1">
+              <font-awesome-icon :icon="['far', 'handshake']" /> Civil
+            </span>
           </template>
           <template #actions="{ rowData }">
             <button
