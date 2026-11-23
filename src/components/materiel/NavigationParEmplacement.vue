@@ -166,12 +166,10 @@ const ajoutEmplacement = () =>
                   <font-awesome-icon
                     v-if="indexedEmplacements[id]?.hangar"
                     :icon="['far', 'house']"
-                    class="me-1"
                   />
                   <font-awesome-icon
                     v-if="indexedEmplacements[id]?.article_id"
                     :icon="['fas', 'car']"
-                    class="me-1"
                   />
                   {{ indexedEmplacements[id]?.designation }}
                 </tag-couleur>
@@ -199,12 +197,10 @@ const ajoutEmplacement = () =>
                 <font-awesome-icon
                   v-if="indexedEmplacements[id]?.hangar"
                   :icon="['far', 'house']"
-                  class="me-1"
                 />
                 <font-awesome-icon
                   v-if="indexedEmplacements[id]?.article_id"
                   :icon="['fas', 'car']"
-                  class="me-1"
                 />
                 {{ indexedEmplacements[id]?.designation }}
               </tag-couleur>
@@ -277,18 +273,8 @@ const ajoutEmplacement = () =>
               @click.stop.prevent="toggleLine(item.id)"
             />
             <tag-couleur :couleur="indexedCouleurs[item.couleur_id]">
-              <font-awesome-icon
-                v-if="item.hangar"
-                title="Hangar"
-                :icon="['far', 'house']"
-                class="me-1"
-              />
-              <font-awesome-icon
-                v-if="item.article_id"
-                title="Véhicule"
-                :icon="['fas', 'car']"
-                class="me-1"
-              />
+              <font-awesome-icon v-if="item.hangar" title="Hangar" :icon="['far', 'house']" />
+              <font-awesome-icon v-if="item.article_id" title="Véhicule" :icon="['fas', 'car']" />
               {{ item.designation }}
             </tag-couleur>
           </a>

@@ -101,12 +101,14 @@ const links = [
     icon: "file-medical-alt",
     nom: "Contrôles médicaux",
     permission: permissions.CONTROLE_MEDICAL.LECTURE,
+    active: (route) => route.name.startsWith("controle"),
   },
   {
     to: { name: "materiel-tableau-bord" },
     icon: "shirt",
     nom: "Matériel",
-    permission: permissions.MATERIEL.LECTURE,
+    permissions: [permissions.MATERIEL.LECTURE, permissions.MATERIEL.INVENTAIRE],
+    active: (route) => route.name.startsWith("materiel"),
   },
   // {
   //   to: '/impressions',

@@ -1,5 +1,5 @@
 <template>
-  <div class="card mb-2">
+  <div class="card mb-3">
     <div
       v-if="$slots.title || $slots.header"
       class="card-header d-flex justify-content-between align-items-center"

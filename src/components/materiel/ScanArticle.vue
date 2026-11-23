@@ -8,18 +8,21 @@ import { formatDate } from "../../tools/formatters.js";
 // compte de la casse ni des espaces), émis via `scan`. Le champ se vide
 // ensuite pour le scan suivant. C'est au parent de placer l'article (ligne
 // vide ou nouvelle ligne).
-const { articles, dejaSelectionnes } = defineProps({
+const { articles, dejaSelectionnes, accepteInconnu } = defineProps({
   articles: { type: Array, required: true },
   // Ids des articles déjà dans la liste du parent : un nouveau scan est refusé.
   dejaSelectionnes: { type: Set, default: () => new Set() },
+  // Un numéro absent de `articles` est émis via `inconnu` au lieu d'être refusé.
+  accepteInconnu: { type: Boolean, default: false },
 });
-const emit = defineEmits(["scan", "vide"]);
+const emit = defineEmits(["scan", "vide", "inconnu"]);
 
 const awn = useNotification();
 const numeroScanne = ref("");
 
 const scanner = () => {
-  const numero = numeroScanne.value.trim().toLowerCase();
+  const saisi = numeroScanne.value.trim();
+  const numero = saisi.toLowerCase();
   numeroScanne.value = "";
   if (numero === "") {
     emit("vide");
@@ -31,7 +34,9 @@ const scanner = () => {
   const correspondants = tousCorrespondants.filter((a) => !a.supprime_le);
   const disponibles = correspondants.filter((a) => !dejaSelectionnes.has(a.id));
 
-  if (tousCorrespondants.length === 0) {
+  if (tousCorrespondants.length === 0 && accepteInconnu) {
+    emit("inconnu", saisi);
+  } else if (tousCorrespondants.length === 0) {
     awn.warning(`Aucun article avec le numéro « ${numero} »`);
   } else if (correspondants.length === 0) {
     const supprime = tousCorrespondants[0];

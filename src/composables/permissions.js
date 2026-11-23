@@ -64,6 +64,7 @@ export default {
     LECTURE: "materiel.lecture",
     MODIFICATION: "materiel.modification",
     CONTROLE: "materiel.controle",
+    INVENTAIRE: "materiel.inventaire",
     CONFIG: "materiel.config",
   },
   RTA: {

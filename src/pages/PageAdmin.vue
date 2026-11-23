@@ -20,6 +20,7 @@
             { to: { name: 'admin-organisations' }, texte: 'Organisations' },
             { to: { name: 'admin-users' }, texte: 'Utilisateurs' },
             { to: { name: 'admin-2fa' }, texte: '2FA' },
+            { to: { name: 'admin-tokens' }, texte: 'Tokens' },
           ]"
         />
         <div id="nav-tabContent" class="tab-content">

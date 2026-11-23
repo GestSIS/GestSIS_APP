@@ -103,13 +103,11 @@ const rowClass = (dataItem) => (emplacementVisible.value[dataItem.id] ? "" : "d-
                 v-if="rowData.hangar"
                 v-tooltip.bottom="'Hangar'"
                 :icon="['far', 'house']"
-                class="me-1"
               />
               <font-awesome-icon
                 v-if="rowData.article_id"
                 v-tooltip.bottom="'Véhicule'"
                 :icon="['fas', 'car']"
-                class="me-1"
               />
               {{ rowData.designation }}
             </tag-couleur>

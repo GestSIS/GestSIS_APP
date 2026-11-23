@@ -8,6 +8,8 @@ import SelectCouleur from "../materiel/SelectCouleur.vue";
 import { useNotification } from "../../composables/useNotification.js";
 import { toDateInputValue } from "../../tools/index.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
+import permissions from "../../composables/permissions.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -22,7 +24,19 @@ const { data, callback } = defineProps({
 
 const awn = useNotification();
 
-const { vehiculeUniquement, ...articleData } = data ?? {};
+// Options d'ouverture, hors champs de l'article :
+// - enregistrer(article) : remplace la création (ex. traitement d'un écart d'inventaire) ;
+// - quantiteFixe : la quantité ne se modifie pas ; sansVehicule : pas de type véhicule ;
+// - typePropose / typeProposeNumerote : nom et numérotation proposés pour un type à créer.
+const {
+  vehiculeUniquement,
+  sansVehicule,
+  quantiteFixe,
+  enregistrer,
+  typePropose,
+  typeProposeNumerote,
+  ...articleData
+} = data ?? {};
 
 const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
@@ -55,10 +69,30 @@ const typeOptions = computed(() => {
   if (!form.id && vehiculeUniquement) {
     return actifs.filter((t) => t.est_emplacement);
   }
+  if (sansVehicule) {
+    return actifs.filter((t) => !t.est_emplacement);
+  }
   return actifs;
 });
 
-const { closeModal, resize } = useModalStore();
+const { showModal, closeModal, resize } = useModalStore();
+const peutCreerType = useHasPermission(permissions.MATERIEL.CONFIG);
+
+// Le type créé revient dans cette fenêtre, déjà choisi, avec la saisie en cours
+const creerType = () =>
+  showModal({
+    component: "ModalMaterielType",
+    data: { designation: typePropose ?? "", est_numerote: typeProposeNumerote ?? false },
+    callback: (nouveau) => {
+      if (nouveau?.id) {
+        showModal({
+          component: "ModalArticle",
+          data: { ...data, ...form, materiel_type_id: nouveau.id },
+          callback,
+        });
+      }
+    },
+  });
 
 watchEffect(() => resize(type.value?.est_emplacement ? 1 : 0));
 
@@ -92,7 +126,10 @@ const save = async () => {
   if (payload.emplacement) delete payload.emplacement.statut;
 
   const action = isCreation ? ArticleService.creerArticles : ArticleService.updateArticles;
-  const { ok } = await submit(() => action([payload]), "Erreur lors de la sauvegarde de l'article");
+  const { ok } = await submit(
+    () => (enregistrer ? enregistrer(payload) : action([payload])),
+    "Erreur lors de la sauvegarde de l'article",
+  );
   if (ok) {
     closeModal();
     callback();
@@ -118,11 +155,29 @@ const save = async () => {
         display-key="designation"
         :options="typeOptions"
       />
+      <div
+        v-if="!form.id && (typePropose || peutCreerType)"
+        class="d-flex flex-wrap gap-2 align-items-center mb-3"
+      >
+        <span v-if="typePropose" class="small text-body-secondary flex-grow-1">
+          Type proposé par le sapeur : « {{ typePropose }} »
+        </span>
+        <button
+          v-if="peutCreerType"
+          type="button"
+          class="btn btn-outline-primary btn-sm"
+          @click="creerType"
+        >
+          <font-awesome-icon :icon="['fas', 'plus']" class="me-1" />
+          Créer un nouveau type
+        </button>
+      </div>
       <div v-if="!form.id && type && !type.est_numerote" class="mb-3">
         <label for="quantite">Quantité</label>
         <input
           id="quantite"
           v-model="form.quantite"
+          :readonly="quantiteFixe"
           required
           min="1"
           max="50"

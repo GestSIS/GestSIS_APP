@@ -8,9 +8,14 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import SelectCategorie from "../materiel/SelectCategorie.vue";
 import { useSubmit } from "../../composables/useSubmit.js";
 
-const { data } = defineProps({
+// callback(type) : appelé avec le type enregistré, une fois la fenêtre fermée
+const { data, callback } = defineProps({
   data: {
     type: Object,
+    default: () => {},
+  },
+  callback: {
+    type: Function,
     default: () => {},
   },
 });
@@ -47,12 +52,13 @@ const save = async () => {
   }
   const action =
     (activeItem.value.id || 0) === 0 ? typeStore.addMaterielType : typeStore.updateMaterielType;
-  const { ok } = await submit(
+  const { ok, data: type } = await submit(
     () => action(activeItem.value),
     "Erreur lors de la sauvegarde du matériel type",
   );
   if (ok) {
     closeModal();
+    callback(type);
   }
 };
 </script>

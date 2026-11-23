@@ -1,22 +1,11 @@
 <script setup>
-import { TokenService } from "../services/StorageService.js";
 import { safeLocalStorage } from "../tools/storage.js";
 import * as data from "../../releases.json";
-import { computed, ref } from "vue";
-import { useAuthStore } from "../stores/auth/Auth.js";
-import { useClipboard } from "../composables/useClipboard.js";
-
-const { copy } = useClipboard();
-
-const authStore = useAuthStore();
+import { ref } from "vue";
 
 const releases = ref(data.releases);
 const all = ref(false);
 const nbNew = ref(0);
-const accessToken = ref(TokenService.getAccessToken());
-const refreshToken = ref(TokenService.getRefreshToken());
-
-const isAdmin = computed(() => authStore.admin);
 
 const date = safeLocalStorage.get("latestReleaseDate") ?? releases.value[0].date;
 const version = safeLocalStorage.get("latestSeenVersion") ?? releases.value[0].version;
@@ -32,14 +21,6 @@ if (latestReadIndex < 0) {
     nbNew.value++;
   }
 }
-
-const refreshTokens = () =>
-  authStore.refreshToken().then(() => {
-    accessToken.value = TokenService.getAccessToken();
-    refreshToken.value = TokenService.getRefreshToken();
-  });
-
-const copyToClipboard = (text) => copy(text);
 </script>
 
 <template>
@@ -133,62 +114,6 @@ const copyToClipboard = (text) => copy(text);
                 >anydesk</a
               >
             </p>
-          </div>
-        </div>
-        <div v-if="isAdmin" class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Admin</h3>
-          </div>
-          <div class="card-body">
-            <div class="mb-3">
-              <button class="btn btn-primary" @click="refreshTokens">Refresh tokens</button>
-            </div>
-            <div class="mb-3">
-              <label for="copy-to-clipboard" class="form-label">Access Token</label>
-              <div class="input-group">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder=""
-                  :value="accessToken"
-                  readonly
-                  aria-label="Copier dans le press-papier"
-                  aria-describedby="copy-to-clipboard"
-                />
-                <button
-                  aria-label="Copier l'access token"
-                  id="copy-to-clipboard"
-                  class="btn btn-outline-secondary"
-                  type="button"
-                  @click="copyToClipboard(accessToken)"
-                >
-                  <font-awesome-icon :icon="['far', 'clipboard']" />
-                </button>
-              </div>
-              <div class="mb-3">
-                <label for="copy-to-clipboard" class="form-label">Refresh Token</label>
-                <div class="input-group">
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder=""
-                    :value="refreshToken"
-                    readonly
-                    aria-label="Copier dans le press-papier"
-                    aria-describedby="copy-to-clipboard"
-                  />
-                  <button
-                    aria-label="Copier le refresh token"
-                    id="copy-to-clipboard"
-                    class="btn btn-outline-secondary"
-                    type="button"
-                    @click="copyToClipboard(refreshToken)"
-                  >
-                    <font-awesome-icon :icon="['far', 'clipboard']" />
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

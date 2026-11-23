@@ -644,14 +644,21 @@ const router = createRouter({
     {
       path: "/materiel",
       meta: { title: "Matériel" },
-      beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+      // Avec la seule permission inventaire, la section se limite à l'onglet Inventaires
+      beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE, permissions.MATERIEL.INVENTAIRE),
       component: () => import("/src/pages/PageMateriel.vue"),
       children: [
         {
           path: "tableau-bord",
           name: "materiel-tableau-bord",
           meta: { title: "Tableau de bord" },
-          beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE),
+          beforeEnter: (to, from) => {
+            if (useHasPermission([permissions.MATERIEL.LECTURE]).value) return true;
+            if (useHasPermission([permissions.MATERIEL.INVENTAIRE]).value) {
+              return { name: "materiel-inventaires" };
+            }
+            return redirect(to, from);
+          },
           component: () => import("/src/components/materiel/TabTableauBord.vue"),
         },
         {
@@ -735,6 +742,20 @@ const router = createRouter({
             },
           ],
         },
+        {
+          // Emplacement choisi dans « État par emplacement » : filtre l'historique
+          path: "inventaires/:emplacementId?",
+          name: "materiel-inventaires",
+          meta: { title: "Inventaires" },
+          props: (route) => ({
+            selectionId: route.params.emplacementId ? Number(route.params.emplacementId) : null,
+          }),
+          beforeEnter: permissionGuard(
+            permissions.MATERIEL.LECTURE,
+            permissions.MATERIEL.INVENTAIRE,
+          ),
+          component: () => import("/src/components/materiel/TabInventaires.vue"),
+        },
         //   {
         //     path: 'inventaire',
         //     name: 'mat-perso-inventaire',
@@ -742,6 +763,33 @@ const router = createRouter({
         //     component: () =>
         //       import('/src/components/materiel/MaterielTabInventaire.vue'),
         //   },
+      ],
+    },
+    {
+      path: "/inventaires",
+      redirect: { name: "materiel-inventaires" },
+    },
+    {
+      // Inventaire : page pleine, sans les onglets du matériel, avec ses propres onglets
+      path: "/inventaires/:id",
+      meta: { title: "Inventaire" },
+      beforeEnter: permissionGuard(permissions.MATERIEL.LECTURE, permissions.MATERIEL.INVENTAIRE),
+      props: true,
+      component: () => import("/src/pages/PageInventaire.vue"),
+      children: [
+        { path: "", redirect: { name: "materiel-inventaire-details" } },
+        {
+          path: "saisie/:noeudId?",
+          name: "materiel-inventaire-details",
+          props: true,
+          component: () => import("/src/components/materiel/OngletSaisieInventaire.vue"),
+        },
+        {
+          path: "ecarts",
+          name: "materiel-inventaire-ecarts",
+          meta: { title: "Écarts d'inventaire" },
+          component: () => import("/src/components/materiel/OngletEcartsInventaire.vue"),
+        },
       ],
     },
     {
@@ -1214,6 +1262,13 @@ const router = createRouter({
           meta: { title: "2FA" },
           beforeEnter: adminGuard(),
           component: () => import("/src/components/admin/AdminTwoFactor.vue"),
+        },
+        {
+          path: "tokens",
+          name: "admin-tokens",
+          meta: { title: "Tokens" },
+          beforeEnter: adminGuard(),
+          component: () => import("/src/components/admin/AdminTokens.vue"),
         },
       ],
     },

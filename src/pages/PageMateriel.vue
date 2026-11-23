@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import permissions from "../composables/permissions.js";
 
 const route = useRoute();
 
@@ -19,7 +20,10 @@ const pleineHauteur = computed(() => route.meta.pleineHauteur === true);
             <li class="breadcrumb-item">
               <router-link :to="{ name: 'accueil' }">Accueil</router-link>
             </li>
-            <li class="breadcrumb-item active" aria-current="page">Matériel</li>
+            <li class="breadcrumb-item">
+              <router-link :to="{ name: 'materiel-tableau-bord' }">Matériel</router-link>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ route.meta.title }}</li>
           </ol>
         </nav>
       </div>
@@ -30,27 +34,38 @@ const pleineHauteur = computed(() => route.meta.pleineHauteur === true);
           :routes="[
             {
               to: { name: 'materiel-tableau-bord' },
+              permission: permissions.MATERIEL.LECTURE,
               texte: 'Tableau de bord',
               exact: false,
             },
             {
               to: { name: 'materiel-par-type' },
+              permission: permissions.MATERIEL.LECTURE,
               texte: 'Par type',
               exact: false,
             },
             {
               to: { name: 'materiel-par-emplacement' },
+              permission: permissions.MATERIEL.LECTURE,
               texte: 'Par emplacement',
               exact: false,
             },
             {
               to: { name: 'materiel-par-sapeur' },
+              permission: permissions.MATERIEL.LECTURE,
               texte: 'Par sapeur',
               exact: false,
             },
             {
               to: { name: 'materiel-controles' },
+              permission: permissions.MATERIEL.LECTURE,
               texte: 'Contrôles & Maintenances',
+              exact: false,
+            },
+            {
+              to: { name: 'materiel-inventaires' },
+              permissions: [permissions.MATERIEL.LECTURE, permissions.MATERIEL.INVENTAIRE],
+              texte: 'Inventaires',
               exact: false,
             },
           ]"
