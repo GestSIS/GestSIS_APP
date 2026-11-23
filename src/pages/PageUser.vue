@@ -7,7 +7,6 @@ import { useModalStore } from "../stores/common/Modal";
 import { PASSWORD_HINT, PASSWORD_MIN_LENGTH, passwordErrors } from "../tools/passwordPolicy.js";
 import { useSubmit } from "../composables/useSubmit.js";
 
-const jeton = ref("");
 const oldPassword = ref("");
 const newPassword = ref("");
 const newPasswordRepeated = ref("");
@@ -39,21 +38,6 @@ const refreshTokens = async () => {
     .then(() => awn.success("Permissions rechargées"))
     .catch(() => awn.alert("Vous avez été déconnecté, veuillez-vous reconnecter"));
 };
-const utiliserJeton = async () => {
-  if (!jeton.value) {
-    awn.alert("Jeton invalide");
-  } else {
-    const { ok } = await submit(
-      () => authStore.useToken(jeton.value),
-      "Jeton déjà utilisé ou invalide.",
-      "Jeton enregistré avec succès",
-    );
-    if (ok) {
-      jeton.value = "";
-    }
-  }
-};
-
 const changerMotDePasse = async () => {
   // Longueur et lettre vérifiées ici ; la fuite de données connue par Auth,
   // qui renvoie ses messages par champ (422) affichés sous le nouveau mot de passe.
@@ -420,30 +404,6 @@ const fields = [
           </base-card>
         </form>
 
-        <form v-if="tab == 'permissions'" @submit.prevent="utiliserJeton">
-          <base-card title="Utiliser un jeton de permissions">
-            <template #header>
-              <!-- TODO: afficher les permissions de l'utilisateur -->
-              <!-- TODO: améliorer cet UI -->
-            </template>
-            <template #body>
-              <div class="mb-3">
-                <label for="jeton">Jeton</label>
-                <input
-                  id="jeton"
-                  v-model="jeton"
-                  type="text"
-                  required
-                  class="form-control form-control-sm"
-                  placeholder="jeton"
-                />
-              </div>
-              <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
-                Utiliser
-              </button>
-            </template>
-          </base-card>
-        </form>
         <base-card title="Recharger mes permissions" v-if="tab == 'permissions'">
           <template #body>
             <button class="btn btn-primary" @click="refreshTokens">Charger</button>

@@ -16,9 +16,6 @@ export default {
   changePassword(data) {
     return Api.auth().post("/change-password", data);
   },
-  useToken(token) {
-    return Api.auth().post("/use-token", { token });
-  },
   // `email` requis : depuis que l'inscription n'émet plus de session tant
   // que l'email n'est pas confirmé, ce point d'accès n'est plus protégé par
   // un jeton (il n'en existe justement pas encore juste après l'inscription).
@@ -27,9 +24,6 @@ export default {
   },
   confirmRegistrationEmail(email, code) {
     return Api.auth().post("/confirmer-email", { email, code });
-  },
-  newRegisterToken(tokenInfo) {
-    return Api.auth().post("/register-token", tokenInfo);
   },
   refreshToken(payload) {
     return Api.auth().post("refresh-token", { token: payload });

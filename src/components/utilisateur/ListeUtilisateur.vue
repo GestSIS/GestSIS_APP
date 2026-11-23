@@ -84,8 +84,6 @@ const computedData = computed(() =>
 const { showModal } = useModalStore();
 const formatRole = (id) => roles.value.find((r) => r.id === id)?.nom;
 
-const invite = () => showModal({ component: "ModalRegisterToken" });
-
 const edit = (user) =>
   showModal({
     component: "ModalUserRole",
@@ -151,9 +149,6 @@ const fields = [
   </div>
   <div class="col-md-12">
     <base-card title="Liste des utilisateurs">
-      <template #header>
-        <button class="btn btn-outline-primary" @click="invite">Inviter</button>
-      </template>
       <template #body-table>
         <base-table
           :loading="loading"

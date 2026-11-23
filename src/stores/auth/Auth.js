@@ -347,17 +347,6 @@ export const useAuthStore = defineStore("auth", {
       Sentry.setUser(null);
       Sentry.setTag("org_key", null);
     },
-    async useToken(token) {
-      // Success responses no longer carry a `message` field (harmonized envelope,
-      // see http/Request.js) — the caller (PageUser.vue) already falls back to a
-      // default success text when nothing is returned here.
-      const { accessToken } = await AuthService.useToken(token);
-      await this.setAuthSuccessful({
-        accessToken,
-        refreshToken: TokenService.getRefreshToken(),
-        user: TokenService.getUser(),
-      });
-    },
     async impersonate(userId) {
       if (userId === this.user?.id) {
         throw new Error("Vous ne pouvez pas usurper votre propre identité.");
@@ -432,9 +421,6 @@ export const useAuthStore = defineStore("auth", {
         return organisations;
       }
       return Promise.resolve();
-    },
-    async newRegisterToken(token) {
-      return AuthService.newRegisterToken(token);
     },
     async updateUserRoles(user) {
       const data = await AuthService.updateUserRoles(user);
@@ -605,8 +591,8 @@ export const useAuthStore = defineStore("auth", {
       this.admin = jwt.data.admin;
       this.validated = jwt.data.validated;
       // Présent (éventuellement null) dans les réponses login/refresh ; absent
-      // quand la session est restaurée depuis le stockage (rechargement de page)
-      // ou juste rééchangée (useToken) : on garde alors la dernière valeur connue.
+      // quand la session est restaurée depuis le stockage (rechargement de page) :
+      // on garde alors la dernière valeur connue.
       if ("twoFactorNudge" in data) {
         this.twoFactorNudge = data.twoFactorNudge ?? null;
         TokenService.saveTwoFactorNudge(this.twoFactorNudge);

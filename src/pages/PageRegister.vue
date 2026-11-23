@@ -11,7 +11,6 @@ const router = useRouter();
 const authStore = useAuthStore();
 const awn = useNotification();
 
-const avance = ref(false);
 const name = ref(null);
 // `?confirm=<email>` : arrivée depuis PageLogin sur un compte dont l'email
 // n'est pas encore confirmé — reprend directement à la saisie du code et en
@@ -21,7 +20,6 @@ const pendingConfirmationEmail = route.query?.confirm ?? route.query?.email ?? n
 const email = ref(pendingConfirmationEmail);
 const password = ref(null);
 const password_confirmation = ref(null);
-const token = ref(route.query?.token ?? "");
 const errors = ref({});
 const submitting = ref(false);
 
@@ -54,7 +52,6 @@ const register = async () => {
       email: email.value?.trim(),
       password: password.value,
       password_confirmation: password_confirmation.value,
-      token: token.value?.trim() || null,
       domaine_code: "sis",
     })
     .then(() => {
@@ -64,7 +61,7 @@ const register = async () => {
       router.replace({ query: { ...route.query, email: email.value?.trim() } });
     })
     .catch((error) => {
-      // 422 : erreurs par champ ; sinon (jeton invalide, trop de tentatives,
+      // 422 : erreurs par champ ; sinon (trop de tentatives,
       // envoi de l'email en échec…) seul `message` est affiché.
       errors.value = error?.errors ?? {
         message: error?.message || "Erreur lors de la création du compte",
@@ -171,18 +168,6 @@ if (route.query?.confirm) {
       />
       <div v-if="errors.password_confirmation" class="invalid-feedback">
         {{ errors.password_confirmation.join(" ") }}
-      </div>
-      <button class="btn btn-link" type="button" @click.prevent="avance = !avance">Avancé</button>
-      <div v-show="avance">
-        <label for="inputToken" class="visually-hidden">Jeton d'enregistrement</label>
-        <input
-          id="inputToken"
-          v-model="token"
-          type="text"
-          class="form-control"
-          placeholder="Jeton (optionnel)"
-          autocomplete="off"
-        />
       </div>
       <div v-if="errors.message" class="invalid-feedback d-block mt-2">{{ errors.message }}</div>
       <button class="btn btn-lg btn-primary mt-3" type="submit" :disabled="submitting">

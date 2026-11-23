@@ -4,7 +4,10 @@
       "date": "23.11.2026",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Nouveau module `inventaire` pour le matériel"]
+      "changes": [
+        "Nouveau module `inventaire` pour le matériel",
+        "Suppression des jetons d'invitation"
+      ]
     },
     {
       "date": "16.11.2026",
