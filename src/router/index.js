@@ -231,7 +231,7 @@ const router = createRouter({
     {
       path: "/sapeurs/:id",
       name: "sapeur-index",
-      meta: { title: "Sapeurs" },
+      meta: { title: "Sapeurs", pleineHauteur: true },
       beforeEnter: permissionGuard(permissions.SAPEUR.LECTURE),
       component: () => import("/src/pages/PageSapeurs.vue"),
       props: true,
