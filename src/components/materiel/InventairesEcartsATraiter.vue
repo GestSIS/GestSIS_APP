@@ -24,8 +24,7 @@ const computedData = computed(() => {
 </script>
 
 <template>
-  <base-card>
-    <template #title>Écarts à traiter</template>
+  <base-card title="Écarts à traiter">
     <template #body>
       <p v-if="computedData.total === 0" class="text-body-secondary mb-0">Aucun écart à traiter.</p>
       <template v-else>

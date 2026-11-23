@@ -57,12 +57,11 @@ const fields = [
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title me-auto">Hangars</h3>
+  <base-card title="Hangars">
+    <template #header>
       <button type="button" class="btn btn-primary me-2" @click="ajout">Ajouter un hangar</button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table :data="hangars" :fields="fields" no-data="Aucun hangar">
         <template #hangar="{ rowData }">
           <tag-couleur :couleur="indexedCouleurs[rowData.couleur_id]">
@@ -94,6 +93,6 @@ const fields = [
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

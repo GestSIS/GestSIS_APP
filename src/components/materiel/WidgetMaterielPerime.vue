@@ -25,8 +25,7 @@ const colonnesArticles = [
 </script>
 
 <template>
-  <base-card>
-    <template #title>Matériel périmé</template>
+  <base-card title="Matériel périmé">
     <template #header>
       <router-link :to="{ name: 'materiel-par-type' }" class="btn btn-outline-primary btn-sm">
         Matériel par type

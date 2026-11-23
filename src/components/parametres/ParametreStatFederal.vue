@@ -13,17 +13,14 @@ const statsFederales = computed(() => statFederalStore.liste.slice().sort((a, b)
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Statistique fédéral</h3>
-    </div>
-    <div class="card-body table-responsive p-0">
+  <base-card title="Statistique fédéral">
+    <template #body-table>
       <base-table
         :data="statsFederales"
         :fields="fields"
         no-data="Aucune statistique fédérale"
         :selectable="true"
       />
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

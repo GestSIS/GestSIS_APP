@@ -72,8 +72,7 @@ const routeNoeud = (noeudId) => ({
 </script>
 
 <template>
-  <base-card>
-    <template #title>Emplacements</template>
+  <base-card title="Emplacements">
     <template #header>
       <router-link
         v-if="inventaireStore.noeuds.length > 1 && selectionId !== inventaireStore.racine.id"

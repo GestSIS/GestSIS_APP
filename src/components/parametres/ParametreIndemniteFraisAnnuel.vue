@@ -150,15 +150,14 @@ const deleteFonction = async (type, fonction) => {
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Frais &amp; indemnités annuels</h3>
+  <base-card title="Frais &amp; indemnités annuels">
+    <template #header>
       <div class="form-check form-switch mb-2">
         <input id="switch" v-model="detailsTypes" type="checkbox" class="form-check-input" />
         <label class="form-check-label" for="switch">Afficher les détails</label>
       </div>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <table id="frais-annuels" class="table table-sm">
         <thead>
           <tr>
@@ -269,6 +268,6 @@ const deleteFonction = async (type, fonction) => {
           </tr>
         </tbody>
       </table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

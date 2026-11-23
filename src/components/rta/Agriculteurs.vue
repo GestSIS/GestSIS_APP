@@ -136,10 +136,7 @@ const fields = [
       <div v-if="loadError" class="alert alert-danger" role="alert">
         {{ loadError }}
       </div>
-      <base-card v-if="Object.keys(computedAgriculteurs).length === 0">
-        <template #header>
-          <h2>Aucune liste</h2>
-        </template>
+      <base-card title="Aucune liste" v-if="Object.keys(computedAgriculteurs).length === 0">
         <template #body>
           <p>Il n'y a aucune liste d'agriculteurs pour le moment.</p>
           <button type="button" class="btn btn-primary" @click="ajoutListe()">

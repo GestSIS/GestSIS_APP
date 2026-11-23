@@ -51,11 +51,8 @@ const fields = [
 </script>
 
 <template>
-  <div class="card card-primary card-outline mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Permis de conduire</h3>
-    </div>
-    <div class="card-body table-responsive p-0">
+  <base-card title="Permis de conduire">
+    <template #body-table>
       <base-table :fields="fields" :data="permisData" :selectable="true" no-data="Aucun permis">
         <template #head>
           <tr>
@@ -73,6 +70,6 @@ const fields = [
           <img :src="`${publicPath}permis/${rowData.type.toLowerCase().replace(' ', '_')}.gif`" />
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

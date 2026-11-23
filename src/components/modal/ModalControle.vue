@@ -431,8 +431,8 @@ const save = async () => {
 
       <!-- Mode multitâche — liste complète -->
       <template v-else-if="mode === 'multi'">
-        <div v-for="(tache, idx) in taches" :key="tache._key" class="card mb-2">
-          <div class="card-body py-2 px-3">
+        <base-card v-for="(tache, idx) in taches" :key="tache._key" body-class="py-2 px-3">
+          <template #body>
             <div class="row g-2 align-items-start">
               <div class="col-auto" style="width: 70px">
                 <label class="form-label form-label-sm">Ordre</label>
@@ -534,8 +534,8 @@ const save = async () => {
                 />
               </div>
             </div>
-          </div>
-        </div>
+          </template>
+        </base-card>
         <button type="button" class="btn btn-sm btn-outline-primary" @click="addTache">
           <font-awesome-icon :icon="['fas', 'plus']" class="me-1" />
           Ajouter une tâche

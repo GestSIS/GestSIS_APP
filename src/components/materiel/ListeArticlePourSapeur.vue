@@ -181,8 +181,7 @@ const linearCategories = (categorieId) => {
 </script>
 
 <template>
-  <base-card>
-    <template #title>Matériel distribué ({{ articles.length }})</template>
+  <base-card :title="`Matériel distribué (${articles.length})`">
     <template #header>
       <base-checkbox v-model="afficherRendus" label="Afficher les articles rendus" />
       <div>

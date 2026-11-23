@@ -291,54 +291,53 @@ const fields = [
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-12 col-xl-3 mb-2">
-        <div class="card card-primary card-outline">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Paramètres</h3>
-          </div>
-          <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-            <a
-              class="nav-link"
-              :class="{ active: tab === 'password' }"
-              href="#"
-              role="tab"
-              @click.prevent="tab = 'password'"
-              >Mot de passe</a
-            >
-            <a
-              class="nav-link"
-              :class="{ active: tab === '2fa' }"
-              href="#"
-              role="tab"
-              @click.prevent="tab = '2fa'"
-              >Double authentification</a
-            >
-            <a
-              class="nav-link"
-              :class="{ active: tab === 'sessions' }"
-              href="#"
-              role="tab"
-              @click.prevent="tab = 'sessions'"
-              >Sessions actives</a
-            >
-            <a
-              class="nav-link"
-              :class="{ active: tab === 'permissions' }"
-              href="#"
-              role="tab"
-              @click.prevent="tab = 'permissions'"
-              >Permissions</a
-            >
-            <a
-              class="nav-link"
-              :class="{ active: tab === 'api-tokens' }"
-              href="#"
-              role="tab"
-              @click.prevent="tab = 'api-tokens'"
-              >Jetons d'API</a
-            >
-          </nav>
-        </div>
+      <div class="col-sm-12 col-xl-3">
+        <base-card title="Paramètres">
+          <template #default>
+            <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+              <a
+                class="nav-link"
+                :class="{ active: tab === 'password' }"
+                href="#"
+                role="tab"
+                @click.prevent="tab = 'password'"
+                >Mot de passe</a
+              >
+              <a
+                class="nav-link"
+                :class="{ active: tab === '2fa' }"
+                href="#"
+                role="tab"
+                @click.prevent="tab = '2fa'"
+                >Double authentification</a
+              >
+              <a
+                class="nav-link"
+                :class="{ active: tab === 'sessions' }"
+                href="#"
+                role="tab"
+                @click.prevent="tab = 'sessions'"
+                >Sessions actives</a
+              >
+              <a
+                class="nav-link"
+                :class="{ active: tab === 'permissions' }"
+                href="#"
+                role="tab"
+                @click.prevent="tab = 'permissions'"
+                >Permissions</a
+              >
+              <a
+                class="nav-link"
+                :class="{ active: tab === 'api-tokens' }"
+                href="#"
+                role="tab"
+                @click.prevent="tab = 'api-tokens'"
+                >Jetons d'API</a
+              >
+            </nav>
+          </template>
+        </base-card>
       </div>
       <div class="col-sm-12 col-xl-9">
         <form v-if="tab == 'password'" @submit.prevent="changerMotDePasse">
@@ -351,11 +350,8 @@ const fields = [
             readonly
             tabindex="-1"
           />
-          <div class="card card-primary card-outline mb-2">
-            <div class="card-header d-flex justify-content-between">
-              <h3>Changer mon mot de passe</h3>
-            </div>
-            <div class="card-body">
+          <base-card title="Changer mon mot de passe">
+            <template #body>
               <div class="mb-3">
                 <label for="old-password">Ancien mot de passe</label>
                 <input
@@ -420,18 +416,17 @@ const fields = [
                 />
               </div>
               <button type="submit" class="btn btn-primary">Changer</button>
-            </div>
-          </div>
+            </template>
+          </base-card>
         </form>
 
         <form v-if="tab == 'permissions'" @submit.prevent="utiliserJeton">
-          <div class="card card-primary card-outline mb-2">
-            <div class="card-header d-flex justify-content-between">
-              <h3>Utiliser un jeton de permissions</h3>
+          <base-card title="Utiliser un jeton de permissions">
+            <template #header>
               <!-- TODO: afficher les permissions de l'utilisateur -->
               <!-- TODO: améliorer cet UI -->
-            </div>
-            <div class="card-body">
+            </template>
+            <template #body>
               <div class="mb-3">
                 <label for="jeton">Jeton</label>
                 <input
@@ -446,21 +441,17 @@ const fields = [
               <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
                 Utiliser
               </button>
-            </div>
-          </div>
+            </template>
+          </base-card>
         </form>
-        <div v-if="tab == 'permissions'" class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Recharger mes permissions</h3>
-          </div>
-          <div class="card-body">
+        <base-card title="Recharger mes permissions" v-if="tab == 'permissions'">
+          <template #body>
             <button class="btn btn-primary" @click="refreshTokens">Charger</button>
-          </div>
-        </div>
+          </template>
+        </base-card>
 
-        <div v-if="tab == 'api-tokens'" class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Jetons d'APIs</h3>
+        <base-card title="Jetons d'APIs" v-if="tab == 'api-tokens'">
+          <template #header>
             <button
               class="btn btn-outline-primary"
               :disabled="!isTwoFactorEnabled"
@@ -468,59 +459,58 @@ const fields = [
             >
               Ajouter
             </button>
-          </div>
-          <p class="text-body-secondary px-3 pt-3 mb-0">
-            Des jetons pour accéder à l'API de GestSIS depuis un script ou une intégration externe —
-            pas pour se connecter à l'application elle-même.
-          </p>
-          <p v-if="!isTwoFactorEnabled" class="text-body-secondary px-3 pt-2 mb-0">
-            Activez la double authentification (onglet « Double authentification ») pour pouvoir
-            créer un jeton.
-          </p>
-          <div class="card-body table-responsive p-0">
-            <base-table
-              :fields="fields"
-              :data="apiTokens"
-              :loading="loading"
-              no-data="Aucun jeton d'API"
-              :selectable="true"
-              :row-class="rowClass"
-            >
-              <template #statut="{ rowData }">
-                <span
-                  v-if="rowData.revoked_at"
-                  class="badge bg-danger"
-                  :title="revocationLabel(rowData)"
-                >
-                  {{ revocationLabel(rowData) }}
-                </span>
-                <span
-                  v-else-if="new Date(rowData.expires_at) < new Date()"
-                  class="badge bg-secondary"
-                >
-                  Expiré
-                </span>
-                <span v-else class="badge bg-success">Actif</span>
-              </template>
-              <template #actions="{ rowData }">
-                <button
-                  aria-label="Supprimer"
-                  :disabled="isSubmitting"
-                  class="btn btn-sm btn-outline-danger"
-                  @click="deleteApiToken(rowData.id)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </template>
-            </base-table>
-          </div>
-        </div>
+          </template>
+          <template #default>
+            <p class="text-body-secondary px-3 pt-3 mb-0">
+              Des jetons pour accéder à l'API de GestSIS depuis un script ou une intégration externe
+              — pas pour se connecter à l'application elle-même.
+            </p>
+            <p v-if="!isTwoFactorEnabled" class="text-body-secondary px-3 pt-2 mb-0">
+              Activez la double authentification (onglet « Double authentification ») pour pouvoir
+              créer un jeton.
+            </p>
+            <div class="card-body table-responsive p-0">
+              <base-table
+                :fields="fields"
+                :data="apiTokens"
+                :loading="loading"
+                no-data="Aucun jeton d'API"
+                :selectable="true"
+                :row-class="rowClass"
+              >
+                <template #statut="{ rowData }">
+                  <span
+                    v-if="rowData.revoked_at"
+                    class="badge bg-danger"
+                    :title="revocationLabel(rowData)"
+                  >
+                    {{ revocationLabel(rowData) }}
+                  </span>
+                  <span
+                    v-else-if="new Date(rowData.expires_at) < new Date()"
+                    class="badge bg-secondary"
+                  >
+                    Expiré
+                  </span>
+                  <span v-else class="badge bg-success">Actif</span>
+                </template>
+                <template #actions="{ rowData }">
+                  <button
+                    aria-label="Supprimer"
+                    :disabled="isSubmitting"
+                    class="btn btn-sm btn-outline-danger"
+                    @click="deleteApiToken(rowData.id)"
+                  >
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
+                </template>
+              </base-table>
+            </div>
+          </template>
+        </base-card>
 
-        <div v-if="tab == '2fa'" class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Double authentification</h3>
-          </div>
-          <div class="card-body">
+        <base-card title="Double authentification" v-if="tab == '2fa'">
+          <template #body>
             <p class="text-body-secondary">
               La double authentification ajoute une étape de vérification à la connexion, en plus de
               votre mot de passe : même si quelqu'un devine ou vole votre mot de passe, il ne pourra
@@ -600,45 +590,44 @@ const fields = [
                 Régénérer les codes de secours
               </button>
             </template>
-          </div>
-        </div>
+          </template>
+        </base-card>
 
-        <div v-if="tab == 'sessions'" class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Sessions actives</h3>
-          </div>
-          <p class="text-body-secondary px-3 pt-3 mb-0">
-            Les appareils sur lesquels votre compte est resté connecté. Déconnectez-en un si vous ne
-            le reconnaissez pas ou s'il s'agit d'un poste public.
-          </p>
-          <div class="card-body table-responsive p-0">
-            <base-table
-              :fields="sessionFields"
-              :data="sessions"
-              :loading="sessionsLoading"
-              :hide-download="true"
-              no-data="Aucune session active"
-            >
-              <template #appareil="{ rowData }">
-                {{ rowData.user_agent }}
-                <span v-if="rowData.current" class="badge bg-primary ms-1">Cet appareil</span>
-              </template>
-              <template #actions="{ rowData }">
-                <!-- Session courante : se déconnecter via le menu, pas depuis cette liste. -->
-                <button
-                  v-if="!rowData.current"
-                  aria-label="Supprimer"
-                  type="button"
-                  class="btn btn-sm btn-outline-danger"
-                  :disabled="isSubmitting"
-                  @click="deleteSession(rowData)"
-                >
-                  <font-awesome-icon :icon="['far', 'trash-alt']" />
-                </button>
-              </template>
-            </base-table>
-          </div>
-        </div>
+        <base-card title="Sessions actives" v-if="tab == 'sessions'">
+          <template #default>
+            <p class="text-body-secondary px-3 pt-3 mb-0">
+              Les appareils sur lesquels votre compte est resté connecté. Déconnectez-en un si vous
+              ne le reconnaissez pas ou s'il s'agit d'un poste public.
+            </p>
+            <div class="card-body table-responsive p-0">
+              <base-table
+                :fields="sessionFields"
+                :data="sessions"
+                :loading="sessionsLoading"
+                :hide-download="true"
+                no-data="Aucune session active"
+              >
+                <template #appareil="{ rowData }">
+                  {{ rowData.user_agent }}
+                  <span v-if="rowData.current" class="badge bg-primary ms-1">Cet appareil</span>
+                </template>
+                <template #actions="{ rowData }">
+                  <!-- Session courante : se déconnecter via le menu, pas depuis cette liste. -->
+                  <button
+                    v-if="!rowData.current"
+                    aria-label="Supprimer"
+                    type="button"
+                    class="btn btn-sm btn-outline-danger"
+                    :disabled="isSubmitting"
+                    @click="deleteSession(rowData)"
+                  >
+                    <font-awesome-icon :icon="['far', 'trash-alt']" />
+                  </button>
+                </template>
+              </base-table>
+            </div>
+          </template>
+        </base-card>
       </div>
     </div>
   </div>

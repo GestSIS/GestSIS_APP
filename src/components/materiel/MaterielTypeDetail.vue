@@ -65,8 +65,7 @@ const editMateriel = () =>
 <template>
   <div v-if="materielType" class="row">
     <div class="col">
-      <base-card>
-        <template #title>Description du matériel</template>
+      <base-card title="Description du matériel">
         <template #header>
           <button
             aria-label="Modifier"
@@ -126,8 +125,7 @@ const editMateriel = () =>
       </base-card>
     </div>
     <div v-if="materielType.type === 1" class="col">
-      <base-card>
-        <template #title>Informations sur le tuyau</template>
+      <base-card title="Informations sur le tuyau">
         <template #body>
           <table class="table mb-0">
             <tr>
@@ -155,8 +153,7 @@ const editMateriel = () =>
       </base-card>
     </div>
     <div v-if="materielType.a_batterie" class="col">
-      <base-card>
-        <template #title>Informations sur les batteries</template>
+      <base-card title="Informations sur les batteries">
         <template #body>
           <table class="table mb-0">
             <tr>
@@ -179,8 +176,7 @@ const editMateriel = () =>
   </div>
   <div v-if="materielType" class="row">
     <div class="col">
-      <base-card>
-        <template #title>Contrôles applicables</template>
+      <base-card title="Contrôles applicables">
         <template #body-table>
           <base-table
             :data="controlesApplicables"
@@ -212,12 +208,9 @@ const editMateriel = () =>
       </base-card>
     </div>
   </div>
-  <div v-else class="card">
-    <div class="card-header">
-      <h5 class="m-0">Type de matériel introuvable</h5>
-    </div>
-    <div class="card-body">Ce type n'existe pas dans cette organisation ou a été supprimé.</div>
-  </div>
+  <base-card title="Type de matériel introuvable" v-else>
+    <template #body>Ce type n'existe pas dans cette organisation ou a été supprimé.</template>
+  </base-card>
 </template>
 
 <style scoped>

@@ -36,12 +36,9 @@ const { id } = defineProps({
           </suspense>
         </div>
       </div>
-      <div v-else class="card">
-        <div class="card-header">
-          <h5 class="m-0">Aucun type sélectionné</h5>
-        </div>
-        <div class="card-body">Sélectionnez un matériel type dans la liste de gauche</div>
-      </div>
+      <base-card title="Aucun type sélectionné" v-else>
+        <template #body>Sélectionnez un matériel type dans la liste de gauche</template>
+      </base-card>
     </div>
   </div>
 </template>

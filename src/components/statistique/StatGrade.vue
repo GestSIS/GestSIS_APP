@@ -41,15 +41,14 @@ const filteredGrade = computed(() => {
 
 <template>
   <div class="col-12 col-md-6 col-xl-4">
-    <div class="card card-primary card-outline">
-      <div class="card-header d-flex justify-content-between">
-        <h3>Stats grades</h3>
+    <base-card title="Stats grades">
+      <template #header>
         <div class="form-check form-switch mb-2">
           <input id="switch-grade" v-model="allGrades" type="checkbox" class="form-check-input" />
           <label class="form-check-label" for="switch-grade">Afficher tous les grades</label>
         </div>
-      </div>
-      <div class="card-body table-responsive p-0">
+      </template>
+      <template #body-table>
         <base-table
           :loading="loading"
           :fields="fields"
@@ -57,7 +56,7 @@ const filteredGrade = computed(() => {
           no-data="Aucun grade"
           :selectable="true"
         />
-      </div>
-    </div>
+      </template>
+    </base-card>
   </div>
 </template>

@@ -153,11 +153,8 @@ const fieldsBase = [
   >
     <div class="row">
       <div class="col-md-3">
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Actions</h5>
-          </div>
-          <div class="card-body d-grid gap-2">
+        <base-card title="Actions" body-class="d-grid gap-2">
+          <template #body>
             <button
               class="btn btn-outline-primary"
               :disabled="!computedData.length"
@@ -165,15 +162,12 @@ const fieldsBase = [
             >
               Examiner les excuses non traitées
             </button>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
       <div class="col-md-9">
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Filtres</h5>
-          </div>
-          <div class="card-body">
+        <base-card title="Filtres">
+          <template #body>
             <div class="row">
               <base-select
                 class="col-md-4"
@@ -200,14 +194,14 @@ const fieldsBase = [
                 <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
               </div>
             </div>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-body table-responsive p-0">
+        <base-card>
+          <template #body-table>
             <base-table
               :loading="loading"
               :selectable="true"
@@ -241,8 +235,8 @@ const fieldsBase = [
                 </button>
               </template>
             </base-table>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
     </div>
   </stateful-filter>

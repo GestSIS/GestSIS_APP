@@ -51,12 +51,9 @@ const fields = [
 </script>
 
 <template>
-  <div class="card card-primary card-outline mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Contrôles médicaux</h3>
-    </div>
-    <form role="form">
-      <div class="card-body table-responsive p-0">
+  <base-card title="Contrôles médicaux">
+    <template #body-table>
+      <form role="form">
         <base-table
           :loading="loading"
           :fields="fields"
@@ -74,7 +71,7 @@ const fields = [
             </button>
           </template>
         </base-table>
-      </div>
-    </form>
-  </div>
+      </form>
+    </template>
+  </base-card>
 </template>

@@ -25,9 +25,8 @@ const save = async () => {
 <template>
   <div class="row">
     <div class="col-12">
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Informations bancaires</h3>
+      <base-card title="Informations bancaires">
+        <template #header>
           <button
             :disabled="isSubmitting"
             v-if="hasEditPermission"
@@ -36,8 +35,8 @@ const save = async () => {
           >
             Enregistrer
           </button>
-        </div>
-        <div class="card-body">
+        </template>
+        <template #body>
           <div class="mb-3">
             <label for="f-sap-nom">IBAN</label>
             <input
@@ -53,8 +52,8 @@ const save = async () => {
               {{ errors["iban"] }}
             </div>
           </div>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

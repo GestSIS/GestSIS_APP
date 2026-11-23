@@ -125,11 +125,8 @@ const degre = [
       </div>
     </div>
     <div class="col-sm-6">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header">
-          <h3 class="card-title">Informations</h3>
-        </div>
-        <div class="card-body">
+      <base-card title="Informations">
+        <template #body>
           <div class="row">
             <div class="col-sm-6 col-xl-6">
               <div class="mb-3">
@@ -329,16 +326,13 @@ const degre = [
               />
             </div>
           </div>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
 
     <div class="col-sm-6">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header">
-          <h3 class="card-title">Statistiques</h3>
-        </div>
-        <div class="card-body">
+      <base-card title="Statistiques">
+        <template #body>
           <!-- INTERVENTION TRAITEMENT -->
           <base-select
             v-model="form.intervention_traitement_id"
@@ -434,16 +428,13 @@ const degre = [
             :options="degre"
             :disabled="!hasEditPermission"
           />
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
 
     <div class="col-sm-12 col-xl-12">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header">
-          <h3 class="card-title">Contact</h3>
-        </div>
-        <div class="card-body">
+      <base-card title="Contact">
+        <template #body>
           <div class="row">
             <div class="col-sm-12 col-xl-12">
               <!-- Proprio -->
@@ -476,8 +467,8 @@ const degre = [
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </form>
 </template>

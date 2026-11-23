@@ -148,9 +148,8 @@ const isInvalid = (key) => {
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Permis de conduire</h3>
+  <base-card title="Permis de conduire">
+    <template #header>
       <button
         v-if="hasEditPermission"
         class="btn btn-primary flex-shrink-1"
@@ -158,8 +157,8 @@ const isInvalid = (key) => {
       >
         Enregistrer
       </button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <table class="table table-sm col-6">
         <tbody>
           <tr
@@ -209,6 +208,6 @@ const isInvalid = (key) => {
           </tr>
         </tbody>
       </table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

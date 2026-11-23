@@ -47,18 +47,17 @@ const filteredCategories = computed(() => {
 
 <template>
   <div class="row">
-    <div class="col-12 col-md-6 mb-3">
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3>Stats Exercice</h3>
+    <div class="col-12 col-md-6">
+      <base-card title="Stats Exercice">
+        <template #header>
           <div class="form-check form-switch mb-2">
             <input id="switch" v-model="allCategories" type="checkbox" class="form-check-input" />
             <label class="form-check-label" for="switch"
               >Afficher les catégories sans exercice</label
             >
           </div>
-        </div>
-        <div class="card-body table-responsive p-0">
+        </template>
+        <template #body-table>
           <base-table
             :loading="loading"
             :fields="fields"
@@ -78,8 +77,8 @@ const filteredCategories = computed(() => {
             <li>Graphique d'un simple tableau</li>
             <li>Répartition des exercices durant l'année -> graph</li>
           </ul> -->
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

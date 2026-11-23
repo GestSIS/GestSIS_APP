@@ -79,8 +79,7 @@ const pdfArticles = (sapeur) => {
 </script>
 
 <template>
-  <base-card>
-    <template #title>Matériel à récupérer</template>
+  <base-card title="Matériel à récupérer">
     <template #header>
       <router-link :to="{ name: 'materiel-par-sapeur' }" class="btn btn-outline-primary btn-sm">
         Matériel par sapeur

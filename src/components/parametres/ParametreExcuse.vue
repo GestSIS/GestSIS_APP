@@ -29,14 +29,13 @@ const save = async () => {
 <template>
   <div class="row">
     <div class="col-12">
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Paramètres pour excuses</h3>
+      <base-card title="Paramètres pour excuses">
+        <template #header>
           <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save">
             Enregistrer
           </button>
-        </div>
-        <div class="card-body">
+        </template>
+        <template #body>
           <div class="mb-3">
             <div class="form-check form-switch">
               <input
@@ -95,8 +94,8 @@ const save = async () => {
               :class="{ 'is-invalid': errors['taux_ac'] }"
             />
           </div> -->
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

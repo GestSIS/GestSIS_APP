@@ -37,12 +37,9 @@ const { id } = defineProps({
           </Suspense>
         </div>
       </div>
-      <div v-else class="card">
-        <div class="card-header">
-          <h5 class="m-0">Aucun emplacement sélectionné</h5>
-        </div>
-        <div class="card-body">Sélectionnez un emplacement dans la liste de gauche</div>
-      </div>
+      <base-card title="Aucun emplacement sélectionné" v-else>
+        <template #body>Sélectionnez un emplacement dans la liste de gauche</template>
+      </base-card>
     </div>
   </div>
 </template>

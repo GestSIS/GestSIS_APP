@@ -242,11 +242,8 @@ const fields = [
       </div>
       <div class="row">
         <div class="col-md-3">
-          <div class="card card-primary card-outline mb-2">
-            <div class="card-header d-flex justify-content-between">
-              <h5>Actions</h5>
-            </div>
-            <div class="card-body d-grid gap-2">
+          <base-card title="Actions" body-class="d-grid gap-2">
+            <template #body>
               <button class="btn btn-outline-primary" @click="vcard(filteredData)">
                 VCard tous
               </button>
@@ -269,27 +266,21 @@ const fields = [
               >
                 SMS
               </button>
-            </div>
-          </div>
+            </template>
+          </base-card>
         </div>
         <div class="col-md-3">
-          <div class="card card-primary card-outline mb-2">
-            <div class="card-header d-flex justify-content-between">
-              <h5>Impression</h5>
-            </div>
-            <div class="card-body d-grid gap-2">
+          <base-card title="Impression" body-class="d-grid gap-2">
+            <template #body>
               <button class="btn btn-outline-primary" @click="listeFssp">Liste FSSP</button>
               <button class="btn btn-outline-primary" @click="listeFoad">Liste FOAD</button>
               <button class="btn btn-outline-primary" @click="trombinoscope">Trombinoscope</button>
-            </div>
-          </div>
+            </template>
+          </base-card>
         </div>
         <div class="col-md-6">
-          <div class="card card-primary card-outline mb-2">
-            <div class="card-header d-flex justify-content-between">
-              <h5>Filtres</h5>
-            </div>
-            <div class="card-body">
+          <base-card title="Filtres">
+            <template #body>
               <div class="row">
                 <base-select
                   class="col-md-6 mb-1"
@@ -349,14 +340,14 @@ const fields = [
                   <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
                 </div>
               </div>
-            </div>
-          </div>
+            </template>
+          </base-card>
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="card card-primary card-outline mb-3">
-            <div class="card-body table-responsive p-0">
+          <base-card>
+            <template #body-table>
               <base-table
                 :loading="loading"
                 :selectable="true"
@@ -410,8 +401,8 @@ const fields = [
                   </button>
                 </template>
               </base-table>
-            </div>
-          </div>
+            </template>
+          </base-card>
         </div>
       </div>
     </div>

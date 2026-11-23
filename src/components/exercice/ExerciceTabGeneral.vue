@@ -84,8 +84,8 @@ const save = async () => {
 </script>
 
 <template>
-  <form class="card card-primary card-outline" @submit.prevent="save">
-    <div class="card-header d-flex justify-content-between">
+  <base-card tag="form" @submit.prevent="save">
+    <template #header>
       <span></span>
       <button
         :disabled="isSubmitting"
@@ -95,8 +95,8 @@ const save = async () => {
       >
         {{ (form.id || 0) === 0 ? "Ajouter" : "Sauvegarder" }}
       </button>
-    </div>
-    <div class="card-body">
+    </template>
+    <template #body>
       <div class="mb-3">
         <label for="m-exe-des">Designation</label>
         <input
@@ -225,6 +225,6 @@ const save = async () => {
           name="communications"
         ></textarea>
       </div>
-    </div>
-  </form>
+    </template>
+  </base-card>
 </template>

@@ -277,11 +277,8 @@ const fields = [
 <template>
   <div class="row">
     <div v-if="hasEditPermission" class="col-12 col-sm-6 col-lg-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Actions</h3>
-        </div>
-        <div class="card-body d-grid gap-1">
+      <base-card title="Actions" body-class="d-grid gap-1">
+        <template #body>
           <button class="btn btn-outline-primary" @click="generer">Nouveau</button>
           <button
             class="btn btn-outline-danger"
@@ -290,15 +287,12 @@ const fields = [
           >
             Supprimer
           </button>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <div class="col-12 col-sm-6 col-lg-8 col-xl-6">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Impressions</h3>
-        </div>
-        <div class="card-body row g-2">
+      <base-card title="Impressions" body-class="row g-2">
+        <template #body>
           <div class="col-6">
             <button
               class="btn btn-outline-primary col-12"
@@ -345,16 +339,13 @@ const fields = [
               Certificats de salaire
             </button>
           </div>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
 
     <div class="col-12 col-sm-3 col-lg-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Export</h3>
-        </div>
-        <div class="card-body row g-2">
+      <base-card title="Export" body-class="row g-2">
+        <template #body>
           <button
             class="btn btn-outline-primary col-12"
             :disabled="!selectedId"
@@ -362,16 +353,15 @@ const fields = [
           >
             Ecritures (Excel)
           </button>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <div class="col-12">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Décomptes</h3>
+      <base-card title="Décomptes">
+        <template #header>
           <button class="btn btn-primary" @click.prevent="generer">Nouveau</button>
-        </div>
-        <div class="card-body table-responsive p-0">
+        </template>
+        <template #body-table>
           <base-table
             :fields="fields"
             :data="computedData"
@@ -399,8 +389,8 @@ const fields = [
               </button>
             </template>
           </base-table>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

@@ -99,13 +99,12 @@ const fields = [
 </script>
 
 <template>
-  <div class="card card-primary card-outline mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Mes décomptes</h3>
+  <base-card title="Mes décomptes">
+    <template #header>
       <button class="btn btn-primary" @click="certificatSalaire">Certificat de salaire</button>
       <button class="btn btn-primary" @click="resumeAnnuel">Résumé annuel</button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table
         class="table-striped"
         :loading="loading"
@@ -125,6 +124,6 @@ const fields = [
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

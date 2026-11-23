@@ -73,11 +73,8 @@ const fields = [
 
 <template>
   <div class="col-xs-12 col-lg-6">
-    <div class="card card-primary card-outline mb-3">
-      <div class="card-header d-flex justify-content-between">
-        <h3 class="card-title">Véhicules</h3>
-      </div>
-      <div class="card-body table-responsive p-0">
+    <base-card title="Véhicules">
+      <template #body-table>
         <base-table
           :loading="loading"
           :data="vehicules"
@@ -96,7 +93,7 @@ const fields = [
             <label class="form-check-label" :for="'v-' + rowData.id"></label>
           </template>
         </base-table>
-      </div>
-    </div>
+      </template>
+    </base-card>
   </div>
 </template>

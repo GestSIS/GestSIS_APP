@@ -138,9 +138,8 @@ const saveLogo = async () => {
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-6">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">General</h3>
+      <base-card title="General">
+        <template #header>
           <button
             :disabled="isSubmitting"
             v-if="hasConfigGeneralPermission"
@@ -150,8 +149,8 @@ const saveLogo = async () => {
           >
             Enregister
           </button>
-        </div>
-        <div class="card-body">
+        </template>
+        <template #body>
           <div class="mb-3">
             <label for="nom">Nom du SIS</label>
             <input
@@ -277,13 +276,10 @@ const saveLogo = async () => {
               />
             </div>
           </div>
-        </div>
-      </div>
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Listes de diffusion</h3>
-        </div>
-        <div class="card-body">
+        </template>
+      </base-card>
+      <base-card title="Listes de diffusion">
+        <template #body>
           <div v-for="liste in listes" :key="liste.id" class="mb-2">
             <h5>{{ liste.designation }}</h5>
             <div class="input-group">
@@ -321,35 +317,33 @@ const saveLogo = async () => {
               </button>
             </div>
           </div>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <div class="col-sm-12 col-xl-6">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Logo</h3>
-        </div>
-        <div v-if="hasConfigGeneralPermission" class="card-body">
+      <base-card title="Logo">
+        <template v-if="hasConfigGeneralPermission" #body>
           <div class="input-group">
             <input type="file" class="form-control" @change="onFileChange" />
             <button :disabled="isSubmitting" class="btn btn-primary" @click="saveLogo">save</button>
           </div>
-        </div>
-        <div class="card-body d-flex justify-content-center">
-          <div v-if="loadingLogo" class="spinner-border" role="status">
-            <span class="visually-hidden">Chargement...</span>
+        </template>
+        <template #default>
+          <div class="card-body d-flex justify-content-center">
+            <div v-if="loadingLogo" class="spinner-border" role="status">
+              <span class="visually-hidden">Chargement...</span>
+            </div>
+            <img
+              v-else
+              class="img-thumbnail img-responsive"
+              :src="loadingLogo ? '' : logoUrl"
+              alt="Logo"
+            />
           </div>
-          <img
-            v-else
-            class="img-thumbnail img-responsive"
-            :src="loadingLogo ? '' : logoUrl"
-            alt="Logo"
-          />
-        </div>
-      </div>
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Localités du sis</h3>
+        </template>
+      </base-card>
+      <base-card title="Localités du sis">
+        <template #header>
           <button
             v-if="hasConfigGeneralPermission"
             type="button"
@@ -358,19 +352,19 @@ const saveLogo = async () => {
           >
             Modifier
           </button>
-        </div>
-        <div class="card-body table-responsive p-0">
+        </template>
+        <template #body-table>
           <base-table
             :data="localitesSis"
             :fields="fields"
             no-data="Aucune localité de configuré pour le SIS"
           />
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
 
     <!-- <div class="col-sm-12 col-xl-6">
-      <div class="card card-primary card-outline">
+      <div class="card">
         <div class="card-header d-flex justify-content-between">
           <h3 class="card-title">TODO:</h3>
         </div>

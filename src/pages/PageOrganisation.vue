@@ -144,12 +144,9 @@ const addSapeurs = (node) => {
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4 mb-3">
-        <div class="card card-primary card-outline">
-          <div class="card-header">
-            <h3>Actions</h3>
-          </div>
-          <div class="card-body d-grid gap-2">
+      <div class="col-md-4">
+        <base-card title="Actions" body-class="d-grid gap-2">
+          <template #body>
             <button
               class="btn btn-outline-primary"
               :disabled="!activeIsGroupe"
@@ -211,28 +208,24 @@ const addSapeurs = (node) => {
                 </div>
               </div>
             </template>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
-      <div class="col-md-4 mb-3">
-        <div class="card card-primary card-outline">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <h3>Affichage</h3>
-          </div>
-          <div class="card-body d-grid gap-2">
+      <div class="col-md-4">
+        <base-card title="Affichage" body-class="d-grid gap-2">
+          <template #body>
             <button title="Tout développer" class="btn btn-outline-primary" @click="expand">
               <font-awesome-icon :icon="['far', 'plus-square']" /> Tout développer
             </button>
             <button title="Tout réduire" class="btn btn-outline-primary" @click="contract">
               <font-awesome-icon :icon="['far', 'minus-square']" /> Tout réduire
             </button>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
       <div class="col-md-12">
-        <div class="card card-primary card-outline">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <h3>Groupes</h3>
+        <base-card title="Groupes">
+          <template #header>
             <div v-if="hasEditPermission" class="form-check form-switch">
               <input
                 id="modeEdition"
@@ -243,15 +236,15 @@ const addSapeurs = (node) => {
               />
               <label class="form-check-label" for="modeEdition">Mode édition</label>
             </div>
-          </div>
-          <div class="card-body">
+          </template>
+          <template #body>
             <groupe-edition
               ref="groupe-edition-component"
               :edit-mode="editMode"
               @selected="selected"
             />
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
     </div>
   </div>

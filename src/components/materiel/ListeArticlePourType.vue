@@ -174,8 +174,7 @@ const ajouter = () =>
 </script>
 
 <template>
-  <base-card v-if="materielType">
-    <template #title>Pièces ({{ articles.length }})</template>
+  <base-card :title="`Pièces (${articles.length})`" v-if="materielType">
     <template #header>
       <base-radio
         v-model="affichageIndividuel"

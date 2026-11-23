@@ -162,10 +162,7 @@ const selectedFichierId = computed({
 
       <!-- Desktop : arbre complet. -->
       <div class="d-none d-md-block">
-        <base-card>
-          <template #header>
-            <h3 class="card-title m-0">GestSIS</h3>
-          </template>
+        <base-card title="GestSIS">
           <template #body-table>
             <editable-tree
               :tree="computedFichiers"

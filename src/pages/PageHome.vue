@@ -286,14 +286,14 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
         </div>
       </div>
 
-      <div v-if="availableSisListe.length <= 0" class="card col-md-3 col-sm-6 col-xs-12">
+      <base-card v-if="availableSisListe.length <= 0" class="col-md-3 col-sm-6 col-xs-12">
         <div class="align-vertical">
           <p v-if="!validated">
             Vous devez valider votre compte afin de pouvoir obtenir des droits depuis votre SIS.
           </p>
           <p v-else>Vous n'avez actuellement aucun droit, demandez des droits à votre SIS.</p>
         </div>
-      </div>
+      </base-card>
     </div>
     <div v-if="peutSExcuser" class="row">
       <div class="col-12 mb-3">
@@ -305,10 +305,11 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
     </div>
     <div v-if="isSapeur" class="row">
       <div class="col-12">
-        <div class="card card-primary">
-          <div
-            class="card-header d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2"
-          >
+        <base-card
+          header-class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2"
+          body-class="table-responsive p-0 d-none d-md-block"
+        >
+          <template #header>
             <h2 class="fs-4 mb-0">Vos prochaines convocations</h2>
             <button
               title="S'abonner à mon agenda"
@@ -319,8 +320,8 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
               <font-awesome-icon :icon="['far', 'calendar-alt']" />
               S'abonner à mon agenda
             </button>
-          </div>
-          <div class="card-body table-responsive p-0 d-none d-md-block">
+          </template>
+          <template #body>
             <base-table
               class="table-striped"
               :loading="prochainesConvocationsLoading"
@@ -381,115 +382,116 @@ const onRowClass = (rowData) => (rowData.convoque ? "" : "table-warning");
                 </button>
               </template>
             </base-table>
-          </div>
-
-          <!-- Mobile : liste de cartes plutôt qu'un tableau exigu -->
-          <div class="card-body p-0 d-md-none">
-            <div v-if="prochainesConvocationsLoading" class="p-3 d-flex justify-content-center">
-              <div class="spinner-border" role="status">
-                <span class="visually-hidden">Chargement...</span>
+          </template>
+          <template #default>
+            <!-- Mobile : liste de cartes plutôt qu'un tableau exigu -->
+            <div class="card-body p-0 d-md-none">
+              <div v-if="prochainesConvocationsLoading" class="p-3 d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Chargement...</span>
+                </div>
               </div>
-            </div>
-            <p v-else-if="!convocationsAVenir.length" class="p-3 mb-0 text-muted">
-              Aucun exercice à venir
-            </p>
-            <div v-else class="d-flex flex-column gap-2 p-2">
-              <div
-                v-for="exercice in convocationsAVenir"
-                :key="exercice.sis_key + '-' + exercice.exercice_id"
-                class="border rounded-3 p-3"
-                :class="exercice.convoque ? 'bg-body' : 'border-warning-subtle bg-warning-subtle'"
-              >
-                <span v-if="exercice.categorie" class="badge text-bg-secondary">{{
-                  exercice.categorie
-                }}</span>
-                <span v-if="!exercice.convoque" class="badge text-bg-warning ms-2 mb-2"
-                  >Pour info</span
-                >
+              <p v-else-if="!convocationsAVenir.length" class="p-3 mb-0 text-muted">
+                Aucun exercice à venir
+              </p>
+              <div v-else class="d-flex flex-column gap-2 p-2">
                 <div
-                  v-if="exercice.sis_nom && sapeurDansPlusieursSis"
-                  class="small text-uppercase text-muted fw-semibold"
+                  v-for="exercice in convocationsAVenir"
+                  :key="exercice.sis_key + '-' + exercice.exercice_id"
+                  class="border rounded-3 p-3"
+                  :class="exercice.convoque ? 'bg-body' : 'border-warning-subtle bg-warning-subtle'"
                 >
-                  {{ exercice.sis_nom }}
-                </div>
-                <div class="fw-bold mt-1">
-                  <font-awesome-icon :icon="['far', 'calendar-alt']" />
-                  {{ formatDateCourte(exercice.date) }}
-                  <span v-if="exercice.heure" class="text-muted fw-normal">
-                    {{ exercice.heure.slice(0, 5) }}
-                  </span>
-                  <font-awesome-icon :icon="['fas', 'location-dot']" class="ms-2" />
-                  <span v-if="exercice.localite || exercice.lieu" class="text-muted fw-normal">
-                    {{ [exercice.localite, exercice.lieu].filter(Boolean).join(" · ") }}
-                  </span>
-                </div>
-                <div
-                  v-if="exercice.designation || exercice.categorie"
-                  class="d-flex align-items-center gap-2 mt-1"
-                >
-                  <span v-if="exercice.designation">{{ exercice.designation }}</span>
-                </div>
-                <div v-if="exercice.communications" class="small text-muted mt-1">
-                  {{ exercice.communications }}
-                </div>
-                <div
-                  v-if="
-                    exercice.excuse_type_id ||
-                    exercice.justificatif_filename ||
-                    peutAjouterExcuse(exercice) ||
-                    peutRetirerExcuse(exercice)
-                  "
-                  class="mt-2 pt-2 border-top"
-                >
+                  <span v-if="exercice.categorie" class="badge text-bg-secondary">{{
+                    exercice.categorie
+                  }}</span>
+                  <span v-if="!exercice.convoque" class="badge text-bg-warning ms-2 mb-2"
+                    >Pour info</span
+                  >
                   <div
-                    v-if="exercice.excuse_type_id || exercice.justificatif_filename"
-                    class="mb-2"
+                    v-if="exercice.sis_nom && sapeurDansPlusieursSis"
+                    class="small text-uppercase text-muted fw-semibold"
                   >
-                    <div class="d-flex align-items-center flex-wrap gap-2">
-                      <span class="small text-muted mb-1">Excusé :</span>
-                      <span
-                        v-if="exercice.excuse_type_id"
-                        class="badge rounded-pill text-bg-primary"
-                        :class="{
-                          'text-bg-danger': exercice.excuse_statut == -1,
-                          'text-bg-secondary': exercice.excuse_statut == 0,
-                          'text-bg-success': exercice.excuse_statut == 1,
-                        }"
-                        >{{ exercice.excuse }}</span
-                      >
-                      <button
-                        v-if="exercice.justificatif_filename"
-                        title="Télécharger le justificatif"
-                        class="btn btn-sm btn-link p-0 text-decoration-none"
-                        @click="downloadJustificatif(exercice)"
-                      >
-                        <font-awesome-icon :icon="['far', 'file-pdf']" />
-                      </button>
-                    </div>
+                    {{ exercice.sis_nom }}
                   </div>
+                  <div class="fw-bold mt-1">
+                    <font-awesome-icon :icon="['far', 'calendar-alt']" />
+                    {{ formatDateCourte(exercice.date) }}
+                    <span v-if="exercice.heure" class="text-muted fw-normal">
+                      {{ exercice.heure.slice(0, 5) }}
+                    </span>
+                    <font-awesome-icon :icon="['fas', 'location-dot']" class="ms-2" />
+                    <span v-if="exercice.localite || exercice.lieu" class="text-muted fw-normal">
+                      {{ [exercice.localite, exercice.lieu].filter(Boolean).join(" · ") }}
+                    </span>
+                  </div>
+                  <div
+                    v-if="exercice.designation || exercice.categorie"
+                    class="d-flex align-items-center gap-2 mt-1"
+                  >
+                    <span v-if="exercice.designation">{{ exercice.designation }}</span>
+                  </div>
+                  <div v-if="exercice.communications" class="small text-muted mt-1">
+                    {{ exercice.communications }}
+                  </div>
+                  <div
+                    v-if="
+                      exercice.excuse_type_id ||
+                      exercice.justificatif_filename ||
+                      peutAjouterExcuse(exercice) ||
+                      peutRetirerExcuse(exercice)
+                    "
+                    class="mt-2 pt-2 border-top"
+                  >
+                    <div
+                      v-if="exercice.excuse_type_id || exercice.justificatif_filename"
+                      class="mb-2"
+                    >
+                      <div class="d-flex align-items-center flex-wrap gap-2">
+                        <span class="small text-muted mb-1">Excusé :</span>
+                        <span
+                          v-if="exercice.excuse_type_id"
+                          class="badge rounded-pill text-bg-primary"
+                          :class="{
+                            'text-bg-danger': exercice.excuse_statut == -1,
+                            'text-bg-secondary': exercice.excuse_statut == 0,
+                            'text-bg-success': exercice.excuse_statut == 1,
+                          }"
+                          >{{ exercice.excuse }}</span
+                        >
+                        <button
+                          v-if="exercice.justificatif_filename"
+                          title="Télécharger le justificatif"
+                          class="btn btn-sm btn-link p-0 text-decoration-none"
+                          @click="downloadJustificatif(exercice)"
+                        >
+                          <font-awesome-icon :icon="['far', 'file-pdf']" />
+                        </button>
+                      </div>
+                    </div>
 
-                  <button
-                    v-if="peutAjouterExcuse(exercice)"
-                    title="Saisir une excuse pour cet exercice"
-                    class="btn btn-sm btn-outline-primary"
-                    @click="addExcuse(exercice)"
-                  >
-                    <font-awesome-icon :icon="['fas', 'plus']" /> S'excuser
-                  </button>
-                  <button
-                    :disabled="isSubmitting"
-                    v-else-if="peutRetirerExcuse(exercice)"
-                    title="Supprimer l'excuse pour cet exercice"
-                    class="btn btn-sm btn-outline-danger"
-                    @click="removeExcuse(exercice)"
-                  >
-                    <font-awesome-icon :icon="['far', 'trash-alt']" /> Retirer
-                  </button>
+                    <button
+                      v-if="peutAjouterExcuse(exercice)"
+                      title="Saisir une excuse pour cet exercice"
+                      class="btn btn-sm btn-outline-primary"
+                      @click="addExcuse(exercice)"
+                    >
+                      <font-awesome-icon :icon="['fas', 'plus']" /> S'excuser
+                    </button>
+                    <button
+                      :disabled="isSubmitting"
+                      v-else-if="peutRetirerExcuse(exercice)"
+                      title="Supprimer l'excuse pour cet exercice"
+                      class="btn btn-sm btn-outline-danger"
+                      @click="removeExcuse(exercice)"
+                    >
+                      <font-awesome-icon :icon="['far', 'trash-alt']" /> Retirer
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
     </div>
   </div>

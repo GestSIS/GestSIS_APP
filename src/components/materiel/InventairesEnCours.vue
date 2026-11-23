@@ -60,8 +60,7 @@ const supprimer = async (inventaire) => {
 </script>
 
 <template>
-  <base-card>
-    <template #title>En cours ({{ computedData.length }})</template>
+  <base-card :title="`En cours (${computedData.length})`">
     <template #header>
       <button
         v-if="hasInventairePermission"

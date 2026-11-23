@@ -81,11 +81,8 @@ const detailRowFields = [
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Interventions</h3>
-    </div>
-    <div class="card-body table-responsive p-0">
+  <base-card title="Interventions">
+    <template #body-table>
       <base-table
         class="table-striped"
         :loading="loading"
@@ -105,6 +102,6 @@ const detailRowFields = [
           />
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

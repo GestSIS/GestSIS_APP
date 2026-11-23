@@ -89,14 +89,13 @@ const removeIndemnite = async (indemnite) => {
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Imputation intervention</h3>
+  <base-card title="Imputation intervention">
+    <template #header>
       <button type="button" class="btn btn-primary" @click="ajoutIndemnite">
         Ajouter une indemnité
       </button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table :data="indemnitesIntervention" :fields="fields" no-data="Aucune indemnité">
         <template #actions="{ rowData }">
           <button
@@ -118,6 +117,6 @@ const removeIndemnite = async (indemnite) => {
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

@@ -35,14 +35,13 @@ const deleteMission = async (mission) => {
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Mission</h3>
+  <base-card title="Mission">
+    <template #header>
       <button type="button" class="btn btn-primary" @click="ajoutMission()">
         Ajouter une mission
       </button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table :data="listeMission" :fields="fields" no-data="Aucune mission" :selectable="true">
         <template #actions="{ rowData }">
           <button
@@ -64,6 +63,6 @@ const deleteMission = async (mission) => {
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

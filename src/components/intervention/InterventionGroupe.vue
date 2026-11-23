@@ -85,11 +85,8 @@ const fields = [
 
 <template>
   <div class="col-xs-12 col-md-6">
-    <div class="card card-primary card-outline mb-3">
-      <div class="card-header d-flex justify-content-between">
-        <h3 class="card-title">Groupes</h3>
-      </div>
-      <div class="card-body table-responsive p-0">
+    <base-card title="Groupes">
+      <template #body-table>
         <base-table
           :loading="loading"
           :data="groupes"
@@ -108,7 +105,7 @@ const fields = [
             <label class="form-check-label" :for="'v-' + rowData.pseudo_id"></label>
           </template>
         </base-table>
-      </div>
-    </div>
+      </template>
+    </base-card>
   </div>
 </template>

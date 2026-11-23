@@ -60,12 +60,11 @@ const deleteCours = async (cours) => {
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Cours</h3>
+  <base-card title="Cours">
+    <template #header>
       <button type="button" class="btn btn-primary" @click="ajoutCours()">Ajouter un cours</button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table :data="listeCours" :fields="fields" no-data="Aucun cours" :selectable="true">
         <template #actions="{ rowData }">
           <button
@@ -87,6 +86,6 @@ const deleteCours = async (cours) => {
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

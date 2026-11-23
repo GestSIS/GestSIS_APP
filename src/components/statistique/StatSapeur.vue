@@ -8,10 +8,10 @@ import StatPermis from "/src/components/statistique/StatPermis.vue";
 
 <template>
   <div class="row">
-    <stat-civilite class="mb-3" />
-    <stat-fonction class="mb-3" />
-    <stat-grade class="mb-3" />
-    <stat-localite class="mb-3" />
-    <stat-permis class="mb-3" />
+    <stat-civilite />
+    <stat-fonction />
+    <stat-grade />
+    <stat-localite />
+    <stat-permis />
   </div>
 </template>

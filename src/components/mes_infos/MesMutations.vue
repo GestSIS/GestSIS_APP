@@ -24,11 +24,8 @@ const fields = [
 </script>
 
 <template>
-  <div class="card card-primary card-outline mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Mes mutations</h3>
-    </div>
-    <div class="card-body table-responsive p-0">
+  <base-card title="Mes mutations">
+    <template #body-table>
       <base-table
         class="table-striped"
         :fields="fields"
@@ -37,6 +34,6 @@ const fields = [
         :hide-download="true"
         no-data="Aucune mutation"
       />
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

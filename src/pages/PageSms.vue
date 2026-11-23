@@ -39,14 +39,11 @@ const smsListe = computed(() => smsStore.liste);
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3>SMS envoyés</h3>
-          </div>
-          <div class="card-body table-responsive p-0">
+        <base-card title="SMS envoyés">
+          <template #body-table>
             <sms-liste :loading="loading" :sms="smsListe" show-exercice />
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
     </div>
   </div>

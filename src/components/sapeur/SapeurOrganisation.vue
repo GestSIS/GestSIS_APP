@@ -34,17 +34,14 @@ const fields = [
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Organisation</h3>
-    </div>
-    <div class="card-body table-responsive p-0">
+  <base-card title="Organisation">
+    <template #body-table>
       <base-table
         :loading="loading"
         :fields="fields"
         :data="computedGroupes"
         no-data="Aucun groupe"
       />
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

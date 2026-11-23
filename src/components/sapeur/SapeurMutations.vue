@@ -65,13 +65,10 @@ const fields = [
 </script>
 
 <template>
-  <div class="card card-primary card-outline mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Incorporation / Sortie</h3>
-    </div>
+  <base-card title="Incorporation / Sortie">
     <!-- form start -->
-    <form role="form">
-      <div class="card-body">
+    <template #body>
+      <form role="form">
         <base-table :loading="loading" :fields="fields" :data="mutations" no-data="Aucune mutation">
           <template #actions="{ rowData }">
             <button
@@ -111,7 +108,7 @@ const fields = [
         >
           <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />Incorporation
         </button>
-      </div>
-    </form>
-  </div>
+      </form>
+    </template>
+  </base-card>
 </template>

@@ -6,8 +6,8 @@ import StatMateriel from "/src/components/statistique/StatMateriel.vue";
 
 <template>
   <div class="row">
-    <stat-intervention-basic class="mb-3" />
-    <stat-vehicule class="mb-3" />
-    <stat-materiel class="mb-3" />
+    <stat-intervention-basic />
+    <stat-vehicule />
+    <stat-materiel />
   </div>
 </template>

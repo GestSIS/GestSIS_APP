@@ -43,14 +43,13 @@ const deleteTraitement = async (traitement) => {
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Traitement</h3>
+  <base-card title="Traitement">
+    <template #header>
       <button type="button" class="btn btn-primary" @click="ajoutTraitement()">
         Ajouter un traitement
       </button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table
         :data="listeTraitement"
         :fields="fields"
@@ -77,6 +76,6 @@ const deleteTraitement = async (traitement) => {
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

@@ -53,11 +53,8 @@ const select = () => {
         <exercice-comptable />
       </div>
     </div>
-    <div class="card card-primary card-outline col-sm-6">
-      <div class="card-header d-flex justify-content-between">
-        <h3>Publipostage</h3>
-      </div>
-      <div class="card-body">
+    <base-card title="Publipostage" class="col-sm-6">
+      <template #body>
         <h5>Sélection des sapeurs</h5>
         <div class="input-group mb-3">
           <input
@@ -83,8 +80,8 @@ const select = () => {
         <button class="btn btn-primary mb-2" @click="publipostage">
           <font-awesome-icon :icon="['fas', 'download']" /> Fichier Excel
         </button>
-      </div>
-    </div>
+      </template>
+    </base-card>
   </div>
 </template>
 

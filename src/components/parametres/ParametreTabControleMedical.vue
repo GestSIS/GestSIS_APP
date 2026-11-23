@@ -15,30 +15,29 @@ await Promise.all([loadMedecin, loadType, loadLocalite]);
 
 <template>
   <div class="row">
-    <div class="col-sm-12 col-xl-3 mb-2">
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Paramètres contrôles médicaux</h3>
-        </div>
-        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-          <router-link
-            class="nav-link"
-            active-class="active"
-            role="tab"
-            :to="{ name: 'param-controle-medical-medecin' }"
-          >
-            Médecins
-          </router-link>
-          <router-link
-            class="nav-link"
-            active-class="active"
-            role="tab"
-            :to="{ name: 'param-controle-medical-type' }"
-          >
-            Contrôles médicaux types
-          </router-link>
-        </nav>
-      </div>
+    <div class="col-sm-12 col-xl-3">
+      <base-card title="Paramètres contrôles médicaux">
+        <template #default>
+          <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+            <router-link
+              class="nav-link"
+              active-class="active"
+              role="tab"
+              :to="{ name: 'param-controle-medical-medecin' }"
+            >
+              Médecins
+            </router-link>
+            <router-link
+              class="nav-link"
+              active-class="active"
+              role="tab"
+              :to="{ name: 'param-controle-medical-type' }"
+            >
+              Contrôles médicaux types
+            </router-link>
+          </nav>
+        </template>
+      </base-card>
     </div>
     <div class="col-sm-12 col-xl-9">
       <router-view />

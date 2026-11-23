@@ -232,11 +232,8 @@ const fields = [
       </div>
       <div class="row">
         <div class="col-md-3">
-          <div class="card card-primary card-outline mb-2">
-            <div class="card-header d-flex justify-content-between">
-              <h5>Actions</h5>
-            </div>
-            <div class="card-body d-grid gap-2">
+          <base-card title="Actions" body-class="d-grid gap-2">
+            <template #body>
               <router-link
                 v-if="hasEditPermission"
                 v-slot="{ navigate }"
@@ -272,15 +269,12 @@ const fields = [
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
+            </template>
+          </base-card>
         </div>
         <div class="col-md-3">
-          <div class="card card-primary card-outline mb-2">
-            <div class="card-header d-flex justify-content-between">
-              <h5>Impressions</h5>
-            </div>
-            <div class="card-body d-grid gap-2">
+          <base-card title="Impressions" body-class="d-grid gap-2">
+            <template #body>
               <button
                 :disabled="!selectedItem?.filename"
                 class="btn btn-outline-primary"
@@ -288,15 +282,12 @@ const fields = [
               >
                 Justificatif
               </button>
-            </div>
-          </div>
+            </template>
+          </base-card>
         </div>
         <div class="col-md-6">
-          <div class="card card-primary card-outline mb-2">
-            <div class="card-header d-flex justify-content-between">
-              <h5>Filtres</h5>
-            </div>
-            <div class="card-body">
+          <base-card title="Filtres">
+            <template #body>
               <div class="row">
                 <div class="col-md-12 mb-2">
                   <base-checkbox v-model="latest" label="Derniers contrôles de chaque sapeurs" />
@@ -345,17 +336,14 @@ const fields = [
                   <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
                 </div>
               </div>
-            </div>
-          </div>
+            </template>
+          </base-card>
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="card card-primary card-outline mb-3">
-            <div class="card-header d-flex justify-content-between">
-              <h3>Liste des contrôles médicaux</h3>
-            </div>
-            <div class="card-body table-responsive p-0">
+          <base-card title="Liste des contrôles médicaux">
+            <template #body-table>
               <base-table
                 :loading="loading"
                 :fields="fields"
@@ -406,8 +394,8 @@ const fields = [
                   </button>
                 </template>
               </base-table>
-            </div>
-          </div>
+            </template>
+          </base-card>
         </div>
       </div>
     </div>

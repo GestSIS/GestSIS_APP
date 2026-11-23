@@ -113,8 +113,8 @@ const fields = [
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="card card-primary card-outline mb-3">
-            <div class="card-body table-responsive p-0">
+          <base-card>
+            <template #body-table>
               <base-table
                 :loading="loading"
                 :fields="fields"
@@ -137,8 +137,8 @@ const fields = [
                   </div>
                 </template>
               </base-table>
-            </div>
-          </div>
+            </template>
+          </base-card>
         </div>
       </div>
     </div>

@@ -159,11 +159,8 @@ const fields = [
   >
     <div class="row">
       <div v-if="hasEditPermission" class="col-12 col-sm-6 col-lg-4 col-xl-3">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Actions</h3>
-          </div>
-          <div class="card-body d-grid gap-1">
+        <base-card title="Actions" body-class="d-grid gap-1">
+          <template #body>
             <button class="btn btn-outline-primary" @click="newEcriture">Nouveau</button>
             <button
               class="btn btn-outline-primary"
@@ -179,58 +176,54 @@ const fields = [
             >
               Supprimer
             </button>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
       <div class="col-12 col-md-8 col-xl-9">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Filtres</h3>
-          </div>
-          <form class="card-body">
-            <div class="row">
-              <base-select
-                class="col-md-4 mb-1"
-                display-key="nom_prenom"
-                base-option="&lt;Sapeur&gt;"
-                :options="filteredSapeurs"
-                :model-value="filters.sapeur_id"
-                @update:model-value="(value) => setFilter('sapeur_id', value)"
-              />
-              <base-select
-                class="col-md-4 mb-1"
-                base-option="&lt;Type&gt;"
-                :options="ecritureTypeOptions"
-                :model-value="filters.type"
-                @update:model-value="(value) => setFilter('type', value)"
-              />
-              <base-select
-                class="col-md-4 mb-1"
-                base-option="&lt;Compte&gt;"
-                :options="filteredComptes"
-                :model-value="filters.compte_id"
-                @update:model-value="(value) => setFilter('compte_id', value)"
-              />
-              <base-select
-                class="col-md-4 mb-1"
-                base-option="&lt;Catégorie comptable&gt;"
-                :options="filteredCategories"
-                :model-value="filters.ecriture_categorie_id"
-                @update:model-value="(value) => setFilter('ecriture_categorie_id', value)"
-              />
-              <div v-if="canReset" class="col-md-4">
-                <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
+        <base-card title="Filtres">
+          <template #body>
+            <form>
+              <div class="row">
+                <base-select
+                  class="col-md-4 mb-1"
+                  display-key="nom_prenom"
+                  base-option="&lt;Sapeur&gt;"
+                  :options="filteredSapeurs"
+                  :model-value="filters.sapeur_id"
+                  @update:model-value="(value) => setFilter('sapeur_id', value)"
+                />
+                <base-select
+                  class="col-md-4 mb-1"
+                  base-option="&lt;Type&gt;"
+                  :options="ecritureTypeOptions"
+                  :model-value="filters.type"
+                  @update:model-value="(value) => setFilter('type', value)"
+                />
+                <base-select
+                  class="col-md-4 mb-1"
+                  base-option="&lt;Compte&gt;"
+                  :options="filteredComptes"
+                  :model-value="filters.compte_id"
+                  @update:model-value="(value) => setFilter('compte_id', value)"
+                />
+                <base-select
+                  class="col-md-4 mb-1"
+                  base-option="&lt;Catégorie comptable&gt;"
+                  :options="filteredCategories"
+                  :model-value="filters.ecriture_categorie_id"
+                  @update:model-value="(value) => setFilter('ecriture_categorie_id', value)"
+                />
+                <div v-if="canReset" class="col-md-4">
+                  <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
+                </div>
               </div>
-            </div>
-          </form>
-        </div>
+            </form>
+          </template>
+        </base-card>
       </div>
       <div class="col-12">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Autres</h3>
-          </div>
-          <div class="card-body table-responsive p-0">
+        <base-card title="Autres">
+          <template #body-table>
             <base-table
               :loading="loading"
               :fields="fields"
@@ -278,8 +271,8 @@ const fields = [
                 </tr>
               </template>
             </base-table>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
     </div>
   </stateful-filter>

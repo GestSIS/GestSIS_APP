@@ -182,14 +182,13 @@ const fields = [
 
 <template>
   <div class="col-sm-12 col-md-12 col-xl-12">
-    <div class="card card-primary card-outline mb-3">
-      <div class="card-header d-flex justify-content-between">
-        <h3 class="card-title">{{ config.titre }}</h3>
+    <base-card :title="config.titre">
+      <template #header>
         <button v-if="peutAjouter" type="button" class="btn btn-primary" @click="ajouterTravail">
           Ajouter une fiche de travail
         </button>
-      </div>
-      <div class="card-body table-responsive p-0">
+      </template>
+      <template #body-table>
         <base-table :loading="loading" :fields="fields" :data="travaux" :no-data="config.aucun">
           <template #quantite="{ rowData }">{{ rowData.quantite }} {{ rowData.unite }}</template>
           <template #statut="{ value }">
@@ -236,7 +235,7 @@ const fields = [
             </button>
           </template>
         </base-table>
-      </div>
-    </div>
+      </template>
+    </base-card>
   </div>
 </template>

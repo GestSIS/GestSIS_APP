@@ -197,9 +197,8 @@ const validite = (duree) => {
     </div>
     <div class="row">
       <div class="col-lg-4 col-12">
-        <div class="card card-primary card-outline">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Infos</h5>
+        <base-card title="Infos">
+          <template #header>
             <button
               :disabled="isSubmitting"
               v-if="hasEditPermission"
@@ -208,129 +207,131 @@ const validite = (duree) => {
             >
               {{ modeAjout ? "Ajouter" : "Enregistrer" }}
             </button>
-          </div>
-          <fieldset :disabled="!hasEditPermission" class="card-body">
-            <div v-if="!modeAjout" class="mb-3">
-              <label for="m-exe-des">Sapeur</label>
-              <input
-                id="m-exe-des"
-                type="text"
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['designation'] }"
-                name="nom"
-                readonly
-                :value="sapeurName"
+          </template>
+          <template #body>
+            <fieldset :disabled="!hasEditPermission">
+              <div v-if="!modeAjout" class="mb-3">
+                <label for="m-exe-des">Sapeur</label>
+                <input
+                  id="m-exe-des"
+                  type="text"
+                  class="form-control form-control-sm"
+                  :class="{ 'is-invalid': errors['designation'] }"
+                  name="nom"
+                  readonly
+                  :value="sapeurName"
+                />
+              </div>
+              <base-select
+                v-else
+                v-model="controleMedical.sapeur_id"
+                class="mb-3"
+                :class="{ 'is-invalid': errors['sapeur_id'] }"
+                label="Sapeur"
+                display-key="nom_prenom"
+                :formatter="(s) => `${s?.nom_prenom} (${s?.age} ans)`"
+                :options="sapeurs"
               />
-            </div>
-            <base-select
-              v-else
-              v-model="controleMedical.sapeur_id"
-              class="mb-3"
-              :class="{ 'is-invalid': errors['sapeur_id'] }"
-              label="Sapeur"
-              display-key="nom_prenom"
-              :formatter="(s) => `${s?.nom_prenom} (${s?.age} ans)`"
-              :options="sapeurs"
-            />
-            <base-select
-              v-model="controleMedical.medecin_id"
-              class="mb-3"
-              :class="{ 'is-invalid': errors['medecin_id'] }"
-              label="Médecin"
-              :options="medecins"
-              required
-            />
-            <base-select
-              v-model="controleMedical.controle_medical_type_id"
-              class="mb-3"
-              :class="{ 'is-invalid': errors['controle_medical_type_id'] }"
-              label="Type"
-              :options="controleTypes"
-            />
-            <div class="mb-3">
-              <base-checkbox v-model="controleMedical.accepter" label="Accepté" />
-            </div>
-            <div class="row">
-              <div class="col-12" :class="{ 'col-xl-6': expirable }">
-                <div class="mb-3">
-                  <label for="m-exe-date-consultation">Consultation</label>
-                  <div class="input-group input-group-sm">
-                    <div class="input-group-text">
-                      <font-awesome-icon :icon="['far', 'calendar-alt']" />
+              <base-select
+                v-model="controleMedical.medecin_id"
+                class="mb-3"
+                :class="{ 'is-invalid': errors['medecin_id'] }"
+                label="Médecin"
+                :options="medecins"
+                required
+              />
+              <base-select
+                v-model="controleMedical.controle_medical_type_id"
+                class="mb-3"
+                :class="{ 'is-invalid': errors['controle_medical_type_id'] }"
+                label="Type"
+                :options="controleTypes"
+              />
+              <div class="mb-3">
+                <base-checkbox v-model="controleMedical.accepter" label="Accepté" />
+              </div>
+              <div class="row">
+                <div class="col-12" :class="{ 'col-xl-6': expirable }">
+                  <div class="mb-3">
+                    <label for="m-exe-date-consultation">Consultation</label>
+                    <div class="input-group input-group-sm">
+                      <div class="input-group-text">
+                        <font-awesome-icon :icon="['far', 'calendar-alt']" />
+                      </div>
+                      <input
+                        id="m-exe-date-consultation"
+                        v-model="controleMedical.consultation"
+                        type="date"
+                        class="form-control form-control-sm"
+                        :class="{ 'is-invalid': errors['date'] }"
+                        name="consultation"
+                      />
                     </div>
-                    <input
-                      id="m-exe-date-consultation"
-                      v-model="controleMedical.consultation"
-                      type="date"
-                      class="form-control form-control-sm"
-                      :class="{ 'is-invalid': errors['date'] }"
-                      name="consultation"
-                    />
+                  </div>
+                </div>
+                <div v-if="expirable" class="col-4 d-xl-none">
+                  <div v-if="expirable" class="d-grid">
+                    <button class="btn btn-primary" @click="validite(1)">+1</button>
+                  </div>
+                </div>
+                <div v-if="expirable" class="col-4 d-xl-none">
+                  <div v-if="expirable" class="d-grid">
+                    <button class="btn btn-primary" @click="validite(3)">+3</button>
+                  </div>
+                </div>
+                <div v-if="expirable" class="col-4 d-xl-none">
+                  <div v-if="expirable" class="d-grid">
+                    <button class="btn btn-primary" @click="validite(5)">+5</button>
+                  </div>
+                </div>
+                <div v-if="expirable" class="col-12 col-xl-6">
+                  <div class="mb-3">
+                    <label for="m-exe-date-validite">Validité</label>
+                    <div class="input-group input-group-sm">
+                      <div class="input-group-text">
+                        <font-awesome-icon :icon="['far', 'calendar-alt']" />
+                      </div>
+                      <input
+                        id="m-exe-date-validite"
+                        v-model="controleMedical.validite"
+                        type="date"
+                        class="form-control form-control-sm"
+                        :class="{ 'is-invalid': errors['date'] }"
+                        name="validite"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div v-if="expirable" class="col-4 d-none d-xl-block">
+                  <div v-if="expirable" class="d-grid">
+                    <button class="btn btn-primary" @click="validite(1)">+1</button>
+                  </div>
+                </div>
+                <div v-if="expirable" class="col-4 d-none d-xl-block">
+                  <div v-if="expirable" class="d-grid">
+                    <button class="btn btn-primary" @click="validite(3)">+3</button>
+                  </div>
+                </div>
+                <div v-if="expirable" class="col-4 d-none d-xl-block">
+                  <div v-if="expirable" class="d-grid">
+                    <button class="btn btn-primary" @click="validite(5)">+5</button>
                   </div>
                 </div>
               </div>
-              <div v-if="expirable" class="col-4 d-xl-none">
-                <div v-if="expirable" class="d-grid">
-                  <button class="btn btn-primary" @click="validite(1)">+1</button>
-                </div>
+              <div class="mb-3">
+                <label for="m-sap-communication">Désignation</label>
+                <textarea
+                  id="m-sap-communication"
+                  v-model="controleMedical.designation"
+                  type="text"
+                  class="form-control form-control-sm"
+                  :class="{ 'is-invalid': errors['communications'] }"
+                  name="communications"
+                ></textarea>
               </div>
-              <div v-if="expirable" class="col-4 d-xl-none">
-                <div v-if="expirable" class="d-grid">
-                  <button class="btn btn-primary" @click="validite(3)">+3</button>
-                </div>
-              </div>
-              <div v-if="expirable" class="col-4 d-xl-none">
-                <div v-if="expirable" class="d-grid">
-                  <button class="btn btn-primary" @click="validite(5)">+5</button>
-                </div>
-              </div>
-              <div v-if="expirable" class="col-12 col-xl-6">
-                <div class="mb-3">
-                  <label for="m-exe-date-validite">Validité</label>
-                  <div class="input-group input-group-sm">
-                    <div class="input-group-text">
-                      <font-awesome-icon :icon="['far', 'calendar-alt']" />
-                    </div>
-                    <input
-                      id="m-exe-date-validite"
-                      v-model="controleMedical.validite"
-                      type="date"
-                      class="form-control form-control-sm"
-                      :class="{ 'is-invalid': errors['date'] }"
-                      name="validite"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div v-if="expirable" class="col-4 d-none d-xl-block">
-                <div v-if="expirable" class="d-grid">
-                  <button class="btn btn-primary" @click="validite(1)">+1</button>
-                </div>
-              </div>
-              <div v-if="expirable" class="col-4 d-none d-xl-block">
-                <div v-if="expirable" class="d-grid">
-                  <button class="btn btn-primary" @click="validite(3)">+3</button>
-                </div>
-              </div>
-              <div v-if="expirable" class="col-4 d-none d-xl-block">
-                <div v-if="expirable" class="d-grid">
-                  <button class="btn btn-primary" @click="validite(5)">+5</button>
-                </div>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label for="m-sap-communication">Désignation</label>
-              <textarea
-                id="m-sap-communication"
-                v-model="controleMedical.designation"
-                type="text"
-                class="form-control form-control-sm"
-                :class="{ 'is-invalid': errors['communications'] }"
-                name="communications"
-              ></textarea>
-            </div>
-          </fieldset>
-        </div>
+            </fieldset>
+          </template>
+        </base-card>
         <div class="alert alert-info mt-2" role="alert">
           <strong><em>Contrôle médical type, remarque :</em></strong>
           <template
@@ -354,9 +355,8 @@ const validite = (duree) => {
         </div>
       </div>
       <div v-if="controleMedical.id" class="col-lg-8 col-12">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header">
-            <h5>Document</h5>
+        <base-card title="Document" header-class="">
+          <template #header>
             <div v-if="controleMedical.filename">
               {{ controleMedical.filename }}
               <button class="btn btn-outline-primary ms-2" @click="downloadJustificatif()">
@@ -371,8 +371,8 @@ const validite = (duree) => {
                 Supprimer
               </button>
             </div>
-          </div>
-          <div v-if="!controleMedical.filename && hasEditPermission" class="card-body">
+          </template>
+          <template v-if="!controleMedical.filename && hasEditPermission" #body>
             <div class="input-group input-group-sm mb-3">
               <p class="w-100">Aucun document</p>
               <input
@@ -391,9 +391,11 @@ const validite = (duree) => {
                 Ajouter
               </button>
             </div>
-          </div>
-          <pdf-viewer v-if="controleMedical.filename" :pdf-data="pdfData" />
-        </div>
+          </template>
+          <template #default>
+            <pdf-viewer v-if="controleMedical.filename" :pdf-data="pdfData" />
+          </template>
+        </base-card>
       </div>
     </div>
   </div>

@@ -281,11 +281,8 @@ const fields = [
   >
     <div class="row">
       <div v-if="hasEditPermission" class="col-12 col-md-4 col-xl-3">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Actions</h3>
-          </div>
-          <div class="card-body d-grid gap-1">
+        <base-card title="Actions" body-class="d-grid gap-1">
+          <template #body>
             <button
               v-if="!selectedItem || selectedItem?.statut == INTERVENTION_STATUT.VALIDEE"
               class="btn btn-outline-primary"
@@ -302,67 +299,65 @@ const fields = [
             >
               Annuler l'imputation
             </button>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
       <div class="col-12 col-md-8 col-xl-9">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Filtres</h3>
-          </div>
-          <form class="card-body">
-            <div class="row">
-              <base-select
-                class="col-md-4 mb-1"
-                base-option="&lt;Localité&gt;"
-                :options="filteredLocalites"
-                :model-value="filters.localite_id"
-                @update:model-value="(value) => setFilter('localite_id', value)"
-              />
-              <base-select
-                class="col-md-4 mb-1"
-                base-option="&lt;Type&gt;"
-                :options="filteredTypesIntervention"
-                :model-value="filters.type_intervention_id"
-                @update:model-value="(value) => setFilter('type_intervention_id', value)"
-              />
-              <base-select
-                class="col-md-4 mb-1"
-                base-option="&lt;Statistique fédérale&gt;"
-                :options="filteredStatFederal"
-                :model-value="filters.stat_federal_id"
-                @update:model-value="(value) => setFilter('stat_federal_id', value)"
-              />
-              <base-select
-                class="col-md-4 mb-1"
-                base-option="&lt;Traitement&gt;"
-                :options="traitements"
-                :model-value="filters.intervention_traitement_id"
-                @update:model-value="(value) => setFilter('intervention_traitement_id', value)"
-              />
-              <base-select
-                class="col-md-4 mb-1"
-                base-option="&lt;Etendue&gt;"
-                :options="degres"
-                :model-value="filters.degre"
-                @update:model-value="(value) => setFilter('degre', value)"
-              />
-              <div v-if="canReset" class="col-md-4 mb-1">
-                <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
+        <base-card title="Filtres">
+          <template #body>
+            <form>
+              <div class="row">
+                <base-select
+                  class="col-md-4 mb-1"
+                  base-option="&lt;Localité&gt;"
+                  :options="filteredLocalites"
+                  :model-value="filters.localite_id"
+                  @update:model-value="(value) => setFilter('localite_id', value)"
+                />
+                <base-select
+                  class="col-md-4 mb-1"
+                  base-option="&lt;Type&gt;"
+                  :options="filteredTypesIntervention"
+                  :model-value="filters.type_intervention_id"
+                  @update:model-value="(value) => setFilter('type_intervention_id', value)"
+                />
+                <base-select
+                  class="col-md-4 mb-1"
+                  base-option="&lt;Statistique fédérale&gt;"
+                  :options="filteredStatFederal"
+                  :model-value="filters.stat_federal_id"
+                  @update:model-value="(value) => setFilter('stat_federal_id', value)"
+                />
+                <base-select
+                  class="col-md-4 mb-1"
+                  base-option="&lt;Traitement&gt;"
+                  :options="traitements"
+                  :model-value="filters.intervention_traitement_id"
+                  @update:model-value="(value) => setFilter('intervention_traitement_id', value)"
+                />
+                <base-select
+                  class="col-md-4 mb-1"
+                  base-option="&lt;Etendue&gt;"
+                  :options="degres"
+                  :model-value="filters.degre"
+                  @update:model-value="(value) => setFilter('degre', value)"
+                />
+                <div v-if="canReset" class="col-md-4 mb-1">
+                  <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
+                </div>
               </div>
-            </div>
-          </form>
-        </div>
+            </form>
+          </template>
+        </base-card>
       </div>
       <div class="col-sm-12 col-xl-12">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Interventions</h3>
+        <base-card title="Interventions">
+          <template #header>
             <!--<button @click.prevent="save" class="btn btn-primary">-->
             <!--  Enregistrer-->
             <!--</button>-->
-          </div>
-          <div class="card-body table-responsive p-0">
+          </template>
+          <template #body-table>
             <base-table
               :loading="loading"
               :fields="fields"
@@ -400,8 +395,8 @@ const fields = [
                 </button>
               </template>
             </base-table>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
     </div>
   </stateful-filter>

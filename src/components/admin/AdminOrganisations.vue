@@ -63,11 +63,8 @@ const fields = [
 <template>
   <div class="row">
     <div class="col-md-3">
-      <div class="card card-primary card-outline mb-2">
-        <div class="card-header d-flex justify-content-between">
-          <h5>Actions</h5>
-        </div>
-        <div class="card-body d-grid gap-1">
+      <base-card title="Actions" body-class="d-grid gap-1">
+        <template #body>
           <a
             class="btn btn-outline-primary"
             :href="
@@ -106,26 +103,22 @@ const fields = [
             "
             >Email mobile</a
           >
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <div class="col-md-3">
-      <div class="card card-primary card-outline mb-2">
-        <div class="card-header d-flex justify-content-between">
-          <h5>Données</h5>
-        </div>
-        <div class="card-body d-grid gap-1">
+      <base-card title="Données" body-class="d-grid gap-1">
+        <template #body>
           <button class="btn btn-outline-primary" @click="jsonExport">Données JSON</button>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
-  <div class="card card-primary card-outline mb-3 col-12 col-lg-12">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Organisations</h3>
+  <base-card title="Organisations" class="col-12 col-lg-12">
+    <template #header>
       <button class="btn btn-outline-primary" @click="ajoutOrganisation">Ajouter</button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table
         ref="table"
         :fields="fields"
@@ -163,6 +156,6 @@ const fields = [
           </tr>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

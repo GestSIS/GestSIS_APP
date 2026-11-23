@@ -178,7 +178,7 @@ const selectedTypeId = computed({
         <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
       </span>
     </div>
-    <div class="card mb-2">
+    <base-card>
       <ul class="list-group list-group-flush">
         <li v-if="computedData.length === 0" class="list-group-item pt-1 pb-1">
           <span class="border-bottom-0">Aucune catégorie</span>
@@ -220,6 +220,6 @@ const selectedTypeId = computed({
           </div>
         </router-link>
       </ul>
-    </div>
+    </base-card>
   </div>
 </template>

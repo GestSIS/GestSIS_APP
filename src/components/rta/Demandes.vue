@@ -29,16 +29,13 @@ const statusMapping = {
   <div v-if="loadError" class="card-body mb-3">
     <div class="alert alert-danger mb-0" role="alert">{{ loadError }}</div>
   </div>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">GestSIS</h3>
-    </div>
-    <div class="card-body table-responsive p-0">
+  <base-card title="GestSIS">
+    <template #body-table>
       <base-table :fields="fields" :data="rtaStore.demandes">
         <template #statut="{ rowData }">
           {{ statusMapping[rowData.statut] }}
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

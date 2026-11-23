@@ -25,8 +25,7 @@ const refreshTokens = () =>
 <template>
   <div class="row">
     <div class="col-md-6">
-      <base-card>
-        <template #title>Tokens de la session</template>
+      <base-card title="Tokens de la session">
         <template #header>
           <button type="button" class="btn btn-primary btn-sm" @click="refreshTokens">
             Refresh tokens

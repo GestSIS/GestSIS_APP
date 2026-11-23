@@ -254,9 +254,8 @@ const heuresParSapeur = computed(() => {
 
 <template>
   <div class="col-sm-12 col-md-12 col-xl-12">
-    <div class="card card-primary card-outline mb-3">
-      <div class="card-header d-flex justify-content-between">
-        <h3 class="card-title">Présences</h3>
+    <base-card title="Présences">
+      <template #header>
         <div class="d-flex align-items-center gap-2">
           <button
             v-if="showValiderButton"
@@ -287,8 +286,8 @@ const heuresParSapeur = computed(() => {
             Ajouter des présences
           </button>
         </div>
-      </div>
-      <div class="card-body">
+      </template>
+      <template #body>
         <div class="mb-2">
           <span class="badge bg-secondary me-2">Intervention</span>
           <span class="badge bg-primary me-2">Entretien</span>
@@ -412,8 +411,8 @@ const heuresParSapeur = computed(() => {
             </tfoot>
           </table>
         </div>
-      </div>
-    </div>
+      </template>
+    </base-card>
   </div>
 </template>
 

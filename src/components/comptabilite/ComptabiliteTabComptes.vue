@@ -116,52 +116,48 @@ const fields = [
   >
     <div class="row">
       <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Impressions</h3>
-          </div>
-          <div class="card-body d-grid gap-1">
+        <base-card title="Impressions" body-class="d-grid gap-1">
+          <template #body>
             <button class="btn btn-outline-primary" @click="justificatifIndividuel(activeCompteId)">
               Justificatif du compte
             </button>
             <button class="btn btn-outline-primary" @click="justificatifComplet">
               Justificatif complet
             </button>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
       <div class="col-12 col-md-8 col-xl-6">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Filtres</h3>
-          </div>
-          <form class="card-body">
-            <div class="row">
-              <base-select
-                class="col-md-6"
-                display-key="nom_prenom"
-                base-option="&lt;Sapeur&gt;"
-                :options="filteredSapeurs"
-                :model-value="filters.sapeur_id"
-                @update:model-value="(value) => setFilter('sapeur_id', value)"
-              />
-              <base-select
-                class="col-md-6"
-                base-option="&lt;Type&gt;"
-                :options="ecritureTypeOptions"
-                :model-value="filters.type"
-                @update:model-value="(value) => setFilter('type', value)"
-              />
-              <div v-if="canReset" class="col-md-6 mt-1">
-                <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
+        <base-card title="Filtres">
+          <template #body>
+            <form>
+              <div class="row">
+                <base-select
+                  class="col-md-6"
+                  display-key="nom_prenom"
+                  base-option="&lt;Sapeur&gt;"
+                  :options="filteredSapeurs"
+                  :model-value="filters.sapeur_id"
+                  @update:model-value="(value) => setFilter('sapeur_id', value)"
+                />
+                <base-select
+                  class="col-md-6"
+                  base-option="&lt;Type&gt;"
+                  :options="ecritureTypeOptions"
+                  :model-value="filters.type"
+                  @update:model-value="(value) => setFilter('type', value)"
+                />
+                <div v-if="canReset" class="col-md-6 mt-1">
+                  <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
+                </div>
               </div>
-            </div>
-          </form>
-        </div>
+            </form>
+          </template>
+        </base-card>
       </div>
       <div class="col-12">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
+        <base-card>
+          <template #header>
             <div class="card-title">
               <h3 class="card-title">Comptes</h3>
               <base-dropdown
@@ -185,14 +181,14 @@ const fields = [
                 </template>
               </base-dropdown>
             </div>
-          </div>
-          <div v-if="!comptes.length" class="card-body">
+          </template>
+          <template v-if="!comptes.length" #body>
             Veuillez configurer les comptes dans
             <router-link class="btn-link" :to="{ name: 'param-comptabilite' }"
               >Configuration</router-link
             >
-          </div>
-          <div class="card-body table-responsive p-0">
+          </template>
+          <template #body-table>
             <base-table
               :loading="loading"
               :fields="fields"
@@ -217,8 +213,8 @@ const fields = [
                 </tr>
               </template>
             </base-table>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
     </div>
   </stateful-filter>

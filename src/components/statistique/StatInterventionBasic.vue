@@ -98,17 +98,16 @@ const fields = computed(() => {
 
 <template>
   <div class="col-12 col-md-6 col-xl-4">
-    <div class="card card-primary card-outline">
-      <div class="card-header d-flex justify-content-between">
-        <h3>Stats interventions</h3>
+    <base-card title="Stats interventions">
+      <template #header>
         <div class="form-check form-switch mb-2">
           <input id="switch" v-model="allCategories" type="checkbox" class="form-check-input" />
           <label class="form-check-label" for="switch">
             Afficher les {{ groupingLabel.toLowerCase() }} sans intervention
           </label>
         </div>
-      </div>
-      <div class="card-body table-responsive p-0">
+      </template>
+      <template #body-table>
         <base-table
           :loading="loading"
           :fields="fields"
@@ -161,7 +160,7 @@ const fields = computed(() => {
             <li>Graphique d'un simple tableau</li>
             <li>Répartition des interventions durant l'année -> graph</li>
           </ul> -->
-      </div>
-    </div>
+      </template>
+    </base-card>
   </div>
 </template>

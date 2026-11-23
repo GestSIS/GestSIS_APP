@@ -251,11 +251,8 @@ const mutate = async () => {
   <div v-if="loadError" class="alert alert-danger" role="alert">
     {{ loadError }}
   </div>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Mutations</h3>
-    </div>
-    <div class="card-body pb-0">
+  <base-card title="Mutations" body-class="pb-0">
+    <template #body>
       <div class="row g-3 align-items-center mb-3">
         <div class="alert alert-primary" role="alert">
           La nouvelle intégration avec GestionRTA-Jura ne nécessite plus d'identifiants. Vous pouvez
@@ -295,8 +292,8 @@ const mutate = async () => {
           gestionrta-jura.ch
         </a>
       </div>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <table class="table table-sm" cellspacing="0">
         <thead>
           <tr>
@@ -414,6 +411,6 @@ const mutate = async () => {
           </tr>
         </tbody>
       </table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

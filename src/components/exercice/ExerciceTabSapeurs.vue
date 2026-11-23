@@ -454,11 +454,8 @@ const statuts = [
   </div>
   <div class="row">
     <div v-if="hasPresencePermission" class="col-12 col-sm-6 col-lg-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Actions</h3>
-        </div>
-        <div class="card-body d-grid gap-1">
+      <base-card title="Actions" body-class="d-grid gap-1">
+        <template #body>
           <button
             class="btn btn-outline-primary"
             :disabled="!canEditPresence"
@@ -466,15 +463,12 @@ const statuts = [
           >
             Gérer la liste des sapeurs
           </button>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Impressions</h3>
-        </div>
-        <div class="card-body d-grid gap-1">
+      <base-card title="Impressions" body-class="d-grid gap-1">
+        <template #body>
           <button class="btn btn-outline-primary" @click="listePresences">
             <font-awesome-icon :icon="['far', 'file-pdf']" class="me-1" />
             Liste de présence
@@ -483,13 +477,12 @@ const statuts = [
             <font-awesome-icon :icon="['far', 'file-pdf']" class="me-1" />
             Liste d'appel
           </button>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <div class="col-12">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex flex-wrap align-items-center gap-2">
-          <h3 class="card-title mb-0">Présences</h3>
+      <base-card title="Présences" header-class="d-flex flex-wrap align-items-center gap-2">
+        <template #header>
           <base-checkbox
             v-if="hasPresencePermission"
             class="mb-0"
@@ -532,8 +525,8 @@ const statuts = [
               Annuler la validation
             </button>
           </div>
-        </div>
-        <div class="card-body table-responsive p-0">
+        </template>
+        <template #body-table>
           <base-table
             class="tableau-presences"
             :loading="loading"
@@ -650,8 +643,8 @@ const statuts = [
               </tr>
             </template>
           </base-table>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <TravauxLies genre="exercice" :id="id" :evenement="exerciceStore.active.data" />
   </div>

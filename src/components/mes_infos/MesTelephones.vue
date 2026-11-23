@@ -38,11 +38,8 @@ const fields = computed(() => [
 </script>
 
 <template>
-  <div class="card card-primary card-outline mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Téléphones</h3>
-    </div>
-    <div class="card-body table-responsive p-0">
+  <base-card title="Téléphones">
+    <template #body-table>
       <base-table
         class="table-striped"
         :fields="fields"
@@ -68,6 +65,6 @@ const fields = computed(() => [
           </thead>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

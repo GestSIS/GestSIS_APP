@@ -12,11 +12,8 @@ const civilites = computed(() => baseDataStore.civilites);
 </script>
 
 <template>
-  <div class="card card-primary card-outline mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Données personnelles</h3>
-    </div>
-    <div class="card-body">
+  <base-card title="Données personnelles">
+    <template #body>
       <base-select
         v-model="model.civilite_id"
         class="mb-3"
@@ -176,6 +173,6 @@ const civilites = computed(() => baseDataStore.civilites);
           name="remarques"
         ></textarea>
       </div>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

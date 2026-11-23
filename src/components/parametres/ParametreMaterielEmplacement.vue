@@ -80,14 +80,13 @@ const rowClass = (dataItem) => (emplacementVisible.value[dataItem.id] ? "" : "d-
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title me-auto">Emplacements</h3>
+  <base-card title="Emplacements">
+    <template #header>
       <button type="button" class="btn btn-primary me-2" @click="ajout">
         Ajouter un emplacement
       </button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table :data="computedData" :fields="fields" :rowClass="rowClass" :selectable="true">
         <template #emplacement="{ rowData }">
           <div :style="{ 'padding-left': rowData.level * 25 + 'px' }">
@@ -147,6 +146,6 @@ const rowClass = (dataItem) => (emplacementVisible.value[dataItem.id] ? "" : "d-
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

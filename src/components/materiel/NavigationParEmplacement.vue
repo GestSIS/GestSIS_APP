@@ -241,7 +241,7 @@ const ajoutEmplacement = () =>
         <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
       </span>
     </div>
-    <div class="card mb-2">
+    <base-card>
       <ul class="ps-0 mb-1">
         <li v-if="computedData.length === 0" class="list-group-item pt-1 pb-1">
           <span class="border-bottom-0">Aucun emplacement</span>
@@ -280,7 +280,7 @@ const ajoutEmplacement = () =>
           </a>
         </router-link>
       </ul>
-    </div>
+    </base-card>
     <button class="btn btn-sm btn-outline-primary w-100 mb-2" @click="ajoutEmplacement">
       Ajouter
     </button>

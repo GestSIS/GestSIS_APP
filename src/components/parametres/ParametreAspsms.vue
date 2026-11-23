@@ -40,14 +40,13 @@ const save = async () => {
 <template>
   <div class="row">
     <div class="col-12 col-xl-6">
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">ASPSMS</h3>
+      <base-card title="ASPSMS">
+        <template #header>
           <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save">
             Enregistrer
           </button>
-        </div>
-        <div class="card-body">
+        </template>
+        <template #body>
           <div class="mb-3">
             <label for="user">Utilisateur</label>
             <input
@@ -83,8 +82,8 @@ const save = async () => {
               >Recharger des crédits</a
             >
           </div>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

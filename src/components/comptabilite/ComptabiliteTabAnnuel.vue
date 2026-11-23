@@ -170,11 +170,8 @@ const fields = [
   >
     <div class="row">
       <div v-if="hasEditPermission" class="col-12 col-md-4 col-xl-3">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Actions</h3>
-          </div>
-          <div class="card-body d-grid gap-1">
+        <base-card title="Actions" body-class="d-grid gap-1">
+          <template #body>
             <button
               class="btn btn-outline-primary"
               :title="computedData.length ? 'Regénérer tous' : 'Générer'"
@@ -190,34 +187,30 @@ const fields = [
             >
               Tout supprimer
             </button>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
       <div class="col-12 col-md-4 col-xl-3">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Filtres</h3>
-          </div>
-          <form class="card-body">
-            <base-select
-              display-key="nom_prenom"
-              base-option="&lt;Sapeur&gt;"
-              :options="filteredSapeurs"
-              :model-value="filters.id"
-              @update:model-value="(value) => setFilter('id', value)"
-            />
-            <div v-if="canReset" class="w-100 mt-3">
-              <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
-            </div>
-          </form>
-        </div>
+        <base-card title="Filtres">
+          <template #body>
+            <form>
+              <base-select
+                display-key="nom_prenom"
+                base-option="&lt;Sapeur&gt;"
+                :options="filteredSapeurs"
+                :model-value="filters.id"
+                @update:model-value="(value) => setFilter('id', value)"
+              />
+              <div v-if="canReset" class="w-100 mt-3">
+                <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
+              </div>
+            </form>
+          </template>
+        </base-card>
       </div>
       <div class="col-12">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title me-auto">Indemnités et Frais annuels</h3>
-          </div>
-          <div class="card-body table-responsive p-0">
+        <base-card title="Indemnités et Frais annuels">
+          <template #body-table>
             <base-table
               :loading="loading"
               :data="filteredData"
@@ -257,8 +250,8 @@ const fields = [
                 </tr>
               </template>
             </base-table>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
     </div>
   </stateful-filter>

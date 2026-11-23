@@ -184,11 +184,8 @@ const fields = [
   >
     <div class="row">
       <div v-if="hasEditPermission" class="col-12 col-md-4 col-xl-3">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Actions</h3>
-          </div>
-          <div class="card-body d-grid gap-1">
+        <base-card title="Actions" body-class="d-grid gap-1">
+          <template #body>
             <button
               v-if="!selectedItem || selectedItem?.statut == TRAVAIL_STATUT.ACCEPTE"
               class="btn btn-outline-primary"
@@ -215,51 +212,47 @@ const fields = [
           >
             Annuler toutes les imputations
           </button> -->
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
       <div class="col-12 col-md-8 col-xl-9">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Filtres</h3>
-          </div>
-          <form class="card-body">
-            <div class="row">
-              <base-select
-                class="col-md-4"
-                display-key="nom_prenom"
-                base-option="&lt;Sapeur&gt;"
-                :options="filteredSapeurs"
-                :model-value="filters.sapeur_id"
-                @update:model-value="(value) => setFilter('sapeur_id', value)"
-              />
-              <base-select
-                class="mb-1 col-md-4"
-                :options="filteredTravailTypes"
-                base-option="<Type>"
-                :model-value="filters.travail_type_id"
-                @update:model-value="(value) => setFilter('travail_type_id', value)"
-              />
-              <base-select
-                class="col-md-4"
-                base-option="<Statut>"
-                :options="travailStatutOptions"
-                :model-value="filters.statut"
-                @update:model-value="(value) => setFilter('statut', value)"
-              />
-              <div v-if="canReset" class="col-md-4">
-                <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
+        <base-card title="Filtres">
+          <template #body>
+            <form>
+              <div class="row">
+                <base-select
+                  class="col-md-4"
+                  display-key="nom_prenom"
+                  base-option="&lt;Sapeur&gt;"
+                  :options="filteredSapeurs"
+                  :model-value="filters.sapeur_id"
+                  @update:model-value="(value) => setFilter('sapeur_id', value)"
+                />
+                <base-select
+                  class="mb-1 col-md-4"
+                  :options="filteredTravailTypes"
+                  base-option="<Type>"
+                  :model-value="filters.travail_type_id"
+                  @update:model-value="(value) => setFilter('travail_type_id', value)"
+                />
+                <base-select
+                  class="col-md-4"
+                  base-option="<Statut>"
+                  :options="travailStatutOptions"
+                  :model-value="filters.statut"
+                  @update:model-value="(value) => setFilter('statut', value)"
+                />
+                <div v-if="canReset" class="col-md-4">
+                  <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
+                </div>
               </div>
-            </div>
-          </form>
-        </div>
+            </form>
+          </template>
+        </base-card>
       </div>
       <div class="col-sm-12 col-xl-12">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Fiches de travails</h3>
-          </div>
-          <div class="card-body table-responsive p-0">
+        <base-card title="Fiches de travails">
+          <template #body-table>
             <base-table
               :loading="loading"
               :fields="fields"
@@ -298,8 +291,8 @@ const fields = [
                 </button>
               </template>
             </base-table>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
     </div>
   </stateful-filter>

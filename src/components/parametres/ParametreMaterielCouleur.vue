@@ -47,12 +47,11 @@ const fields = [
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title me-auto">Couleurs</h3>
+  <base-card title="Couleurs">
+    <template #header>
       <button type="button" class="btn btn-primary" @click="ajout">Ajouter</button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table :data="couleurs" :fields="fields" :selectable="true" no-data="Aucune couleur">
         <template #couleur="{ rowData }">
           <tag-couleur :couleur="rowData">A</tag-couleur>
@@ -78,6 +77,6 @@ const fields = [
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

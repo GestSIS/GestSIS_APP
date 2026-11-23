@@ -193,23 +193,17 @@ const showAbsences = (absences) =>
 <template>
   <div class="row">
     <div class="col-md-3">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h5>Actions</h5>
-        </div>
-        <div class="card-body d-grid gap-2">
+      <base-card title="Actions" body-class="d-grid gap-2">
+        <template #body>
           <button v-if="hasEditPermission" class="btn btn-outline-primary" @click="addAbsence">
             Ajouter une absence
           </button>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <div class="col-md-6">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h5>Affichage</h5>
-        </div>
-        <div class="card-body">
+      <base-card title="Affichage">
+        <template #body>
           <div class="row">
             <div class="col-6">
               <base-select
@@ -226,19 +220,19 @@ const showAbsences = (absences) =>
               <base-select v-model="displayMonth" :options="mois" />
             </div>
           </div>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div class="card card-primary card-outline mb-3">
-        <div v-if="loading" class="card-body d-flex justify-content-center">
+      <base-card body-class="d-flex justify-content-center">
+        <template v-if="loading" #body>
           <div class="spinner-border" role="status">
             <span class="visually-hidden">Chargement...</span>
           </div>
-        </div>
-        <div class="card-body table-responsive p-0">
+        </template>
+        <template #body-table>
           <table class="table">
             <thead>
               <tr>
@@ -403,8 +397,8 @@ const showAbsences = (absences) =>
               </tr>
             </tfoot>
           </table>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

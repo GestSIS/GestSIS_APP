@@ -69,14 +69,13 @@ const fields = [
 </script>
 
 <template>
-  <div class="card card-primary card-outline mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Ma fiche de travail</h3>
+  <base-card title="Ma fiche de travail">
+    <template #header>
       <button v-if="hasSaisiePermission" type="button" class="btn btn-primary" @click="addTravail">
         Saisir une fiche de travail
       </button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table
         class="table-striped"
         :loading="loading"
@@ -90,6 +89,6 @@ const fields = [
           <status-badge :status="travailStatut(value)" />
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

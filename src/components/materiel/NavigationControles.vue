@@ -123,7 +123,7 @@ const selectedControleId = computed({
         <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
       </span>
     </div>
-    <div class="card mb-2">
+    <base-card>
       <ul class="list-group list-group-flush">
         <li v-if="controlesFiltres.length === 0" class="list-group-item pt-1 pb-1">
           Aucun contrôle
@@ -157,6 +157,6 @@ const selectedControleId = computed({
           </a>
         </router-link>
       </ul>
-    </div>
+    </base-card>
   </div>
 </template>

@@ -65,8 +65,7 @@ const controler = (article, controleId) =>
 </script>
 
 <template>
-  <base-card>
-    <template #title>Contrôles manquants / dépassés / en préavis</template>
+  <base-card title="Contrôles manquants / dépassés / en préavis">
     <template #header>
       <router-link :to="{ name: 'materiel-controles' }" class="btn btn-outline-primary btn-sm">
         Voir les contrôles

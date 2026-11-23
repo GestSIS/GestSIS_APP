@@ -44,58 +44,57 @@ await Promise.all([
 
 <template>
   <div class="row">
-    <div class="col-sm-12 col-xl-3 mb-2">
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Paramètres interventions</h3>
-        </div>
-        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-          <router-link
-            class="nav-link"
-            active-class="active"
-            role="tab"
-            :to="{ name: 'param-intervention-vehicule' }"
-            >Véhicules</router-link
-          >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            role="tab"
-            :to="{ name: 'param-intervention-materiel' }"
-            >Matériel</router-link
-          >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            :to="{ name: 'param-intervention-mission' }"
-            >Missions</router-link
-          >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            :to="{ name: 'param-intervention-telephone' }"
-            >Téléphones</router-link
-          >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            :to="{ name: 'param-intervention-traitement' }"
-            >Traitement</router-link
-          >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            :to="{ name: 'param-intervention-type' }"
-            >Type d'intervention</router-link
-          >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            :to="{ name: 'param-intervention-stat' }"
-            >Statistique fédérale</router-link
-          >
-        </nav>
-      </div>
+    <div class="col-sm-12 col-xl-3">
+      <base-card title="Paramètres interventions">
+        <template #default>
+          <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+            <router-link
+              class="nav-link"
+              active-class="active"
+              role="tab"
+              :to="{ name: 'param-intervention-vehicule' }"
+              >Véhicules</router-link
+            >
+            <router-link
+              class="nav-link"
+              active-class="active"
+              role="tab"
+              :to="{ name: 'param-intervention-materiel' }"
+              >Matériel</router-link
+            >
+            <router-link
+              class="nav-link"
+              active-class="active"
+              :to="{ name: 'param-intervention-mission' }"
+              >Missions</router-link
+            >
+            <router-link
+              class="nav-link"
+              active-class="active"
+              :to="{ name: 'param-intervention-telephone' }"
+              >Téléphones</router-link
+            >
+            <router-link
+              class="nav-link"
+              active-class="active"
+              :to="{ name: 'param-intervention-traitement' }"
+              >Traitement</router-link
+            >
+            <router-link
+              class="nav-link"
+              active-class="active"
+              :to="{ name: 'param-intervention-type' }"
+              >Type d'intervention</router-link
+            >
+            <router-link
+              class="nav-link"
+              active-class="active"
+              :to="{ name: 'param-intervention-stat' }"
+              >Statistique fédérale</router-link
+            >
+          </nav>
+        </template>
+      </base-card>
     </div>
     <div class="col-sm-12 col-xl-9">
       <router-view />

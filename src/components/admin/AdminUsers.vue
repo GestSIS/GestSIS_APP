@@ -67,9 +67,8 @@ const fields = [
 </script>
 
 <template>
-  <div class="card card-primary card-outline mb-3 col-12">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Utilisateurs</h3>
+  <base-card title="Utilisateurs" class="col-12">
+    <template #header>
       <div class="form-check form-switch mb-2">
         <input
           id="switch-show-disabled"
@@ -81,8 +80,8 @@ const fields = [
           >Afficher les comptes désactivés</label
         >
       </div>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table
         ref="table"
         :fields="fields"
@@ -150,6 +149,6 @@ const fields = [
           </tr>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

@@ -227,9 +227,8 @@ const fieldsSapeurs = [
 <template>
   <div class="row">
     <div class="col-4">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Données</h3>
+      <base-card title="Données">
+        <template #header>
           <div>
             <button
               type="button"
@@ -246,8 +245,8 @@ const fieldsSapeurs = [
             </button>
             <button class="btn btn-primary" @click="editUser(user)">Modifier</button>
           </div>
-        </div>
-        <div class="card-body">
+        </template>
+        <template #body>
           <div class="mb-3">
             <label for="id">id</label>
             <input
@@ -418,16 +417,15 @@ const fieldsSapeurs = [
               Déconnecter tous les appareils
             </button>
           </div>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <div class="col-4">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h5 class="card-title">Roles</h5>
+      <base-card title="Roles">
+        <template #header>
           <button class="btn btn-primary" @click="ajouterRole">Ajouter</button>
-        </div>
-        <div class="card-body table-responsive p-0">
+        </template>
+        <template #body-table>
           <base-table
             ref="table"
             :fields="fieldsRoles"
@@ -462,15 +460,12 @@ const fieldsSapeurs = [
               </tr>
             </template>
           </base-table>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <div class="col-4">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h5 class="card-title">Sapeurs</h5>
-        </div>
-        <div class="card-body table-responsive p-0">
+      <base-card title="Sapeurs">
+        <template #body-table>
           <base-table
             ref="table"
             :fields="fieldsSapeurs"
@@ -505,8 +500,8 @@ const fieldsSapeurs = [
               </tr>
             </template>
           </base-table>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

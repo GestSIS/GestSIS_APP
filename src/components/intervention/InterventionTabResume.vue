@@ -45,9 +45,8 @@ const save = async () => {
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-12">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Résumé</h3>
+      <base-card title="Résumé">
+        <template #header>
           <button
             :disabled="isSubmitting"
             v-if="hasEditPermission"
@@ -56,8 +55,8 @@ const save = async () => {
           >
             Enregistrer
           </button>
-        </div>
-        <div class="card-body">
+        </template>
+        <template #body>
           <label for="m-int-resume">Description</label>
           <textarea
             id="m-int-resume"
@@ -67,8 +66,8 @@ const save = async () => {
             rows="30"
             @blur="save"
           ></textarea>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

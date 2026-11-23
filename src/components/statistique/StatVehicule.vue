@@ -43,9 +43,8 @@ const filteredVehicules = computed(() =>
 
 <template>
   <div class="col-12 col-md-6 col-xl-4">
-    <div class="card card-primary card-outline">
-      <div class="card-header d-flex justify-content-between">
-        <h3>Stats véhicules pour interventions</h3>
+    <base-card title="Stats véhicules pour interventions">
+      <template #header>
         <div class="form-check form-switch mb-2">
           <input
             id="switch-vehicule"
@@ -57,8 +56,8 @@ const filteredVehicules = computed(() =>
             >Afficher les véhicules n'ayant pas effectué d'interventions</label
           >
         </div>
-      </div>
-      <div class="card-body table-responsive p-0">
+      </template>
+      <template #body-table>
         <base-table
           :loading="loading"
           :fields="fields"
@@ -66,7 +65,7 @@ const filteredVehicules = computed(() =>
           no-data="Aucun véhicule utilisé"
           :selectable="true"
         />
-      </div>
-    </div>
+      </template>
+    </base-card>
   </div>
 </template>

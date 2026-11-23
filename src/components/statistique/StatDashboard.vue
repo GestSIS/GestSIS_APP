@@ -1,11 +1,8 @@
 <template>
   <div class="row">
-    <div class="col-md-12 mb-3">
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3>Dashboard</h3>
-        </div>
-        <div class="card-body">
+    <div class="col-md-12">
+      <base-card title="Dashboard">
+        <template #body>
           <h3>Fonctionalités actuelles</h3>
           <h4>Sapeurs</h4>
           <ul>
@@ -42,8 +39,8 @@
             <li>Statistiques de présences sur intervention</li>
           </ul>
           -->
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

@@ -66,36 +66,34 @@ const fields = [
 
 <template>
   <div class="col-12 col-md-6 col-xl-3">
-    <div class="card card-primary card-outline mb-3">
-      <div class="card-header d-flex justify-content-between">
-        <h3 class="card-title">Filtres</h3>
-      </div>
-      <form class="card-body">
-        <div class="row">
-          <div class="col-md-6">
-            <input
-              v-model="filters.sapeur"
-              type="text"
-              placeholder="Sapeur"
-              class="form-control form-control-sm"
-            />
+    <base-card title="Filtres">
+      <template #body>
+        <form>
+          <div class="row">
+            <div class="col-md-6">
+              <input
+                v-model="filters.sapeur"
+                type="text"
+                placeholder="Sapeur"
+                class="form-control form-control-sm"
+              />
+            </div>
+            <div class="col-md-6">
+              <input
+                v-model="filters.email"
+                type="text"
+                placeholder="Email"
+                class="form-control form-control-sm"
+              />
+            </div>
           </div>
-          <div class="col-md-6">
-            <input
-              v-model="filters.email"
-              type="text"
-              placeholder="Email"
-              class="form-control form-control-sm"
-            />
-          </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </template>
+    </base-card>
   </div>
   <div class="col-md-12">
-    <div class="card card-primary card-outline mb-3">
-      <div class="card-header d-flex justify-content-between">
-        <h3>Liste des sapeurs n'ayant pas créé de compte</h3>
+    <base-card title="Liste des sapeurs n'ayant pas créé de compte">
+      <template #header>
         <a
           class="btn btn-outline-primary"
           :href="
@@ -108,8 +106,8 @@ const fields = [
         >
           Email
         </a>
-      </div>
-      <div class="card-body table-responsive p-0">
+      </template>
+      <template #body-table>
         <base-table
           :loading="loading"
           :fields="fields"
@@ -128,7 +126,7 @@ const fields = [
             </a>
           </template>
         </base-table>
-      </div>
-    </div>
+      </template>
+    </base-card>
   </div>
 </template>

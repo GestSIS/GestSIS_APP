@@ -92,14 +92,13 @@ const fields = [
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Exercices</h3>
+  <base-card title="Exercices">
+    <template #header>
       <button v-if="hasPresencePermission" class="btn btn-primary" @click.prevent="edit">
         Modifier
       </button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table
         :loading="loading"
         :fields="fields"
@@ -156,6 +155,6 @@ const fields = [
           </div>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

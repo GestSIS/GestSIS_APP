@@ -4,15 +4,12 @@ const photo = ref(null); // https://images.pexels.com/photos/220453/pexels-photo
 </script>
 
 <template>
-  <div class="card card-primary card-outline mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Photo</h3>
-    </div>
-    <div class="card-body text-center">
+  <base-card title="Photo" body-class="text-center">
+    <template #body>
       <font-awesome-icon v-if="!photo" :icon="['fas', 'user']" size="10x" />
       <img v-else class="img img-responsive" :src="photo" />
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>
 
 <style scoped>

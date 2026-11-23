@@ -389,10 +389,9 @@ const deleteSapeur = async () => {
     </div>
     <div class="row nested-container">
       <div class="col-3 d-none d-sm-block custom-scroll-column">
-        <div class="card card-primary card-outline mb-3">
+        <base-card title="Effectif" header-class="d-flex flex-column gap-2">
           <!-- Espacement unique (gap-2) entre tous les blocs : pas de marge propre aux éléments -->
-          <div class="card-header d-flex flex-column gap-2">
-            <h5 class="card-title mb-0">Effectif</h5>
+          <template #header>
             <div v-if="hasEditPermission" class="d-flex gap-2">
               <button type="button" class="btn btn-primary w-50" @click="addSapeur">
                 <font-awesome-icon :icon="['fas', 'plus']" />
@@ -436,41 +435,45 @@ const deleteSapeur = async () => {
               label="Statut"
               :options="actifFilterOptions"
             />
-          </div>
-          <ul id="liste-sapeurs" ref="liste-sapeurs" class="list-group list-group-flush">
-            <router-link
-              v-for="sapeur in filteredSapeurs"
-              v-slot="{ navigate }"
-              :key="sapeur.id"
-              custom
-              :to="{
-                name: currentRouteName,
-                params: { id: sapeur.id },
-              }"
-            >
-              <a
-                class="list-group-item list-group-item-action sapeur-item"
-                href="#"
-                :class="{
-                  active: activeSapeurId == sapeur.id,
+          </template>
+          <template #default>
+            <ul id="liste-sapeurs" ref="liste-sapeurs" class="list-group list-group-flush">
+              <router-link
+                v-for="sapeur in filteredSapeurs"
+                v-slot="{ navigate }"
+                :key="sapeur.id"
+                custom
+                :to="{
+                  name: currentRouteName,
+                  params: { id: sapeur.id },
                 }"
-                role="link"
-                @click="navigate"
-                >{{ sapeur.nom_prenom }}
-                <font-awesome-icon v-if="sapeur.type === TYPE_CIVIL" :icon="['far', 'handshake']" />
-                <font-awesome-icon v-if="sapeur.type === TYPE_RECRUE" icon="person-circle-plus" />
-              </a>
-            </router-link>
-            <li v-if="filteredSapeurs.length === 0" class="list-group-item">
-              {{ recherche ? `Aucun résultat pour « ${recherche} »` : "Aucun sapeur" }}
-            </li>
-          </ul>
-        </div>
+              >
+                <a
+                  class="list-group-item list-group-item-action sapeur-item"
+                  href="#"
+                  :class="{
+                    active: activeSapeurId == sapeur.id,
+                  }"
+                  role="link"
+                  @click="navigate"
+                  >{{ sapeur.nom_prenom }}
+                  <font-awesome-icon
+                    v-if="sapeur.type === TYPE_CIVIL"
+                    :icon="['far', 'handshake']"
+                  />
+                  <font-awesome-icon v-if="sapeur.type === TYPE_RECRUE" icon="person-circle-plus" />
+                </a>
+              </router-link>
+              <li v-if="filteredSapeurs.length === 0" class="list-group-item">
+                {{ recherche ? `Aucun résultat pour « ${recherche} »` : "Aucun sapeur" }}
+              </li>
+            </ul>
+          </template>
+        </base-card>
       </div>
       <div class="col-12 col-sm-9 custom-scroll-column">
-        <div class="card card-primary card-outline mb-3 d-sm-none">
-          <div class="card-header d-flex flex-column gap-2">
-            <h5 class="card-title mb-0">Effectif</h5>
+        <base-card title="Effectif" class="d-sm-none" header-class="d-flex flex-column gap-2">
+          <template #header>
             <div v-if="hasEditPermission" class="d-flex gap-2">
               <button type="button" class="btn btn-primary flex-fill" @click="addSapeur">
                 <font-awesome-icon :icon="['fas', 'plus']" />
@@ -518,24 +521,19 @@ const deleteSapeur = async () => {
               label="Statut"
               :options="actifFilterOptions"
             />
-          </div>
-          <base-select
-            base-option="&lt;Sapeur&gt;"
-            :options="filteredSapeurs"
-            display-key="nom_prenom"
-            :model-value="activeSapeurId"
-            @update:model-value="(value) => selectSapeur(value)"
-          />
-          <!-- <li v-if="filteredSapeurs.length === 0" class="list-group-item">
-              Aucun sapeur
-            </li> -->
-        </div>
+          </template>
+          <template #default>
+            <base-select
+              base-option="&lt;Sapeur&gt;"
+              :options="filteredSapeurs"
+              display-key="nom_prenom"
+              :model-value="activeSapeurId"
+              @update:model-value="(value) => selectSapeur(value)"
+            />
+          </template>
+        </base-card>
         <!-- Même indicateur que base-table pendant le chargement -->
-        <section
-          v-if="chargementSapeur"
-          class="card card-primary card-outline mb-3"
-          aria-busy="true"
-        >
+        <base-card v-if="chargementSapeur" tag="section" aria-busy="true">
           <div
             class="card-body en-tete-chargement d-flex justify-content-center align-items-center"
           >
@@ -543,7 +541,7 @@ const deleteSapeur = async () => {
               <span class="visually-hidden">Chargement du sapeur…</span>
             </div>
           </div>
-        </section>
+        </base-card>
         <div
           v-else-if="erreurChargement"
           class="alert alert-danger d-flex flex-wrap align-items-center gap-2 mb-3"
@@ -558,12 +556,13 @@ const deleteSapeur = async () => {
             Réessayer
           </button>
         </div>
-        <section
+        <base-card
           v-else-if="enTete"
-          class="card card-primary card-outline mb-3"
+          tag="section"
           aria-labelledby="fiche-sapeur-nom"
+          body-class="d-flex flex-wrap align-items-center gap-3"
         >
-          <div class="card-body d-flex flex-wrap align-items-center gap-3">
+          <template #body>
             <div class="identite-sapeur d-flex flex-column gap-1">
               <div class="d-flex flex-wrap align-items-center gap-2">
                 <h4 id="fiche-sapeur-nom" class="mb-0">{{ enTete.nomPrenom }}</h4>
@@ -640,8 +639,8 @@ const deleteSapeur = async () => {
                 </button>
               </template>
             </div>
-          </div>
-        </section>
+          </template>
+        </base-card>
         <base-navigation-tab
           v-if="activeSapeur?.id"
           :routes="
@@ -670,9 +669,9 @@ const deleteSapeur = async () => {
                 </div>
               </div>
               <div v-else class="col-12">
-                <div class="card">
-                  <div class="card-body">Commencez par ajouter un sapeur</div>
-                </div>
+                <base-card>
+                  <template #body>Commencez par ajouter un sapeur</template>
+                </base-card>
               </div>
             </div>
           </div>

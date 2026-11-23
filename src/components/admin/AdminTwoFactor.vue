@@ -57,11 +57,8 @@ const exemptionFields = [
 <template>
   <div class="row">
     <div class="col-md-3">
-      <div class="card card-primary card-outline mb-2">
-        <div class="card-header">
-          <h5>Politique d'enforcement</h5>
-        </div>
-        <div class="card-body">
+      <base-card title="Politique d'enforcement">
+        <template #body>
           <p class="text-body-secondary small">
             À partir de cette date, tout compte sans 2FA activé sera bloqué au login et devra le
             configurer avant de continuer. Les comptes exemptés ne sont jamais bloqués.
@@ -90,15 +87,12 @@ const exemptionFields = [
           >
             Retirer l'échéance
           </button>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <div class="col-md-9">
-      <div class="card card-primary card-outline mb-2">
-        <div class="card-header">
-          <h5>Adoption</h5>
-        </div>
-        <div class="card-body">
+      <base-card title="Adoption">
+        <template #body>
           <div v-if="loading">Chargement…</div>
           <div v-else class="row text-center">
             <div class="col-4">
@@ -114,15 +108,12 @@ const exemptionFields = [
               <div class="text-body-secondary">En attente</div>
             </div>
           </div>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
-  <div class="card card-primary card-outline mb-3 col-12">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Comptes exemptés</h3>
-    </div>
-    <div class="card-body table-responsive p-0">
+  <base-card title="Comptes exemptés" class="col-12">
+    <template #body-table>
       <base-table
         :fields="exemptionFields"
         :data="stats?.exemptions ?? []"
@@ -149,6 +140,6 @@ const exemptionFields = [
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

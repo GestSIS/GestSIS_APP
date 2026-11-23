@@ -44,8 +44,7 @@ const totaux = computed(() => [
 </script>
 
 <template>
-  <base-card>
-    <template #title>Écarts constatés</template>
+  <base-card title="Écarts constatés">
     <template #body>
       <div class="row text-center g-2 mb-2">
         <div v-for="total in totaux" :key="total.libelle" class="col-4">

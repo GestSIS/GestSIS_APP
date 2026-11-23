@@ -148,9 +148,8 @@ const editPhoto = () =>
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-6">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Données personnelles</h3>
+      <base-card title="Données personnelles">
+        <template #header>
           <button
             :disabled="isSubmitting"
             v-if="hasEditPermission"
@@ -159,8 +158,8 @@ const editPhoto = () =>
           >
             Enregistrer
           </button>
-        </div>
-        <div class="card-body">
+        </template>
+        <template #body>
           <base-select
             v-model="activeSapeur.civilite_id"
             class="mb-3"
@@ -328,11 +327,10 @@ const editPhoto = () =>
               name="remarques"
             ></textarea>
           </div>
-        </div>
-      </div>
-      <div v-if="estSapeur || estRecrue" class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Références professionnelles</h3>
+        </template>
+      </base-card>
+      <base-card title="Références professionnelles" v-if="estSapeur || estRecrue">
+        <template #header>
           <button
             v-if="hasEditPermission"
             class="btn btn-primary"
@@ -341,9 +339,9 @@ const editPhoto = () =>
           >
             Enregistrer
           </button>
-        </div>
-        <form role="form">
-          <div class="card-body">
+        </template>
+        <template #body>
+          <form role="form">
             <div class="mb-3">
               <label for="m-sap-profession">Profession</label>
               <input
@@ -377,14 +375,13 @@ const editPhoto = () =>
                 name="lieu_travail"
               />
             </div>
-          </div>
-        </form>
-      </div>
+          </form>
+        </template>
+      </base-card>
     </div>
     <div class="col-sm-12 col-xl-6">
-      <div v-if="estCivil" class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Civil</h3>
+      <base-card title="Civil" v-if="estCivil">
+        <template #header>
           <button
             :disabled="isSubmitting"
             v-if="hasEditPermission"
@@ -393,9 +390,9 @@ const editPhoto = () =>
           >
             Enregistrer
           </button>
-        </div>
-        <form role="form">
-          <div class="card-body">
+        </template>
+        <template #body>
+          <form role="form">
             <div class="mb-3">
               <div class="form-check form-switch">
                 <input
@@ -410,13 +407,12 @@ const editPhoto = () =>
                 <label class="form-check-label" for="civilActif">Actif</label>
               </div>
             </div>
-          </div>
-        </form>
-      </div>
+          </form>
+        </template>
+      </base-card>
 
-      <div v-if="estSapeur" class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Photo</h3>
+      <base-card title="Photo" v-if="estSapeur" body-class="text-center">
+        <template #header>
           <button
             :disabled="isSubmitting"
             v-if="photo && hasEditPermission"
@@ -428,20 +424,17 @@ const editPhoto = () =>
           <button v-if="hasEditPermission" class="btn btn-outline-primary" @click="editPhoto">
             Modifier
           </button>
-        </div>
-        <div class="card-body text-center">
+        </template>
+        <template #body>
           <font-awesome-icon v-if="!photo" :icon="['fas', 'user']" size="10x" />
           <img v-else class="img img-responsive" :src="photo" />
-        </div>
-      </div>
+        </template>
+      </base-card>
 
       <SapeurTelephones />
 
-      <div v-if="estSapeur" class="card card-primary card-outline mb-3">
-        <div class="card-header">
-          <h3 class="card-title">Informations</h3>
-        </div>
-        <div class="card-body">
+      <base-card title="Informations" v-if="estSapeur">
+        <template #body>
           <div class="mb-3 d-flex align-items-center justify-content-between">
             <span>
               <strong>Fonction principale: </strong>
@@ -491,8 +484,8 @@ const editPhoto = () =>
               <font-awesome-icon :icon="['fas', 'angle-right']" class="ms-1" />
             </router-link>
           </div>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

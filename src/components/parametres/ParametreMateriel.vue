@@ -54,14 +54,13 @@ const deleteMateriel = async (materiel) => {
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Matériel consommable et en prêt</h3>
+  <base-card title="Matériel consommable et en prêt">
+    <template #header>
       <button type="button" class="btn btn-primary" @click="ajoutMateriel()">
         Ajouter du matériel
       </button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table
         :data="listeMateriel"
         :fields="fields"
@@ -88,6 +87,6 @@ const deleteMateriel = async (materiel) => {
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

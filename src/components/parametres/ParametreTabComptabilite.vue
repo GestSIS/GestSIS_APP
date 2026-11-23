@@ -40,65 +40,64 @@ await Promise.all([
 
 <template>
   <div class="row">
-    <div class="col-sm-12 col-xl-3 mb-2">
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Paramètres comptabilité</h3>
-        </div>
-        <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-          <router-link
-            class="nav-link"
-            active-class="active"
-            role="tab"
-            :to="{ name: 'param-comptabilite-compte' }"
-            >Compte</router-link
-          >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            role="tab"
-            :to="{ name: 'param-comptabilite-categorie' }"
-            >Catégories comptables</router-link
-          >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            :to="{ name: 'param-comptabilite-indemnite-exercice' }"
-            >Imputation exercice &amp; séance</router-link
-          >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            :to="{ name: 'param-comptabilite-indemnite-intervention' }"
-            >Imputation intervention</router-link
-          >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            :to="{ name: 'param-comptabilite-indemnite-cours' }"
-            >Imputation cours</router-link
-          >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            role="tab"
-            :to="{ name: 'param-comptabilite-indemnite-frais-annuel' }"
-            >Frais &amp; indemnité annuel</router-link
-          >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            :to="{ name: 'param-comptabilite-cotisations' }"
-            >Côtisations sociales</router-link
-          >
-          <router-link
-            class="nav-link"
-            active-class="active"
-            :to="{ name: 'param-comptabilite-amende' }"
-            >Amende</router-link
-          >
-        </nav>
-      </div>
+    <div class="col-sm-12 col-xl-3">
+      <base-card title="Paramètres comptabilité">
+        <template #default>
+          <nav class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+            <router-link
+              class="nav-link"
+              active-class="active"
+              role="tab"
+              :to="{ name: 'param-comptabilite-compte' }"
+              >Compte</router-link
+            >
+            <router-link
+              class="nav-link"
+              active-class="active"
+              role="tab"
+              :to="{ name: 'param-comptabilite-categorie' }"
+              >Catégories comptables</router-link
+            >
+            <router-link
+              class="nav-link"
+              active-class="active"
+              :to="{ name: 'param-comptabilite-indemnite-exercice' }"
+              >Imputation exercice &amp; séance</router-link
+            >
+            <router-link
+              class="nav-link"
+              active-class="active"
+              :to="{ name: 'param-comptabilite-indemnite-intervention' }"
+              >Imputation intervention</router-link
+            >
+            <router-link
+              class="nav-link"
+              active-class="active"
+              :to="{ name: 'param-comptabilite-indemnite-cours' }"
+              >Imputation cours</router-link
+            >
+            <router-link
+              class="nav-link"
+              active-class="active"
+              role="tab"
+              :to="{ name: 'param-comptabilite-indemnite-frais-annuel' }"
+              >Frais &amp; indemnité annuel</router-link
+            >
+            <router-link
+              class="nav-link"
+              active-class="active"
+              :to="{ name: 'param-comptabilite-cotisations' }"
+              >Côtisations sociales</router-link
+            >
+            <router-link
+              class="nav-link"
+              active-class="active"
+              :to="{ name: 'param-comptabilite-amende' }"
+              >Amende</router-link
+            >
+          </nav>
+        </template>
+      </base-card>
     </div>
     <div class="col-sm-12 col-xl-9">
       <router-view />

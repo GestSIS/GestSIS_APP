@@ -62,8 +62,7 @@ const supprimer = (article) =>
 </script>
 
 <template>
-  <base-card>
-    <template #title>Nombre de contrôles dépassé / en préavis</template>
+  <base-card title="Nombre de contrôles dépassé / en préavis">
     <template #header>
       <router-link :to="{ name: 'materiel-controles' }" class="btn btn-outline-primary btn-sm">
         Voir les contrôles

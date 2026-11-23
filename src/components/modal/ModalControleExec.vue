@@ -723,8 +723,8 @@ const save = async () => {
             </div>
             <template v-else>
               <label>Résultat</label>
-              <div v-for="resultat in resultats" :key="resultat.key" class="card mb-2">
-                <div class="card-body py-2 px-3">
+              <base-card v-for="resultat in resultats" :key="resultat.key" body-class="py-2 px-3">
+                <template #body>
                   <div class="row g-2 align-items-start">
                     <div class="col-4">
                       <strong>{{ resultat.definition.nom }}</strong>
@@ -793,8 +793,8 @@ const save = async () => {
                       />
                     </div>
                   </div>
-                </div>
-              </div>
+                </template>
+              </base-card>
             </template>
           </template>
 

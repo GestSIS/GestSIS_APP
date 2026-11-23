@@ -85,12 +85,11 @@ const permissionMapping = (key) => {
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Rôles</h3>
+  <base-card title="Rôles">
+    <template #header>
       <button type="button" class="btn btn-primary" @click="newRole">Nouveau rôle</button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <table id="sap-cours" class="table table-sm table-bordered" cellspacing="0" width="100%">
         <thead>
           <tr>
@@ -161,8 +160,8 @@ const permissionMapping = (key) => {
           </tr>
         </tbody>
       </table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>
 
 <style scoped>

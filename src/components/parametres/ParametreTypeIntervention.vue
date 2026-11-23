@@ -89,14 +89,13 @@ const deleteStat = async (stat) => {
 <template>
   <div class="row">
     <div class="col-sm-12 col-xl-6">
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Type d'intervention</h3>
+      <base-card title="Type d'intervention">
+        <template #header>
           <button type="button" class="btn btn-primary" @click="ajoutType()">
             Ajouter un type
           </button>
-        </div>
-        <div class="card-body table-responsive p-0">
+        </template>
+        <template #body-table>
           <base-table
             :data="listeType"
             :fields="fieldsType"
@@ -123,18 +122,17 @@ const deleteStat = async (stat) => {
               </button>
             </template>
           </base-table>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <div class="col-sm-12 col-xl-6">
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Statistiques</h3>
+      <base-card title="Statistiques">
+        <template #header>
           <button type="button" class="btn btn-primary" @click="ajoutStat()">
             Ajouter un type de statistique
           </button>
-        </div>
-        <div class="card-body table-responsive p-0">
+        </template>
+        <template #body-table>
           <base-table :data="listeStat" :fields="fieldsStat" no-data="Aucune statistique">
             <template #actions="{ rowData }">
               <button
@@ -156,8 +154,8 @@ const deleteStat = async (stat) => {
               </button>
             </template>
           </base-table>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

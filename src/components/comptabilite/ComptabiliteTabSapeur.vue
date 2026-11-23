@@ -221,23 +221,17 @@ const fields = [
   >
     <div class="row">
       <div v-if="hasEditPermission" class="col-12 col-sm-6 col-lg-4 col-xl-3">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Actions</h3>
-          </div>
-          <div class="card-body d-grid gap-1">
+        <base-card title="Actions" body-class="d-grid gap-1">
+          <template #body>
             <button class="btn btn-outline-primary" title="Fonctionnalité à venir" disabled>
               Créer un décompte individuel
             </button>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
       <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Impressions</h3>
-          </div>
-          <div class="card-body d-grid gap-1">
+        <base-card title="Impressions" body-class="d-grid gap-1">
+          <template #body>
             <button class="btn btn-outline-primary" @click="printParSapeur">
               Résumé des frais complet
             </button>
@@ -248,34 +242,30 @@ const fields = [
             >
               Résumé des frais pour sapeur
             </button>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
       <div class="col-12 col-md-4 col-xl-3">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Filtres</h3>
-          </div>
-          <form class="card-body">
-            <base-select
-              display-key="nom_prenom"
-              base-option="&lt;Sapeur&gt;"
-              :options="filteredSapeurs"
-              :model-value="filters.id"
-              @update:model-value="(value) => setFilter('id', value)"
-            />
-            <div v-if="canReset" class="w-100 mt-2">
-              <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
-            </div>
-          </form>
-        </div>
+        <base-card title="Filtres">
+          <template #body>
+            <form>
+              <base-select
+                display-key="nom_prenom"
+                base-option="&lt;Sapeur&gt;"
+                :options="filteredSapeurs"
+                :model-value="filters.id"
+                @update:model-value="(value) => setFilter('id', value)"
+              />
+              <div v-if="canReset" class="w-100 mt-2">
+                <button class="btn btn-sm btn-warning w-100" @click="reset">Réinitialiser</button>
+              </div>
+            </form>
+          </template>
+        </base-card>
       </div>
       <div class="col-sm-12 col-xl-12">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Sapeurs</h3>
-          </div>
-          <div class="card-body table-responsive p-0">
+        <base-card title="Sapeurs">
+          <template #body-table>
             <base-table
               :loading="loading"
               :selectable="true"
@@ -317,8 +307,8 @@ const fields = [
                 </tr>
               </template>
             </base-table>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
     </div>
   </stateful-filter>

@@ -158,11 +158,8 @@ const nbGroupes = computed(() => {
   <div v-if="loadError" class="card-body pb-0 mb-3">
     <div class="alert alert-danger mb-0" role="alert">{{ loadError }}</div>
   </div>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Référence RTA</h3>
-    </div>
-    <div class="card-body table-responsive p-0">
+  <base-card title="Référence RTA">
+    <template #body-table>
       <table class="table table-sm" cellspacing="0">
         <thead>
           <tr>
@@ -252,6 +249,6 @@ const nbGroupes = computed(() => {
           </tr>
         </tbody>
       </table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

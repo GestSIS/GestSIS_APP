@@ -188,8 +188,7 @@ const ajouter = () =>
 </script>
 
 <template>
-  <base-card>
-    <template #title>Pièces ({{ articles.filter((a) => a.supprime_le === null).length }})</template>
+  <base-card :title="`Pièces (${articles.filter((a) => a.supprime_le === null).length})`">
     <template #header>
       <base-checkbox v-model="afficherSupprimes" label="Afficher le matériel supprimé" />
       <base-radio

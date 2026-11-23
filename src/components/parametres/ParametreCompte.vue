@@ -52,12 +52,11 @@ const deleteCompte = async (compteId) => {
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Comptes</h3>
+  <base-card title="Comptes">
+    <template #header>
       <button type="button" class="btn btn-primary" @click="ajoutCompte">Ajouter un compte</button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table :data="listeCompte" :fields="fields" no-data="Aucun compte" :selectable="true">
         <template #actions="{ rowData }">
           <button
@@ -79,6 +78,6 @@ const deleteCompte = async (compteId) => {
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

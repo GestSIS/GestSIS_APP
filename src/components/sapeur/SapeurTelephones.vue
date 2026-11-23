@@ -115,9 +115,8 @@ const fields = computed(() => [
 
 <template>
   <!-- Téléphones -->
-  <div class="card card-primary card-outline mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Téléphones</h3>
+  <base-card title="Téléphones">
+    <template #header>
       <button
         :disabled="isSubmitting"
         v-if="hasEditPermission"
@@ -126,8 +125,8 @@ const fields = computed(() => [
       >
         Enregistrer
       </button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <div v-if="loading" class="p-3 d-flex justify-content-center">
         <div class="spinner-border" role="status">
           <span class="visually-hidden">Chargement...</span>
@@ -209,6 +208,6 @@ const fields = computed(() => [
       >
         <font-awesome-icon class="me-1" :icon="['fas', 'plus']" />Ajouter un numéro
       </button>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

@@ -65,8 +65,7 @@ const modifierArticle = (article) =>
 </script>
 
 <template>
-  <base-card v-if="types.length > 0">
-    <template #title>Articles avec numéro manquant</template>
+  <base-card title="Articles avec numéro manquant" v-if="types.length > 0">
     <template #header>
       <router-link :to="{ name: 'materiel-par-type' }" class="btn btn-outline-primary btn-sm">
         Matériel par type

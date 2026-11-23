@@ -45,9 +45,8 @@ const estSapeur = computed(() => {
     <div class="col-sm-12 col-xl-6">
       <mes-references-professionelles v-if="estSapeur" v-model="sapeur" />
 
-      <div v-if="!estSapeur" class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Civil</h3>
+      <base-card title="Civil" v-if="!estSapeur">
+        <template #header>
           <button
             v-if="hasEditPermission"
             class="btn btn-primary"
@@ -55,9 +54,9 @@ const estSapeur = computed(() => {
           >
             Enregistrer
           </button>
-        </div>
-        <form role="form">
-          <div class="card-body">
+        </template>
+        <template #body>
+          <form role="form">
             <div class="mb-3">
               <div class="form-check form-switch">
                 <input
@@ -70,18 +69,15 @@ const estSapeur = computed(() => {
                 <label class="form-check-label" for="civilActif">Actif</label>
               </div>
             </div>
-          </div>
-        </form>
-      </div>
+          </form>
+        </template>
+      </base-card>
 
       <mes-telephones v-model="sapeur.telephones" :sapeur-type="sapeur.type" />
 
-      <div v-if="estSapeur" class="card card-primary card-outline mb-3">
-        <div class="card-header">
-          <h3 class="card-title">Informations</h3>
-        </div>
-        <form role="form">
-          <div class="card-body">
+      <base-card title="Informations" v-if="estSapeur">
+        <template #body>
+          <form role="form">
             <base-select
               v-model="sapeur.fonction_id"
               class="mb-3"
@@ -115,9 +111,9 @@ const estSapeur = computed(() => {
               />
               <!-- TODO Porteur checkbox -->
             </div>
-          </div>
-        </form>
-      </div>
+          </form>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

@@ -77,8 +77,7 @@ const demarrer = (emplacementId) =>
 </script>
 
 <template>
-  <base-card>
-    <template #title>État par emplacement</template>
+  <base-card title="État par emplacement">
     <template #body>
       <div class="d-flex small fw-semibold text-body-secondary pb-1">
         <span

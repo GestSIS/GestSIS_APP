@@ -3,12 +3,9 @@ const model = defineModel();
 </script>
 
 <template>
-  <div class="card card-primary card-outline mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Références professionnelles</h3>
-    </div>
-    <form role="form">
-      <div class="card-body">
+  <base-card title="Références professionnelles">
+    <template #body>
+      <form role="form">
         <div class="mb-3">
           <label for="m-sap-profession">Profession</label>
           <input
@@ -42,7 +39,7 @@ const model = defineModel();
             name="lieu_travail"
           />
         </div>
-      </div>
-    </form>
-  </div>
+      </form>
+    </template>
+  </base-card>
 </template>

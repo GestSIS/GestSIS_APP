@@ -40,14 +40,13 @@ const save = async () => {
 <template>
   <div class="row">
     <div class="col-12">
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Côtisations sociales</h3>
+      <base-card title="Côtisations sociales">
+        <template #header>
           <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save">
             Enregistrer
           </button>
-        </div>
-        <div class="card-body">
+        </template>
+        <template #body>
           <div class="mb-3">
             <label for="taux_avs"
               >Taux AVS/AI/APG<font-awesome-icon
@@ -130,8 +129,8 @@ const save = async () => {
             label="Catégorie comptable"
             :options="listeCategorie"
           />
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

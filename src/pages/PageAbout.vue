@@ -39,11 +39,8 @@ if (latestReadIndex < 0) {
     </div>
     <div class="row">
       <div class="col-md-8">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Notes de mise à jour</h3>
-          </div>
-          <div class="card-body">
+        <base-card title="Notes de mise à jour">
+          <template #body>
             <div
               v-for="({ changes, date, app }, i) in all
                 ? releases
@@ -63,15 +60,12 @@ if (latestReadIndex < 0) {
               </ul>
             </div>
             <button v-if="!all" class="btn btn-primary" @click="all = true">Tout afficher</button>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
       <div class="col-md-4">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3>A propos</h3>
-          </div>
-          <div class="card-body">
+        <base-card title="A propos">
+          <template #body>
             <h1>GestSIS</h1>
             <p>Application métier pour la gestion d'un service d'incendie et de secours.</p>
             <p>Auteur : Bastien Wermeille</p>
@@ -82,13 +76,10 @@ if (latestReadIndex < 0) {
               </a>
             </p>
             <p>GestSIS © {{ new Date().getFullYear() }} - Tous droits réservés</p>
-          </div>
-        </div>
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Contribuer</h3>
-          </div>
-          <div class="card-body">
+          </template>
+        </base-card>
+        <base-card title="Contribuer">
+          <template #body>
             <p>
               Tu souhaites contribuer au projet ? Consulte le
               <a
@@ -99,13 +90,10 @@ if (latestReadIndex < 0) {
               >
               sur GitHub.
             </p>
-          </div>
-        </div>
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3>Support</h3>
-          </div>
-          <div class="card-body">
+          </template>
+        </base-card>
+        <base-card title="Support">
+          <template #body>
             <!-- TODO: Ajout sujet par défault - Nom SIS -->
             <p>Contacter par <a href="mailto:support@gestsis.ch">email</a></p>
             <p>
@@ -114,8 +102,8 @@ if (latestReadIndex < 0) {
                 >anydesk</a
               >
             </p>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
     </div>
   </div>

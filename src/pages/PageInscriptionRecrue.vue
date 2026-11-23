@@ -198,7 +198,7 @@ const soumettre = async () => {
 
 <template>
   <div class="centered">
-    <div class="card inscription-card">
+    <base-card class="inscription-card">
       <div v-if="logoOk" class="text-center pt-3">
         <img
           :src="logoUrl"
@@ -599,7 +599,7 @@ const soumettre = async () => {
           </div>
         </form>
       </div>
-    </div>
+    </base-card>
   </div>
 </template>
 

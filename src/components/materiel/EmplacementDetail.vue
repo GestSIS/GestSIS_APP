@@ -72,9 +72,8 @@ const editEmplacement = () => {
 <template>
   <div class="row mb-2">
     <div :class="estVehicule || estHangar ? 'col-md-6 mb-3' : 'col-12'">
-      <div class="card mb-2 h-100">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="m-0">Emplacement</h5>
+      <base-card title="Emplacement" class="h-100">
+        <template #header>
           <button
             aria-label="Modifier"
             type="button"
@@ -83,8 +82,8 @@ const editEmplacement = () => {
           >
             <font-awesome-icon :icon="['far', 'edit']" />
           </button>
-        </div>
-        <div class="card-body">
+        </template>
+        <template #body>
           <div class="row">
             <div class="col-3">Nom</div>
             <div class="col-9">{{ emplacement.designation }}</div>
@@ -114,18 +113,15 @@ const editEmplacement = () => {
               {{ formatEmptyString(emplacement.remarque) }}
             </div>
           </div>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <div v-if="estVehicule" class="col-md-6 mb-3">
-      <div class="card mb-2 h-100">
-        <div class="card-header">
-          <h5 class="m-0">
-            <font-awesome-icon :icon="['fas', 'car']" class="me-1" />
-            Véhicule
-          </h5>
-        </div>
-        <div class="card-body">
+      <base-card class="h-100">
+        <template #title
+          ><font-awesome-icon :icon="['fas', 'car']" class="me-1" /> Véhicule</template
+        >
+        <template #body>
           <div class="row">
             <div class="col-3">Numéro</div>
             <div class="col-9">
@@ -162,18 +158,15 @@ const editEmplacement = () => {
               {{ emplacement.article.disponible_intervention ? "Oui" : "Non" }}
             </div>
           </div>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <div v-if="estHangar" class="col-md-6 mb-3">
-      <div class="card mb-2 h-100">
-        <div class="card-header">
-          <h5 class="m-0">
-            <font-awesome-icon :icon="['far', 'house']" class="me-1" />
-            Hangar
-          </h5>
-        </div>
-        <div class="card-body">
+      <base-card class="h-100">
+        <template #title
+          ><font-awesome-icon :icon="['far', 'house']" class="me-1" /> Hangar</template
+        >
+        <template #body>
           <div class="row">
             <div class="col-3">Rue</div>
             <div class="col-9">{{ formatEmptyString(emplacement.hangar.rue) }}</div>
@@ -188,8 +181,8 @@ const editEmplacement = () => {
               {{ indexedLocalites[emplacement.hangar.localite_id]?.designation }}
             </div>
           </div>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

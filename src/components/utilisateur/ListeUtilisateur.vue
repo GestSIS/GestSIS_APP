@@ -110,53 +110,51 @@ const fields = [
 
 <template>
   <div class="col-12 col-md-12 col-xl-8">
-    <div class="card card-primary card-outline mb-3">
-      <div class="card-header d-flex justify-content-between">
-        <h3 class="card-title">Filtres</h3>
-      </div>
-      <form class="card-body">
-        <div class="row">
-          <div class="col-md-3">
-            <base-checkbox
-              v-model="filters.special"
-              class="mb-3"
-              label="Afficher comptes spéciaux"
-            />
+    <base-card title="Filtres">
+      <template #body>
+        <form>
+          <div class="row">
+            <div class="col-md-3">
+              <base-checkbox
+                v-model="filters.special"
+                class="mb-3"
+                label="Afficher comptes spéciaux"
+              />
+            </div>
+            <div class="col-md-3">
+              <base-checkbox
+                v-model="filters.inactif"
+                class="mb-3"
+                label="Afficher sapeurs inactifs"
+              />
+            </div>
+            <div class="col-md-3">
+              <input
+                v-model="filters.user"
+                type="text"
+                placeholder="Utilisateur"
+                class="form-control form-control-sm"
+              />
+            </div>
+            <div class="col-md-3">
+              <input
+                v-model="filters.sapeur"
+                type="text"
+                placeholder="Sapeur"
+                class="form-control form-control-sm"
+              />
+            </div>
           </div>
-          <div class="col-md-3">
-            <base-checkbox
-              v-model="filters.inactif"
-              class="mb-3"
-              label="Afficher sapeurs inactifs"
-            />
-          </div>
-          <div class="col-md-3">
-            <input
-              v-model="filters.user"
-              type="text"
-              placeholder="Utilisateur"
-              class="form-control form-control-sm"
-            />
-          </div>
-          <div class="col-md-3">
-            <input
-              v-model="filters.sapeur"
-              type="text"
-              placeholder="Sapeur"
-              class="form-control form-control-sm"
-            />
-          </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </template>
+    </base-card>
   </div>
   <div class="col-md-12">
-    <div class="card card-primary card-outline mb-3">
-      <div class="card-header d-flex justify-content-between">
-        <h3>Liste des utilisateurs</h3>
+    <base-card title="Liste des utilisateurs">
+      <template #header>
         <button class="btn btn-outline-primary" @click="invite">Inviter</button>
-      </div>
-      <div class="card-body table-responsive p-0">
+      </template>
+      <template #body-table>
         <base-table
           :loading="loading"
           :fields="fields"
@@ -186,7 +184,7 @@ const fields = [
             </button>
           </template>
         </base-table>
-      </div>
-    </div>
+      </template>
+    </base-card>
   </div>
 </template>

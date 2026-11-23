@@ -50,32 +50,28 @@ const computedData = computed(() => {
 
 <template>
   <div class="row">
-    <div class="col-12 col-xl-6 mb-3">
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h4>Filtres</h4>
-        </div>
-        <form class="card-body p-2 pb-0">
-          <div class="form-check form-switch mb-2">
-            <input
-              id="switch-fonction"
-              v-model="allSapeurs"
-              type="checkbox"
-              class="form-check-input"
-            />
-            <label class="form-check-label" for="switch-fonction"
-              >Afficher les sapeurs sans interventions</label
-            >
-          </div>
-        </form>
-      </div>
+    <div class="col-12 col-xl-6">
+      <base-card title="Filtres" body-class="p-2 pb-0">
+        <template #body>
+          <form>
+            <div class="form-check form-switch mb-2">
+              <input
+                id="switch-fonction"
+                v-model="allSapeurs"
+                type="checkbox"
+                class="form-check-input"
+              />
+              <label class="form-check-label" for="switch-fonction"
+                >Afficher les sapeurs sans interventions</label
+              >
+            </div>
+          </form>
+        </template>
+      </base-card>
     </div>
-    <div class="col-12 mb-3">
-      <div class="card card-primary card-outline">
-        <div class="card-header d-flex justify-content-between">
-          <h3>Présences aux interventions</h3>
-        </div>
-        <div class="card-body table-responsive p-0">
+    <div class="col-12">
+      <base-card title="Présences aux interventions">
+        <template #body-table>
           <base-table
             ref="table"
             :fields="fields"
@@ -83,8 +79,8 @@ const computedData = computed(() => {
             :selectable="true"
             no-data="Aucune intervention"
           />
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

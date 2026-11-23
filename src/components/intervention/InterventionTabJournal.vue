@@ -365,9 +365,8 @@ const fieldsJalons = [
         </ul>
       </div>
       <div class="col-sm-12 col-md-8 col-xl-8">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Appels</h3>
+        <base-card title="Appels">
+          <template #header>
             <button
               v-if="hasEditPermission"
               type="button"
@@ -376,8 +375,8 @@ const fieldsJalons = [
             >
               Ajouter un appel
             </button>
-          </div>
-          <div class="card-body table-responsive p-0">
+          </template>
+          <template #body-table>
             <base-table
               :data="appels"
               :fields="fieldsAppels"
@@ -406,12 +405,11 @@ const fieldsJalons = [
                 </div>
               </template>
             </base-table>
-          </div>
-        </div>
+          </template>
+        </base-card>
 
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Missions</h3>
+        <base-card title="Missions">
+          <template #header>
             <button
               v-if="hasEditPermission"
               type="button"
@@ -420,8 +418,8 @@ const fieldsJalons = [
             >
               Ajouter une mission
             </button>
-          </div>
-          <div class="card-body table-responsive p-0">
+          </template>
+          <template #body-table>
             <base-table
               :data="missions"
               :fields="fieldsMissions"
@@ -450,12 +448,11 @@ const fieldsJalons = [
                 </div>
               </template>
             </base-table>
-          </div>
-        </div>
+          </template>
+        </base-card>
 
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-header d-flex justify-content-between">
-            <h3 class="card-title">Jalons</h3>
+        <base-card title="Jalons">
+          <template #header>
             <button
               v-if="hasEditPermission"
               type="button"
@@ -464,8 +461,8 @@ const fieldsJalons = [
             >
               Ajouter un jalon
             </button>
-          </div>
-          <div class="card-body table-responsive p-0">
+          </template>
+          <template #body-table>
             <base-table
               :data="jalons"
               :fields="fieldsJalons"
@@ -494,8 +491,8 @@ const fieldsJalons = [
                 </div>
               </template>
             </base-table>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
     </div>
   </div>

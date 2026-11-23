@@ -119,8 +119,7 @@ const nouveauControle = () =>
 </script>
 
 <template>
-  <base-card>
-    <template #title>Articles concernés</template>
+  <base-card title="Articles concernés">
     <template #header>
       <button
         v-if="hasControlePermission"

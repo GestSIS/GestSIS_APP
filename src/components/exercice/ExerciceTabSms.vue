@@ -45,8 +45,8 @@ const sendSms = () => {
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex">
+  <base-card>
+    <template #header>
       <button
         class="btn btn-outline-primary me-2"
         :disabled="!hasSmsEnvoiePermission"
@@ -54,7 +54,9 @@ const sendSms = () => {
       >
         Nouveau SMS
       </button>
-    </div>
-    <sms-liste :loading="loading" :sms="smsListe" />
-  </div>
+    </template>
+    <template #default>
+      <sms-liste :loading="loading" :sms="smsListe" />
+    </template>
+  </base-card>
 </template>

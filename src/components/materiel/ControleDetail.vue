@@ -67,8 +67,7 @@ const editControle = () =>
   </div>
   <div v-else class="row">
     <div class="col-12">
-      <base-card>
-        <template #title>Détails du contrôle</template>
+      <base-card title="Détails du contrôle">
         <template #header>
           <button
             aria-label="Modifier"

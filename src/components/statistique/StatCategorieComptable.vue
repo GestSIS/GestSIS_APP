@@ -53,9 +53,8 @@ const filteredData = computed(() => {
 
 <template>
   <div class="col-12 col-md-6 col-xl-4">
-    <div class="card card-primary card-outline">
-      <div class="card-header d-flex justify-content-between">
-        <h3>Stats catégories comptables</h3>
+    <base-card title="Stats catégories comptables">
+      <template #header>
         <div class="form-check form-switch mb-2">
           <input
             id="switch-categorie-comptable"
@@ -67,8 +66,8 @@ const filteredData = computed(() => {
             >Afficher les catégories sans écriture</label
           >
         </div>
-      </div>
-      <div class="card-body table-responsive p-0">
+      </template>
+      <template #body-table>
         <base-table
           :loading="loading"
           :fields="fields"
@@ -92,7 +91,7 @@ const filteredData = computed(() => {
             </tr>
           </template>
         </base-table>
-      </div>
-    </div>
+      </template>
+    </base-card>
   </div>
 </template>

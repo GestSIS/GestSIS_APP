@@ -3,11 +3,8 @@ const activeSapeur = defineModel();
 </script>
 
 <template>
-  <div class="card card-primary card-outline mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Informations bancaires</h3>
-    </div>
-    <div class="card-body">
+  <base-card title="Informations bancaires">
+    <template #body>
       <div class="mb-3">
         <label for="f-sap-nom">IBAN</label>
         <input
@@ -19,6 +16,6 @@ const activeSapeur = defineModel();
           disabled
         />
       </div>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

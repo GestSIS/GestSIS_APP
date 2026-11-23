@@ -6,8 +6,8 @@ import StatCompte from "/src/components/statistique/StatCompte.vue";
 
 <template>
   <div class="row">
-    <stat-categorie-comptable class="mb-3" />
-    <stat-module-comptable class="mb-3" />
-    <stat-compte class="mb-3" />
+    <stat-categorie-comptable />
+    <stat-module-comptable />
+    <stat-compte />
   </div>
 </template>

@@ -44,11 +44,8 @@ const filteredCivilite = computed(() => {
 
 <template>
   <div class="col-12 col-md-6 col-xl-4">
-    <div class="card card-primary card-outline">
-      <div class="card-header d-flex justify-content-between">
-        <h3>Stats sapeurs</h3>
-      </div>
-      <div class="card-body table-responsive p-0">
+    <base-card title="Stats sapeurs">
+      <template #body-table>
         <base-table
           :loading="loading"
           :fields="fields"
@@ -70,7 +67,7 @@ const filteredCivilite = computed(() => {
             </tr>
           </template>
         </base-table>
-      </div>
-    </div>
+      </template>
+    </base-card>
   </div>
 </template>

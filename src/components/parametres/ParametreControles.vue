@@ -59,14 +59,13 @@ const fields = [
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title me-auto">Contrôles</h3>
+  <base-card title="Contrôles">
+    <template #header>
       <button type="button" class="btn btn-primary" @click="ajoutControle">
         Ajouter un contrôle
       </button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table
         :data="controles"
         :fields="fields"
@@ -109,6 +108,6 @@ const fields = [
           </div>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

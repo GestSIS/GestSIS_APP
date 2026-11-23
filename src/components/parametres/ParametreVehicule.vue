@@ -47,9 +47,8 @@ const supprimer = (vehicule) =>
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Véhicules</h3>
+  <base-card title="Véhicules">
+    <template #header>
       <button
         v-if="hasEditPermission"
         type="button"
@@ -58,8 +57,8 @@ const supprimer = (vehicule) =>
       >
         Ajouter
       </button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table :data="vehicules" :fields="fields" no-data="Aucun véhicule" :selectable="true">
         <template #actions="{ rowData }">
           <button
@@ -82,6 +81,6 @@ const supprimer = (vehicule) =>
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

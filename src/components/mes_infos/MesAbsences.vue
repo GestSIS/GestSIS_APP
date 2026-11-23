@@ -62,14 +62,13 @@ const fields = [
 </script>
 
 <template>
-  <div class="card card-primary card-outline mb-3">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Mes absences</h3>
+  <base-card title="Mes absences">
+    <template #header>
       <button v-if="absenceParams?.actif" type="button" class="btn btn-primary" @click="addAbsence">
         Saisir une absence
       </button>
-    </div>
-    <div class="card-body table-responsive p-0">
+    </template>
+    <template #body-table>
       <base-table
         class="table-striped"
         :loading="loading"
@@ -99,6 +98,6 @@ const fields = [
           </button>
         </template>
       </base-table>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>

@@ -95,19 +95,16 @@ const fields = [
   <stateful-filter id="absences" v-slot="{ filteredData }" :data="computedData">
     <div class="row">
       <div class="col-md-3">
-        <div class="card card-primary card-outline mb-2">
-          <div class="card-header d-flex justify-content-between">
-            <h5>Actions</h5>
-          </div>
-          <div class="card-body d-grid gap-2">
+        <base-card title="Actions" body-class="d-grid gap-2">
+          <template #body>
             <button v-if="hasEditPermission" class="btn btn-outline-primary" @click="addAbsence">
               Ajouter une absence
             </button>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
       <!-- <div class="col-md-6">
-        <div class="card card-primary card-outline mb-2">
+        <div class="card mb-2">
           <div class="card-header d-flex justify-content-between">
             <h5>Filtres</h5>
           </div>
@@ -122,8 +119,8 @@ const fields = [
     </div>
     <div class="row">
       <div class="col-md-12">
-        <div class="card card-primary card-outline mb-3">
-          <div class="card-body table-responsive p-0">
+        <base-card>
+          <template #body-table>
             <base-table
               ref="basetable_absences"
               :loading="loading"
@@ -153,8 +150,8 @@ const fields = [
                 </button>
               </template>
             </base-table>
-          </div>
-        </div>
+          </template>
+        </base-card>
       </div>
     </div>
   </stateful-filter>

@@ -70,14 +70,13 @@ const fields = [
 
 <template>
   <div class="col-xs-12 col-lg-6">
-    <div class="card card-primary card-outline mb-3">
-      <div class="card-header d-flex justify-content-between">
-        <h3 class="card-title">Matériel consommable et en prêt</h3>
+    <base-card title="Matériel consommable et en prêt">
+      <template #header>
         <button v-if="hasEditPermission" type="button" class="btn btn-primary" @click="newMateriel">
           Ajouter du matériel
         </button>
-      </div>
-      <div class="card-body table-responsive p-0">
+      </template>
+      <template #body-table>
         <base-table
           :loading="loading"
           :fields="fields"
@@ -107,7 +106,7 @@ const fields = [
             </div>
           </template>
         </base-table>
-      </div>
-    </div>
+      </template>
+    </base-card>
   </div>
 </template>

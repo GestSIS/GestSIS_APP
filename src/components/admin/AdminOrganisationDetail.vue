@@ -108,12 +108,11 @@ const fields = [
 <template>
   <div class="row">
     <div class="col-4">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h3 class="card-title">Données</h3>
+      <base-card title="Données">
+        <template #header>
           <button class="btn btn-primary" @click="editOrganisation">Modifier</button>
-        </div>
-        <div class="card-body">
+        </template>
+        <template #body>
           <div class="mb-3">
             <label for="id">id</label>
             <input
@@ -173,15 +172,12 @@ const fields = [
             />
             <label for="mobile" class="ms-1">Mobile</label>
           </div>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
     <div class="col-8">
-      <div class="card card-primary card-outline mb-3">
-        <div class="card-header d-flex justify-content-between">
-          <h5 class="card-title">Utilisateurs</h5>
-        </div>
-        <div class="card-body table-responsive p-0">
+      <base-card title="Utilisateurs">
+        <template #body-table>
           <base-table
             ref="table"
             :fields="fields"
@@ -228,8 +224,8 @@ const fields = [
               </tr>
             </template>
           </base-table>
-        </div>
-      </div>
+        </template>
+      </base-card>
     </div>
   </div>
 </template>

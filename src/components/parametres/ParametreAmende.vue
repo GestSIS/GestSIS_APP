@@ -73,14 +73,13 @@ const save = async () => {
 </script>
 
 <template>
-  <div class="card card-primary card-outline">
-    <div class="card-header d-flex justify-content-between">
-      <h3 class="card-title">Amendes</h3>
+  <base-card title="Amendes">
+    <template #header>
       <button :disabled="isSubmitting" type="button" class="btn btn-primary" @click="save()">
         Enregistrer
       </button>
-    </div>
-    <div class="card-body">
+    </template>
+    <template #body>
       <div class="row">
         <base-select
           v-model="params.compte_id"
@@ -126,6 +125,6 @@ const save = async () => {
         </template>
       </base-table>
       <button class="btn btn-primary mt-2" @click="addAmende">+</button>
-    </div>
-  </div>
+    </template>
+  </base-card>
 </template>
