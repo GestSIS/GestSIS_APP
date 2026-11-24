@@ -288,7 +288,11 @@ const fields = [
             >
               Dupliquer
             </button>
-            <button class="btn btn-outline-primary" @click="importExerciceComptable">
+            <button
+              v-if="hasEditPermission"
+              class="btn btn-outline-primary"
+              @click="importExerciceComptable"
+            >
               Importer depuis année précédente
             </button>
             <div class="row">
