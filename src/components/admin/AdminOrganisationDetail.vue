@@ -107,7 +107,7 @@ const fields = [
 
 <template>
   <div class="row">
-    <div class="col-4">
+    <div class="col-md-4">
       <base-card title="Données">
         <template #header>
           <button class="btn btn-primary" @click="editOrganisation">Modifier</button>
@@ -175,7 +175,7 @@ const fields = [
         </template>
       </base-card>
     </div>
-    <div class="col-8">
+    <div class="col-md-8">
       <base-card title="Utilisateurs">
         <template #body-table>
           <base-table
