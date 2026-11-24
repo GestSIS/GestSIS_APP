@@ -45,6 +45,12 @@ const colonnesComposants = [
   { title: "Composant", key: "composant_nom" },
   { title: "Article contrôlé", slot: "articleControle" },
 ];
+// Date en slot : date seule ou date-heure selon l'événement ; pas de tri par colonne pour
+// garder l'ordre de l'historique (ordre des événements d'un même jour).
+const colonnesHistorique = [
+  { title: "Date", slot: "date" },
+  { title: "Événement", slot: "evenement" },
+];
 await Promise.all([
   typeStore.fetchMaterielTypes(),
   afficheEmplacement ? emplacementStore.fetchEmplacements() : null,
@@ -383,16 +389,20 @@ const lignesControles = computed(() =>
           </template>
 
           <strong class="d-block mb-2">Historique</strong>
-          <ul class="list-unstyled mb-0">
-            <li v-for="(evt, i) in historique" :key="i">
-              <span class="text-muted me-2">{{
-                evt.dateSeule ? formatDate(evt.date) : formatDateTime(evt.date)
-              }}</span>
-              <span>{{ evt.label }}</span>
-              <span v-if="evt.detail" class="text-muted"> — {{ evt.detail }}</span>
-            </li>
-            <li v-if="historique.length === 0" class="text-muted">Aucun événement</li>
-          </ul>
+          <base-table
+            :data="historique"
+            :fields="colonnesHistorique"
+            :hide-download="true"
+            no-data="Aucun événement"
+          >
+            <template #date="{ rowData }">
+              {{ rowData.dateSeule ? formatDate(rowData.date) : formatDateTime(rowData.date) }}
+            </template>
+            <template #evenement="{ rowData }">
+              {{ rowData.label }}
+              <span v-if="rowData.detail" class="text-muted"> — {{ rowData.detail }}</span>
+            </template>
+          </base-table>
 
           <template v-if="composants.length > 0">
             <strong class="d-block mt-3 mb-2">Utilisé comme composant</strong>
