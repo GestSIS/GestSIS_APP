@@ -45,7 +45,7 @@ const breadcrumbFinal = computed(() =>
 );
 
 const { showValiderButton, showDevaliderButton, validerIntervention, devaliderIntervention } =
-  useValidationIntervention(id);
+  useValidationIntervention(() => id);
 </script>
 
 <template>
@@ -57,14 +57,6 @@ const { showValiderButton, showDevaliderButton, validerIntervention, devaliderIn
         </base-breadcrumb>
       </div>
       <div class="col-sm-6 d-flex justify-content-end align-items-center gap-2">
-        <record-navigation
-          v-if="!newMode"
-          filter-id="interventions"
-          :items="interventionStore.liste"
-          :current-id="id"
-          date-key="date_debut"
-          label="Intervention"
-        />
         <status-badge v-if="!newMode" :status="interventionStatut(activeInterventionData.statut)" />
         <button
           v-if="!newMode && showValiderButton"
@@ -83,6 +75,14 @@ const { showValiderButton, showDevaliderButton, validerIntervention, devaliderIn
           <font-awesome-icon :icon="['fas', 'rotate-left']" class="me-1" />
           Annuler la validation
         </button>
+        <record-navigation
+          v-if="!newMode"
+          filter-id="interventions"
+          :items="interventionStore.liste"
+          :current-id="id"
+          date-key="date_debut"
+          label="Intervention"
+        />
         <exercice-comptable />
       </div>
     </div>

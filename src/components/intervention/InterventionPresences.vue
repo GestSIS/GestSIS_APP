@@ -28,7 +28,7 @@ const { id } = defineProps({
 });
 
 const { showValiderButton, showDevaliderButton, validerIntervention, devaliderIntervention } =
-  useValidationIntervention(id);
+  useValidationIntervention(() => id);
 
 const loading = ref(false);
 watchEffect(async () => {

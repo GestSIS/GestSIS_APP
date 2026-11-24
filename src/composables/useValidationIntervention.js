@@ -1,6 +1,6 @@
 // Validation et annulation de validation d'une intervention (utilisé dans PageIntervention.vue
 // et intervention/InterventionPresences.vue), sur le modèle de l'exercice.
-import { computed } from "vue";
+import { computed, toValue } from "vue";
 import permissions from "./permissions.js";
 import { useHasPermission } from "./useHasPermission.js";
 import { useSubmit } from "./useSubmit.js";
@@ -12,7 +12,8 @@ import { useModalStore } from "../stores/common/Modal.js";
 const INTERVENTION_SAISIE = 1;
 const INTERVENTION_VALIDEE = 2;
 
-// `id` : intervention ouverte ; sans id (liste), utiliser devaliderInterventionId(id)
+// `id` : getter de l'intervention ouverte (suit la navigation précédent / suivant) ;
+// sans id (liste), utiliser devaliderInterventionId(id)
 export function useValidationIntervention(id = null) {
   const interventionStore = useInterventionStore();
   const modalStore = useModalStore();
@@ -36,7 +37,7 @@ export function useValidationIntervention(id = null) {
       )
     ) {
       await submit(
-        () => interventionStore.validerIntervention(id),
+        () => interventionStore.validerIntervention(toValue(id)),
         "Erreur lors de la validation de l'intervention.",
         "Intervention validée.",
       );
@@ -58,7 +59,7 @@ export function useValidationIntervention(id = null) {
     }
   };
 
-  const devaliderIntervention = () => devaliderInterventionId(id);
+  const devaliderIntervention = () => devaliderInterventionId(toValue(id));
 
   return {
     isSubmitting,
