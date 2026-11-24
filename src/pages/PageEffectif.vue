@@ -36,9 +36,7 @@ const loading = ref(true);
 const selectedId = ref(null);
 const sapeurs = ref([]);
 
-const localites = computed(() =>
-  localiteStore.liste.slice().sort((a, b) => a.designation.localeCompare(b.designation)),
-);
+const localites = computed(() => localiteStore.liste);
 const civilites = computed(() => baseDataStore.civilites);
 const groupes = computed(() => groupeStore.liste);
 const fonctions = computed(() => fonctionStore.liste.filter((f) => f.actif));

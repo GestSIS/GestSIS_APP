@@ -47,29 +47,12 @@ await Promise.all([
 const alarmes = computed(
   () => alarmeStore.liste, //.sort((a, b) => b.date_debut.localeCompare(a.date_debut)),
 );
-const types = computed(() => typeInterventionStore.liste);
-const stats = computed(() => statFederalStore.liste);
-const traitements = computed(() => traitementStore.liste);
-const localites = computed(() =>
-  localiteStore.liste.slice().sort((a, b) => a.designation.localeCompare(b.designation)),
-);
 
 const computedData = computed(() => {
   return alarmes.value.map((a) => ({
     ...a,
     groupes: [...new Set(a.firefighters.map((s) => s.group_number))],
   }));
-  // return interventions.value.map((e) => ({
-  //   ...e,
-  //   type_intervention: types.value.find((c) => c.id == e.type_intervention_id)
-  //     ?.designation,
-  //   localite: localites.value.find((l) => l.id == e.localite_id)?.designation,
-  //   stat_federal: stats.value.find((l) => l.id == e.stat_federal_id)
-  //     ?.designation,
-  //   traitement: traitements.value.find(
-  //     (l) => l.id == e.intervention_traitement_id,
-  //   )?.designation,
-  // }));
 });
 
 const fields = [

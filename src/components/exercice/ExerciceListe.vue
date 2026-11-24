@@ -52,9 +52,7 @@ const exercices = computed(() =>
   exerciceStore.liste.slice().sort((a, b) => a.date?.localeCompare(b.date)),
 );
 const categories = computed(() => exerciceCategorieStore.liste);
-const localites = computed(() =>
-  localiteStore.liste.slice().sort((a, b) => a.designation.localeCompare(b.designation)),
-);
+const localites = computed(() => localiteStore.liste);
 const hasEditPermission = useHasPermission(permissions.EXERCICE.MODIFICATION);
 const hasSmsEnvoiePermission = useHasPermission(permissions.SMS.ENVOIE);
 const hasValidationPermission = useHasPermission(permissions.EXERCICE.VALIDATION);

@@ -54,9 +54,7 @@ const interventions = computed(() =>
 const types = computed(() => typeInterventionStore.liste);
 const stats = computed(() => statFederalStore.liste);
 const traitements = computed(() => traitementStore.liste);
-const localites = computed(() =>
-  localiteStore.liste.slice().sort((a, b) => a.designation.localeCompare(b.designation)),
-);
+const localites = computed(() => localiteStore.liste);
 const hasValidationPermission = useHasPermission(permissions.INTERVENTION.VALIDATION);
 const hasEditPermission = useHasPermission(permissions.INTERVENTION.MODIFICATION);
 

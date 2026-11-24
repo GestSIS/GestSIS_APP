@@ -52,9 +52,7 @@ const coursTypes = computed(() =>
 const coursSapeurs = computed(() =>
   coursSapeurStore.liste.slice().sort((a, b) => a.date.localeCompare(b.date)),
 );
-const localites = computed(() =>
-  localiteStore.liste.slice().sort((a, b) => a.designation.localeCompare(b.designation)),
-);
+const localites = computed(() => localiteStore.liste);
 
 const computedData = computed(() =>
   coursSapeurs.value.map((s) => ({
