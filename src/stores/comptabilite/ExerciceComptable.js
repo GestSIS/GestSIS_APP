@@ -15,13 +15,14 @@ export const useExerciceComptableStore = defineStore("exerciceComptable", {
         return Promise.resolve();
       }
       const data = await ExerciceComptableService.getExercices();
-      this.liste = data;
+      // Toujours triée de la plus récente à la plus ancienne année
+      this.liste = data.sort((e1, e2) => e2.annee - e1.annee);
 
       if ((this.activeId || 0) === 0) {
         // Select année en cours ou sinon, le dernier
         const anneeEnCours = new Date().getFullYear();
         const exerciceEnCours = data.find((e) => e.annee == anneeEnCours);
-        this.activeId = exerciceEnCours?.id || data.sort((e1, e2) => e2.annee - e1.annee)[0]?.id;
+        this.activeId = exerciceEnCours?.id || this.liste[0]?.id;
       }
 
       return data;
@@ -31,7 +32,7 @@ export const useExerciceComptableStore = defineStore("exerciceComptable", {
     },
     async addExerciceComptable(exercice) {
       const data = await ExerciceComptableService.addExercice(exercice);
-      this.liste.push(data);
+      this.liste = [...this.liste, data].sort((e1, e2) => e2.annee - e1.annee);
       return data;
     },
     async updateExerciceComptable(exercice) {

@@ -127,12 +127,18 @@ const estFinSansRetour = (attribution) => {
 const historique = computed(() => {
   const events = [];
   if (data.created_at) {
-    events.push({ date: data.created_at, ordre: ORDRE_EVENEMENT.AJOUT, label: "Ajouté" });
+    events.push({
+      id: "ajout",
+      date: data.created_at,
+      ordre: ORDRE_EVENEMENT.AJOUT,
+      label: "Ajouté",
+    });
   }
   attributions.value.forEach((a) => {
     const attribuePar = nomSapeur(a.attribue_par_sapeur_id);
     const nom = a.sapeur?.nom_prenom ?? "-";
     events.push({
+      id: `attribution-${a.id}`,
       date: a.debut,
       dateSeule: true,
       ordre: ORDRE_EVENEMENT.ATTRIBUTION,
@@ -142,6 +148,7 @@ const historique = computed(() => {
     if (a.fin) {
       const cloturePar = nomSapeur(a.cloture_par_sapeur_id);
       events.push({
+        id: `fin-attribution-${a.id}`,
         date: a.fin,
         dateSeule: true,
         ordre: ORDRE_EVENEMENT.FIN_ATTRIBUTION,
@@ -152,6 +159,7 @@ const historique = computed(() => {
   });
   execs.value.forEach((e) => {
     events.push({
+      id: `controle-${e.id}`,
       date: e.executed_at,
       ordre: ORDRE_EVENEMENT.CONTROLE,
       label: `Contrôle ${e.controle?.nom ?? ""}`.trim(),
@@ -160,6 +168,7 @@ const historique = computed(() => {
   });
   if (data.supprime_le) {
     events.push({
+      id: "suppression",
       date: data.supprime_le,
       dateSeule: true,
       ordre: ORDRE_EVENEMENT.SUPPRESSION,

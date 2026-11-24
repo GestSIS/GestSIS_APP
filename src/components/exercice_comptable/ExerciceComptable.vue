@@ -6,9 +6,7 @@ import { useHasPermission } from "../../composables/useHasPermission.js";
 
 const exerciceComptableStore = useExerciceComptableStore();
 
-const listeExerciceComptable = computed(() =>
-  exerciceComptableStore.liste.slice().sort((a, b) => b.annee - a.annee),
-);
+const listeExerciceComptable = computed(() => exerciceComptableStore.liste);
 const activeExerciceComptable = computed(() =>
   exerciceComptableStore.liste.find((e) => e.id == exerciceComptableStore.activeId),
 );

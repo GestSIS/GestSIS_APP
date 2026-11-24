@@ -15,9 +15,7 @@ const fields = [
   { title: "Actions", slot: "actions" },
 ];
 
-const listeExerciceComptable = computed(() =>
-  exerciceComptableStore.liste.slice().sort((a, b) => b.annee - a.annee),
-);
+const listeExerciceComptable = computed(() => exerciceComptableStore.liste);
 
 const { showModal } = useModalStore();
 const newExerciceComptable = () => showModal({ component: "ModalExerciceComptable", data: {} });
