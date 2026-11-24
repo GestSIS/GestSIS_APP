@@ -270,13 +270,14 @@ export const useSapeurStore = defineStore("sapeur", {
     },
     async removeMutation(mutationId) {
       const data = await SapeurService.removeMutation(this.active.data.id, mutationId);
+      const statut = {
+        actif: data.actif,
+        annee_incorporation: data.annee_incorporation,
+        type: data.type,
+      };
       this.active.mutations = this.active.mutations.filter((c) => c.id !== mutationId);
-      this.liste = this.liste.map((s) => {
-        if (s.id == this.active.data.id) {
-          return { ...s, actif: data.actif };
-        }
-        return s;
-      });
+      this.active.data = { ...this.active.data, ...statut };
+      this.liste = this.liste.map((s) => (s.id == this.active.data.id ? { ...s, ...statut } : s));
       return data;
     },
     // Autres actions

@@ -6,6 +6,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { toDateInputValue } from "../../tools/index.js";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -30,6 +31,8 @@ const finServiceButtonState = computed(
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
 
+const isLastMutation = computed(() => mutations.value.length === 1);
+
 const removeMutation = async (mutation) => {
   if (
     await confirm(
@@ -41,6 +44,21 @@ const removeMutation = async (mutation) => {
       () => sapeurStore.removeMutation(mutation?.id),
       "Erreur lors de la suppression de la mutation.",
       "Mutation supprimée.",
+    );
+  }
+};
+
+const backToRecrue = async () => {
+  if (
+    await confirm(
+      "Voulez-vous vraiment repasser ce sapeur en recrue ?",
+      "Sa mutation sera supprimée et il retournera dans la liste des recrues.",
+    )
+  ) {
+    await submit(
+      () => sapeurStore.removeMutation(mutations.value[0].id),
+      "Erreur lors du passage en recrue.",
+      "Le sapeur est repassé en recrue.",
     );
   }
 };
@@ -66,32 +84,8 @@ const fields = [
 
 <template>
   <base-card title="Incorporation / Sortie">
-    <!-- form start -->
-    <template #body>
-      <form role="form">
-        <base-table :loading="loading" :fields="fields" :data="mutations" no-data="Aucune mutation">
-          <template #actions="{ rowData }">
-            <button
-              v-if="hasEditPermission"
-              aria-label="Modifier"
-              type="button"
-              class="btn btn-outline-primary border-0"
-              @click="editMutation(rowData)"
-            >
-              <font-awesome-icon :icon="['far', 'edit']" />
-            </button>
-            <button
-              aria-label="Supprimer"
-              :disabled="isSubmitting"
-              v-if="hasEditPermission"
-              type="button"
-              class="btn btn-outline-danger border-0"
-              @click="removeMutation(rowData)"
-            >
-              <font-awesome-icon :icon="['far', 'trash-alt']" />
-            </button>
-          </template>
-        </base-table>
+    <template #header>
+      <div>
         <button
           v-if="finServiceButtonState && hasEditPermission"
           type="button"
@@ -108,6 +102,42 @@ const fields = [
         >
           <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />Incorporation
         </button>
+        <button
+          v-if="isLastMutation && hasEditPermission"
+          :disabled="isSubmitting"
+          type="button"
+          class="btn btn-outline-warning ms-2"
+          @click="backToRecrue"
+        >
+          <font-awesome-icon class="me-1" :icon="['fas', 'person-circle-plus']" />Repasser en recrue
+        </button>
+      </div>
+    </template>
+    <template #body>
+      <form role="form">
+        <base-table :loading="loading" :fields="fields" :data="mutations" no-data="Aucune mutation">
+          <template #actions="{ rowData }">
+            <button
+              v-if="hasEditPermission"
+              aria-label="Modifier"
+              type="button"
+              class="btn btn-outline-primary border-0"
+              @click="editMutation(rowData)"
+            >
+              <font-awesome-icon :icon="['far', 'edit']" />
+            </button>
+            <button
+              aria-label="Supprimer"
+              :disabled="isSubmitting"
+              v-if="hasEditPermission && !isLastMutation"
+              type="button"
+              class="btn btn-outline-danger border-0"
+              @click="removeMutation(rowData)"
+            >
+              <font-awesome-icon :icon="['far', 'trash-alt']" />
+            </button>
+          </template>
+        </base-table>
       </form>
     </template>
   </base-card>
