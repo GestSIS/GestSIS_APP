@@ -17,14 +17,14 @@ const filters = ref({
   email: "",
 });
 
-const sisId = computed(() => authStore.organisation.activeId);
+const oragnisationId = computed(() => authStore.organisation.activeId);
 const users = computed(() => authStore.users);
 const sapeurs = computed(() => sapeurStore.liste);
 
 const computedData = computed(() => {
   const sapeurIds = new Set(
     users.value.flatMap((u) =>
-      u.sapeur.filter((s) => s.sis_id == sisId.value).map((s) => s.sapeur_id),
+      u.sapeur.filter((s) => s.organisation_id == oragnisationId.value).map((s) => s.sapeur_id),
     ),
   );
   return sapeurs.value
