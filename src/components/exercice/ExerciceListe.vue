@@ -118,6 +118,12 @@ const email = async ({ id }) => {
   link.click();
 };
 
+const duplicate = (id) =>
+  showModal({
+    component: "ModalDupliquerExercice",
+    data: exercices.value.find((e) => e.id == id),
+  });
+
 const validerExercice = async (id) => {
   await submit(
     () => exerciceStore.validerExercice(id),
@@ -274,6 +280,17 @@ const fields = [
                 {{ hasEditPermission ? "Modifier" : "Aperçu" }}
               </button>
             </router-link>
+            <button
+              v-if="hasEditPermission"
+              :disabled="!selectedId"
+              class="btn btn-outline-primary"
+              @click="duplicate(selectedId)"
+            >
+              Dupliquer
+            </button>
+            <button class="btn btn-outline-primary" @click="importExerciceComptable">
+              Importer depuis année précédente
+            </button>
             <div class="row">
               <div class="col-6">
                 <button
@@ -294,17 +311,11 @@ const fields = [
                 </button>
               </div>
             </div>
-            <button class="btn btn-outline-primary" @click="downloadIcs(filteredData)">
-              Fichier <em>Icalc</em>
-            </button>
-            <button class="btn btn-outline-primary" @click="importExerciceComptable">
-              Importer depuis année précédente
-            </button>
           </template>
         </base-card>
       </div>
       <div class="col-md-3">
-        <base-card title="Impressions" body-class="d-grid gap-2">
+        <base-card title="Export" body-class="d-grid gap-2">
           <template #body>
             <button
               class="btn btn-outline-primary"
@@ -326,6 +337,9 @@ const fields = [
               @click="listeAppel({ id: selectedId })"
             >
               Liste d'appel
+            </button>
+            <button class="btn btn-outline-primary" @click="downloadIcs(filteredData)">
+              Fichier <em>Icalc</em>
             </button>
           </template>
         </base-card>

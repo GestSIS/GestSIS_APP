@@ -6,7 +6,8 @@
       "app": "GestSIS APP",
       "changes": [
         "Sapeurs, l'incorporation d'un sapeur peut être annulée : il redevient recrue",
-        "Navigation entre les exercices et interventions facilitée"
+        "Navigation entre les exercices et interventions facilitée",
+        "Exercices, un exercice peut être dupliqué à une autre date, avec ou sans ses convocations"
       ]
     },
     {

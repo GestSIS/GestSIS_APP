@@ -63,6 +63,12 @@ export const useExerciceStore = defineStore("exercice", {
       this.active.data = data;
       return data;
     },
+    async dupliquerExercice(exerciceId, form) {
+      const data = await ExerciceService.dupliquerExercice(exerciceId, form);
+      // Garde le tri du plus récent au plus ancien
+      this.liste = [...this.liste, data].sort((e1, e2) => new Date(e2.date) - new Date(e1.date));
+      return data;
+    },
     async validerExercice(exerciceId) {
       const data = await ExerciceService.validerExercice(exerciceId);
       this.liste = this.liste.map((e) => (e.id == exerciceId ? { ...e, statut: data?.statut } : e));
