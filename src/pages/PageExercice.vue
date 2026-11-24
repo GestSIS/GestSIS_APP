@@ -4,6 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useNotification } from "../composables/useNotification.js";
 import { useExerciceStore } from "../stores/exercice/Exercice.js";
 import ExerciceComptable from "/src/components/exercice_comptable/ExerciceComptable.vue";
+import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
 
 const { id } = defineProps({
   id: {
@@ -13,9 +14,16 @@ const { id } = defineProps({
 });
 
 const exerciceStore = useExerciceStore();
+const exerciceComptableStore = useExerciceComptableStore();
+
 const route = useRoute();
 const router = useRouter();
 const awn = useNotification();
+
+await exerciceComptableStore.fetchExercicesComptables();
+watchEffect(async () => {
+  await exerciceStore.fetchExercices(exerciceComptableStore.activeId);
+});
 
 const newMode = computed(() => id === "new");
 watchEffect(() => {
@@ -48,21 +56,18 @@ const breadcrumbFinal = computed(() =>
   <div class="container-fluid">
     <div class="row">
       <div class="col-sm-6">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb m-3">
-            <li class="breadcrumb-item">
-              <router-link :to="{ name: 'accueil' }">Accueil</router-link>
-            </li>
-            <li class="breadcrumb-item">
-              <router-link :to="{ name: 'exercices' }">Exercices</router-link>
-            </li>
-            <li class="breadcrumb-item active" aria-current="page">
-              {{ breadcrumbFinal }}
-            </li>
-          </ol>
-        </nav>
+        <base-breadcrumb :items="[{ label: 'Exercices', to: { name: 'exercices' } }]">
+          {{ breadcrumbFinal }}
+        </base-breadcrumb>
       </div>
-      <div class="col-sm-6 d-flex justify-content-end">
+      <div class="col-sm-6 d-flex justify-content-end align-items-center gap-3">
+        <record-navigation
+          v-if="!newMode"
+          filter-id="exercices"
+          :items="exerciceStore.liste"
+          :current-id="id"
+          label="Exercice"
+        />
         <exercice-comptable />
       </div>
     </div>

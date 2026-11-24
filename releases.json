@@ -4,7 +4,10 @@
       "date": "24.11.2026",
       "version": "1.0",
       "app": "GestSIS APP",
-      "changes": ["Sapeurs, l'incorporation d'un sapeur peut être annulée : il redevient recrue"]
+      "changes": [
+        "Sapeurs, l'incorporation d'un sapeur peut être annulée : il redevient recrue",
+        "Navigation entre les exercices et interventions facilitée"
+      ]
     },
     {
       "date": "23.11.2026",

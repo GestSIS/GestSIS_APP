@@ -32,9 +32,7 @@ await exerciceComptableStore.fetchExercicesComptables();
 const exercices = computed(() =>
   exerciceStore.liste.slice().sort((a, b) => new Date(a.date) - new Date(b.date)),
 );
-const localites = computed(() =>
-  localiteStore.liste.slice().sort((a, b) => a.designation.localeCompare(b.designation)),
-);
+const localites = computed(() => localiteStore.liste);
 const sapeurs = computed(() => sapeurStore.liste);
 const localiteExercices = computed(() => {
   const loc = new Set(exercices.value.map((e) => e.localite_id));

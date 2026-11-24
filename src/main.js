@@ -26,6 +26,8 @@ import BaseCheckbox from "/src/components/base/BaseCheckbox.vue";
 import BaseRadio from "/src/components/base/BaseRadio.vue";
 import BaseMultiSelect from "/src/components/base/BaseMultiSelect.vue";
 import StatefulFilter from "/src/components/base/StatefulFilter.vue";
+import BaseBreadcrumb from "/src/components/base/BaseBreadcrumb.vue";
+import RecordNavigation from "/src/components/base/RecordNavigation.vue";
 import BaseTable from "/src/components/table/BaseTable.vue";
 import BaseNavigationTab from "/src/components/base/BaseNavigationTab.vue";
 import BaseCard from "/src/components/base/BaseCard.vue";
@@ -102,6 +104,8 @@ app
   .component("BaseRadio", BaseRadio)
   .component("BaseMultiSelect", BaseMultiSelect)
   .component("StatefulFilter", StatefulFilter)
+  .component("BaseBreadcrumb", BaseBreadcrumb)
+  .component("RecordNavigation", RecordNavigation)
   .component("BaseTable", BaseTable)
   .component("BaseCard", BaseCard)
   .component("BaseNavigationTab", BaseNavigationTab)

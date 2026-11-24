@@ -4,10 +4,12 @@ import { watchEffect } from "vue";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useInterventionStore } from "../stores/intervention/Intervention.js";
+import { useExerciceComptableStore } from "../stores/comptabilite/ExerciceComptable.js";
 import { interventionStatut } from "../tools/intervention.js";
 import { useValidationIntervention } from "../composables/useValidationIntervention.js";
 
 const interventionStore = useInterventionStore();
+const exerciceComptableStore = useExerciceComptableStore();
 const route = useRoute();
 const router = useRouter();
 
@@ -17,6 +19,9 @@ const { id } = defineProps({
     default: "new",
   },
 });
+
+await exerciceComptableStore.fetchExercicesComptables();
+watchEffect(() => interventionStore.fetchInterventions(exerciceComptableStore.activeId));
 
 const newMode = computed(() => id === "new");
 watchEffect(() => {
@@ -47,19 +52,19 @@ const { showValiderButton, showDevaliderButton, validerIntervention, devaliderIn
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-6">
-        <ol class="breadcrumb m-3">
-          <li class="breadcrumb-item">
-            <router-link :to="{ name: 'accueil' }">Accueil</router-link>
-          </li>
-          <li class="breadcrumb-item">
-            <router-link :to="{ name: 'interventions' }">Interventions</router-link>
-          </li>
-          <li class="breadcrumb-item active" aria-current="page">
-            {{ breadcrumbFinal }}
-          </li>
-        </ol>
+        <base-breadcrumb :items="[{ label: 'Interventions', to: { name: 'interventions' } }]">
+          {{ breadcrumbFinal }}
+        </base-breadcrumb>
       </div>
       <div class="col-sm-6 d-flex justify-content-end align-items-center gap-2">
+        <record-navigation
+          v-if="!newMode"
+          filter-id="interventions"
+          :items="interventionStore.liste"
+          :current-id="id"
+          date-key="date_debut"
+          label="Intervention"
+        />
         <status-badge v-if="!newMode" :status="interventionStatut(activeInterventionData.statut)" />
         <button
           v-if="!newMode && showValiderButton"
