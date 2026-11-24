@@ -83,7 +83,6 @@ const { showValiderButton, showDevaliderButton, validerIntervention, devaliderIn
           date-key="date_debut"
           label="Intervention"
         />
-        <exercice-comptable />
       </div>
     </div>
     <div class="row">

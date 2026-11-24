@@ -68,7 +68,6 @@ const breadcrumbFinal = computed(() =>
           :current-id="id"
           label="Exercice"
         />
-        <exercice-comptable />
       </div>
     </div>
     <div class="row">
