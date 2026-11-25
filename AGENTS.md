@@ -75,7 +75,7 @@ pnpm lint           # ESLint (--fix) sur src
 
 Variables dans `.env.local` (copier depuis `.env.example`) : `VITE_API_ENDPOINT`, `VITE_AUTH_ENDPOINT`, `VITE_DOC_ENDPOINT`, `VITE_SENTRY_DSN` (optionnel, reporting d'erreurs Bugsink, vide = désactivé). Dans l'env Docker, le fichier est fourni par `init.sh` (copie de `.env.docker`).
 
-Upload des sourcemaps vers Bugsink au build (`vite.config.js`, `@sentry/vite-plugin`) : variables `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN`, `SENTRY_URL` — sans `SENTRY_AUTH_TOKEN` (cas local/dev), l'upload est simplement désactivé.
+Upload des sourcemaps vers Bugsink en CI, après le build (`.github/workflows/main.yml`, `sentry-cli sourcemaps inject` puis `upload`, CLI Rust `@sentry/cli`) : variables `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN`, `SENTRY_URL` — sans `SENTRY_AUTH_TOKEN`, l'upload est ignoré. Les `.map` sont supprimées de `dist/` avant le déploiement.
 
 Les erreurs sont envoyées à Bugsink via un tunnel côté API (`main.js` → `${VITE_API_ENDPOINT}/monitoring-tunnel` → `MonitoringTunnelController` dans GestSIS_API, variable `SENTRY_TUNNEL_DSN`), pas directement depuis le navigateur — évite le blocage par les bloqueurs de pub/tracker sur le motif `/api/<id>/envelope/`.
 

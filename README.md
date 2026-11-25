@@ -57,9 +57,9 @@ Variables lues depuis `.env.local` (voir [`.env.example`](.env.example)) :
 | `VITE_DOC_ENDPOINT`  | URL de la documentation utilisateur (GestSIS_Doc)          |
 | `VITE_SENTRY_DSN`    | Optionnel : envoi des erreurs à Bugsink. Vide = désactivé. |
 
-Au build uniquement, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` et `SENTRY_URL` permettent
-d'envoyer les sourcemaps à Bugsink. Sans `SENTRY_AUTH_TOKEN` (cas local), cet envoi est simplement
-ignoré.
+En CI uniquement, `sentry-cli` (`@sentry/cli`) envoie les sourcemaps à Bugsink après le build, avec
+`SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_AUTH_TOKEN` et `SENTRY_URL`. Sans `SENTRY_AUTH_TOKEN`, cet envoi
+est simplement ignoré.
 
 ## Commandes
 
