@@ -9,6 +9,7 @@ import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useCoursStore } from "../../stores/sapeur/Cours.js";
 import { useCoursSapeurStore } from "../../stores/sapeur/CoursSapeur.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 // `errors` vient de useSubmit (erreurs de champs de l'API), aussi remis à zéro localement.
 const { errors, isSubmitting, submit } = useSubmit();
@@ -28,9 +29,7 @@ const cours = computed(() => coursStore.liste);
 const grades = computed(() => gradeStore.liste);
 const fonctions = computed(() => fonctionStore.liste);
 const localites = computed(() => localiteStore.liste);
-const sapeurs = computed(() =>
-  sapeurStore.liste.filter((s) => s.actif).filter((s) => s.type === 0),
-);
+const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.statut_sapeur === STATUT.ACTIF));
 const sapeursDisponibles = (index) => {
   const selectionnesAilleurs = new Set(
     form.sapeurs

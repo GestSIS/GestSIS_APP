@@ -7,6 +7,7 @@ import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { formatPhoneNumber } from "../../tools/formatters.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const baseDataStore = useBaseDataStore();
 const sapeurStore = useSapeurStore();
@@ -32,7 +33,8 @@ watchEffect(
   () => (telephonesData.value = (activeSapeurTelephones.value || []).map((t) => ({ ...t }))),
 );
 
-const sapeurType = computed(() => sapeurStore.active.data.type);
+// Colonne RTA pour qui est ou a été sapeur
+const estSapeur = computed(() => sapeurStore.active.data.statut_sapeur !== STATUT.JAMAIS);
 const telephoneTypes = computed(() => baseDataStore.telephoneTypes);
 
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
@@ -104,7 +106,7 @@ const fields = computed(() => [
   },
   { title: "Numéro", key: "numero", slot: "numero" },
   { title: "Type", key: "telephone_type_id", slot: "type" },
-  ...(sapeurType.value === 0
+  ...(estSapeur.value
     ? [{ title: "RTA", key: "rta", slot: "rta", columnClass: "align-middle text-center" }]
     : []),
   ...(hasEditPermission.value
@@ -140,7 +142,7 @@ const fields = computed(() => [
         no-data="Aucun numéro enregistré"
         :hide-download="true"
       >
-        <template v-if="sapeurType === 0" #head>
+        <template v-if="estSapeur" #head>
           <thead>
             <tr>
               <th class="col-1" :class="{ 'd-none': telephones.length <= 1 }">Priorité</th>

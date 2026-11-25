@@ -5,6 +5,7 @@ import { useBaseDataStore } from "../../stores/common/BaseData.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { NATURE_MUTATION } from "../../tools/sapeur.js";
 
 const { callback } = defineProps({
   callback: {
@@ -15,7 +16,8 @@ const { callback } = defineProps({
 
 const { errors, isSubmitting, submit } = useSubmit();
 const form = reactive({
-  type: 0,
+  // Nature de la première mutation : sapeur ou civil
+  nature: NATURE_MUTATION.SAPEUR,
   nom: "",
   prenom: "",
   rue: "",
@@ -53,7 +55,9 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">Ajouter un {{ form.type == 0 ? "sapeur" : "civil" }}</h5>
+      <h5 class="modal-title">
+        Ajouter un {{ form.nature === NATURE_MUTATION.SAPEUR ? "sapeur" : "civil" }}
+      </h5>
       <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -61,22 +65,22 @@ const save = async () => {
         <div class="form-check form-check-inline">
           <input
             id="inlineRadio1"
-            v-model="form.type"
+            v-model="form.nature"
             class="form-check-input"
             type="radio"
             name="inlineRadioOptions"
-            :value="0"
+            :value="NATURE_MUTATION.SAPEUR"
           />
           <label class="form-check-label" for="inlineRadio1">Sapeur</label>
         </div>
         <div class="form-check form-check-inline">
           <input
             id="inlineRadio2"
-            v-model="form.type"
+            v-model="form.nature"
             class="form-check-input"
             type="radio"
             name="inlineRadioOptions"
-            :value="1"
+            :value="NATURE_MUTATION.CIVIL"
           />
           <label class="form-check-label" for="inlineRadio2">Civil</label>
         </div>
@@ -192,7 +196,7 @@ const save = async () => {
           </div>
         </div>
       </div>
-      <div v-if="form.type === 0" class="row mb-3">
+      <div v-if="form.nature === NATURE_MUTATION.SAPEUR" class="row mb-3">
         <div class="col-6">
           <label for="m-sap-date-naissance">Date de naissance</label>
           <div class="input-group input-group-sm">
@@ -226,8 +230,9 @@ const save = async () => {
           />
         </div>
       </div>
-      <div v-if="form.type === 0" class="mb-3">
-        <label for="m-sap-email">Date incorporation</label>
+      <!-- Début de la mutation sapeur ou civile créée avec la personne -->
+      <div class="mb-3">
+        <label for="m-sap-incorporation">Date incorporation</label>
         <div class="input-group input-group-sm mb-3">
           <div class="input-group-text">
             <font-awesome-icon :icon="['far', 'calendar-alt']" />

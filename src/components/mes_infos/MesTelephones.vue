@@ -3,10 +3,10 @@ import { computed } from "vue";
 import { useBaseDataStore } from "../../stores/common/BaseData.js";
 
 const model = defineModel({ type: Array });
-const { sapeurType } = defineProps({
-  sapeurType: {
-    type: Number,
-    required: true,
+const { estSapeur } = defineProps({
+  estSapeur: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -33,7 +33,7 @@ const fields = computed(() => [
     key: "telephone_type_id",
     formatter: (id) => telephoneTypes.value.find((t) => t.id === id)?.type,
   },
-  ...(sapeurType === 0 ? [{ title: "RTA", key: "rta", type: Boolean }] : []),
+  ...(estSapeur ? [{ title: "RTA", key: "rta", type: Boolean }] : []),
 ]);
 </script>
 
@@ -47,7 +47,7 @@ const fields = computed(() => [
         no-data="Aucun numéro enregistré"
         :hide-download="true"
       >
-        <template v-if="sapeurType === 0" #head>
+        <template v-if="estSapeur" #head>
           <thead>
             <tr>
               <th :class="{ 'd-none': telephones.length <= 1 }">Priorité</th>

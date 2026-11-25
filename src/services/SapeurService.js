@@ -72,9 +72,6 @@ export default {
   saveSapeur(sapeurId, sapeurData) {
     return Api.api().put("/sapeurs/" + sapeurId, sapeurData);
   },
-  saveNonSapeurStatut(sapeurId, sapeurData) {
-    return Api.api().put("/sapeurs/" + sapeurId + "/autre-statut", sapeurData);
-  },
   fetchPhoto(sapeurId) {
     return Api.api()
       .get("/sapeurs/" + sapeurId + "/photo", {

@@ -5,6 +5,7 @@ import { useInterventionStore } from "../../stores/intervention/Intervention.js"
 import { useModalStore } from "../../stores/common/Modal.js";
 import { fromDateTimeLocalValue, toDateTimeLocalValue } from "../../tools/index.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const responsableOptions = [
   { value: "aucun", label: "Aucun" },
@@ -35,7 +36,9 @@ const max = toDateTimeLocalValue(data.max);
 const responsableMode = ref(
   data?.jalon?.sapeur_id ? "sapeur_id" : data?.jalon?.sapeur ? "sapeur" : "aucun",
 );
-const listeSapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
+const listeSapeurs = computed(() =>
+  sapeurStore.liste.filter((s) => s.statut_sapeur === STATUT.ACTIF),
+);
 
 const { closeModal } = useModalStore();
 

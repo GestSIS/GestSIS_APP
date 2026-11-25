@@ -17,10 +17,7 @@ import { exportFileName } from "../tools/index.js";
 import { formatPhoneNumber } from "../tools/formatters.js";
 import { useDownload } from "../composables/useDownload.js";
 import { useSubmit } from "../composables/useSubmit.js";
-
-const TYPE_SAPEUR = 0;
-const TYPE_CIVIL = 1;
-const TYPE_RECRUE = 2;
+import { STATUT } from "../tools/sapeur.js";
 
 const baseDataStore = useBaseDataStore();
 const sapeurStore = useSapeurStore();
@@ -30,7 +27,7 @@ const localiteStore = useLocaliteStore();
 
 const routes = [
   { texte: "General", to: { name: "sapeur-details" }, civil: true, recrue: true },
-  { texte: "Mutations", to: { name: "sapeur-mutations" } },
+  { texte: "Mutations", to: { name: "sapeur-mutations" }, civil: true },
   {
     texte: "Contrôles médicaux",
     to: { name: "sapeur-controles-medicaux" },
@@ -71,12 +68,12 @@ watch(
           name: "sapeur-details",
           params: { id: activeSapeurId.value },
         });
-      } else if (sapeurStore.liste.filter((s) => s.actif).length > 0) {
+      } else if (sapeurStore.liste.some((s) => s.statut_sapeur === STATUT.ACTIF)) {
         // Sapeurs disponible
         router.push({
           name: "sapeur-details",
           params: {
-            id: sapeurStore.liste.filter((s) => s.actif)[0]?.id,
+            id: sapeurStore.liste.find((s) => s.statut_sapeur === STATUT.ACTIF)?.id,
           },
         });
       }
@@ -114,20 +111,23 @@ const chargementSapeur = computed(
     sapeurStore.active.data?.id != sapeurStore.active.id,
 );
 
+// Onglets selon les statuts : tous pour qui est ou a été sapeur (historique compris),
+// ceux des civils pour un civil uniquement, ceux des recrues sinon
+const routeAutorisee = (s, r) => {
+  if (s.statut_sapeur !== STATUT.JAMAIS) {
+    return true;
+  }
+  if (s.statut_civil !== STATUT.JAMAIS) {
+    return r.civil === true;
+  }
+  return r.recrue === true;
+};
+
 // Redirect civils/recrues vers les onglets qui leur sont pertinents
 watchEffect(() => {
-  const type = sapeurStore.active.data?.type;
+  const s = sapeurStore.active.data;
   const routeName = route.name;
-  const routeAutorisee = (r) => {
-    if (type === TYPE_CIVIL) {
-      return r.civil === true;
-    }
-    if (type === TYPE_RECRUE) {
-      return r.recrue === true;
-    }
-    return true;
-  };
-  if (type !== TYPE_SAPEUR && routes.find((r) => r.to.name == routeName && !routeAutorisee(r))) {
+  if (s?.id && routes.find((r) => r.to.name == routeName && !routeAutorisee(s, r))) {
     router.push({
       name: "sapeur-details",
       params: { id: sapeurStore.active.id },
@@ -135,33 +135,53 @@ watchEffect(() => {
   }
 });
 
-const filter = ref("actif");
-const filters = ref({
-  actif: (s) => s.actif,
-  inactif: (s) => !s.actif,
-  all: () => true,
-});
+// Une personne peut figurer dans les sapeurs et dans les civils (ex. ancien sapeur
+// resté civil : sapeurs inactifs et civils actifs). Le statut actif/inactif
+// est celui du type sélectionné.
+const statutDuType = {
+  sapeur: (s) => s.statut_sapeur,
+  civil: (s) => s.statut_civil,
+};
 const typeFilter = ref("sapeur");
 const typeFilters = ref({
-  sapeur: (s) => s.type === TYPE_SAPEUR,
-  civil: (s) => s.type === TYPE_CIVIL,
-  recrue: (s) => s.type === TYPE_RECRUE,
+  sapeur: (s) => s.statut_sapeur !== STATUT.JAMAIS,
+  civil: (s) => s.statut_civil !== STATUT.JAMAIS,
+  recrue: (s) => s.statut_sapeur === STATUT.JAMAIS && s.statut_civil === STATUT.JAMAIS,
+});
+const filter = ref("actif");
+const filters = ref({
+  actif: (s) => statutDuType[typeFilter.value]?.(s) === STATUT.ACTIF,
+  inactif: (s) => statutDuType[typeFilter.value]?.(s) === STATUT.INACTIF,
+  all: () => true,
 });
 const eventListener = ref(null);
 
 const sapeurs = computed(() => sapeurStore.liste);
 const activeSapeur = computed(() => sapeurStore.active.data);
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
-const isRecrue = computed(() => activeSapeur.value?.type === TYPE_RECRUE);
+const isRecrue = computed(
+  () =>
+    activeSapeur.value?.statut_sapeur === STATUT.JAMAIS &&
+    activeSapeur.value?.statut_civil === STATUT.JAMAIS,
+);
 
 // En-tête de la fiche : identité du sapeur affiché, quel que soit l'onglet ouvert.
-const TYPE_LABELS = { [TYPE_SAPEUR]: "Sapeur", [TYPE_CIVIL]: "Civil", [TYPE_RECRUE]: "Recrue" };
+// Un badge par rôle (sapeur, civil), une personne pouvant avoir les deux
+const badgeRole = (libelle, statut) =>
+  statut === STATUT.JAMAIS
+    ? null
+    : {
+        libelle: `${libelle} ${statut === STATUT.ACTIF ? "actif" : "inactif"}`,
+        classe: statut === STATUT.ACTIF ? "text-bg-success" : "text-bg-secondary",
+      };
 const enTete = computed(() => {
   const s = activeSapeur.value;
   if (!s?.id) return null;
   return {
     nomPrenom: `${s.nom ?? ""} ${s.prenom ?? ""}`.trim(),
-    type: TYPE_LABELS[s.type] ?? "",
+    roles: [badgeRole("Sapeur", s.statut_sapeur), badgeRole("Civil", s.statut_civil)].filter(
+      Boolean,
+    ),
     // Rôle dans le corps : fonction principale puis grade
     // (grade_id / fonction_id valent 0 quand ils ne sont pas renseignés)
     details: [
@@ -201,12 +221,12 @@ const typeFilterOptions = computed(() => [
   {
     value: "sapeur",
     label: "Sapeurs",
-    badge: sapeurs.value.filter(typeFilters.value.sapeur).filter(filters.value.actif).length,
+    badge: sapeurs.value.filter((s) => s.statut_sapeur === STATUT.ACTIF).length,
   },
   {
     value: "civil",
     label: "Civils",
-    badge: sapeurs.value.filter(typeFilters.value.civil).filter(filters.value.actif).length,
+    badge: sapeurs.value.filter((s) => s.statut_civil === STATUT.ACTIF).length,
   },
   {
     value: "recrue",
@@ -458,10 +478,16 @@ const deleteSapeur = async () => {
                   @click="navigate"
                   >{{ sapeur.nom_prenom }}
                   <font-awesome-icon
-                    v-if="sapeur.type === TYPE_CIVIL"
+                    v-if="sapeur.statut_civil !== STATUT.JAMAIS"
                     :icon="['far', 'handshake']"
                   />
-                  <font-awesome-icon v-if="sapeur.type === TYPE_RECRUE" icon="person-circle-plus" />
+                  <font-awesome-icon
+                    v-if="
+                      sapeur.statut_sapeur === STATUT.JAMAIS &&
+                      sapeur.statut_civil === STATUT.JAMAIS
+                    "
+                    icon="person-circle-plus"
+                  />
                 </a>
               </router-link>
               <li v-if="filteredSapeurs.length === 0" class="list-group-item">
@@ -566,15 +592,14 @@ const deleteSapeur = async () => {
             <div class="identite-sapeur d-flex flex-column gap-1">
               <div class="d-flex flex-wrap align-items-center gap-2">
                 <h4 id="fiche-sapeur-nom" class="mb-0">{{ enTete.nomPrenom }}</h4>
+                <span v-if="isRecrue" class="badge text-bg-warning">Recrue à valider</span>
                 <span
-                  v-if="!isRecrue"
+                  v-for="role in enTete.roles"
+                  :key="role.libelle"
                   class="badge"
-                  :class="activeSapeur.actif ? 'text-bg-success' : 'text-bg-secondary'"
+                  :class="role.classe"
                 >
-                  {{ activeSapeur.actif ? "Actif" : "Inactif" }}
-                </span>
-                <span class="badge" :class="isRecrue ? 'text-bg-warning' : 'text-bg-light border'">
-                  {{ isRecrue ? "Recrue à valider" : enTete.type }}
+                  {{ role.libelle }}
                 </span>
               </div>
               <div v-if="enTete.details" class="text-body-secondary">{{ enTete.details }}</div>
@@ -645,12 +670,7 @@ const deleteSapeur = async () => {
           v-if="activeSapeur?.id"
           :routes="
             routes
-              .filter(
-                (route) =>
-                  (activeSapeur.type === TYPE_CIVIL && route.civil) ||
-                  (activeSapeur.type === TYPE_RECRUE && route.recrue) ||
-                  activeSapeur.type === TYPE_SAPEUR,
-              )
+              .filter((r) => routeAutorisee(activeSapeur, r))
               .map((r) => ({
                 ...r,
                 to: { ...r.to, params: { id: activeSapeurId } },

@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useBaseDataStore } from "../../stores/common/BaseData.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const model = defineModel();
 
@@ -126,7 +127,7 @@ const civilites = computed(() => baseDataStore.civilites);
           />
         </div>
       </div>
-      <div v-if="model.type === 0" class="row mb-3">
+      <div v-if="model.statut_sapeur !== STATUT.JAMAIS" class="row mb-3">
         <div class="col-6">
           <label for="m-sap-date-naissance">Date de naissance</label>
           <div class="input-group input-group-sm">

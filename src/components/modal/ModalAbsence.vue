@@ -4,6 +4,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { useAbsenceStore } from "../../stores/absence/Absence.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const { data } = defineProps({
   data: {
@@ -20,7 +21,7 @@ const form = reactive({
 
 const sapeurStore = useSapeurStore();
 const absenceStore = useAbsenceStore();
-const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
+const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.statut_sapeur === STATUT.ACTIF));
 
 const { closeModal } = useModalStore();
 
@@ -51,7 +52,7 @@ const save = async () => {
         class="mb-3"
         label="Sapeur"
         display-key="nom_prenom"
-        :options="sapeurs.filter((s) => s.actif && s.type == 0)"
+        :options="sapeurs"
       />
       <div class="mb-3">
         <label for="cours-date">Départ</label>

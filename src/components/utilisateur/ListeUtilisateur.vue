@@ -5,6 +5,7 @@ import { useAuthStore } from "../../stores/auth/Auth.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import permissions from "../../composables/permissions.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const sapeurStore = useSapeurStore();
 const authStore = useAuthStore();
@@ -39,14 +40,16 @@ const computedData = computed(() =>
       const sapeur = sapeurs.value.find((s) => s.id === sapeurId);
       // Pas de sapeur attendu (compte spécial) => actif par défaut.
       // Sapeur attendu mais introuvable (lien orphelin) => considéré inactif, comme un sapeur inactif.
-      const actifStatut = !sapeurId ? true : !!sapeur?.actif;
+      const actifStatut = !sapeurId
+        ? true
+        : sapeur?.statut_sapeur === STATUT.ACTIF || sapeur?.statut_civil === STATUT.ACTIF;
       return {
         ...u,
         special: !sapeurId,
         inactif: !u.user_roles?.length && !actifStatut,
         actifStatut,
         nom_prenom: !u?.sapeur?.length > 0 ? "-" : (sapeur?.nom_prenom ?? "-"),
-        type: !u?.sapeur?.length > 0 ? "-" : sapeur?.type,
+        civil: !!sapeur && sapeur.statut_civil !== STATUT.JAMAIS,
       };
     })
     .filter((u) => (filters.value.inactif ? true : !u.inactif))
@@ -166,7 +169,7 @@ const fields = [
           </template>
           <template #sapeur="{ rowData }">
             {{ rowData.nom_prenom }}
-            <span v-if="rowData?.type === 1" class="badge bg-info text-dark ms-1">
+            <span v-if="rowData?.civil" class="badge bg-info text-dark ms-1">
               <font-awesome-icon :icon="['far', 'handshake']" /> Civil
             </span>
           </template>

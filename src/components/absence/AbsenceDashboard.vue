@@ -10,6 +10,7 @@ import { computed, ref, watchEffect } from "vue";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceComptable.js";
 import { useAbsenceStore } from "../../stores/absence/Absence.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const fonctionStore = useFonctionStore();
 const localiteStore = useLocaliteStore();
@@ -62,7 +63,7 @@ const mois = [
   { id: 12, designation: "Decembre" },
 ];
 
-const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif && s.type == 0));
+const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.statut_sapeur === STATUT.ACTIF));
 const absences = computed(() =>
   absenceStore.liste.slice().sort((a, b) => a.debut?.localeCompare(b.debut)),
 );

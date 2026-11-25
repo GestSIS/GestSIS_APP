@@ -4,12 +4,13 @@ import MesDonneesBancaires from "./MesDonneesBancaires.vue";
 import MesReferencesProfessionelles from "./MesReferencesProfessionelles.vue";
 import MesTelephones from "./MesTelephones.vue";
 
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useMesInfosStore } from "../../stores/mesinfos/MesInfos";
 import { useFonctionStore } from "../../stores/sapeur/Fonction.js";
 import { useGradeStore } from "../../stores/sapeur/Grade.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useBaseDataStore } from "../../stores/common/BaseData.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const fonctionStore = useFonctionStore();
 const gradeStore = useGradeStore();
@@ -26,14 +27,11 @@ await Promise.all([
   gradeStore.fetchGrades(),
 ]);
 
-const hasEditPermission = ref(false);
-
 const sapeur = computed(() => infosStore.infos);
 const fonctions = computed(() => fonctionStore.liste);
 const grades = computed(() => gradeStore.liste);
-const estSapeur = computed(() => {
-  return sapeur.value.type == 0;
-});
+// Est ou a été sapeur
+const estSapeur = computed(() => sapeur.value.statut_sapeur !== STATUT.JAMAIS);
 </script>
 
 <template>
@@ -45,35 +43,7 @@ const estSapeur = computed(() => {
     <div class="col-sm-12 col-xl-6">
       <mes-references-professionelles v-if="estSapeur" v-model="sapeur" />
 
-      <base-card title="Civil" v-if="!estSapeur">
-        <template #header>
-          <button
-            v-if="hasEditPermission"
-            class="btn btn-primary"
-            @click.prevent="saveNonSapeurStatut"
-          >
-            Enregistrer
-          </button>
-        </template>
-        <template #body>
-          <form role="form">
-            <div class="mb-3">
-              <div class="form-check form-switch">
-                <input
-                  id="civilActif"
-                  v-model="sapeur.actif"
-                  class="form-check-input"
-                  type="checkbox"
-                  role="switch"
-                />
-                <label class="form-check-label" for="civilActif">Actif</label>
-              </div>
-            </div>
-          </form>
-        </template>
-      </base-card>
-
-      <mes-telephones v-model="sapeur.telephones" :sapeur-type="sapeur.type" />
+      <mes-telephones v-model="sapeur.telephones" :est-sapeur="estSapeur" />
 
       <base-card title="Informations" v-if="estSapeur">
         <template #body>
@@ -96,7 +66,7 @@ const estSapeur = computed(() => {
             <div class="mb-3 form-check">
               <input
                 id="actif"
-                v-model="sapeur.actif"
+                :checked="sapeur.statut_sapeur === STATUT.ACTIF"
                 type="checkbox"
                 name="actif"
                 class="form-check-input"

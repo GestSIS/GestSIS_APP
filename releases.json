@@ -1,6 +1,15 @@
 {
   "releases": [
     {
+      "date": "25.11.2026",
+      "version": "1.0",
+      "app": "GestSIS APP",
+      "changes": [
+        "Sapeurs, une personne peut être à la fois sapeur et civil",
+        "Sapeurs, incorporation civile depuis l'onglet Mutations"
+      ]
+    },
+    {
       "date": "24.11.2026",
       "version": "1.0",
       "app": "GestSIS APP",

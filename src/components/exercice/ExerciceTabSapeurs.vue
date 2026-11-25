@@ -16,6 +16,7 @@ import { EXERCICE_STATUT, exerciceStatut } from "../../tools/exercice.js";
 import { exportFileName } from "../../tools/index.js";
 import { useDownload } from "../../composables/useDownload.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -56,7 +57,8 @@ watchEffect(() => {
       return {
         ...s,
         nom_prenom: sapeur?.nom_prenom ?? "...",
-        actif: sapeur?.actif,
+        // Sapeur ou civil actif : un civil peut aussi être convoqué
+        actif: sapeur?.statut_sapeur === STATUT.ACTIF || sapeur?.statut_civil === STATUT.ACTIF,
       };
     })
     .sort((a, b) => a.nom_prenom.localeCompare(b.nom_prenom));

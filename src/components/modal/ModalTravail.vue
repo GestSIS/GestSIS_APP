@@ -13,6 +13,7 @@ import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useTravailStore } from "../../stores/travail/Travail.js";
 import TravailService from "../../services/TravailService.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const { callback, data } = defineProps({
   callback: {
@@ -164,7 +165,11 @@ const libelleEvenement = computed(() =>
 const droitEvenement = computed(() =>
   form.intervention_id ? "la validation des interventions" : "la validation des exercices",
 );
-const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
+const sapeurs = computed(() =>
+  sapeurStore.liste.filter(
+    (s) => s.statut_sapeur === STATUT.ACTIF || s.statut_civil === STATUT.ACTIF,
+  ),
+);
 const hasSaisieCommunePermission = useHasPermission(permissions.FICHE_TRAVAIL.SAISIE_COMMUNE);
 
 const activeUnite = computed(() =>

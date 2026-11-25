@@ -13,6 +13,7 @@ import { useControleMedicalStore } from "../stores/controleMedical/ControleMedic
 import permissions from "../composables/permissions.js";
 import { useHasPermission } from "../composables/useHasPermission.js";
 import { useSubmit } from "../composables/useSubmit.js";
+import { STATUT } from "../tools/sapeur.js";
 
 const sapeurStore = useSapeurStore();
 const exerciceComptableStore = useExerciceComptableStore();
@@ -49,7 +50,7 @@ const controleMedical = computed(() => controleMedicalStore.active.data);
 const medecins = computed(() => medecinStore.liste);
 const sapeurs = computed(() =>
   sapeurStore.liste
-    .filter((s) => s.type === 0 && s.actif)
+    .filter((s) => s.statut_sapeur === STATUT.ACTIF)
     .map((s) => {
       const age = Math.floor(
         (new Date() - new Date(s?.date_naissance || 0).getTime()) / 1000 / (60 * 60 * 24) / 365.25,

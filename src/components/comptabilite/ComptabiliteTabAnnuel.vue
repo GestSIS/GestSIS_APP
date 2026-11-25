@@ -11,6 +11,7 @@ import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useCompteStore } from "../../stores/comptabilite/Compte.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -100,7 +101,9 @@ const onRowClass = (dataItem, isSelected) => {
   if (isSelected) {
     return;
   }
-  return dataItem.actif ? "" : "text-danger";
+  return dataItem.statut_sapeur === STATUT.ACTIF || dataItem.statut_civil === STATUT.ACTIF
+    ? ""
+    : "text-danger";
 };
 
 const detailRowOptions = {

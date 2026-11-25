@@ -45,7 +45,6 @@ export const useSapeurStore = defineStore("sapeur", {
               nom: data.nom,
               prenom: data.prenom,
               nom_prenom: `${data.nom} ${data.prenom}`,
-              actif: data.actif,
               date_naissance: data.date_naissance,
             }
           : s,
@@ -120,28 +119,6 @@ export const useSapeurStore = defineStore("sapeur", {
               nom: data.nom,
               prenom: data.prenom,
               nom_prenom: `${data.nom} ${data.prenom}`,
-              actif: data.actif,
-              date_naissance: data.date_naissance,
-            }
-          : s,
-      );
-      return data;
-    },
-    async saveNonSapeurStatut(payload) {
-      const data = await SapeurService.saveNonSapeurStatut(
-        this.active.data.id,
-        payload || this.active.data,
-      );
-      this.active.data = data;
-      this.liste = this.liste.map((s) =>
-        s.id == data.id
-          ? {
-              ...s,
-              fonction_id: data.fonction_id,
-              nom: data.nom,
-              prenom: data.prenom,
-              nom_prenom: data.nom_prenom,
-              actif: data.actif,
               date_naissance: data.date_naissance,
             }
           : s,
@@ -243,15 +220,20 @@ export const useSapeurStore = defineStore("sapeur", {
       return data;
     },
     // Mutations
+    // Les statuts (sapeur, civil) découlent des mutations
+    updateStatuts(data) {
+      const statuts = {
+        annee_incorporation: data.annee_incorporation,
+        statut_sapeur: data.statut_sapeur,
+        statut_civil: data.statut_civil,
+      };
+      this.active.data = { ...this.active.data, ...statuts };
+      this.liste = this.liste.map((s) => (s.id == this.active.data.id ? { ...s, ...statuts } : s));
+    },
     async addMutation(payload) {
       const data = await SapeurService.addMutation(this.active.data.id, payload);
       this.active.mutations = [...this.active.mutations, data.mutation];
-      this.liste = this.liste.map((s) => {
-        if (s.id === data.mutation.sapeur_id) {
-          return { ...s, actif: data.actif, annee_incorporation: data.annee_incorporation };
-        }
-        return s;
-      });
+      this.updateStatuts(data);
       return data;
     },
     async editMutation(payload) {
@@ -260,24 +242,13 @@ export const useSapeurStore = defineStore("sapeur", {
         ...this.active.mutations.filter((c) => c.id !== data.mutation.id),
         data.mutation,
       ];
-      this.liste = this.liste.map((s) => {
-        if (s.id == data.mutation.sapeur_id) {
-          return { ...s, actif: data.actif, annee_incorporation: data.annee_incorporation };
-        }
-        return s;
-      });
+      this.updateStatuts(data);
       return data;
     },
     async removeMutation(mutationId) {
       const data = await SapeurService.removeMutation(this.active.data.id, mutationId);
-      const statut = {
-        actif: data.actif,
-        annee_incorporation: data.annee_incorporation,
-        type: data.type,
-      };
       this.active.mutations = this.active.mutations.filter((c) => c.id !== mutationId);
-      this.active.data = { ...this.active.data, ...statut };
-      this.liste = this.liste.map((s) => (s.id == this.active.data.id ? { ...s, ...statut } : s));
+      this.updateStatuts(data);
       return data;
     },
     // Autres actions

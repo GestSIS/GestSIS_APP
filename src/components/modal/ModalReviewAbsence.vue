@@ -12,6 +12,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import ExerciceService from "../../services/ExerciceService";
 import SapeurService from "../../services/SapeurService";
 import { exportFileName } from "../../tools/index.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const { data } = defineProps({
   data: {
@@ -41,7 +42,7 @@ const excuseTypeStore = useExcuseTypeStore();
 const absences = computed(() => exerciceStore.absences);
 const exercices = computed(() => exerciceStore.liste);
 const categories = computed(() => exerciceCategorieStore.liste);
-const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
+const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.statut_sapeur === STATUT.ACTIF));
 const activeExerciceComptableId = computed(() => exerciceComptableStore.activeId);
 const excuseTypes = computed(() => excuseTypeStore.liste);
 const localites = computed(() => localiteStore.liste);

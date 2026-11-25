@@ -5,6 +5,7 @@ import { useExerciceComptableStore } from "../../stores/comptabilite/ExerciceCom
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { NATURE_MUTATION } from "../../tools/sapeur.js";
 
 const { data } = defineProps({
   data: {
@@ -33,6 +34,7 @@ sapeurStore.fetchSapeurFonctions(sapeurStore.active.id);
 const localites = computed(() => localiteStore.liste);
 
 const finDeService = computed(() => form.action == "finService");
+const estCivile = computed(() => form.nature === NATURE_MUTATION.CIVIL);
 
 // Une date de fin vient d'être ajoutée si la mutation n'en avait pas auparavant
 const sortieAjoutee = computed(() => !!form.sortie && !data.sortie);
@@ -72,7 +74,10 @@ const save = async () => {
 <template>
   <form @submit.prevent="save">
     <div class="modal-header">
-      <h5 class="modal-title">{{ form.id ? "Modifier" : "Ajouter" }} une mutation</h5>
+      <h5 class="modal-title">
+        {{ form.id ? "Modifier" : "Ajouter" }}
+        {{ estCivile ? "une incorporation civile" : "une mutation" }}
+      </h5>
       <button aria-label="Fermer" type="button" class="btn-close" @click="closeModal()"></button>
     </div>
     <div class="modal-body">
@@ -88,7 +93,7 @@ const save = async () => {
         />
       </div>
       <div class="mb-3">
-        <label for="cours-date">Fin de service</label>
+        <label for="cours-date">{{ estCivile ? "Fin" : "Fin de service" }}</label>
         <input
           id="cours-date"
           v-model="form.sortie"

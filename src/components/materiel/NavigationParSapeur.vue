@@ -16,6 +16,7 @@ import {
   SelectNoOptions,
   SelectOption,
 } from "vue3-select-component/primitives";
+import { STATUT } from "../../tools/sapeur.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -34,6 +35,7 @@ const listeSapeurs = (
 ).map((s) => ({
   ...s,
   nom_prenom: `${s.nom} ${s.prenom}`,
+  actif: s.statut_sapeur === STATUT.ACTIF || s.statut_civil === STATUT.ACTIF,
   value: s.id,
   label: `${s.nom} ${s.prenom}`,
 }));
@@ -90,7 +92,7 @@ const selectedSapeurId = computed({
             >
               <font-awesome-icon
                 v-if="!item.actif"
-                v-tooltip.bottom="'Sapeur inactif'"
+                v-tooltip.bottom="'Inactif'"
                 :icon="['fas', 'triangle-exclamation']"
                 class="me-1"
               />{{ item.label }}
@@ -151,7 +153,7 @@ const selectedSapeurId = computed({
           >
             <font-awesome-icon
               v-if="!item.actif"
-              v-tooltip.bottom="'Sapeur inactif'"
+              v-tooltip.bottom="'Inactif'"
               class="text-danger"
               :icon="['fas', 'triangle-exclamation']"
             />{{ item.nom_prenom }}

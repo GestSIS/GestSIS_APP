@@ -4,6 +4,7 @@ import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useInterventionStore } from "../../stores/intervention/Intervention.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const { callback, data } = defineProps({
   callback: {
@@ -40,7 +41,7 @@ const selectedSapeurs = ref(Object.fromEntries(data.sapeurs?.map((s) => [s, true
 const piquet = ref(data.presence?.piquet ?? false);
 
 const sapeurStore = useSapeurStore();
-const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif && s.type == 0));
+const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.statut_sapeur === STATUT.ACTIF));
 
 const nbSelectedSapeurs = computed(
   () => Object.keys(selectedSapeurs.value).filter((s) => selectedSapeurs.value[s]).length,

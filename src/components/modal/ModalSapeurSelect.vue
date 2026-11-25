@@ -8,6 +8,7 @@ import { useModalStore } from "../../stores/common/Modal";
 import { useBaseDataStore } from "../../stores/common/BaseData.js";
 import { useLocaliteStore } from "../../stores/common/Localite.js";
 import { useGroupeStore } from "../../stores/groupe/Groupe.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 // TODO:
 // - Date anniversaire
@@ -35,7 +36,7 @@ const selectedGeneric = ref({
   localite_id: {},
   civilite_id: {},
   annee_incorporation: {},
-  type: {},
+  statut: {},
   sapeur: {},
 });
 const expanded = ref({});
@@ -70,10 +71,15 @@ const sapeurs = computed(() => sapeurStore.liste);
 const civilites = computed(() => baseDataStore.civilites);
 const permis = computed(() => baseDataStore.permisTypes);
 
+// Sans les civils, seul le statut sapeur compte : un ancien sapeur resté civil
+// est actif (en tant que civil) mais n'est plus un sapeur actif.
 const filteredSapeurs = computed(() => {
-  return sapeurs.value.filter(
-    (s) => (inactif.value ? true : s?.actif) && (civil.value ? true : s?.type == 0),
-  );
+  return sapeurs.value.filter((s) => {
+    if (civil.value) {
+      return inactif.value || s?.statut_sapeur === STATUT.ACTIF || s?.statut_civil === STATUT.ACTIF;
+    }
+    return inactif.value ? s?.statut_sapeur !== STATUT.JAMAIS : s?.statut_sapeur === STATUT.ACTIF;
+  });
 });
 const filteredLocalites = computed(() => {
   const localitesIds = new Set(availableSapeur.value.map((s) => s.localite_id));
@@ -134,7 +140,7 @@ const flattenedSapeurGroupe = computed(() => {
                 leaf: true,
                 level: level + 1,
                 parent_id: groupe.id,
-                type: s.type,
+                civil: s.statut_civil !== STATUT.JAMAIS,
                 id: s.id,
               },
             ]),
@@ -195,7 +201,7 @@ const flattenedSapeurGeneric = (relation, comparison, displayKey) => {
             designation: sapeur.nom_prenom,
             level: 1,
             leaf: true,
-            type: sapeur.type,
+            civil: sapeur.statut_civil !== STATUT.JAMAIS,
             id: sapeur.id,
             parent_id: elem.id,
           })),
@@ -373,13 +379,20 @@ const selectOptions = {
         .map((annee) => ({ designation: annee, id: annee })),
     displayKey: "designation",
   },
-  type: {
+  // Une personne sapeur et civile figure dans les deux groupes
+  statut: {
     generic: true,
     label: "Type",
+    comparison: (sapeur, value) =>
+      ({
+        sapeur: sapeur.statut_sapeur !== STATUT.JAMAIS,
+        civil: sapeur.statut_civil !== STATUT.JAMAIS,
+        recrue: sapeur.statut_sapeur === STATUT.JAMAIS && sapeur.statut_civil === STATUT.JAMAIS,
+      })[value],
     collection: () => [
-      { id: 0, designation: "Sapeur" },
-      { id: 1, designation: "Civil" },
-      { id: 2, designation: "Recrue" },
+      { id: "sapeur", designation: "Sapeur" },
+      { id: "civil", designation: "Civil" },
+      { id: "recrue", designation: "Recrue" },
     ],
     displayKey: "designation",
   },
@@ -493,7 +506,10 @@ const selectOptions = {
                 </td>
                 <td>
                   {{ item.nom_prenom }}
-                  <font-awesome-icon v-if="item.type !== 0" :icon="['far', 'handshake']" />
+                  <font-awesome-icon
+                    v-if="item.statut_civil !== STATUT.JAMAIS"
+                    :icon="['far', 'handshake']"
+                  />
                 </td>
                 <td>
                   <button
@@ -550,10 +566,7 @@ const selectOptions = {
                     <label class="form-check-label" :for="computeId(item)"></label>
                   </div>
                   {{ item.designation }}
-                  <font-awesome-icon
-                    v-if="item.leaf && item.type !== 0"
-                    :icon="['far', 'handshake']"
-                  />
+                  <font-awesome-icon v-if="item.leaf && item.civil" :icon="['far', 'handshake']" />
                 </td>
                 <td>
                   <button
@@ -603,7 +616,10 @@ const selectOptions = {
                 </td>
                 <td>
                   {{ item.nom_prenom }}
-                  <font-awesome-icon v-if="item.type !== 0" :icon="['far', 'handshake']" />
+                  <font-awesome-icon
+                    v-if="item.statut_civil !== STATUT.JAMAIS"
+                    :icon="['far', 'handshake']"
+                  />
                 </td>
                 <td>
                   <button

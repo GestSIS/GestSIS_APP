@@ -6,6 +6,7 @@ import { useTravailTypeStore } from "../../stores/travail/TravailType.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import { useTravailStore } from "../../stores/travail/Travail.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const { data } = defineProps({
   data: {
@@ -28,7 +29,11 @@ const initialQuantite = ref(data.quantite);
 
 const unites = computed(() => uniteStore.liste);
 const travailTypes = computed(() => travailTypeStore.liste);
-const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
+const sapeurs = computed(() =>
+  sapeurStore.liste.filter(
+    (s) => s.statut_sapeur === STATUT.ACTIF || s.statut_civil === STATUT.ACTIF,
+  ),
+);
 
 const { closeModal } = useModalStore();
 

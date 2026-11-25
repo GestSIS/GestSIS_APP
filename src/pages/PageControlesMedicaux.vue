@@ -13,6 +13,7 @@ import SapeurService from "/src/services/SapeurService.js";
 import { useHasPermission } from "../composables/useHasPermission.js";
 import { useControleMedicalStore } from "../stores/controleMedical/ControleMedical.js";
 import { useSubmit } from "../composables/useSubmit.js";
+import { STATUT } from "../tools/sapeur.js";
 
 const sapeurStore = useSapeurStore();
 const medecinStore = useMedecinStore();
@@ -49,7 +50,7 @@ const computedData = computed(() => {
       return {
         ...s,
         sapeur: sapeur?.nom_prenom,
-        sapeurActif: sapeur?.actif,
+        sapeurActif: sapeur?.statut_sapeur === STATUT.ACTIF,
         age,
         type: types.value.find((t) => t.id == s.controle_medical_type_id)?.designation,
         medecin: medecins.value.find((m) => m.id == s.medecin_id)?.designation,

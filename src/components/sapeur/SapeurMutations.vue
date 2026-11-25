@@ -6,7 +6,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import permissions from "/src/composables/permissions.js";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useSubmit } from "../../composables/useSubmit.js";
-import { toDateInputValue } from "../../tools/index.js";
+import { NATURE_MUTATION } from "../../tools/sapeur.js";
 
 const sapeurStore = useSapeurStore();
 const localiteStore = useLocaliteStore();
@@ -20,18 +20,28 @@ watchEffect(async () => {
 const mutations = computed(() =>
   sapeurStore.active.mutations.map((m) => ({
     ...m,
+    nature_libelle: m.nature === NATURE_MUTATION.CIVIL ? "Civil" : "Sapeur",
     localite: localiteStore.liste.find((l) => l.id == m.localite_id)?.designation,
   })),
 );
 const hasEditPermission = useHasPermission(permissions.SAPEUR.MODIFICATION);
-const finServiceButtonState = computed(
-  () => mutations.value.length > 0 && mutations.value.find((m) => !m.sortie),
+// Sapeur et civil ont chacun leur période en cours, indépendamment l'une de l'autre
+const mutationSapeurOuverte = computed(() =>
+  mutations.value.find((m) => m.nature === NATURE_MUTATION.SAPEUR && !m.sortie),
+);
+const mutationCivileOuverte = computed(() =>
+  mutations.value.find((m) => m.nature === NATURE_MUTATION.CIVIL && !m.sortie),
 );
 
 const { showModal, confirm } = useModalStore();
 const { isSubmitting, submit } = useSubmit();
 
+// La dernière mutation ne se supprime pas : une mutation sapeur permet de repasser
+// en recrue, celle d'un civil est refusée par l'API (supprimer la personne)
 const isLastMutation = computed(() => mutations.value.length === 1);
+const peutRepasserEnRecrue = computed(
+  () => isLastMutation.value && mutations.value[0].nature === NATURE_MUTATION.SAPEUR,
+);
 
 const removeMutation = async (mutation) => {
   if (
@@ -68,12 +78,17 @@ const editMutation = (mutation) => showModal({ component: "ModalMutation", data:
 const finService = () =>
   showModal({
     component: "ModalMutation",
-    data: { action: "finService", ...mutations.value.find((m) => !m.sortie) },
+    data: { action: "finService", ...mutationSapeurOuverte.value },
   });
 
-const incorporation = () => showModal("ModalMutation");
+const incorporation = () =>
+  showModal({ component: "ModalMutation", data: { nature: NATURE_MUTATION.SAPEUR } });
+
+const incorporationCivile = () =>
+  showModal({ component: "ModalMutation", data: { nature: NATURE_MUTATION.CIVIL } });
 
 const fields = [
+  { title: "Nature", key: "nature_libelle" },
   { title: "Incorporation", key: "incorporation", type: Date },
   { title: "Sortie", key: "sortie", type: Date },
   { title: "Motif", key: "motif" },
@@ -87,7 +102,7 @@ const fields = [
     <template #header>
       <div>
         <button
-          v-if="finServiceButtonState && hasEditPermission"
+          v-if="mutationSapeurOuverte && hasEditPermission"
           type="button"
           class="btn btn-outline-primary"
           @click="finService"
@@ -103,7 +118,15 @@ const fields = [
           <font-awesome-icon class="me-1" :icon="['fas', 'door-closed']" />Incorporation
         </button>
         <button
-          v-if="isLastMutation && hasEditPermission"
+          v-if="!mutationCivileOuverte && hasEditPermission"
+          type="button"
+          class="btn btn-outline-primary ms-2"
+          @click="incorporationCivile"
+        >
+          <font-awesome-icon class="me-1" :icon="['far', 'handshake']" />Incorporation civile
+        </button>
+        <button
+          v-if="peutRepasserEnRecrue && hasEditPermission"
           :disabled="isSubmitting"
           type="button"
           class="btn btn-outline-warning ms-2"

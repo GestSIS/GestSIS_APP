@@ -7,6 +7,7 @@ import { useModalStore } from "../../stores/common/Modal.js";
 import { fromDateTimeLocalValue, toDateTimeLocalValue } from "../../tools/index.js";
 import BaseAutocomplete from "/src/components/base/BaseAutocomplete.vue";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const responsableOptions = [
   { value: "sapeur_id", label: "Sapeur" },
@@ -40,7 +41,9 @@ const form = reactive({
 const responsableMode = ref(data?.mission?.sapeur_id ? "sapeur_id" : "sapeur");
 
 const listMissions = computed(() => missionStore.liste);
-const listeSapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
+const listeSapeurs = computed(() =>
+  sapeurStore.liste.filter((s) => s.statut_sapeur === STATUT.ACTIF),
+);
 
 const { closeModal } = useModalStore();
 

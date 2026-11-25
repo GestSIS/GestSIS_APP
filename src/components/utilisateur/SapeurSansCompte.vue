@@ -2,6 +2,7 @@
 import { computed, ref } from "vue";
 import { useAuthStore } from "../../stores/auth/Auth.js";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const sapeurStore = useSapeurStore();
 const authStore = useAuthStore();
@@ -28,8 +29,7 @@ const computedData = computed(() => {
     ),
   );
   return sapeurs.value
-    .filter((s) => s.actif)
-    .filter((s) => s.type == 0)
+    .filter((s) => s.statut_sapeur === STATUT.ACTIF)
     .filter((s) => !sapeurIds.has(s.id))
     .filter((s) =>
       s.nom_prenom

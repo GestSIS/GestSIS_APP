@@ -8,6 +8,7 @@ import { useImputationStore } from "../../stores/comptabilite/Imputation.js";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useUniteStore } from "../../stores/common/Unite.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const { data } = defineProps({
   data: {
@@ -40,7 +41,11 @@ const compteStore = useCompteStore();
 const ecritureCategorieStore = useEcritureCategorieStore();
 const imputationStore = useImputationStore();
 const uniteStore = useUniteStore();
-const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
+const sapeurs = computed(() =>
+  sapeurStore.liste.filter(
+    (s) => s.statut_sapeur === STATUT.ACTIF || s.statut_civil === STATUT.ACTIF,
+  ),
+);
 const comptes = computed(() => compteStore.liste);
 const unites = computed(() => uniteStore.liste);
 const categories = computed(() => ecritureCategorieStore.liste);

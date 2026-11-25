@@ -5,6 +5,7 @@ import { useSapeurStore } from "../../stores/sapeur/Sapeur.js";
 import ArticleService from "../../services/materiel/ArticleService";
 import { useModalStore } from "../../stores/common/Modal.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const { data, callback } = defineProps({
   data: {
@@ -19,7 +20,11 @@ const { data, callback } = defineProps({
 
 const sapeurStore = useSapeurStore();
 await sapeurStore.fetchSapeurs();
-const sapeurs = computed(() => sapeurStore.liste.filter((s) => s.actif));
+const sapeurs = computed(() =>
+  sapeurStore.liste.filter(
+    (s) => s.statut_sapeur === STATUT.ACTIF || s.statut_civil === STATUT.ACTIF,
+  ),
+);
 
 const { errors, isSubmitting, submit } = useSubmit();
 const form = ref({

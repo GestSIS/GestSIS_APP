@@ -12,6 +12,7 @@ import permissions from "../../composables/permissions.js";
 import Api from "/src/http/Request";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const localiteStore = useLocaliteStore();
 const sisParamStore = useSisParamStore();
@@ -51,7 +52,7 @@ const localitesSis = computed(() =>
   })),
 );
 const sapeurs = computed(() =>
-  sapeurStore.liste.filter((s) => s.actif).sort((a, b) => a.tri - b.tri),
+  sapeurStore.liste.filter((s) => s.statut_sapeur === STATUT.ACTIF).sort((a, b) => a.tri - b.tri),
 );
 
 const sisParam = ref({});

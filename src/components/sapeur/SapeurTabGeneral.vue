@@ -12,6 +12,7 @@ import SapeurService from "../../services/SapeurService.js";
 import SapeurTelephones from "/src/components/sapeur/SapeurTelephones.vue";
 import { useHasPermission } from "../../composables/useHasPermission.js";
 import { useSubmit } from "../../composables/useSubmit.js";
+import { STATUT } from "../../tools/sapeur.js";
 
 const sapeurStore = useSapeurStore();
 const fonctionStore = useFonctionStore();
@@ -30,7 +31,7 @@ fonctionStore.fetchFonctions();
 watchEffect(async () => {
   const sapeurId = sapeurStore.active.id ?? 0;
   if (sapeurId > 0) {
-    if (sapeurStore.active.data.type === 0) {
+    if (sapeurStore.active.data.statut_sapeur !== STATUT.JAMAIS) {
       SapeurService.fetchPhoto(sapeurId).then((p) => {
         photo.value = p;
       });
@@ -40,9 +41,14 @@ watchEffect(async () => {
 
 const activeSapeur = computed(() => sapeurStore.active.data);
 const activeSapeurId = computed(() => sapeurStore.active.id ?? 0);
-const estSapeur = computed(() => sapeurStore.active.data.type === 0);
-const estCivil = computed(() => sapeurStore.active.data.type === 1);
-const estRecrue = computed(() => sapeurStore.active.data.type === 2);
+// Est ou a été sapeur
+const estSapeur = computed(() => sapeurStore.active.data.statut_sapeur !== STATUT.JAMAIS);
+const sapeurActif = computed(() => sapeurStore.active.data.statut_sapeur === STATUT.ACTIF);
+const estRecrue = computed(
+  () =>
+    sapeurStore.active.data.statut_sapeur === STATUT.JAMAIS &&
+    sapeurStore.active.data.statut_civil === STATUT.JAMAIS,
+);
 const civilites = computed(() => baseDataStore.civilites);
 const localites = computed(() =>
   localiteStore.liste.map((l) => ({
@@ -85,17 +91,6 @@ const saveSapeur = async () => {
   }
   await submit(
     () => sapeurStore.saveActiveSapeur(saveSapeur),
-    "Erreur lors de l'enregistrement des données",
-    "Modifications sauvegardées",
-  );
-};
-const saveNonSapeurStatut = async () => {
-  let saveSapeur = {
-    id: activeSapeur.value.id,
-    actif: activeSapeur.value.actif,
-  };
-  await submit(
-    () => sapeurStore.saveNonSapeurStatut(saveSapeur),
     "Erreur lors de l'enregistrement des données",
     "Modifications sauvegardées",
   );
@@ -380,37 +375,6 @@ const editPhoto = () =>
       </base-card>
     </div>
     <div class="col-sm-12 col-xl-6">
-      <base-card title="Civil" v-if="estCivil">
-        <template #header>
-          <button
-            :disabled="isSubmitting"
-            v-if="hasEditPermission"
-            class="btn btn-primary"
-            @click.prevent="saveNonSapeurStatut"
-          >
-            Enregistrer
-          </button>
-        </template>
-        <template #body>
-          <form role="form">
-            <div class="mb-3">
-              <div class="form-check form-switch">
-                <input
-                  id="civilActif"
-                  v-model="activeSapeur.actif"
-                  class="form-check-input"
-                  type="checkbox"
-                  role="switch"
-                  :true-value="1"
-                  :false-value="0"
-                />
-                <label class="form-check-label" for="civilActif">Actif</label>
-              </div>
-            </div>
-          </form>
-        </template>
-      </base-card>
-
       <base-card title="Photo" v-if="estSapeur" body-class="text-center">
         <template #header>
           <button
@@ -472,8 +436,8 @@ const editPhoto = () =>
               <strong>Statut: </strong>
               <span
                 class="badge rounded-pill"
-                :class="activeSapeur.actif ? 'text-bg-success' : 'text-bg-secondary'"
-                >{{ activeSapeur.actif ? "Actif" : "Inactif" }}</span
+                :class="sapeurActif ? 'text-bg-success' : 'text-bg-secondary'"
+                >{{ sapeurActif ? "Actif" : "Inactif" }}</span
               >
             </span>
             <router-link
