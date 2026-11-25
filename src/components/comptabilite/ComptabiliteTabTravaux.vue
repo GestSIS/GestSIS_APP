@@ -51,7 +51,10 @@ const selectedItem = computed(() => {
 });
 
 const travaux = computed(() =>
-  travailStore.liste.filter((t) => t.statut >= TRAVAIL_STATUT.ACCEPTE),
+  // Les fiches liées à un exercice ou une intervention s'imputent avec leur événement
+  travailStore.liste.filter(
+    (t) => t.statut >= TRAVAIL_STATUT.ACCEPTE && !t.exercice_id && !t.intervention_id,
+  ),
 );
 const sapeurs = computed(() => sapeurStore.liste);
 const travailTypes = computed(() => travailTypeStore.liste);
