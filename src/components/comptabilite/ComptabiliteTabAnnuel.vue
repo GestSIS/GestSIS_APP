@@ -66,12 +66,7 @@ const computedData = computed(() => {
       // Add data relative to table
       .map((s) => ({
         ...s,
-        getData: () =>
-          new Promise(
-            function (resolve) {
-              resolve(ecritures.value);
-            }.bind(s),
-          ),
+        getData: () => Promise.resolve(s.ecritures),
       }))
   );
 });
