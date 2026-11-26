@@ -1,5 +1,6 @@
 import { defineConfig, lazyPlugins } from "vite-plus";
 import vue from "@vitejs/plugin-vue";
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -67,9 +68,28 @@ export default defineConfig({
     ],
   },
   build: {
-    // Uploaded to Bugsink by sentry-cli in CI, then removed from dist/ before deploy.
     // Needed so error reports on the deployed app can be symbolicated against the original source.
     sourcemap: true,
   },
-  plugins: lazyPlugins(() => [vue()]),
+  plugins: lazyPlugins(() => [
+    vue(),
+    sentryVitePlugin({
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      url: process.env.SENTRY_URL,
+      // Telemetry goes to sentry.io, not Bugsink: extra network call on every build.
+      telemetry: false,
+      release: {
+        name: process.env.SENTRY_RELEASE || process.env.npm_package_version,
+        create: false,
+        finalize: false,
+      },
+      // No token outside CI (local/dev builds) -> skip upload instead of failing the build.
+      disable: !process.env.SENTRY_AUTH_TOKEN,
+      sourcemaps: {
+        filesToDeleteAfterUpload: ["./dist/**/*.map"],
+      },
+    }),
+  ]),
 });

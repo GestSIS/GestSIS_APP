@@ -1,5 +1,4 @@
 allowBuilds:
-  "@sentry/cli": false
   "@parcel/watcher": false
   vue-demi: false
 

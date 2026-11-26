@@ -47,28 +47,13 @@ jobs:
 
       - name: build
         run: pnpm build
-
-      # Injecte les Debug IDs dans dist/ puis envoie les sourcemaps à Bugsink.
-      # Sans token (PR depuis un fork), on saute l'envoi. Un échec ne bloque pas le déploiement.
-      - name: Upload sourcemaps to Bugsink
-        continue-on-error: true
-        run: |
-          if [ -z "$SENTRY_AUTH_TOKEN" ]; then
-            echo "SENTRY_AUTH_TOKEN absent : envoi des sourcemaps ignoré"
-            exit 0
-          fi
-          pnpm exec sentry-cli sourcemaps inject dist
-          pnpm exec sentry-cli sourcemaps upload --release "$GITHUB_SHA" dist
         env:
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_URL: ${{ secrets.SENTRY_URL }}
+          SENTRY_RELEASE: ${{ github.sha }}
           SENTRY_DISABLE_UPDATE_CHECK: "1"
-
-      # Les sourcemaps ne doivent jamais être déployées
-      - name: Remove sourcemaps
-        run: find dist -name '*.map' -delete
 
       - name: Configure SSH
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
