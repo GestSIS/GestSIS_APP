@@ -1,6 +1,12 @@
 {
   "releases": [
     {
+      "date": "28.11.2026",
+      "version": "1.0",
+      "app": "GestSIS Mobile 2.6.16",
+      "changes": ["Amélioration de l'interface de saisie des présences aux exercices"]
+    },
+    {
       "date": "25.11.2026",
       "version": "1.0",
       "app": "GestSIS APP",
