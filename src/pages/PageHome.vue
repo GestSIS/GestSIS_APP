@@ -35,7 +35,11 @@ if (!authStore.organisation.activeId && availableSisListe.value.length > 0) {
   await authStore.selectOrganisation(availableSisListe.value[0]);
 }
 
-await localiteStore.fetchLocalites();
+// Compte sans SIS (non validé ou sans droits) : pas de Sis-Key, l'API refuserait la requête
+// et la page n'afficherait pas le message qui lui est destiné.
+if (authStore.organisation.activeId) {
+  await localiteStore.fetchLocalites();
+}
 
 const isSapeur = computed(() => Object.keys(authStore.organisation.sapeurs ?? {}).length > 0);
 
