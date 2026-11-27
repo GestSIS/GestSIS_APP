@@ -70,11 +70,9 @@ const columns = computed(() => {
 });
 const filteredFonctions = computed(() => {
   const fonctionsIds = new Set(
-    [
-      ...Object.values(columns.value)
-        .map((e) => new Set(Object.keys(e.fonctions)))
-        .reduce((acc, b) => new Set([...acc, ...b])),
-    ].map((a) => parseInt(a)),
+    Object.values(columns.value)
+      .flatMap((e) => Object.keys(e.fonctions))
+      .map((a) => parseInt(a)),
   );
   return fonctions.value.filter((f) => fonctionsIds.has(parseInt(f.id)));
 });
