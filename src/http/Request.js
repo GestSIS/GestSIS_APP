@@ -43,8 +43,8 @@ const createClient = (baseURL, { headers, ...config } = {}) =>
 
 /**
  * Client JSON : renvoie le contenu de l'enveloppe `data`, rejette le corps de l'erreur.
- * `refreshOn401` : jeton expiré → refresh + rejeu. Jamais côté Auth, où un 401 est une
- * réponse métier (identifiants ou code 2FA invalides) et non un jeton à rafraîchir.
+ * `refreshOn401` : jeton expiré → refresh + rejeu. Jamais sur les points d'accès Auth
+ * publics (voir `authNoRefresh`), où un 401 est une réponse métier et non un jeton à rafraîchir.
  */
 const createJsonClient = (baseURL, { headers, refreshOn401 = false } = {}) => {
   const client = createClient(baseURL, { headers });
@@ -142,9 +142,14 @@ const request = {
 
   api: () => createJsonClient(API_URL, { refreshOn401: true }),
 
-  auth: () => createJsonClient(AUTH_URL),
+  // Comme côté API, 401 = jeton expiré ou invalide (refus de droits : 403, saisie invalide : 422).
+  auth: () => createJsonClient(AUTH_URL, { refreshOn401: true }),
 
-  // Variante de `auth()` portant un jeton explicite plutôt que l'access token
+  // Points d'accès Auth publics (login, inscription, mot de passe oublié, refresh, logout),
+  // où un 401 est une réponse métier, et appels faits pendant le refresh lui-même.
+  authNoRefresh: () => createJsonClient(AUTH_URL),
+
+  // Variante de `authNoRefresh()` portant un jeton explicite plutôt que l'access token
   // global (`axios.defaults.headers.common`) : utilisée pour le flow 2FA, où
   // les jetons pre-auth/setup sont volontairement à portée restreinte et ne
   // doivent jamais remplacer la session courante (voire n'existent que quand

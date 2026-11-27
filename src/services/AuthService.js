@@ -2,16 +2,16 @@ import Api from "/src/http/Request";
 
 export default {
   login(payload) {
-    return Api.auth().post("/login", payload);
+    return Api.authNoRefresh().post("/login", payload);
   },
   register(credentials) {
-    return Api.auth().post("/register", credentials);
+    return Api.authNoRefresh().post("/register", credentials);
   },
   forgottenPassword(email) {
-    return Api.auth().post("/forgotten-password", { email });
+    return Api.authNoRefresh().post("/forgotten-password", { email });
   },
   resetPassword(token, password) {
-    return Api.auth().post("/reset-password", { token, password });
+    return Api.authNoRefresh().post("/reset-password", { token, password });
   },
   changePassword(data) {
     return Api.auth().post("/change-password", data);
@@ -20,16 +20,16 @@ export default {
   // que l'email n'est pas confirmé, ce point d'accès n'est plus protégé par
   // un jeton (il n'en existe justement pas encore juste après l'inscription).
   resendValidationEmail(email) {
-    return Api.auth().post("/resend-confirmation", { email });
+    return Api.authNoRefresh().post("/resend-confirmation", { email });
   },
   confirmRegistrationEmail(email, code) {
-    return Api.auth().post("/confirmer-email", { email, code });
+    return Api.authNoRefresh().post("/confirmer-email", { email, code });
   },
   refreshToken(payload) {
-    return Api.auth().post("refresh-token", { token: payload });
+    return Api.authNoRefresh().post("refresh-token", { token: payload });
   },
   logout(refreshToken) {
-    return Api.auth().post("logout", { token: refreshToken });
+    return Api.authNoRefresh().post("logout", { token: refreshToken });
   },
   getSessions() {
     return Api.auth().get("sessions");
@@ -37,8 +37,10 @@ export default {
   deleteSession(id) {
     return Api.auth().delete("sessions/" + id);
   },
+  // Sans refresh automatique : verifySession() gère lui-même l'échec (refresh avec la bonne
+  // redirection), et un second refresh concurrent ferait double déconnexion.
   me() {
-    return Api.auth().get("me");
+    return Api.authNoRefresh().get("me");
   },
   updateUserRoles(user) {
     return Api.auth().post("users/" + user.id + "/roles", {
@@ -54,8 +56,10 @@ export default {
   deleteRole(roleId) {
     return Api.auth().delete("roles/" + roleId);
   },
+  // Sans refresh automatique : appelé par setAuthSuccessful() pendant le refresh lui-même,
+  // un 401 attendrait alors indéfiniment le refresh en cours.
   getOrganisations() {
-    return Api.auth().get("organisations");
+    return Api.authNoRefresh().get("organisations");
   },
   getPermissions() {
     return Api.auth().get("permissions");
