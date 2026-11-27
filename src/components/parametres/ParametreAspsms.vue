@@ -14,6 +14,7 @@ const params = ref({
 
 const aspsmsParams = computed(() => aspsmsParamStore.params);
 const credit = computed(() => aspsmsParamStore.credit);
+const creditError = computed(() => aspsmsParamStore.creditError);
 
 watch(aspsmsParams, (value) => {
   if (value && value?.username && value?.password) {
@@ -75,7 +76,9 @@ const save = async () => {
               readonly
               :value="credit"
               class="form-control form-control-sm"
+              :class="{ 'is-invalid': creditError }"
             />
+            <div v-if="creditError" class="invalid-feedback">{{ creditError }}</div>
           </div>
           <div class="mb-3">
             <a href="https://www.aspsms.com/en/login/" target="_blank" rel="noopener noreferrer"
