@@ -1295,6 +1295,10 @@ const CHUNK_RELOAD_GUARD_KEY = "chunk-preload-error-reload";
 let lastAttemptedPath = null;
 let reloadPending = false;
 
+// Rechargement lancé : les erreurs qui suivent (imports résolus à `undefined` après preventDefault,
+// d'où « Couldn't resolve component ») en sont des conséquences, à ne pas rapporter.
+export const isChunkReloadPending = () => reloadPending;
+
 router.beforeEach((to) => {
   lastAttemptedPath = to.fullPath;
 });
