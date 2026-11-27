@@ -1293,12 +1293,21 @@ const router = createRouter({
 // voulait aller plutôt que de silencieusement recharger la page précédente.
 const CHUNK_RELOAD_GUARD_KEY = "chunk-preload-error-reload";
 let lastAttemptedPath = null;
+let reloadPending = false;
 
 router.beforeEach((to) => {
   lastAttemptedPath = to.fullPath;
 });
 
 window.addEventListener("vite:preloadError", (event) => {
+  // Un même import échoue souvent sur plusieurs chunks à la fois (composant parent/enfant,
+  // dépendances préchargées) : chacun déclenche l'événement. Une fois le rechargement lancé,
+  // on étouffe les suivants, sinon ils remontent comme rejets non gérés avant le déchargement.
+  if (reloadPending) {
+    event.preventDefault();
+    return;
+  }
+
   // sessionStorage indisponible (stockage bloqué) : get renvoie null et on recharge quand même,
   // au prix d'une éventuelle boucle si l'erreur persiste (préférable à rester bloqué sur l'erreur).
   if (safeSessionStorage.get(CHUNK_RELOAD_GUARD_KEY)) {
@@ -1306,6 +1315,7 @@ window.addEventListener("vite:preloadError", (event) => {
     return;
   }
   safeSessionStorage.set(CHUNK_RELOAD_GUARD_KEY, "1");
+  reloadPending = true;
 
   // Sans preventDefault, Vite relance l'erreur après l'événement : elle remonterait comme rejet
   // non géré (Sentry) alors que le rechargement la résout.
