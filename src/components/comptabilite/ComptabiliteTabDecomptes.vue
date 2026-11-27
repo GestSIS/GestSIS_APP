@@ -373,7 +373,7 @@ const fields = [
             <template #detail-row="{ rowData }">
               <generic-details-row :options="detailRowOptions" :row-data="rowData" />
             </template>
-            <template #actions="{ value }">
+            <template #actions="{ rowData }">
               <!-- <button aria-label="Modifier" type="button" class="btn btn-outline-primary border-0">
               <font-awesome-icon :icon="['far', 'edit']" />
             </button>-->
@@ -383,7 +383,7 @@ const fields = [
                 v-if="hasEditPermission"
                 type="button"
                 class="btn btn-outline-danger border-0"
-                @click="supprimer(value)"
+                @click="supprimer(rowData.id)"
               >
                 <font-awesome-icon :icon="['far', 'trash-alt']" />
               </button>
