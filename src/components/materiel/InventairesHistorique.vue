@@ -4,6 +4,10 @@ import { useRouter } from "vue-router";
 import { useInventaireStore } from "../../stores/materiel/Inventaire";
 import { useEmplacementStore } from "../../stores/materiel/Emplacement";
 import { useSapeurStore } from "../../stores/sapeur/Sapeur";
+import { useModalStore } from "../../stores/common/Modal";
+import { useSubmit } from "../../composables/useSubmit.js";
+import { useHasPermission } from "../../composables/useHasPermission.js";
+import permissions from "../../composables/permissions.js";
 import { groupedByData, indexedData } from "../../tools/index.js";
 import { etapesEmplacement } from "../../tools/materiel.js";
 import {
@@ -28,6 +32,9 @@ const router = useRouter();
 const inventaireStore = useInventaireStore();
 const emplacementStore = useEmplacementStore();
 const sapeurStore = useSapeurStore();
+const { confirm } = useModalStore();
+const { isSubmitting, submit } = useSubmit();
+const hasInventairePermission = useHasPermission(permissions.MATERIEL.INVENTAIRE);
 
 const computedData = computed(() => {
   const indexedEmplacements = indexedData(emplacementStore.liste);
@@ -72,6 +79,21 @@ const computedData = computed(() => {
 
 const toutAfficher = () => router.push({ name: "materiel-inventaires" });
 
+const supprimer = async (inventaire) => {
+  if (
+    await confirm(
+      `Supprimer « ${inventaire.designation} » ?`,
+      "L'inventaire et tout ce qui a été saisi sont effacés. Les écarts déjà traités restent appliqués au stock.",
+    )
+  ) {
+    await submit(
+      () => inventaireStore.supprimerInventaire(inventaire.id),
+      "Impossible de supprimer l'inventaire",
+      "Inventaire supprimé.",
+    );
+  }
+};
+
 const fields = [
   { title: "Date", key: "date", type: Date },
   { title: "Périmètre", slot: "perimetre", sortKey: "perimetre" },
@@ -106,6 +128,7 @@ const fields = [
         :data="computedData.inventaires"
         :fields="fields"
         no-data="Aucun inventaire validé"
+        selectable
       >
         <template #perimetre="{ rowData }">
           <chemin-emplacement :etapes="rowData.etapes" />
@@ -139,6 +162,17 @@ const fields = [
           >
             <font-awesome-icon :icon="['far', 'eye']" />
           </router-link>
+          <button
+            v-if="hasInventairePermission"
+            type="button"
+            class="btn btn-sm btn-outline-danger border-0"
+            title="Supprimer"
+            :aria-label="`Supprimer ${rowData.designation}`"
+            :disabled="isSubmitting"
+            @click.stop="supprimer(rowData)"
+          >
+            <font-awesome-icon :icon="['far', 'trash-alt']" />
+          </button>
         </template>
       </base-table>
     </template>
