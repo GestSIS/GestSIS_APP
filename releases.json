@@ -3,6 +3,14 @@
     {
       "date": "28.11.2026",
       "version": "1.0",
+      "app": "GestSIS Mobile 2.6.17",
+      "changes": [
+        "En cas de problème, l'app signale automatiquement l'erreur afin qu'elle puisse être corrigée"
+      ]
+    },
+    {
+      "date": "28.11.2026",
+      "version": "1.0",
       "app": "GestSIS Mobile 2.6.16",
       "changes": ["Amélioration de l'interface de saisie des présences aux exercices"]
     },
